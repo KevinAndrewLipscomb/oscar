@@ -10,6 +10,9 @@ function RoleEmailAddress($role)
    {
    switch ($role)
       {
+      //
+      // Roles for use by production code
+      //
       case "schedule-coordinator":
          return "ebrazle@vbgov.com";
          break;
@@ -17,6 +20,18 @@ function RoleEmailAddress($role)
          return "wkiley@vbgov.com";
          break;
       case "escalation-level-2-recipient":
+         return "NONE";
+         break;
+      //
+      // Roles for use by experimental code
+      //
+      case "x-schedule-coordinator":
+         return "ebrazle@vbgov.com";
+         break;
+      case "x-escalation-level-1-recipient":
+         return "wkiley@vbgov.com";
+         break;
+      case "x-escalation-level-2-recipient":
          return "NONE";
          break;
       default:
