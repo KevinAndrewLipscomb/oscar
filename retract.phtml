@@ -12,6 +12,8 @@ $mode="";
 $a = $a;
 $b = $b;
 $c = $c;
+$d = $d;
+$e = $e;
 //
 if ($mode) error_reporting(E_ALL);
 //
@@ -28,7 +30,7 @@ require_once("f_sendapprovalnotice.phtml");
 <head><title>Retraction Confirmation</title></head>
 <? BodyOpen(); ?>
 <table align=center width=80%><tr><td>
-<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
 <H1 ALIGN=CENTER>Retraction Confirmation</H1>
 <hr>
 <?
@@ -37,7 +39,14 @@ require_once("f_sendapprovalnotice.phtml");
 //
 $first_name = base64_decode($a);
 $last_name = base64_decode($b);
-$applicable_month_abbrev = base64_decode($c);
+$applicable_month_num = base64_decode($c);
+$email_addr = base64_decode($d);
+$squad = base64_decode($e);
+//
+// Determine the three-letter abbreviation for the specified month.
+//
+$applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
+$applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
 //
 // Connect to the database.
 //
@@ -48,17 +57,27 @@ mysql_select_db("oscar");
 //
 mysql_query
    (
-   "update ignore " . $mode . "avail_sheet"
-   .  " set d1=NULL, d2=NULL, d3=NULL, d4=NULL, d5=NULL, d6=NULL, d7=NULL, d8=NULL, d9=NULL, d10=NULL, d11=NULL, d12=NULL, d13=NULL, d14=NULL, d15=NULL, d16=NULL, d17=NULL, d18=NULL, d19=NULL, d20=NULL, d21=NULL, d22=NULL, d23=NULL, d24=NULL, d25=NULL, d26=NULL, d27=NULL, d28=NULL, d29=NULL, d30=NULL, d31=NULL"
-   .  "    , n1=NULL, n2=NULL, n3=NULL, n4=NULL, n5=NULL, n6=NULL, n7=NULL, n8=NULL, n9=NULL, n10=NULL, n11=NULL, n12=NULL, n13=NULL, n14=NULL, n15=NULL, n16=NULL, n17=NULL, n18=NULL, n19=NULL, n20=NULL, n21=NULL, n22=NULL, n23=NULL, n24=NULL, n25=NULL, n26=NULL, n27=NULL, n28=NULL, n29=NULL, n30=NULL, n31=NULL"
-   .  "    , num_extras=NULL"
-   .  "    , note='%OSCAR: User at IP address $REMOTE_ADDR retracted all availabilities on " . date("l Y-M-d H:i:s T") . ".'"
+   "delete from " . $mode . "avail_sheet "
    .  " where last_name = \"" . addslashes(addslashes($last_name)) . "\""
    .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
    .  "    and month = '$applicable_month_abbrev'"
    )
-   or die("Update failed with error:  " . mysql_error());
-$num_rows_affected = mysql_affected_rows();
+   or die("Delete failed with error:  " . mysql_error());
+if ($num_rows_affected = mysql_affected_rows())
+   {
+   mysql_query
+      (
+      "insert into " . $mode . "avail_sheet "
+      .  " set last_name = \"" . addslashes(addslashes($last_name)) . "\""
+      .  "    , first_name = \"" . addslashes(addslashes($first_name)) . "\""
+      .  "    , email_addr = \"" . addslashes(addslashes($email_addr)) . "\""
+      .  "    , squad = '$squad'"
+      .  "    , month = '$applicable_month_abbrev'"
+      .  "    , note='</i><b>*** WARNING: User at IP address $REMOTE_ADDR retracted all availabilities on " . date("l Y-M-d H:i:s T") . ".</b><i>'"
+      .  "    , expiration='" . date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0)) . "'"
+      )
+      or die("Finalization query failed with error:  " . mysql_error());
+   }
 //
 PutLibPhotoRandomPlaced("sasquatch",1,"right");
 echo "<p>The OSCAR system has retracted $num_rows_affected record";
@@ -69,13 +88,14 @@ if ($num_rows_affected == 0)
    echo "<i>\n"
       . "A <u>zero</u> result can be caused by:\n"
       . "   <ul>\n"
+      . "      <li>an empty set of records, as shown in the challenge message;</li>\n"
       . "      <li>an attempt to retract records from months gone by;</li>\n"
       . "      <li>an OSCAR bug.</li>\n"
       . "   </ul>\n"
       . "If you suspect a bug, please report the problem to the following people:\n"
       . "   <ul>\n"
-      . "      <li><a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">the Schedule Coordinator</a></li>\n"
-      . "      <li><a href=mailto:\"" . RoleEmailAddress("") . "\">the OSCAR System Administrator</a></li>\n"
+      . "      <li><a href=mailto:\"" . RoleEmailAddress("schedule-coordinator",$mode) . "\">the Schedule Coordinator</a></li>\n"
+      . "      <li><a href=mailto:\"" . RoleEmailAddress("",$mode) . "\">the OSCAR System Administrator</a></li>\n"
       . "   </ul>\n"
       . "</i>\n";
    }
@@ -83,7 +103,7 @@ echo "<p><b>Don't forget to <a href="
    . OscarRootUrl()
    . "/" . $mode . "als-avail-sub-form.phtml>submit an accurate availability sheet</a> by the deadline.</b></p>\n"
    . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-   . RoleEmailAddress("")
+   . RoleEmailAddress("",$mode)
    . "\">OSCAR System Administrator</a>.</p>";
 
 ?>
