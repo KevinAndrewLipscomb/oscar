@@ -52,7 +52,7 @@ switch ($month_num)
    }
 if ($report_type == "FULL")
    {
-   $where_clause = "month='" . strstr($month_word,0,3) ."' ";
+   $where_clause = "month='" . substr($month_word,0,3) ."' ";
    echo "<pre>\n";
    echo "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
    echo "   +--------------------------------------------+\n";
