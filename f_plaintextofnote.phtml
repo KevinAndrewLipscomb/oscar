@@ -12,10 +12,14 @@ function PlainTextOfNote
    {
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
-   // Eliminate "pre" tags since this routine assumes everything is "pre"formatted.
+   // Remove leading addendum indicator, if any.
    //
-   $note = str_replace("<tt>","",$note);
-   $note = str_replace("</tt>","",$note);
+   $addendum_indicator = "<br>:<br>";
+   $addendum_indicator_len = strlen($addendum_indicator);
+   if (substr($note,0,$addendum_indicator_len) == $addendum_indicator)
+      {
+      $note = substr($note,$addendum_indicator_len);
+      }
    //
    // Reduce newlines in the incoming $note, to keep its plaintext appearance consistent with its HTML appearance.
    //
@@ -23,15 +27,25 @@ function PlainTextOfNote
    $note = str_replace("\r"," ",$note);
    $note = str_replace("\n"," ",$note);
    //
+   // Eliminate "tt" tags since plaintext is equivalent to teletype rendition.
+   //
+   $note = str_replace("<tt>","",$note);
+   $note = str_replace("</tt>","",$note);
+   //
+   // Eliminate "b" tags since plaintext cannot be bolded.
+   //
+   $note = str_replace("<b>","",$note);
+   $note = str_replace("</b>","",$note);
+   //
    // Set up a break string for the wordwrap function that contains a newline followed by enough spaces to push the
    // remaining text past the specified left margin.
    //
    $break = "\n";
    for ($i=1; $i<=$left_margin; $i++) $break .= " ";
    //
-   // Replace our proprietary addendum indicators with something appropriate in this context.
+   // Replace addendum indicators with something appropriate in this context.
    //
-   $note = str_replace("<br:br>",($break . ":" . $break),$note);
+   $note = str_replace($addendum_indicator,($break . ":" . $break),$note);
    //
    // Replace standard break indicators with hard newlines.
    //

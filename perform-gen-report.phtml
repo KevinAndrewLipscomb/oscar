@@ -95,6 +95,7 @@ require_once("f_harvestedlist.phtml");
 require_once("f_harvestemailaddresses.phtml");
 require_once("f_beemsschedcoord.phtml");
 require_once("f_htmlofnote.phtml");
+require_once("f_formattednoteappendage.phtml");
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
@@ -594,7 +595,17 @@ if ($shift_filter == "all")
                   .  "<blockquote>\n";
                if ($num_submissions > 1)
                   {
-                  $report .= "   <p><b>*** WARNING: SUBMISSION COUNT = $num_submissions, VERIFICATION RECOMMENDED</b></p>\n";
+                  $report .= "<p><b>" . HtmlOfNote
+                     (
+                     FormattedNoteAppendage
+                        (
+                        $mode,
+                        "WARNING",
+                        "MULTSUB",
+                        "Submission count = $num_submissions, verification recommended."
+                        )
+                     );
+                  $report .= "</b></p>\n";
                   }
                $report .= "<table>\n";
                $report .= "<tr><td valign=top>Days:</td><td valign=top>";

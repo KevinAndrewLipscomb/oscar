@@ -10,9 +10,14 @@ function HtmlOfNote
    {
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
-   $s =  str_replace("<br:br>","<br>:<br>",$note);
+   $addendum_indicator = "<br>:<br>";
+   $addendum_indicator_len = strlen($addendum_indicator);
+   if (substr($note,0,$addendum_indicator_len) == $addendum_indicator)
+      {
+      $note = substr($note,$addendum_indicator_len);
+      }
    //
    if ($mode) error_reporting($saved_error_level);
-   return $s;
+   return $note;
    }
 ?>

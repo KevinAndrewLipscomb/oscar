@@ -14,13 +14,25 @@ function FormattedNoteAppendage
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    $pad_mask = "................";
+   $num_invisible_chars = 0;
    //
-   $s =  "<br:br>"
+   $condition = strtoupper($condition);
+   switch ($condition)
+      {
+      case "WARNING":
+      case "ERROR":
+      case "SEVERE":
+      case "FATAL":
+         $condition = "<b>$condition</b>";
+         $num_invisible_chars = 7;
+      }
+   //
+   $s =  "<br>:<br>"
       .  "<tt>"
       .  str_pad("mesg(" . strtoupper($mnemonic) . ")",16,$pad_mask)
       .  "from(" .  strtoupper($source) .  ")"
       .  "<br>"
-      .  str_pad("type(" . strtoupper($condition) . ")",16,$pad_mask)
+      .  str_pad("type($condition)",(16 + $num_invisible_chars),$pad_mask)
       .  "time(" .  date("Y-m-d-H:i-T") . ")"
       .  "</tt>"
       .  "<br>"
