@@ -26,13 +26,23 @@ if ($report_type == "FULL")
    $where_clause = "month='$month' ";
    echo "<pre>\n";
    echo "Full availability report for $month generated " . date("l Y-M-d H:i:s T") . "\n\n";
-   echo "Legend:\n";
-   echo "   -5-    : EMS-5 team member\n";
-   echo "   -30-   : Squad truck team member\n";
-   echo "   Rxx    : Home rescue squad\n";
-   echo "   ERS    : VBFD firefighter\n";
-   echo "   8xxxxx : Officer code (also 7xxxxx)\n";
-   echo "   *      : See Notes section for special request.\n\n\n";
+   echo "   +--------------------------------------------+\n";
+   echo "   | Legend:                                    |\n";
+   echo "   |    -5-30- Rxx 8xxxxx Lastname, Firstname * |\n";
+   echo "   |     ^  ^   ^    ^                        ^ |\n";
+   echo "   |     |  |   |    |                        | |\n";
+   echo "   |     |  |   |    +- Officer code          | |\n";
+   echo "   |     |  |   |       (also 7xxxxx)         | |\n";
+   echo "   |     |  |   |                             | |\n";
+   echo "   |     |  |   +- Home rescue squad          | |\n";
+   echo "   |     |  |      (ERS for VBFD)             | |\n";
+   echo "   |     |  |                                 | |\n";
+   echo "   |     |  +- Squad truck team member        | |\n";
+   echo "   |     |                                    | |\n";
+   echo "   |     +- EMS-5 team member                 | |\n";
+   echo "   |                                          | |\n";
+   echo "   |    See special request in Notes section -+ |\n";
+   echo "   +--------------------------------------------+\n\n\n";
    for ($index = 1; $index <= 31; $index++)
       {
       $where_clause_2 = "and d$index='AVAILABLE' ";
