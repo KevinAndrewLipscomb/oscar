@@ -38,7 +38,6 @@ mysql_query
    .  " where last_name = \"" . addslashes(addslashes($last_name)) . "\""
    .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
    .  "    and month = '$applicable_month_abbrev'"
-   "
    )
    or die("Deletion failed with error:  " . mysql_error());
 //
