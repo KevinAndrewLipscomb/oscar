@@ -26,24 +26,34 @@ require_once("f_bodyopen.phtml");
            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
         </td></tr></table>
         <hr>
+        <p>To guard against misuse of the OSCAR system, all generated reports are first sent to the VBDEMS Central Schedule Coordinator.&nbsp; Upon the coordinator's approval, the report will be forwarded to the email address that you specify.</p>
         <form action=request-full-report.phtml method=post>
-           Applicable month:&nbsp;
-           <select size="1" name=month>
-              <option value="">Select</option>
-              <option value="JAN">January</option>
-              <option value="FEB">February</option>
-              <option value="MAR">March</option>
-              <option value="APR">April</option>
-              <option value="MAY">May</option>
-              <option value="JUN">June</option>
-              <option value="JUL">July</option>
-              <option value="AUG">August</option>
-              <option value="SEP">September</option>
-              <option value="OCT">October</option>
-              <option value="NOV">November</option>
-              <option value="DEC">December</option>
-           </select>
-           &nbsp;
+           <table>
+              <tr>
+                 <td>Your email address:</td>
+                 <td><input type=text name=email_addr size=64>
+              </tr>
+              <tr>
+                 <td>Applicable month:</td>
+                 <td>
+                    <select size="1" name=month>
+                       <option value="">Select</option>
+                       <option value="JAN">January</option>
+                       <option value="FEB">February</option>
+                       <option value="MAR">March</option>
+                       <option value="APR">April</option>
+                       <option value="MAY">May</option>
+                       <option value="JUN">June</option>
+                       <option value="JUL">July</option>
+                       <option value="AUG">August</option>
+                       <option value="SEP">September</option>
+                       <option value="OCT">October</option>
+                       <option value="NOV">November</option>
+                       <option value="DEC">December</option>
+                    </select>
+                 </td>
+              </tr>
+           </table>
            <input type=submit value="Request full report">
         </form>
         <hr>
