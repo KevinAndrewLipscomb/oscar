@@ -1,0 +1,89 @@
+<?php
+//
+// $Id$
+//
+error_reporting(E_ALL);
+//
+$foundation_dir = '../foundation';
+require_once("$foundation_dir/f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("$foundation_dir/f_bodyopen.phtml");
+require_once("$foundation_dir/f_connectselectdb.phtml");
+require_once("f_agencyselectionlist.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Surrogate Submissions Form (Part 1)</title>
+</head>
+
+<?php BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+         <table><tr><td>
+            <h6 align="center">
+               KVEO-IT-PROJECT<br>
+               <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+               <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+            <h1 align="center">Surrogate Submissions Form (Part 1)</h1>
+            <h2 align="center">for scheduling officers and their designees</h2>
+         </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+         </td></tr></table>
+         <hr>
+         <?php
+         if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+            {
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <?php echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your submission later.</p>"; ?>
+            </blockquote>            
+            </b>
+            <?php
+            }
+         else
+            {
+            ?>
+            <p>This form is intended for the use of scheduling officers and their designees.</p>
+            <form method="POST" action="<?php echo $mode; ?>form-surrogate-submissions-2.phtml">
+               <table>
+                  <tr>
+                     <td>Surrogate submitter's email address:</td>
+                     <td><input type=text name=email_addr size="64" maxlength=64></td>
+                  </tr>
+                  <tr>
+                     <td>Applicable month:</td>
+                     <td><select size=1 name=applicable_month_num>
+                        <option value="">Select</option>
+                        <?php
+                        $next_month_num = date("n") + 1;
+                        echo "<option value=" . $next_month_num . ">" . date("F",mktime(12,0,0,$next_month_num,1)) . "</option>\n";
+                        echo "<option value=" . ($next_month_num + 1) . ">" . date("F",mktime(12,0,0,($next_month_num + 1),1)) . "</option>\n";
+                        ?>
+                     </select></td>
+                  </tr>
+                  <tr>
+                     <td>Send availabilities to:</td>
+                     <td><?php AgencySelectionList($mode); ?></td>
+                  </tr>
+               </table>
+               <p><input type="submit" value="Continue..."><input type="reset" value="Reset"></p>
+            </form>
+            <?php
+            }
+            ?>
+         <hr>
+         <small><small><em><pre>$Id$</pre></em></small></small>
+      </td>
+   </tr>
+</table>
+</body>
+
+</html>
+

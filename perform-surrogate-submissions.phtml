@@ -1,0 +1,285 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_availlist.phtml");
+?>
+<html>
+<head><title>OSCAR - Confirmation</title></head>
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+         <h6 align="center">
+            KVEO-IT-PROJECT<br>
+            <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+            <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+         <H1 ALIGN="CENTER">Confirmation</H1>
+         <hr>
+         <?
+         //
+         // Validate parameters.
+         //
+         if
+            (
+               ($email_addr != "")
+            and
+               ($applicable_month_num != "")
+            )
+         // then
+            {
+            //
+            // All required values are present.
+            //
+            echo "<p><b>You may want to print this page for your records.</b></p>\n"
+               . "<blockquote>\n"
+               . "<p>Your input has been processed as follows:</p>\n"
+               . "<blockquote><table border=1 cellspacing=0 cellpadding=3>\n"
+               . "<tr bgcolor=#D0D0D0>\n"
+               . "   <td><small>Timestamp</small></td>\n"
+               . "   <td><small>Lastname</small></td>\n"
+               . "   <td><small>Firstname</small></td>\n"
+               . "   <td><small>Month</small></td>\n"
+               . "   <td align=center><small>Days</small></td>\n"
+               . "   <td align=center><small>Nights</small></td>\n"
+               . "   <td><small>POC</small></td>\n"
+               . "</tr>\n";
+            //
+            // Calculate the expiration date for this availability sheet.  For the expiration date calculation, the 0th day
+            // of month+1 resolves to the last day of month.
+            //
+            $applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
+            $applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
+            $expiration_date = date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0));
+            //
+            // Connect to the database.
+            //
+            mysql_connect("localhost","kalipso",Password());
+            mysql_select_db("oscar");
+            //
+            $found_something_to_process = "";
+            $be_problem = "";
+            //
+            for ($i = 1; $i <= count($last_name); $i++)
+               {
+               //
+               // Init vars
+               //
+               $extracted_first_name = $extracted_last_name = $extracted_email_addr = $month = "";
+               $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
+                  $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 =
+                  $d31 = "";
+               $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 =
+                  $n17 = $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 =
+                  $n31 = "";
+               $timestamp = "";
+               //
+               if (
+                     ($last_name[$i] != "")
+                  and
+                     ($first_name[$i] != "")
+                  and
+                     (
+                        (
+                           ($shift_a_num[$i] != "")
+                        and
+                           ($shift_a_day_night[$i] != "")
+                        )
+                     or
+                        (
+                           ($shift_b_num[$i] != "")
+                        and
+                           ($shift_b_day_night[$i] != "")
+                        )
+                     )
+                  )
+               // then
+                  {
+                  $found_something_to_process = "TRUE";
+                  //
+                  if (($shift_a_day_night[$i] != "") and ($shift_a_num[$i] != ""))
+                     {
+                     $field_a = $shift_a_day_night[$i][0] . $shift_a_num[$i];
+                     }
+                  if (($shift_b_day_night[$i] != "") and ($shift_b_num[$i] != ""))
+                     {
+                     $field_b = $shift_b_day_night[$i][0] . $shift_b_num[$i];
+                     }
+                  
+                  //
+                  $sql = "insert into " . $mode . "avail_sheet set first_name='" . addslashes(trim($first_name[$i])) . "'"
+                     . ", last_name='" . addslashes(trim($last_name[$i])) ."'"
+                     . ", email_addr='" . addslashes(trim($email_addr)) . "'"
+                     . ", month='" . $applicable_month_abbrev . "'"
+                     . ", squad='ERS'"
+                     . ", be_tda='TRUE'"
+                     . ", be_als='TRUE'";
+                  if ($field_a != "") $sql .= ", $field_a='AVAILABLE'";
+                  if ($field_b != "") $sql .= ", $field_b='AVAILABLE'";
+                  $sql .= ", submitting_node='$REMOTE_ADDR'"
+                     . ", expiration='$expiration_date'";
+                  mysql_query($sql)
+                     or die
+                        (
+                        "Sorry, the database operation failed with this error:  <i>"
+                        .  mysql_error()
+                        .  "</i>\n\nPlease notify the <a href=mailto:\""
+                        .  RoleEmailAddress("")
+                        .  "\">OSCAR System Administrator</a>."
+                        );
+                  @mail
+                     (
+                     RoleEmailAddress("failsafe-recipient",$mode),
+                     "OSCAR insert op",
+                     stripslashes
+                        (
+                        "The \'OSCAR - "
+                        . $mode
+                        . "add-ers-tda-inputs.phtml\' script has processed the following operation:\n\n$sql"
+                        )
+                     );
+                  //
+                  // Clear calculated vars for next iteration.
+                  //
+                  $field_a = $field_b = "";
+                  //
+                  $result = mysql_query
+                     (
+                     $qry = "select first_name as extracted_first_name"
+                     .  "   , last_name as extracted_last_name"
+                     .  "   , email_addr as extracted_email_addr"
+                     .  "   , month"
+                     .  "   , d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, d23, d24, d25, d26, d27, d28, d29, d30, d31"
+                     .  "   , n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27, n28, n29, n30, n31"
+                     .  "   , timestamp"
+                     .  " from " . $mode . "avail_sheet"
+                     .  " where month='$applicable_month_abbrev'"
+                     .  "    and last_name='" . addslashes(trim($last_name[$i])) . "'"
+                     .  "    and first_name='" . addslashes(trim($first_name[$i])) . "'"
+                     .  "    and be_tda='TRUE'"
+                     .  " order by timestamp desc"
+                     .  " limit 1"
+                     );
+                  if ($num_rows = mysql_num_rows($result))
+                     {
+                     //
+                     // The insert and subsequent select must've succeeded.  Display what came back.
+                     //
+                     extract($row = mysql_fetch_array($result));
+                     echo "<tr>\n"
+                        . "   <td><small>$timestamp</small></td>\n"
+                        . "   <td><small>$extracted_last_name</small></td>\n"
+                        . "   <td><small>$extracted_first_name</small></td>\n"
+                        . "   <td><small>$month</small></td>\n"
+                        . "   <td align=center><small>";
+                     $avail_days_list = AvailList($d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31);
+                     if ($avail_days_list)
+                        {
+                        echo $avail_days_list;
+                        }
+                     else
+                        {
+                        echo "&nbsp;";
+                        }
+                     echo "   </small></td>\n"
+                        . "   <td align=center><small>";
+                     $avail_nights_list = AvailList($n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31);
+                     if ($avail_nights_list)
+                        {
+                        echo $avail_nights_list;
+                        }
+                     else
+                        {
+                        echo "&nbsp;";
+                        }
+                     echo "</small></td>\n"
+                        . "   <td><small>$extracted_email_addr</small></td>\n"
+                        . "</tr>\n";
+                     }
+                  else
+                     {
+                     $be_problem = "TRUE";
+                     echo "<tr><td colspan=10 align=center><b>Error: See explanation below.</b></td></tr>\n";
+                     }
+                  } // if row is processable
+               if (($i == count($last_name)) and (!$found_something_to_process))
+                  {
+                  echo "<tr><td colspan=10 align=center><b>Warning: Your submission didn't contain any valid TDA"
+                     . " records.&nbsp; Click your browser's [<--&nbsp;Back] button to correct the problem.</b></td></tr>\n";
+                  }
+               } // for row
+            echo "</table></blockquote>\n";
+            if ($be_problem)
+               {
+               //
+               // Fill the page out with a warning and instructions.
+               //
+               ?>
+               <h2><br><i>Error!</i></h2>
+               <b>
+               <blockquote>
+                  <p>The OSCAR system was unable to find some of what it thinks it just inserted into the database.&nbsp; 
+                     Possible causes include:</p>
+                  <ul>
+                     <li>The network may be very congested.
+                     <li>The database server may be bogged down, or may have gone offline due to error or maintenance.
+                     <li>The OSCAR system's query or program logic may be faulty.
+                  </ul>
+                  <p>Please try submitting your information again later, or contact the <a href=mailto:\"<? echo 
+                     RoleEmailAddress(""); ?>\">OSCAR System Administrator</a>.</p>
+               </blockquote>            
+               </b>
+               <?
+               }
+            else
+               {
+               PutLibPhotoRandomPlaced("sasquatch",1,"right");
+               echo "<p><b>Thanks!</b></p>";
+               echo "<p>If you have feedback about the technical aspects of this process, please contact the "
+                  . "<a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>\n";
+               }
+            echo "</blockquote>\n"
+               . "<table cellspacing=10>\n"
+               . "   <tr><td colspan=3><h3>Actions</h3></td></tr>\n"
+               . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=" . $mode . "ers-tda-input-form.phtml?email_addr=$email_addr&applicable_month_num=$applicable_month_num>Continue</a></b></td><td>to submit TDAs.</td></tr>\n"
+               . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=" . $mode . "index.phtml>Return</a></b></td><td>to the OSCAR home page.</td></tr>\n"
+               . "</table>\n";
+            }
+         else
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Error!</i></h2>
+            <b>
+            <blockquote>
+               <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
+               <ul>
+                  <li><p>Email address</p>
+                  <li><p>Applicable month</p>
+               </ul>
+               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\"" . RoleEmailAddress("") . "\">OSCAR System Administrator</a>.</p>";
+            }
+         ?>
+         <br clear=both>
+         <hr>
+         <p><small><small><em><pre>$Id$</pre></em></small></small>
+      </td>
+   </tr>
+</table>
+</body>
+</html>
