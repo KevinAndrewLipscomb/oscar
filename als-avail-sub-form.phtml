@@ -5,7 +5,7 @@
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_sysadmemailaddr.phtml");
+require_once("f_roleemailaddress.phtml");
 ?>
 <html>
 
@@ -203,7 +203,7 @@ require_once("f_sysadmemailaddr.phtml");
             <p align=left>Double check your selections before submitting this
             form.</li>
           <?
-          echo "<li><p align=left>If you have feedback about this form, please send it to the <a href=mailto:" . SysAdmEmailAddr() . ">OSCAR System Administrator</a>.</li>";
+          echo "<li><p align=left>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress() . ">OSCAR System Administrator</a>.</li>";
           ?>
           <li>
             <p align=left>If you wish to print a copy of the completed form
