@@ -1,0 +1,29 @@
+<?
+//
+// $Id$
+//
+function AgencySelectionList($mode = "")
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $result = mysql_query("select * from " . $mode . "agency where be_active='TRUE'")
+      or die("AgencySelectionList query failed with error: " . mysql_error());
+   //
+   echo "<select name=coord_agency>\n";
+   if (mysql_num_rows($result) > 1)
+      {
+      echo "<option value=\"\">Select</option>\n";
+      }
+   //
+   while($row = mysql_fetch_array($result))
+      {
+      $enumeral = $description = "";
+      extract($row);
+      echo "<option value=\"$enumeral\">$description</option>\n";
+      }
+   //
+   echo "</select>\n";
+   //
+   error_reporting($saved_error_level);
+   }
+?>
