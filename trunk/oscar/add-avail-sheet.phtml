@@ -19,7 +19,6 @@ require_once("f_bodyopen.phtml");
          <H1 ALIGN="CENTER">Availability sheet submission</H1>
          <hr>
          <?
-         PutLibPhotoRandomPlaced("sasquatch",1,"left");
          //
          // Validate parameters.
          //
@@ -39,6 +38,7 @@ require_once("f_bodyopen.phtml");
          // All required values are present.
          //
             {
+            PutLibPhotoRandomPlaced("sasquatch",1,"left");
             //
             // Connect to the database.
             //
@@ -63,7 +63,7 @@ require_once("f_bodyopen.phtml");
             // Fill the page out with a warning and instructions.
             //
             ?>
-            <h3><i>Error!</i></h3>
+            <h2><i>Error!</i></h2>
             <b>
             <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
             <ul>
@@ -75,10 +75,14 @@ require_once("f_bodyopen.phtml");
             </ul>
             <p>Please press your browser's [<-- BACK] button to correct the problems.</p>
             </b>
-            <p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:infotech@kvrs.org>OSCAR System Administrator</a>.</p>
+            <blockquote>            
+               <p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:infotech@kvrs.org>OSCAR System Administrator</a>.</p>
+            </blockquote>
             <?
             }
          ?>
+         <hr>
+         <p><small><small><em><pre>$Id$</pre></em></small></small>
       </td>
    </tr>
 </table>
