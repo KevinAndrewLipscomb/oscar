@@ -92,15 +92,17 @@ if ($report_type == "FULL")
    $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month='$month' order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
    if ($num_rows = mysql_num_rows($result))
       {
-      extract($row);
-      echo "$last_name, $first_name [-";
-      if ($be_on_team_5) echo "5"; else echo "-";
-      echo "-";
-      if ($be_on_team_30) echo "30"; else echo "--";
-      echo "- ";
-      if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-      echo "$squad $cad_num]\n";
-      echo "<blockquote><i>$note</i></blockquote>";
+      while ($row = mysql_fetch_array($result))
+         {
+         echo "$last_name, $first_name [-";
+         if ($be_on_team_5) echo "5"; else echo "-";
+         echo "-";
+         if ($be_on_team_30) echo "30"; else echo "--";
+         echo "- ";
+         if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+         echo "$squad $cad_num]\n";
+         echo "<blockquote><i>$note</i></blockquote>";
+         }
       }
    else
       {
