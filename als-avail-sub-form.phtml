@@ -21,21 +21,29 @@ require_once("f_bodyopen.phtml");
         <h1 align="center">Online Availability Submission Form</h1>
         <h2 align="center">for ALS Providers</h2>
         <hr>
-        <p>For ALS members only.</p>
+        <p>For ALS members only.  <b>Bold</b> fields are required.</p>
         <form method="POST" action="add-avail-sheet.phtml">
 //$ReviewPoint--
           <table border="0" cellpadding="0" cellspacing="0" width="912">
             <tr>
-              <td width="167">Name:</td>
-              <td width="741"><input type="text" name="Name" size="60"></td>
+              <td width="167">First name:</td>
+              <td width="741"><input type="text" name=first_name size="32"></td>
             </tr>
             <tr>
-              <td width="167">Email address:</td>
-              <td width="741"><input type="text" name="EmailAddress" size="60"></td>
+              <td width="167"><b>Last name:</b></td>
+              <td width="741"><input type="text" name=last_name size="32"></td>
             </tr>
             <tr>
-              <td width="167">Applicable month:</td>
-              <td width="741"><select size="1" name="ApplicableMonth">
+              <td width="167"><b>Officer code:</b></td>
+              <td width="741"><input type="text" name=cad_num size="6">&nbsp; (Your 7##### or 8##### number)</td>
+            </tr>
+            <tr>
+              <td width="167"><b>Email address:</b></td>
+              <td width="741"><input type="text" name=email_addr size="64"></td>
+            </tr>
+            <tr>
+              <td width="167"><b>Applicable month:</b></td>
+              <td width="741"><select size="1" name=month>
                   <option>Select</option>
                   <option>January</option>
                   <option>February</option>
@@ -54,8 +62,8 @@ require_once("f_bodyopen.phtml");
   </center>
   <center>
             <tr>
-              <td width="167">Home squad:</td>
-              <td width="741"><select size="1" name="HomeSquad">
+              <td width="167"><b>Home squad:</b></td>
+              <td width="741"><select size="1" name=squad>
                   <option>Select</option>
                   <option>1 - Ocean Park</option>
                   <option>2 - Davis Corner</option>
@@ -75,9 +83,9 @@ require_once("f_bodyopen.phtml");
   </center>
         <p>Check all that apply as of today's date:</p>
         <ul>
-          <li><input type="checkbox" name="SquadTruckMember" value="YES, I AM ON THE SQUAD TRUCK TEAM">I
+          <li><input type="checkbox" name=be_on_team_30 value="TRUE">I
             am on the Squad Truck Team.</li>
-          <li><input type="checkbox" name="EMS5Member" value="YES, I AM AN EMS-5">I
+          <li><input type="checkbox" name=be_on_team_5 value="TRUE">I
             am an EMS-5.</li>
         </ul>
         <div align="left">
@@ -166,7 +174,7 @@ require_once("f_bodyopen.phtml");
           </table>
         </div>
         <p align="left">How many extra shifts are you willing to be scheduled
-          for?&nbsp; <input type="text" name="ExtraShifts" size="2" value="0"></p>
+          for?&nbsp; <input type="text" name=num_extras size="2" value="0"></p>
           <blockquote>
             <table border="1">
                <tr>
@@ -182,7 +190,7 @@ require_once("f_bodyopen.phtml");
             </table>
           </blockquote>
           <p align="left">Special requests:<br>
-          <textarea rows="8" name="SpecialRequest" cols="60"></textarea></p>
+          <textarea rows="8" name=note cols="60"></textarea></p>
         <ul>
           <li>
             <p align="left">Availability sheets are due on the 10th day of the
@@ -195,8 +203,7 @@ require_once("f_bodyopen.phtml");
             into an email and sent to the VBDEMS Central Schedule Coordinator.</li>
           <li>
             <p align="left">If you have feedback about this form, please send it
-            to the <a href="mailto:infotech@kvrs.org">KVRS Information
-            Technology Committee Chair</a>.</li>
+            to the <a href="mailto:infotech@kvrs.org">OSCAR Administrator</a>.</li>
           <li>
             <p align="left">If you wish to print a copy of the completed form
             for your records, do so <b>before</b> you click Submit.</li>
