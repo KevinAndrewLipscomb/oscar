@@ -9,7 +9,7 @@ $mode = RunMode($PHP_SELF);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_numsheets.phtml");
+require_once($mode . "f_numsheets.phtml");
 require_once("f_connectselectdb.phtml");
 ?>
 <html>
@@ -40,16 +40,17 @@ require_once("f_connectselectdb.phtml");
             <br>
             <b>Sheets on file</b>
             <blockquote>
-               <table border=1 cellpadding=3>
-                  <?
-                  //
-                  // Calculate month numbers and abbreviations.
-                  //
-                  $after_next_month_num = ($next_month_num = ($current_month_num = date("n")) + 1) + 1;
-                  $current_month_abbrev = date("M");
-                  $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
-                  $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
-                  ?>
+               <?
+               //
+               // Calculate month numbers and abbreviations.
+               //
+               $after_next_month_num = ($next_month_num = ($current_month_num = date("n")) + 1) + 1;
+               $current_month_abbrev = date("M");
+               $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
+               $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
+               ?>
+               <b>TOTALS</b>
+               <table border=1 cellspacing=0 cellpadding=4>
                   <tr bgcolor=#E8E8E8>
                      <td align=center>&nbsp;<? echo $current_month_abbrev; ?>&nbsp;</td>
                      <td align=center>&nbsp;<? echo $next_month_abbrev; ?>&nbsp;</td>
@@ -57,9 +58,35 @@ require_once("f_connectselectdb.phtml");
                   </tr>
                   <tr>
                      <?
-                     echo "<td align=center>" . NumSheets($current_month_abbrev) . "</td>\n";
-                     echo "<td align=center>" . NumSheets($next_month_abbrev) . "</td>\n";
-                     echo "<td align=center>" . NumSheets($after_next_month_abbrev) . "</td>\n";
+                     echo "<td align=center>" . NumSheets($current_month_abbrev,$mode) . "</td>\n";
+                     echo "<td align=center>" . NumSheets($next_month_abbrev,$mode) . "</td>\n";
+                     echo "<td align=center>" . NumSheets($after_next_month_abbrev,$mode) . "</td>\n";
+                     ?>
+                  </tr>
+               </table>
+               <br>
+               Direct versus indirect use of OSCAR
+               <table border=1 cellspacing=0 cellpadding=4>
+                  <tr bgcolor=#E8E8E8>
+                     <td align=center>&nbsp;<? echo $current_month_abbrev; ?>&nbsp;</td>
+                     <td align=center>&nbsp;<? echo $next_month_abbrev; ?>&nbsp;</td>
+                     <td align=center>&nbsp;<? echo $after_next_month_abbrev; ?>&nbsp;</td>
+                     <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                     <?
+                     echo "<td align=center>" . NumSheets($current_month_abbrev,$mode,"","NONVBGOV") . "</td>\n";
+                     echo "<td align=center>" . NumSheets($next_month_abbrev,$mode,"","NONVBGOV") . "</td>\n";
+                     echo "<td align=center>" . NumSheets($after_next_month_abbrev,$mode,"","NONVBGOV") . "</td>\n";
+                     echo "<td>Self-submitted</td>\n";
+                     ?>
+                  </tr>
+                  <tr>
+                     <?
+                     echo "<td align=center>" . NumSheets($current_month_abbrev,$mode,"","VBGOV") . "</td>\n";
+                     echo "<td align=center>" . NumSheets($next_month_abbrev,$mode,"","VBGOV") . "</td>\n";
+                     echo "<td align=center>" . NumSheets($after_next_month_abbrev,$mode,"","VBGOV") . "</td>\n";
+                     echo "<td>Entered by EMS Admin</td>\n";
                      ?>
                   </tr>
                </table>
