@@ -180,7 +180,7 @@ if ($report_type == "FULL")
          .  "    , note"
          .  "    , count(*) as num_submissions"
          .  " from avail_sheet"
-         .  " where month=\"" . substr($month_word,0,3) . "\"
+         .  " where month=\"" . substr($month_word,0,3) . "\""
          .  " group by last_name"
          .  "    , first_name"
          )
