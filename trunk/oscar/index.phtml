@@ -2,11 +2,21 @@
 //
 // $Id$
 //
+$mode="";
+   //
+   // Set to "" for production, "x_" to debug.
+   //
 error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
+require_once("f_password.phtml");
+//
+// Connect to the database.
+//
+mysql_connect("localhost","kalipso",Password());
+mysql_select_db("oscar");
 ?>
 <html>
 
@@ -85,15 +95,72 @@ require_once("f_roleemailaddress.phtml");
                   </tr>
                </table>
                <hr>
+               <center>
+                  <a href=http://www.vabeachems.com>
+                  V<small>&nbsp;A&nbsp;</small>&nbsp;
+                  &nbsp;B<small>&nbsp;E&nbsp;A&nbsp;C&nbsp;H</small>&nbsp;
+                  &nbsp;D<small>&nbsp;E&nbsp;P&nbsp;T</small>&nbsp;
+                  &nbsp;<small>O&nbsp;F</small>&nbsp;
+                  &nbsp;E&nbsp;M&nbsp;S
+                  </a>
+               </center>
+               <hr>
                <table cellspacing=10>
-                  <tr><td colspan=3><h3>Actions</h3></td></tr>
-                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=als-avail-sub-form.phtml>Submit</a></b></td><td>an availability sheet.&nbsp;&nbsp;&nbsp;<small><i>(BCs, enter TDAs <a href=ers-tda-input-form.phtml>here</a>.)</i></small></td></tr>
+                  <tr>
+                     <td colspan=5><h3>Actions</h3></td>
+                  </tr>
+                  <tr>
+                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                     <td align=right><b><a href=als-avail-sub-form.phtml>Submit</a></b></td><td>an availability sheet.&nbsp;&nbsp;&nbsp;<small><i>(BCs,&nbsp;enter&nbsp;TDAs&nbsp;<a href=ers-tda-input-form.phtml>here</a>.)</i></small></td>
+                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                     <td rowspan=3 valign=top>
+                        <table border=1 cellspacing=0 cellpadding=1>
+                           <?
+                           //
+                           // Calculate month numbers and abbreviations.
+                           //
+                           $after_next_month_num = ($next_month_num = ($current_month_num = date("n")) + 1) + 1;
+                           $current_month_abbrev = date("M");
+                           $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
+                           $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
+                           ?>
+                           <tr bgcolor=#D0D0D0><td colspan=3><small><i>Sheets on file&nbsp; <small><font color=#888888>(more stats)</font></i></small></td></tr>
+                           <tr bgcolor=#E8E8E8>
+                              <td align=center><small><i><? echo $current_month_abbrev; ?></i></small></td>
+                              <td align=center><small><i><? echo $next_month_abbrev; ?></i></small></td>
+                              <td align=center><small><i><? echo $after_next_month_abbrev; ?></i></small></td>
+                           </tr>
+                           <tr>
+                              <?
+                              $num_sheets = 0;
+                              $result = mysql_query("select count(*) as num_sheets from oscar." . $mode . "avail_sheet where month='$current_month_abbrev' group by month")
+                                 or die("Select count for current month failed with error:  " . mysql_error());
+                              if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+                              echo "<td align=center><small><i>$num_sheets</i></small></td>\n";
+                              //
+                              $num_sheets = 0;
+                              $result = mysql_query("select count(*) as num_sheets from oscar." . $mode . "avail_sheet where month='$next_month_abbrev' group by month")
+                                 or die("Select count for next month failed with error:  " . mysql_error());
+                              if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+                              echo "<td align=center><small><i>$num_sheets</i></small></td>\n";
+                              //
+                              $num_sheets = 0;
+                              $result = mysql_query("select count(*) as num_sheets from oscar." . $mode . "avail_sheet where month='$after_next_month_abbrev' group by month")
+                                 or die("Select count for month after next failed with error:  " . mysql_error());
+                              if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+                              echo "<td align=center><small><i>$num_sheets</i></small></td>\n";
+                              ?>
+                           </tr>
+                        </table>
+                     </td>
+                  </tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=request-compiled-avails.phtml>Request</a></b></td><td>a compiled availability report.</td></tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=request-retraction.phtml>Retract</a></b></td><td>previous submissions.</td></tr>
-                  <tr><td colspan=3><h3><br>Administrivia</h3></td></tr>
+                  <tr><td colspan=5><h3><br>Administrivia</h3></td></tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=whats-new.phtml>See</a></b></td><td>what's new.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><font color=D0D0D0>FAQ</font></b></td><td>Answers to frequently asked questions.</td></tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=privacy.phtml>Read</a></b></td><td>the privacy policy.</td></tr>
-                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><font color=888888>Subscribe</font></b></td><td>your organization to this service.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><font color=D0D0D0>Subscribe</font></b></td><td>your organization to this service.</td></tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=develop.phtml>Become</a></b></td><td>a <b>kveo-it-project</b> open-source developer.</td></tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=mailto:"<? echo RoleEmailAddress(""); ?>">Contact</a></b></td><td>the OSCAR System Administrator.</td></tr>
                </table>
