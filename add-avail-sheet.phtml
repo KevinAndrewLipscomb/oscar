@@ -51,7 +51,7 @@ require_once("f_roleemailaddress.phtml");
             //
             $applicable_month_num = date("n") + 1;
             $applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
-            $expiration_date = date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0,$year_num));
+            $expiration_date = date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0));
             //
             // Create and execute the SQL statement to insert/replace the record.
             //
