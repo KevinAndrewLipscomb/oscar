@@ -260,16 +260,6 @@ if ($report_type == "FULL")
             )
             or die("Create...select note_and_submission_count failed with error:  " . mysql_error());
          //
-         // The above statement copies some records that have no note and only one submission, so a clean up is required...
-         //
-         mysql_query
-            (
-            "delete from note_and_submission_count"
-            .  " where note = \"\""
-            .  "    and num_submissions = 1"
-            )
-            or die("Delete from note_and_submission_count failed with error:  " . mysql_error());
-         //
          $result = mysql_query("select * from note_and_submission_count order by last_name, first_name")
             or die("Select from note_and_submission_count failed with error:  " . mysql_error());
          if ($num_rows = mysql_num_rows($result))
@@ -294,13 +284,16 @@ if ($report_type == "FULL")
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                $report .= "$squad]\n";
-               $report .= "<blockquote>\n";
-               if ($num_submissions > 1)
+               if (($num_submissions > 1) or ($note != ""))
                   {
-                  $report .= "   <p><b>*** WARNING: SUBMISSION COUNT = $num_submissions, VERIFICATION RECOMMENDED ***</b></p>\n";
+                  $report .= "<blockquote>\n";
+                  if ($num_submissions > 1)
+                     {
+                     $report .= "   <p><b>*** WARNING: SUBMISSION COUNT = $num_submissions, VERIFICATION RECOMMENDED ***</b></p>\n";
+                     }
+                  $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
+                  $report .= "</blockquote>\n<br>\n";
                   }
-               $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
-               $report .= "</blockquote>\n<br>\n";
                $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = $num_submissions = "";
                }
             }
