@@ -161,7 +161,21 @@ require_once("f_connectselectdb.phtml");
                   .  RoleEmailAddress("")
                   .  "\">OSCAR System Administrator</a>."
                   );
-            // mail(RoleEmailAddress("")),"OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
+            //
+            // As a failsafe in case the database becomes unavailable at any critical time after the insertion, send the
+            // data to the sysadmin via email.
+            //
+            @mail
+               (
+               RoleEmailAddress("",$mode),
+               "OSCAR insert op",
+               stripslashes
+                  (
+                  "The \'OSCAR - "
+                  . $mode
+                  . "perform-add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"
+                  )
+               );
             //
             // For a more meaningful acknowledgement, reinitialize all the dependent variables and restore them by 
             // retrieving the very record we just inserted.

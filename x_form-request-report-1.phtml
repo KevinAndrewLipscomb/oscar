@@ -11,6 +11,7 @@ require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_connectselectdb.phtml");
 require_once("f_password.phtml");
+require_once($mode . "f_agencyselectionlist.phtml");
 ?>
 <html>
 
@@ -75,23 +76,7 @@ require_once("f_password.phtml");
               </tr>
               <tr>
                  <td>Get availabilities from:</td>
-                 <td>
-                    <select size=1 name=coord_agency>
-                       <option value="">Select</option>
-                       <option value="EMS">EMS Admin</option>
-                       <option value="R01">Rescue 1 - Ocean Park</option>
-                       <option value="R02">Rescue 2 - Davis Corner</option>
-                       <option value="R04">Rescue 4 - Chesapeake Beach</option>
-                       <option value="R05">Rescue 5 - Courthouse</option>
-                       <option value="R06">Rescue 6 - Creeds</option>
-                       <option value="R09">Rescue 9 - Kempsville</option>
-                       <option value="R13">Rescue 13 - Blackwater</option>
-                       <option value="R14">Rescue 14 - Virginia Beach</option>
-                       <option value="R15">Rescue 15 - Knotts Island</option>
-                       <option value="R16">Rescue 16 - Plaza</option>
-                       <option value="R17">Rescue 17 - Sandbridge</option>
-                    </select>
-                 </td>
+                 <td><? AgencySelectionList($mode); ?></td>
               </tr>
            </table>
            <br>

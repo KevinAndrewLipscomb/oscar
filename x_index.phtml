@@ -1,0 +1,203 @@
+<?
+//
+// $Id$
+//
+error_reporting(E_ALL);
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_password.phtml");
+require_once("f_numsheets.phtml");
+require_once("f_serverstatus.phtml");
+require_once("f_connectselectdb.phtml");
+//
+$connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE");
+?>
+<html>
+
+<head><title>OSCAR System</title></head>
+
+<? BodyOpen(); ?>
+
+<div align="center">
+   <center>
+   <table border="0" width="80%">
+      <tr>
+         <td width="100%">
+            <div align="left">
+               <table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                     <td rowspan="5">
+                     <?
+                     if ($connected)
+                        {
+                        PutLibPhotoRandomPlaced("sasquatch",1);
+                        }
+                     else
+                        {
+                        echo "&nbsp;";
+                        }
+                     ?>
+                     </td>
+                     <td rowspan="5" width="20">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                     <td width="22">
+                        <h5></h5>
+                     </td>
+                     <td align="center" width="25" bgcolor="#D0D0D0">
+                        <h1>O</h1>
+                     </td>
+                     <td width="110">
+                        <h2>nline</h2>
+                     </td>
+                     <td rowspan="5" width="20">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                     <td rowspan="5">
+                        <p align="center"><small>
+                        An open-source system for organizations that need to schedule autonomous people who have highly variable availabilities.</small></p>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td width="22">
+                        <h5></h5>
+                     </td>
+                     <td align="center" width="25" bgcolor="#D0D0D0">
+                        <h1>S</h1>
+                     </td>
+                     <td width="110">
+                        <h2>ubmission</h2>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td width="22">
+                        <h5>and&nbsp;</h5>
+                     </td>
+                     <td align="center" width="25" bgcolor="#D0D0D0">
+                        <h1>C</h1>
+                     </td>
+                     <td width="110">
+                        <h2>ompilation</h2>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td width="22">
+                        <h5>of&nbsp;</h5>
+                     </td>
+                     <td align="center" width="25" bgcolor="#D0D0D0">
+                        <h1>A</h1>
+                     </td>
+                     <td width="110">
+                        <h2>vailability</h2>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td width="22">
+                        <h5></h5>
+                     </td>
+                     <td align="center" width="25" bgcolor="#D0D0D0">
+                        <h1>R</h1>
+                     </td>
+                     <td width="110">
+                        <h2>ecords</h2>
+                     </td>
+                  </tr>
+               </table>
+               <hr>
+               <center>
+                  <a href=http://www.vabeachems.com>
+                  <b>
+                  V<small>&nbsp;A&nbsp;</small>&nbsp;
+                  &nbsp;B<small>&nbsp;E&nbsp;A&nbsp;C&nbsp;H</small>&nbsp;
+                  &nbsp;D<small>&nbsp;E&nbsp;P&nbsp;T</small>&nbsp;
+                  &nbsp;<small>O&nbsp;F</small>&nbsp;
+                  &nbsp;E&nbsp;M&nbsp;S
+                  </b>
+                  </a>
+               </center>
+               <hr>
+               <table cellspacing=10>
+                  <tr>
+                     <td colspan=5><h3>Actions</h3></td>
+                  </tr>
+                  <?
+                  //
+                  // Connect to the database.
+                  //
+                  if ($connected)
+                     {
+                     ?>
+                     <tr>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td align=right valign=top><b><a href=<? echo $mode; ?>form-submit-avails-1.phtml>Submit</a></b></td><td valign=top>an&nbsp;availability&nbsp;sheet.&nbsp;&nbsp <small><i>(BCs,&nbsp;enter&nbsp;TDAs&nbsp;<a href=<? echo $mode; ?>ers-tda-input-form.phtml>here</a>.)</i></small></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td rowspan=3 valign=top>
+                           <p><i><small>Server status: <? echo ServerStatus(); ?></small></i></p>
+                           <table border=1 cellspacing=0 cellpadding=1>
+                              <?
+                              //
+                              // Calculate month numbers and abbreviations.
+                              //
+                              $after_next_month_num = ($next_month_num = ($current_month_num = date("n")) + 1) + 1;
+                              $current_month_abbrev = date("M");
+                              $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
+                              $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
+                              ?>
+                              <tr bgcolor=#D0D0D0><td colspan=3 align=center><small><i>Sheets&nbsp;on&nbsp;file&nbsp; <small><a href=<? echo $mode; ?>stats.phtml>(more&nbsp;stats)</a></i></small></td></tr>
+                              <tr bgcolor=#E8E8E8>
+                                 <td align=center><small><i><? echo $current_month_abbrev; ?></i></small></td>
+                                 <td align=center><small><i><? echo $next_month_abbrev; ?></i></small></td>
+                                 <td align=center><small><i><? echo $after_next_month_abbrev; ?></i></small></td>
+                              </tr>
+                              <tr>
+                                 <?
+                                 echo "<td align=center><small><i>" . NumSheets($current_month_abbrev) . "</i></small></td>\n";
+                                 echo "<td align=center><small><i>" . NumSheets($next_month_abbrev) . "</i></small></td>\n";
+                                 echo "<td align=center><small><i>" . NumSheets($after_next_month_abbrev) . "</i></small></td>\n";
+                                 ?>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>form-request-report-1.phtml>Request</a></b></td><td valign=top>a compiled availability report.</td></tr>
+                     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>form-request-retraction.phtml>Retract</a></b></td><td valign=top>previous submissions.</td></tr>
+                     <?
+                     }
+                  else
+                     {
+                     ?>
+                     <tr>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td align=right valign=top><b>Sorry...</b></td><td valign=top>OSCAR's main functions are unavailable because its database is
+                           offline.&nbsp; This condition is temporary.&nbsp; Please try again later.</td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td valign=top>
+                           <p><i><small>Server&nbsp;status:<br><b>DB OFFLINE</b></small></i></p>
+                        </td>
+                     </tr>
+                     <?
+                     }
+                  ?>
+                  <tr><td colspan=5><h3><br>Administrivia</h3></td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>whats-new.phtml>Catch up</a></b></td><td valign=top>on what's new.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><font color=D0D0D0>FAQ</font></b></td><td valign=top>Answers to frequently asked questions.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>privacy.phtml>Read</a></b></td><td valign=top>the privacy policy.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><font color=D0D0D0>Subscribe</font></b></td><td valign=top>your organization to this service.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>develop.phtml>Become</a></b></td><td valign=top>a <b>kveo-it-project</b> open-source developer.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=mailto:"<? echo RoleEmailAddress(""); ?>">Contact</a></b></td><td valign=top>the OSCAR System Administrator.</td></tr>
+               </table>
+               <hr>
+               <p><small><i>Built with<a href="http://www.mysql.com"> MySQL </a>and<a href="http://www.php.net"> PHP </a>.</i></small></p>
+               <p><small><small><em><pre>$Id$</pre></em></small></small>
+            </div>
+         </td>
+      </tr>
+   </table>
+   </center>
+</div>
+
+</body>
+
+</html>
