@@ -412,8 +412,8 @@ if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordi
    //          0        1         2         3         4         5         6         7
    //          123456789012345678901234567890123456789012345678901234567890123456789012
    $notice =  "The OSCAR Availability Report\n";
-   $notice .= "you requested is available at:\n";
-   $notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest>.\n\n";
+   $notice .= "you requested is available at:\n\n";
+   $notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
    }
 else
    {
