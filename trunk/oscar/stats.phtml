@@ -195,8 +195,8 @@ require_once("f_connectselectdb.phtml");
                   //
                   // Histogram
                   //
-                  echo "<tr><td colspan=2>Histogram:<br>\n"
-                     . "   <blockquote><pre>\n";
+                  echo "<tr><td colspan=2>Histogram:\n"
+                     . "   <blockquote><pre><small>";
                   $result = mysql_query
                      (
                      "select num_avails, count(*) as occurrences "
@@ -212,7 +212,7 @@ require_once("f_connectselectdb.phtml");
                      for ($i=1; $i<=$occurrences; $i++) echo "#";
                      echo "\n";
                      }
-                  echo "</pre></blockquote>\n"
+                  echo "</small></pre></blockquote>\n"
                      . "</td></tr>\n";
                   ?>
                </table>
