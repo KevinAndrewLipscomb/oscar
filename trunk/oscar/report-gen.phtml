@@ -96,8 +96,8 @@ if ($report_type == "FULL")
       // This is also a good time to purge the database expired records, as from-scratch requests for full reports don't
       // happen excessively but do happen regularly.
       //
-      //mysql_query("delete from avail_sheet where expiration < CURRENT_DATE");
-      //mysql_query("delete from report_cache where expiration < CURRENT_DATE");
+      mysql_query("delete from avail_sheet where expiration < CURRENT_DATE");
+      mysql_query("delete from report_cache where expiration < CURRENT_DATE");
       //
       $base_sql_statement = "select last_name, first_name, squad, be_on_team_30, be_on_team_5, (note != \"\") as be_a_note from avail_sheet ";
       $report .= "<pre>\n";
