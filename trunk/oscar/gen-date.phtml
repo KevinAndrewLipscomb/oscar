@@ -1,0 +1,43 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+?>
+<html>
+
+<head><title>OSCAR - What's New</title></head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+           <h6 align="center">
+              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+           <h1 align="center">Explanation of report generation times</h1>
+        <hr>
+        <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+        <p>It is not abnormal for your report to have been generated prior to the time you requested it.</p>
+        <p>How can this be?</p>
+        <p>The OSCAR system <i>caches</i> the reports that it generates.&nbsp; This means that any generated report is kept
+           in the OSCAR database for possible future use.&nbsp; If another person had submitted a request identical to
+           yours, and nothing in the OSCAR database has changed since that time, then the OSCAR system will simply point you
+           to the existing report rather than generate a new one from scratch.&nbsp; Under such circumstances, the
+           generation time on your report will be the time the report was <i>originally</i> generated.</p>
+        <p>If, however, the OSCAR system has received new submissions since the last similar report was requested, the OSCAR
+           system will generate a brand new report.&nbsp; In this case, the generation time on your report will match the
+           time you made your request.</p>
+        <p>This scheme assures that you receive up-to-date information in your report.&nbsp; It also conserves server
+           resources while providing a useful screening mechanism.<p>
+        <p>If you have questions or concerns about the technical aspects of this process, feel free to contact the
+           <a href=<? RoleEmailAddress(""); ?>>OSCAR System Administrator</a>.</p>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small></center></td>
+    </tr>
+  </table>
+</body>
+
+</html>
+

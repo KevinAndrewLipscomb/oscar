@@ -82,7 +82,7 @@ if ($report_type == "FULL")
       //
       $base_sql_statement = "select distinct last_name, first_name, squad, be_on_team_30, be_on_team_5, (note != \"\") as be_a_note from avail_sheet ";
       $report .= "<pre>\n";
-      $report .= "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
+      $report .= "Full availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       $report .= "   +-------------------------------------+\n";
       $report .= "   | Legend:                             |\n";
       $report .= "   |    -5-30- Rxx Lastname, Firstname * |\n";
@@ -356,7 +356,7 @@ else
          }
       //
       $report .= "<pre>\n";
-      $report .= "Filtered availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
+      $report .= "Filtered availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       $report .= "   +-----------------------------------+\n";
       $report .= "   | Legend:                           |\n";
       $report .= "   |    -5-30- Rxx Lastname, Firstname |\n";
