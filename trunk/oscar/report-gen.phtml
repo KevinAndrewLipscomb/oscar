@@ -95,25 +95,24 @@ if ($report_type == "FULL")
       $base_sql_statement = "select last_name, first_name, squad, be_on_team_30, be_on_team_5, (note != \"\") as be_a_note from avail_sheet ";
       $report .= "<pre>\n";
       $report .= "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
-      $report .= "   +--------------------------------------------+\n";
-      $report .= "   | Legend:                                    |\n";
-      $report .= "   |    -5-30- Rxx 8xxxxx Lastname, Firstname * |\n";
-      $report .= "   |     ^  ^   ^    ^                        ^ |\n";
-      $report .= "   |     |  |   |    |                        | |\n";
-      $report .= "   |     |  |   |    +- Officer code          | |\n";
-      $report .= "   |     |  |   |       (also 7xxxxx)         | |\n";
-      $report .= "   |     |  |   |                             | |\n";
-      $report .= "   |     |  |   +- Home rescue squad          | |\n";
-      $report .= "   |     |  |      (ERS for VBFD)             | |\n";
-      $report .= "   |     |  |                                 | |\n";
-      $report .= "   |     |  +- Squad truck team member        | |\n";
-      $report .= "   |     |                                    | |\n";
-      $report .= "   |     +- EMS-5 team member                 | |\n";
-      $report .= "   |                                          | |\n";
-      $report .= "   |    See special request in Notes section -+ |\n";
-      $report .= "   +--------------------------------------------+\n\n\n";
-      $report .= "Days\n";
-      $report .= "----\n\n";
+      $report .= "   +-------------------------------------+\n";
+      $report .= "   | Legend:                             |\n";
+      $report .= "   |    -5-30- Rxx Lastname, Firstname * |\n";
+      $report .= "   |     ^  ^   ^                      ^ |\n";
+      $report .= "   |     |  |   |                      | |\n";
+      $report .= "   |     |  |   +- Home rescue squad   | |\n";
+      $report .= "   |     |  |      (ERS for VBFD)      | |\n";
+      $report .= "   |     |  |                          | |\n";
+      $report .= "   |     |  +- Squad truck team member | |\n";
+      $report .= "   |     |                             | |\n";
+      $report .= "   |     +- EMS-5 team member          | |\n";
+      $report .= "   |                                   | |\n";
+      $report .= "   |              See special request -+ |\n"; 
+      $report .= "   |              in Note section        |\n";
+      $report .= "   +-------------------------------------+\n\n\n";
+      $report .= "+------+\n";
+      $report .= "| Days |\n";
+      $report .= "+------+\n\n";
       for ($day_index = 1; $day_index <= 31; $day_index++)
          {
          $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$month_num,$day_index,$year_num));
@@ -145,8 +144,9 @@ if ($report_type == "FULL")
          $report .= "\n";
          }
       $report .= "\n";
-      $report .= "Nights\n";
-      $report .= "------\n\n";
+      $report .= "+--------+\n";
+      $report .= "| Nights |\n";
+      $report .= "+--------+\n\n";
       for ($night_index = 1; $night_index <= 31; $night_index++)
          {
          $night_description = date("jS \\n\i\g\h\\t (l):",mktime(21,0,0,$month_num,$night_index,$year_num));
