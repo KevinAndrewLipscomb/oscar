@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+MAILTO=kevin.lipscomb@kvrs.org
+#
+20 03 * * * lynx http://www.oscarsystem.com/daily-avail-report.phtml
