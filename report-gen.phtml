@@ -6,15 +6,16 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-?>
-<html>
-<head><title>Report generation</title></head>
-<? BodyOpen(); ?>
-<table align=center width="80%"><tr><td>
-<H6 ALIGN="CENTER">KVEO-IT-PROJECT<br><a href="<? echo OscarHomePageUrl(); ?>">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
-<H1 ALIGN="CENTER">Report generation</H1>
-<hr>
-<?
+// require_once("f_roleemailaddress");
+//
+$msg = "<html>\n";
+$msg .= "<head><title>Report generation</title></head>\n";
+$msg .= BodyOpen(); . "\n";
+$msg .= "<table align=center width="80%"><tr><td>\n";
+$msg .= "<H6 ALIGN="CENTER">KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$msg .= "<H1 ALIGN="CENTER">Report generation</H1>\n";
+$msg .= "<hr>\n";
+//
 mysql_connect(localhost,kalipso,Password());
 mysql_select_db(oscar);
 //
@@ -52,27 +53,27 @@ $where_clause = "month='" . substr($month_word,0,3) ."' ";
 if ($report_type == "FULL")
    {
    $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
-   echo "<pre>\n";
-   echo "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
-   echo "   +--------------------------------------------+\n";
-   echo "   | Legend:                                    |\n";
-   echo "   |    -5-30- Rxx 8xxxxx Lastname, Firstname * |\n";
-   echo "   |     ^  ^   ^    ^                        ^ |\n";
-   echo "   |     |  |   |    |                        | |\n";
-   echo "   |     |  |   |    +- Officer code          | |\n";
-   echo "   |     |  |   |       (also 7xxxxx)         | |\n";
-   echo "   |     |  |   |                             | |\n";
-   echo "   |     |  |   +- Home rescue squad          | |\n";
-   echo "   |     |  |      (ERS for VBFD)             | |\n";
-   echo "   |     |  |                                 | |\n";
-   echo "   |     |  +- Squad truck team member        | |\n";
-   echo "   |     |                                    | |\n";
-   echo "   |     +- EMS-5 team member                 | |\n";
-   echo "   |                                          | |\n";
-   echo "   |    See special request in Notes section -+ |\n";
-   echo "   +--------------------------------------------+\n\n\n";
-   echo "Days\n";
-   echo "----\n\n";
+   $msg .= "<pre>\n";
+   $msg .= "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
+   $msg .= "   +--------------------------------------------+\n";
+   $msg .= "   | Legend:                                    |\n";
+   $msg .= "   |    -5-30- Rxx 8xxxxx Lastname, Firstname * |\n";
+   $msg .= "   |     ^  ^   ^    ^                        ^ |\n";
+   $msg .= "   |     |  |   |    |                        | |\n";
+   $msg .= "   |     |  |   |    +- Officer code          | |\n";
+   $msg .= "   |     |  |   |       (also 7xxxxx)         | |\n";
+   $msg .= "   |     |  |   |                             | |\n";
+   $msg .= "   |     |  |   +- Home rescue squad          | |\n";
+   $msg .= "   |     |  |      (ERS for VBFD)             | |\n";
+   $msg .= "   |     |  |                                 | |\n";
+   $msg .= "   |     |  +- Squad truck team member        | |\n";
+   $msg .= "   |     |                                    | |\n";
+   $msg .= "   |     +- EMS-5 team member                 | |\n";
+   $msg .= "   |                                          | |\n";
+   $msg .= "   |    See special request in Notes section -+ |\n";
+   $msg .= "   +--------------------------------------------+\n\n\n";
+   $msg .= "Days\n";
+   $msg .= "----\n\n";
    for ($day_index = 1; $day_index <= 31; $day_index++)
       {
       $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
@@ -85,15 +86,15 @@ if ($report_type == "FULL")
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
-            echo "   -";
-            if ($be_on_team_5) echo "5"; else echo "-";
-            echo "-";
-            if ($be_on_team_30) echo "30"; else echo "--";
-            echo "- ";
+            $msg .= "   -";
+            if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
+            $msg .= "-";
+            if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
+            $msg .= "- ";
             if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
             printf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
-            if ($note != "") echo "*";
-            echo "\n";
+            if ($note != "") $msg .= "*";
+            $msg .= "\n";
             $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
             }
          }
@@ -101,11 +102,11 @@ if ($report_type == "FULL")
          {
          echo $day_description . " None\n";
          }
-      echo "\n";
+      $msg .= "\n";
       }
-   echo "\n";
-   echo "Nights\n";
-   echo "------\n\n";
+   $msg .= "\n";
+   $msg .= "Nights\n";
+   $msg .= "------\n\n";
    for ($night_index = 1; $night_index <= 31; $night_index++)
       {
       $night_description = date("jS (l)",mktime(21,0,0,$month_num,$night_index,$year_num)) . " night:";
@@ -118,15 +119,15 @@ if ($report_type == "FULL")
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
-            echo "   -";
-            if ($be_on_team_5) echo "5"; else echo "-";
-            echo "-";
-            if ($be_on_team_30) echo "30"; else echo "--";
-            echo "- ";
+            $msg .= "   -";
+            if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
+            $msg .= "-";
+            if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
+            $msg .= "- ";
             if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
             printf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
-            if ($note != "") echo "*";
-            echo "\n";
+            if ($note != "") $msg .= "*";
+            $msg .= "\n";
             $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
             }
          }
@@ -134,7 +135,7 @@ if ($report_type == "FULL")
          {
          echo $night_description . " None\n";
          }
-      echo "\n";
+      $msg .= "\n";
       }
    ?>
    </pre>
@@ -146,20 +147,20 @@ if ($report_type == "FULL")
       while ($row = mysql_fetch_array($result))
          {
          extract($row);
-         echo "$last_name, $first_name&nbsp; [-";
-         if ($be_on_team_5) echo "5"; else echo "-";
-         echo "-";
-         if ($be_on_team_30) echo "30"; else echo "--";
-         echo "- ";
+         $msg .= "$last_name, $first_name&nbsp; [-";
+         if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
+         $msg .= "-";
+         if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
+         $msg .= "- ";
          if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-         echo "$squad $cad_num]\n";
-         echo "<blockquote><i>" . stripslashes($note) . "</i></blockquote>\n<br>";
+         $msg .= "$squad $cad_num]\n";
+         $msg .= "<blockquote><i>" . stripslashes($note) . "</i></blockquote>\n<br>";
          $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
          }
       }
    else
       {
-      echo "None\n";
+      $msg .= "None\n";
       }
    }
 else
@@ -185,24 +186,24 @@ else
    $d = array(1 => $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31);
    $n = array(1 => $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31);
    //
-   echo "<pre>\n";
-   echo "Filtered availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
-   echo "   +------------------------------------------+\n";
-   echo "   | Legend:                                  |\n";
-   echo "   |    -5-30- Rxx 8xxxxx Lastname, Firstname |\n";
-   echo "   |     ^  ^   ^    ^                        |\n";
-   echo "   |     |  |   |    |                        |\n";
-   echo "   |     |  |   |    +- Officer code          |\n";
-   echo "   |     |  |   |       (also 7xxxxx)         |\n";
-   echo "   |     |  |   |                             |\n";
-   echo "   |     |  |   +- Home rescue squad          |\n";
-   echo "   |     |  |      (ERS for VBFD)             |\n";
-   echo "   |     |  |                                 |\n";
-   echo "   |     |  +- Squad truck team member        |\n";
-   echo "   |     |                                    |\n";
-   echo "   |     +- EMS-5 team member                 |\n";
-   echo "   +------------------------------------------+\n\n\n";
-   if ($info_message) echo "$info_message\n\n";
+   $msg .= "<pre>\n";
+   $msg .= "Filtered availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
+   $msg .= "   +------------------------------------------+\n";
+   $msg .= "   | Legend:                                  |\n";
+   $msg .= "   |    -5-30- Rxx 8xxxxx Lastname, Firstname |\n";
+   $msg .= "   |     ^  ^   ^    ^                        |\n";
+   $msg .= "   |     |  |   |    |                        |\n";
+   $msg .= "   |     |  |   |    +- Officer code          |\n";
+   $msg .= "   |     |  |   |       (also 7xxxxx)         |\n";
+   $msg .= "   |     |  |   |                             |\n";
+   $msg .= "   |     |  |   +- Home rescue squad          |\n";
+   $msg .= "   |     |  |      (ERS for VBFD)             |\n";
+   $msg .= "   |     |  |                                 |\n";
+   $msg .= "   |     |  +- Squad truck team member        |\n";
+   $msg .= "   |     |                                    |\n";
+   $msg .= "   |     +- EMS-5 team member                 |\n";
+   $msg .= "   +------------------------------------------+\n\n\n";
+   if ($info_message) $msg .= "$info_message\n\n";
    for ($day_index = 1; $day_index <= 31; $day_index++)
       {
       if ($d[$day_index])
@@ -217,14 +218,14 @@ else
             while ($row = mysql_fetch_array($result))
                {
                extract($row);
-               echo "   -";
-               if ($be_on_team_5) echo "5"; else echo "-";
-               echo "-";
-               if ($be_on_team_30) echo "30"; else echo "--";
-               echo "- ";
+               $msg .= "   -";
+               if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
+               $msg .= "-";
+               if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
+               $msg .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                printf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
-               echo "\n";
+               $msg .= "\n";
                $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                }
             }
@@ -232,7 +233,7 @@ else
             {
             echo $day_description . " None\n";
             }
-         echo "\n";
+         $msg .= "\n";
          }
       }
    for ($night_index = 1; $night_index <= 31; $night_index++)
@@ -249,14 +250,14 @@ else
             while ($row = mysql_fetch_array($result))
                {
                extract($row);
-               echo "   -";
-               if ($be_on_team_5) echo "5"; else echo "-";
-               echo "-";
-               if ($be_on_team_30) echo "30"; else echo "--";
-               echo "- ";
+               $msg .= "   -";
+               if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
+               $msg .= "-";
+               if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
+               $msg .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                printf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
-               echo "\n";
+               $msg .= "\n";
                $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                }
             }
@@ -264,14 +265,22 @@ else
             {
             echo $night_description . " None\n";
             }
-         echo "\n";
+         $msg .= "\n";
          }
       }
-   echo "</pre>\n";
+   $msg .= "</pre>\n";
    }
+//
+$msg .= "<pre>--- END ---</pre><br>\n";
+$msg .= "<small><i><pre>$Id$</pre></i></small>\n";
+$msg .= "</td></tr></table>\n";
+$msg .= "</body>\n";
+$msg .= "</html>\n";
+//
+echo $msg;
+// $recipient = RoleEmailAddress("schedule-coordinator");
+// $subject = "OSCAR report";
+// $headers = "Reply-to: $name <$email_addr>\r\n";
+// $headers .= "Content-type: text/html\r\n";
+// mail($recipient, $subject, $msg, $headers);
 ?>
-<pre>--- END ---</pre><br>
-<small><i><pre>$Id$</pre></i></small>
-</td></tr></table>
-</body>
-</html>
