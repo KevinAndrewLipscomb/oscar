@@ -16,6 +16,7 @@ require_once("f_plaintextofnote.phtml");
 require_once("f_sshowavailsheetrecdetail.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_formattednoteappendage.phtml");
+require_once("f_htmlofnote.phtml");
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
@@ -181,7 +182,8 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
       //
       $sql = "select * from intermediate_avail_sheet "
          .  " where last_name='$target_last_name' "
-         .  "    and first_name='$target_first_name' ";
+         .  "    and first_name='$target_first_name' "
+         .  " order by timestamp desc limit 1 ";  // to assure that we get the latest one, same as the sched coord saw
       //
       $result = mysql_query($sql) or die("Retrieval of an intermediate_avail_sheet failed with error: " & mysql_error());
       //
@@ -367,6 +369,35 @@ while ($row = mysql_fetch_array($result))
    if (!array_key_exists($coord_agency,$census)) $census[$coord_agency] = 0;
    if (($num_relayed_sheets = ($num_sheets - $census[$coord_agency])) > 0)
       {
+      //
+      // Insert a record into the relay journal.  Although not mentioned in the below insert statement, each of the relay
+      // journal's records also has a timestamp, which is implicitly set to now-time during the insert.
+      //
+      mysql_query
+         (
+         "insert into " . $mode . "relay_journal "
+         .  " set month='$month_abbrev' "
+         .  "    , coord_agency='$coord_agency' "
+         )
+         or die("Insertion of relay journal record for agency $coord_agency failed with error: " . mysql_error());
+      //
+      if (!mysql_affected_rows())
+         {
+         echo "<p><b>" . HtmlOfNote
+            (
+            FormattedNoteAppendage
+               (
+               $mode,
+               "ERROR",
+               "JOUENTFAI",
+               "Insertion of relay journal record for agency $coord_agency failed.  The $coord_agency schedule "
+               .  "coordinator may not be able to see relayed records in his or her report.  To workaround this error, the "
+               .  "EMS Schedule Coordinator should submit a single availability record directly to $coord_agency for an "
+               .  "Imaginary Person."
+               )
+            )
+            . "</b></p>\n";
+         }
       //
       // Determine whether or not the agency is an OSCAR participant.
       //

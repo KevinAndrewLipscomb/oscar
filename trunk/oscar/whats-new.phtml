@@ -19,6 +19,8 @@ require_once("f_bodyopen.phtml");
            <h1 align="center">What's New</h1>
         <hr>
         <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+        <p><b>2002-03-31:&nbsp; </b>Fixed bug 531168, which prevented squad schedule coordinators from seeing relayed
+           availability sheets in their reports under certain circumstances.</p>
         <p><b>2002-03-29:&nbsp; </b>Fixed bug 535823, which was preventing regular users from requesting compiled
            availability reports.&nbsp; (The bug did not prevent authorities from requesting reports.)&nbsp; The bug was
            caused by misordering the parameters to an underlying PHP routine called "wordwrap()".</p>
@@ -63,6 +65,7 @@ require_once("f_bodyopen.phtml");
            like conventional month-at-a-glance calendars.</p>
         <p><b>2001-11-21:&nbsp; </b>Revised verbage in a few sections to indicate that the first part of the retraction
            process may also be used to simply reconfirm prior submissions.</p>
+        <? PutLibPhotoRandomPlaced("sasquatch",1,"left"); ?>
         <p><b>2001-11-16:&nbsp; </b>Major enhancements to support availability coordination at both the department and 
            squad/team levels.&nbsp; Features will be activated on per-agency basis via database updates at direction of 
            EMS-2.&nbsp; Added availability summaries to the full reports that authorities get.&nbsp; Added failsafe

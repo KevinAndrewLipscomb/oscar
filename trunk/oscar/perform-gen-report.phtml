@@ -128,6 +128,21 @@ if
 {
 $name = trim($name);
 $email_addr = trim($email_addr);
+
+//
+// CODEGENCOAL ("code-gen-coal")
+//    COndition DEscriptor GENeration/COmparison ALgorithm
+//
+//    The CODEGENCOAL is the set of statements in this script that contribute to the generation and comparison of condition
+//    descriptors.
+//
+//    The condition descriptor summarizes the conditions under which the report was requested.  We use the MD5 digest of the
+//    condition descriptor as the key for the report in the report cache.
+//
+//    Currently, elements of the CODEGENCOAL are interspersed with elements of other conceptual algorithms that contribute
+//    to perform-gen-report.  A potential future improvement would be to extract and modularize the CODEGENCOAL.
+//
+
 //
 // Retrieve timestamp of latest avail_sheet record.  Later, we'll use it to see if database conditions have changed
 // significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
@@ -142,10 +157,22 @@ $result = mysql_query
    or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
 $row = mysql_fetch_object($result);
 //
-// The condition descriptor summarizes the conditions under which the report was requested.  We use the MD5 digest of the
-// condition descriptor as the key for the report in the report cache.
-//
 $condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_latest_submission . "\n";
+//
+// Retrieve timestamp of latest relay_journal record for this agency.  If records have been relayed, but no relayed record
+// has a submission time later than the latest non-relayed submission, then knowing the timestamp_of_latest_submission
+// (above) is not sufficient.
+//
+$result = mysql_query
+   (
+   "select max(timestamp) as timestamp_of_latest_relay "
+   .  " from " . $mode . "relay_journal "
+   .  " where coord_agency='$coord_agency' "
+   )
+   or die("The attempt to select the latest timestamp from the relay journal failed with this error:  " . mysql_error());
+$row = mysql_fetch_object($result);
+//
+$condition_descriptor .= "timestamp_of_latest_relay=" . $row->timestamp_of_latest_relay . "\n";
 //
 if ($coord_agency == "EMS")
    {
@@ -1128,6 +1155,17 @@ if ($result)
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
       . RoleEmailAddress("",$mode)
       . "\">OSCAR System Administrator</a>.</p>";
+   //
+   if ($mode != "")
+      {
+      echo "<pre>\n"
+         . "condition_descriptor\n"
+         . "--------------------\n"
+         . "$condition_descriptor\n\n"
+         . "digest: $digest\n"
+         . "</pre>\n";
+      }
+   //
    }
 else
    {
