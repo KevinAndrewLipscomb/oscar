@@ -2,12 +2,27 @@
 //
 // $Id$
 //
+$mode="";
+   //
+   // Set to "" for production use, "x_" to debug.
+   //
+//
+// Assign incoming arguments to themselves to avoid "undefined variable" warnings later.
+//
+$a = $a;
+$b = $b;
+$c = $c;
+$d = $d;
+//
+if ($mode) error_reporting(E_ALL);
+//
 require_once("f_password.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
-require_once("f_showavailsheetrecdetail.phtml");
+require_once("f_availlist.phtml");
+require_once($mode . "f_showavailsheetrecdetail.phtml");
 //
 // Give arguments meaningful names.  The obtuse names and base 64 encoding are measly attempts to protect generated URLs to this script
 // from being abused.
@@ -34,12 +49,12 @@ KVEO-IT-PROJECT<br>
 //
 // Connect to the database.
 //
-mysql_connect(localhost,kalipso,Password());
-mysql_select_db(oscar);
+mysql_connect("localhost","kalipso",Password());
+mysql_select_db("oscar");
 //
 $result = mysql_query
    (
-   "select * from avail_sheet"
+   "select * from " . $mode . "avail_sheet"
    .  " where last_name = \"" . addslashes(addslashes($last_name)) . "\""
    .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
    .  "    and month = '$month'"
@@ -63,6 +78,13 @@ if ($num_rows)
    while ($row = mysql_fetch_array($result))
       {
       $record_index++;
+      $timestamp = $first_name = $last_name = $email_addr = $squad = $month = $be_on_team_5 = $be_on_team_30 = $be_tda =
+         $be_als = $num_extras = "";
+      $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
+         $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 = $d31 = "";
+      $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 =
+         $n17 = $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 = $n31 = "";
+      $note = $expiration = "";
       extract($row);
       ShowAvailSheetRecDetail
          (
@@ -75,6 +97,7 @@ if ($num_rows)
          $be_on_team_5,
          $be_on_team_30,
          $be_tda,
+         $be_als,
          $num_extras,
          $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
          $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
@@ -90,7 +113,7 @@ if ($num_rows)
       // Clear variables for next pass.
       //
       $timestamp = $first_name = $last_name = $email_addr = $squad = $month = $be_on_team_5 = $be_on_team_30 = $be_tda =
-         $num_extras = "";
+         $be_als = $num_extras = "";
       $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
          $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 = $d31 = "";
       $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 =

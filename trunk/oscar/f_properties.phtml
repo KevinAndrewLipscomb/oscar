@@ -7,18 +7,29 @@ function Properties
    $be_on_team_5,
    $be_on_team_30,
    $be_tda,
+   $be_als,
    $squad
    )
    {
+   $mode="";
+      //
+      // Set to "" for production use, "x_" to debug.
+      //
+   if ($mode) $saved_error_level = error_reporting(E_ALL);
+   //
    $s = "-";
    if ($be_on_team_5 == "TRUE") $s .= "5"; else $s .= "-";
    $s .= "-";
    if ($be_on_team_30 == "TRUE") $s .= "30"; else $s .= "--";
    $s .= "-";
    if ($be_tda == "TRUE") $s .= "TDA"; else $s .= "---";
+   $s .= "-";
+   if ($be_als == "TRUE") $s .= "Z"; else $s .= "-";
    $s .= "- ";
    if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
    $s .= sprintf("%3s",$squad);
+   //
+   if ($mode) error_reporting($saved_error_level);
    return $s;
    }
 ?>

@@ -19,7 +19,7 @@ function BeAuthority
       )
       or die("BeAuthority query failed with error:  " . mysql_error());
    //
-   extract(mysql_fetch_array($result));
+   if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
    //
    error_reporting($saved_error_level);
    return ($found_email_addr != "");

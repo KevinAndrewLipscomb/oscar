@@ -83,17 +83,17 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once($mode . "f_roleemailaddress.phtml");
-require_once($mode . "f_oscarmailheaders.phtml");
-require_once($mode . "f_sendapprovalnotice.phtml");
-require_once("f_properties.phtml");
-require_once("f_beauthority.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_sendapprovalnotice.phtml");
+require_once($mode . "f_properties.phtml");
+require_once($mode . "f_beauthority.phtml");
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
 $report .= "<body bgcolor=#FFFFFF>\n";
 $report .= "<table align=center width=80%><tr><td>\n";
-$report .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$report .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
 $report .= "<H1 ALIGN=CENTER>Availability Report</H1>\n";
 $report .= "<hr>\n";
 //
@@ -196,10 +196,15 @@ if ($shift_filter == "all")
          .  ", be_on_team_30"
          .  ", be_on_team_5"
          .  ", be_tda"
+         .  ", be_als"
          .  ", (note != \"\") as be_a_note"
          .  " from " . $mode . "avail_sheet ";
       switch ($team_filter)
          {
+         case "als_only":
+            $where_clause .= " and be_als = 'TRUE' ";
+            $info_message = "This report ONLY includes Zone Car ALS providers.";
+            break;
          case "team_5_only":
             $where_clause .= " and be_on_team_5 = 'TRUE' ";
             $info_message = "This report ONLY includes EMS-5 team members.";
@@ -217,21 +222,23 @@ if ($shift_filter == "all")
          }
       $report .= "<pre>\n";
       $report .= "Availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
-      $report .= "   +-----------------------------------------+\n";
-      $report .= "   | Legend:                                 |\n";
-      $report .= "   |    -5-30-TDA- Rxx Lastname, Firstname * |\n";
-      $report .= "   |     ^  ^       ^                      ^ |\n";
-      $report .= "   |     |  |       |                      | |\n";
-      $report .= "   |     |  |       +- Home rescue squad   | |\n";
-      $report .= "   |     |  |          (ERS for VBFD)      | |\n";
-      $report .= "   |     |  |                              | |\n";
-      $report .= "   |     |  +- Squad truck team member     | |\n";
-      $report .= "   |     |                                 | |\n";
-      $report .= "   |     +- EMS-5 team member              | |\n";
-      $report .= "   |                                       | |\n";
-      $report .= "   |                  See special request -+ |\n"; 
-      $report .= "   |                  in Note section        |\n";
-      $report .= "   +-----------------------------------------+\n\n\n";
+      $report .= "   +-------------------------------------------+\n";
+      $report .= "   | Legend:                                   |\n";
+      $report .= "   |    -5-30-TDA-Z- Rxx Lastname, Firstname * |\n";
+      $report .= "   |     ^  ^     ^   ^                      ^ |\n";
+      $report .= "   |     |  |     |   |                      | |\n";
+      $report .= "   |     |  |     |   +- Home rescue squad   | |\n";
+      $report .= "   |     |  |     |      (ERS for VBFD)      | |\n";
+      $report .= "   |     |  |     |                          | |\n";
+      $report .= "   |     |  |     +- Zone Car ALS            | |\n";
+      $report .= "   |     |  |                                | |\n";
+      $report .= "   |     |  +- Squad truck team member       | |\n";
+      $report .= "   |     |                                   | |\n";
+      $report .= "   |     +- EMS-5 team member                | |\n";
+      $report .= "   |                                         | |\n";
+      $report .= "   |                    See special request -+ |\n"; 
+      $report .= "   |                    in Note section        |\n";
+      $report .= "   +-------------------------------------------+\n\n\n";
       $report .= "This report includes ALL shifts.\n";
       if ($info_message) $report .= "$info_message\n";
       $report .= "\n";
@@ -251,7 +258,7 @@ if ($shift_filter == "all")
                {
                $be_a_note = "";
                extract($row);
-               $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
+               $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$be_als,$squad) . " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
                if ($be_authority)
@@ -273,7 +280,7 @@ if ($shift_filter == "all")
                   if ($be_a_note) $report .= " *";
                   }
                $report .= "\n";
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_a_note = "";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_a_note = "";
                }
             }
          else
@@ -299,7 +306,7 @@ if ($shift_filter == "all")
                {
                $be_a_note = "";
                extract($row);
-               $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
+               $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$be_als,$squad) . " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
                if ($be_authority)
@@ -321,7 +328,7 @@ if ($shift_filter == "all")
                   if ($be_a_note) $report .= "*";
                   }
                $report .= "\n";
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_a_note = "";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_a_note = "";
                }
             }
          else
@@ -346,6 +353,7 @@ if ($shift_filter == "all")
             .  "    , be_on_team_30"
             .  "    , be_on_team_5"
             .  "    , be_tda"
+            .  "    , be_als"
             .  "    , note"
             .  "    , count(*) as num_submissions"
             .  " from " . $mode . "avail_sheet "
@@ -361,6 +369,8 @@ if ($shift_filter == "all")
             {
             while ($row = mysql_fetch_array($result))
                {
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $note =
+                  $num_submissions = "";
                extract($row);
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
@@ -373,7 +383,7 @@ if ($shift_filter == "all")
                   .  "&d="
                   .  base64_encode($be_authority)
                   .  ">$last_name, $first_name</a>&nbsp; ["
-                  .  Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad)
+                  .  Properties($be_on_team_5,$be_on_team_30,$be_tda,$be_als,$squad)
                   .  "]</p>";
                if (($num_submissions > 1) or ($note != ""))
                   {
@@ -385,7 +395,8 @@ if ($shift_filter == "all")
                   $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
                   $report .= "</blockquote>\n<br>\n";
                   }
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $note = $num_submissions = "";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $note =
+                  $num_submissions = "";
                }
             }
          else
@@ -480,9 +491,14 @@ else
          .  ", be_on_team_30"
          .  ", be_on_team_5"
          .  ", be_tda"
+         .  ", be_als"
          .  " from " . $mode . "avail_sheet ";
       switch ($team_filter)
          {
+         case "als_only":
+            $where_clause .= " and be_als = 'TRUE' ";
+            $info_message = "This report ONLY includes Zone Car ALS providers.";
+            break;
          case "team_5_only":
             $where_clause .= " and be_on_team_5 = 'TRUE' ";
             $info_message = "This report ONLY includes EMS-5 team members.";
@@ -501,18 +517,20 @@ else
       //
       $report .= "<pre>\n";
       $report .= "Availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
-      $report .= "   +---------------------------------------+\n";
-      $report .= "   | Legend:                               |\n";
-      $report .= "   |    -5-30-TDA- Rxx Lastname, Firstname |\n";
-      $report .= "   |     ^  ^       ^                      |\n";
-      $report .= "   |     |  |       |                      |\n";
-      $report .= "   |     |  |       +- Home rescue squad   |\n";
-      $report .= "   |     |  |          (ERS for VBFD)      |\n";
-      $report .= "   |     |  |                              |\n";
-      $report .= "   |     |  +- Squad truck team member     |\n";
-      $report .= "   |     |                                 |\n";
-      $report .= "   |     +- EMS-5 team member              |\n";
-      $report .= "   +---------------------------------------+\n\n\n";
+      $report .= "   +-----------------------------------------+\n";
+      $report .= "   | Legend:                                 |\n";
+      $report .= "   |    -5-30-TDA-Z- Rxx Lastname, Firstname |\n";
+      $report .= "   |     ^  ^     ^   ^                      |\n";
+      $report .= "   |     |  |     |   |                      |\n";
+      $report .= "   |     |  |     |   +- Home rescue squad   |\n";
+      $report .= "   |     |  |     |      (ERS for VBFD)      |\n";
+      $report .= "   |     |  |     |                          |\n";
+      $report .= "   |     |  |     +- Zone Car ALS            |\n";
+      $report .= "   |     |  |                                |\n";
+      $report .= "   |     |  +- Squad truck team member       |\n";
+      $report .= "   |     |                                   |\n";
+      $report .= "   |     +- EMS-5 team member                |\n";
+      $report .= "   +-----------------------------------------+\n\n\n";
       $report .= "This report ONLY includes selected shifts.\n";
       if ($info_message) $report .= "$info_message\n";
       $report .= "\n";
@@ -530,7 +548,7 @@ else
                while ($row = mysql_fetch_array($result))
                   {
                   extract($row);
-                  $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
+                  $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$be_als,$squad) . " ";
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
                   if ($be_authority)
@@ -551,7 +569,7 @@ else
                      $report .= "</a>";
                      }
                   $report .= "\n";
-                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = "";
+                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = "";
                   }
                }
             else
@@ -575,7 +593,7 @@ else
                while ($row = mysql_fetch_array($result))
                   {
                   extract($row);
-                  $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
+                  $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$be_als,$squad) . " ";
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
                   if ($be_authority)
@@ -596,7 +614,7 @@ else
                      $report .= "</a>";
                      }
                   $report .= "\n";
-                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = "";
+                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = "";
                   }
                }
             else
@@ -630,16 +648,7 @@ else
 //
 $result = mysql_query("select 1 from " . $mode . "trusted_user where email_address='$email_addr'")
    or die("Trust check failed with error:  " . mysql_error());
-if (
-      mysql_num_rows($result)
-   or
-      ($email_addr == RoleEmailAddress("schedule-coordinator",$mode))
-   or
-      ($email_addr == RoleEmailAddress("escalation-level-1-recipient",$mode))
-   or
-      ($email_addr == RoleEmailAddress("",$mode))
-   )
-// then
+if (mysql_num_rows($result) or $be_authority)
    {
    //
    // Then send an approval notice to the requestor directly.

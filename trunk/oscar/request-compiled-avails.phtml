@@ -32,10 +32,18 @@ require_once("f_bodyopen.phtml");
            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
         </td></tr></table>
         <hr>
-        <p><i>To guard against misuse, the OSCAR system first sends all generated reports to the VBDEMS Central Schedule 
-           Coordinator.&nbsp; The coordinator then forwards the report to the email address that you specify.&nbsp; 
-           Because this process requires human intervention, results may not be immediate.</i></p>
-        <br>
+        <blockquote>
+           <table align=center bgcolor=#E8E8E8>
+              <tr>
+                 <td align=center valign=middle>
+                    <small><i>To guard against misuse, the OSCAR system first sends all generated reports to the VBDEMS
+                       Central Schedule Coordinator.&nbsp; The coordinator then forwards the report to the email address 
+                       that you specify.&nbsp; Because this process requires human intervention, results may not be 
+                       immediate.</i></small>
+                 </td>
+              </tr>
+           </table>
+        </blockquote>
         <form action=<? echo $mode; ?>report-gen.phtml method=post>
            <table>
               <tr>
@@ -66,6 +74,7 @@ require_once("f_bodyopen.phtml");
                     Include:
                     <blockquote>
                        <input type=radio name=team_filter value=everyone checked>Everyone<br>
+                       <input type=radio name=team_filter value=als_only>Only Zone Car ALS providers<br>
                        <input type=radio name=team_filter value=team_30_only>Only squad truck team members<br>
                        <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
                        <input type=radio name=team_filter value=tda_only>Only TDA personnel<br>
