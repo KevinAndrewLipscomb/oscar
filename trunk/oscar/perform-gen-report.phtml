@@ -79,6 +79,7 @@ $n31 = $n31;
 //
 if ($mode) error_reporting(E_ALL);
 //
+$foundation_dir = "../foundation";
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -96,6 +97,7 @@ require_once("f_harvestemailaddresses.phtml");
 require_once("f_beemsschedcoord.phtml");
 require_once("f_htmlofnote.phtml");
 require_once("f_formattednoteappendage.phtml");
+require_once("$foundation_dir/std_style_class.php");
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
@@ -1137,11 +1139,7 @@ if ($result)
             . "<blockquote><tt>mesg(RELAY)...Relayed&nbsp;by&nbsp;EMS</tt></blockquote></blockquote>\n";
          }
       //
-      echo "<p><b><font color=red>AOL USERS TAKE NOTE</font></b></p>\n"
-         . "<blockquote>\n"
-         . "   If your regular email program does not correctly handle the access link that OSCAR sends to you, "
-         . "   try retrieving it by logging into <a href=http://webmail.aol.com><b>webmail.aol.com</b></a> instead.\n"
-         . "</blockquote>\n"
+      echo std_style_class::AolEmailClientWarning()
          . "<p><b>Security note</b></p>\n"
          . "<blockquote>Because you are an OSCAR Authority or a Trusted User, your request does not need to be "
          . "screened.&nbsp; Requests from regular users, however, must be screened by a schedule coordinator or an "
