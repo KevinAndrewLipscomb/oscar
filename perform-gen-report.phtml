@@ -13,6 +13,7 @@ $applicable_month_num = $applicable_month_num;
 $coord_agency = $coord_agency;
 $team_filter = $team_filter;
 $shift_filter = $shift_filter;
+$relay = $relay;
 $d1 = $d1;
 $d2 = $d2;
 $d3 = $d3;
@@ -991,7 +992,7 @@ $result = mysql_query
    .  "    and coord_agency='$coord_agency' "
    )
    or die("Trust check failed with error:  " . mysql_error());
-if (mysql_num_rows($result) or $be_authority)
+if ($direct_approval = (mysql_num_rows($result) or $be_authority))
    {
    //
    // Then send an approval notice to the requestor directly.
@@ -1014,10 +1015,8 @@ else
    $screen_notice .= "Report from a user who identified him or herself as:\n\n";
    $screen_notice .= "   Name:           $name\n";
    $screen_notice .= "   Email address:  $email_addr\n\n";
-   $screen_notice .= "The user gave this reason for the request:\n";
-   $screen_notice .= "---BEGIN REASON---\n";
-   $screen_notice .= $reason . "\n";
-   $screen_notice .= "---END REASON---\n\n";
+   $screen_notice .= "The user gave this reason for the request:\n\n";
+   $screen_notice .= "   " . wordwrap($reason,"\n   ",72) . "\n\n";
    $screen_notice .= "Please take one of the following actions:\n\n\n";
    $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
    $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
@@ -1077,12 +1076,44 @@ else
 if ($result)
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"right");
-   echo "<p>The OSCAR system has successfully generated your report.&nbsp;  Because the report contains personal "
-      . "information, a screening notice has been sent to the <a href=mailto:\""
-      . RoleEmailAddress("schedule-coordinator",$mode,$coord_agency)
-      . "\">$coord_agency Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once screening "
-      . "is complete.</p>";
-   echo "<p><b>Check your email periodically for the report.</b></p>";
+   if ($direct_approval)
+      {
+      if ($relay == "TRUE")
+         {
+         echo "<p><b>Your Post-Relay Report has just been generated.</b></p>\n"
+            . "<blockquote>Because the report contains personal information, an "
+            . "access link has been sent to your email address ($email_addr).</blockquote>\n";
+         }
+      else
+         {
+         echo "<p><b>Success!</b></p>\n"
+            . "<blockquote>OSCAR has generated your report.&nbsp; Because the report contains personal information, an "
+            . "access link has been sent to your email address ($email_addr).</blockquote>\n";
+         }
+      echo "<p><b>Check your email periodically for a message with the link to the report.</b></p>\n";
+      //
+      if ($relay == "TRUE")
+         {
+         echo "<p><b>Identifying relayed records</b></p>\n"
+            . "<blockquote>In your post-relay report, records relayed from EMS will be annotated with the text:\n"
+            . "<blockquote><tt>mesg(RELAY)...Relayed&nbsp;by&nbsp;EMS</tt></blockquote></blockquote>\n";
+         }
+      //
+      echo "<p><b>Security note</b></p>\n"
+         . "<blockquote>Because you are an OSCAR Authority or a Trusted User, your request does not need to be "
+         . "screened.&nbsp; Requests from regular users, however, must be screened by a schedule coordinator or an "
+         . "escalation authority prior to fulfillment.</blockquote>\n";
+      }
+   else
+      {
+      echo "<p><b>Success!</b></p>\n"
+         . "<blockquote>OSCAR has successfully generated your report.&nbsp;  Because the report contains personal "
+         . "information, a screening notice has been sent to the <a href=mailto:\""
+         . RoleEmailAddress("schedule-coordinator",$mode,$coord_agency)
+         . "\">$coord_agency Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once "
+         . "screening is complete.</blockquote>";
+      echo "<p><b>Check your email periodically for the report.</b></p>";
+      }
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
       . RoleEmailAddress("",$mode)
       . "\">OSCAR System Administrator</a>.</p>";
