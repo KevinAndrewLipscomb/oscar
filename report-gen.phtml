@@ -14,7 +14,8 @@ require_once("f_roleemailaddress.phtml");
 //
 $result = mysql_query("select max(timestamp) as timestamp_of_latest_submission from avail_sheet")
    or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
-$condition_descriptor = "timestamp_of_latest_submission=" . mysql_fetch_object($result)->timestamp_of_latest_submission . "\n";
+$row = mysql_fetch_object($result);
+$condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_latest_submission . "\n";
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
@@ -75,12 +76,14 @@ if ($report_type == "FULL")
    $condition_descriptor .= "type=FULL\n";
    $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
       or die("The digest calculation failed with this error:  " . mysql_error());
-   $digest = mysql_fetch_object($result)->digest;
+   $row = mysql_fetch_object($result);
+   $digest = $row->digest;
    $result = mysql_query("select report from report_cache where digest = $digest")
       or die("The cache check failed with error:  " . mysql_error());
    if (mysql_num_rows($result))
       {
-      $report = mysql_fetch_object($result)->report;
+      $row = mysql_fetch_object($result);
+      $report = $row->report;
       }
    else
       {
@@ -268,12 +271,14 @@ else
       }
    $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
       or die("The digest calculation failed with this error:  " . mysql_error());
-   $digest = mysql_fetch_object($result)->digest;
+   $row = mysql_fetch_object($result);
+   $digest = $row->digest;
    $result = mysql_query("select report from report_cache where digest = $digest")
       or die("The cache check failed with error:  " . mysql_error());
    if (mysql_num_rows($result))
       {
-      $report = mysql_fetch_object($result)->report;
+      $row = mysql_fetch_object($result);
+      $report = $row->report;
       }
    else
       {
