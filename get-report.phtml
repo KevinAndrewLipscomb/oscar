@@ -37,10 +37,10 @@ else
                   <h2><i>Sorry...</i></h2>
                   <blockquote>
                      <p>The OSCAR system could not locate the requested report.&nbsp; It has probably expired.</p>
+                     <?
+                     echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+                     ?>
                   </blockquote>            
-                  <?
-                  echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
-                  ?>
                   <br clear=both>
                   <hr>
                   <p><small><small><em><pre>$Id$</pre></em></small></small>
