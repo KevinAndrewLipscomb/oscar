@@ -22,7 +22,7 @@ function PutLibPhotoRandomPlaced
    //
    // Execute the statement
    //
-   $result_set = mysql_query($sql);
+   $result_set = mysql_query($sql) or die(mysql_error());
    //
    // Check how many rows were returned
    //
