@@ -18,7 +18,7 @@ function PutLibPhotoRandomPlaced
    // Create the SQL statement
    //
    $sql = "select div_spec,frame_num from photo_detail where placement like '%$placement%' order by rand()";
-   if ($limit != "") $sql = $sql + " limit '$limit'";
+   if ($limit != "") $sql = $sql . " limit '$limit'";
    //
    // Execute the statement
    //
@@ -40,7 +40,7 @@ function PutLibPhotoRandomPlaced
             //
             // This sets up the $div_spec and $frame_num variables.
             //
-         $image_source_spec = "div/$div_spec/$frame_num-i.jpg";
+         $image_source_spec = "http://kalipso.phpwebhosting.com/div/$div_spec/$frame_num-i.jpg";
          echo "<a href=\"http://kalipso.phpwebhosting.com/present-photo.phtml?div_spec=$div_spec&frame_num=$frame_num\">\n";
          $size = GetImageSize("$image_source_spec");
          echo "   <img border=\"2\" src=$image_source_spec $size[3] align=$align>\n";
