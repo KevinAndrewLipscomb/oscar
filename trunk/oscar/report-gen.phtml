@@ -92,7 +92,7 @@ if ($report_type == "FULL")
       }
    ?>
    </pre>
-   <h3><ul>Notes</ul></h3>
+   <h3><u>Notes</u></h3>
    <?
    $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"$month\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
    if ($num_rows = mysql_num_rows($result))
