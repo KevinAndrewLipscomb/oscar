@@ -1,0 +1,233 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+error_reporting(E_ALL);
+//
+$foundation_dir = "../foundation";
+$pear_dir = "../pear";
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_beauthority.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_squadofcoordagency.phtml");
+require_once("f_beemsschedcoord.phtml");
+require_once("f_htmlofnote.phtml");
+require_once("f_formattednoteappendage.phtml");
+require_once("f_numsheets.phtml");
+require_once("f_numavails.phtml");
+require_once("$foundation_dir/std_style_class.php");
+require_once("Mail.php");
+require_once("$pear_dir/Mail/mime.php");
+//
+$html = "<html>\n";
+$html .= "<body bgcolor=#FFFFFF>\n";
+$html .= "<table align=center width=80%><tr><td>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H1 ALIGN=CENTER>Trends</H1>\n";
+$html .= "<hr>\n";
+//
+$report = "------------\n"
+        . "OSCAR Trends\n"
+        . "------------\n\n";
+//
+echo $html;
+//
+// Connect to the database.
+//
+if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   $html .= "<p>Sorry, OSCAR's database was temporarily offline at the time this report was attempted.</p>";
+   //
+   $report .= "Sorry, OSCAR's database was temporarily offline at the time this report was attempted.\n";
+   }
+else
+   {
+   //
+   // Collect data.
+   //
+   unset($agency_vs_sheets_array);
+   unset($agency_vs_avails_array);
+   //
+   $current_month_abbrev = date('M');
+   //
+   //    Wipe any records for current month so they can be properly refreshed.
+   //
+   mysql_query
+      (
+      $qry = "delete from " . $mode . "trend_data "
+      .  " where year=" . date('Y')
+      .  "    and month='$current_month_abbrev' "
+      )
+      or die("Query [$qry] failed with error:  " . mysql_error());
+   //
+   //    Get list of active agencies.
+   //
+   $result = mysql_query("select enumeral as agency from " . $mode . "agency where be_active='TRUE' ")
+      or die("Retrieval of active agency list failed with error:  " . mysql_error());
+   //
+   //    Loop through agencies collecting current data.
+   //
+   while ($row = mysql_fetch_array($result))
+      {
+      extract($row);  // Sets $agency
+      //
+      // Get current submission and flexibility numbers.
+      //
+      $agency_vs_sheets_array['current'][$agency] = NumSheets($current_month_abbrev,$mode,$agency,'TDA_EXCLUSIVE');
+      $agency_vs_avails_array['current'][$agency] = NumAvails($current_month_abbrev,$agency,$mode);
+      //
+      //    Insert current data into trend table.
+      //
+      $qry = "insert ignore into " . $mode . "trend_data "
+         . "set year='" . date('Y') . "' "
+         . "   , month='$current_month_abbrev' "
+         . "   , agency='$agency' "
+         . "   , num_submissions=" . $agency_vs_sheets_array['current'][$agency]
+         . "   , num_avails=" . $agency_vs_avails_array['current'][$agency];
+      mysql_query($qry)
+         or die("Query [$qry] failed with error: " . mysql_error());
+      }
+   //
+   // Get historical submission and flexibility numbers.
+   //
+   $months_distant = array(1 => 1,3,6,9,12,24,60,120);
+   foreach ($months_distant as $month_distant)
+      {
+      $distant_time = mktime(12,0,0,(date('m')-$month_distant),15,date('Y'));
+      $result = mysql_query
+         (
+         $qry = "select agency "
+            . "   , num_submissions "
+            . "   , num_avails "
+            . " from " . $mode . "trend_data "
+            . " where year='" . date('Y',$distant_time) . "' "
+            . "    and month='" . date('M',$distant_time) . "' "
+         )
+         or die("Query [$qry] failed with error: " . mysql_error());
+      //
+      while ($row = mysql_fetch_array($result))
+         {
+         extract($row);  // Sets $agency, $num_submissions, $num_avails
+         //
+         $agency_vs_sheets_array["now-$month_distant"][$agency] = $num_submissions;
+         $agency_vs_avails_array["now-$month_distant"][$agency] = $num_avails;
+         }
+      }
+   //
+   // Generate reports comparing this month's data to historical data.
+   //
+   //          0        1         2         3         4         5         6         7
+   //          123456789012345678901234567890123456789012345678901234567890123456789012
+   $report .= "This report shows how many people submitted availability sheets to each\n"
+           .  "agency during the current cycle.  Comparisons with prior periods, if\n"
+           .  "available, are also shown.  TDA submissions are not included.\n\n"
+           .  "Notes on interpreting the data in this report:\n\n"
+           .  "-  OSCAR only reports what it knows.  The closer an agency comes to\n"
+           .  "   entering all of its availability sheets into OSCAR, the more\n"
+           .  "   meaningful this data becomes.\n\n"
+           .  "-  OSCAR does not reconcile the effects of the EMS-to-Squad Relay\n"
+           .  "   Process in the preparation of this data.  This has two ramifications.\n"
+           .  "   First, changes in relay practices will cause changes in the data.\n"
+           .  "   Second, it is not meaningful to take the sum of the data across\n"
+           .  "   agencies.\n\n"
+           .  "-  Notwithstanding the above, the data in this section may be used to\n"
+           .  "   approximate the number of active members serving each agency.\n\n\n";
+   foreach ($agency_vs_sheets_array['current'] as $agency => $num_submissions)
+      {
+      $report .= "$agency: $num_submissions submission";
+      if ($num_submissions != 1) $report .= "s";
+      $report .= " this month\n";
+      //
+      foreach ($months_distant as $month_distant)
+         {
+         if (isset($agency_vs_sheets_array["now-$month_distant"][$agency]))
+            {
+            $report .= "   ";
+            $past_num_submissions = $agency_vs_sheets_array["now-$month_distant"][$agency];
+            //
+            if ($num_submissions == $past_num_submissions)
+               {
+               $report .= "same as $month_distant month";
+               if ($month_distant != 1) $report .= "s";
+               $report .= " ago\n";
+               }
+            else
+               {
+               if ($difference = ($num_submissions - $past_num_submissions) > 0)
+                  {
+                  $report .= "up ";
+                  }
+               else
+                  {
+                  $report .= "down ";
+                  }
+               $change = (integer)($difference/$past_num_submissions*100);
+               if ($change == 0) $change = "<1";
+               $report .=  "$change% from $month_distant month";
+               if ($month_distant != 1) $report .= "s";
+               $report .= " ago\n";
+               }
+            }
+         }
+      //
+      $report .= "\n";
+      //
+      }
+   $report .= "-- OSCAR\n"
+      .  "-- Home page: " . OscarHomePageUrl() . "\n"
+      .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+   //
+   // Send the report.
+   //
+   $email_addr_list = "";
+   $result = mysql_query
+      (
+      $qry = "select email_addr from " . $mode . "authority "
+      .  "where role='' "
+      .  "   or role='schedule-coordinator' "
+      .  "   or role like 'escalation%' "
+      .  "   or role='recruitment-retention-officer' "
+      )
+      or die("Query [$qry] failed with error: " . mysql_error());
+   while ($row = mysql_fetch_array($result))
+      {
+      extract($row);  // Sets $email_addr
+      $email_addr_list .= "$email_addr,";
+      }
+   $email_addr_list = substr($email_addr_list,0,-1);
+   //
+   $subject_string = 'Trends';
+   $result = mail($email_addr_list,$subject_string,$report,OscarMailHeaders());
+   //
+   if ($result)
+      {
+      echo "<p>Success.</p>\n";
+      }
+   else
+      {
+      //
+      // Fill the page out with a warning and instructions.
+      //
+      ?>
+      <h2><i>Error!</i></h2>
+      <?
+      }
+   }
+?>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>

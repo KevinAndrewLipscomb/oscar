@@ -1,0 +1,124 @@
+<?
+//
+// $Id$
+//
+function NumAvails
+   (
+   $month_abbrev,
+   $coord_agency,
+   $mode = ""
+   )
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $num_avails = 0;
+   //
+   mysql_query($qry = "drop table if exists aggregated")
+      or die("Query [$qry] failed with error:  " . mysql_error());
+   mysql_query
+      (
+      "create  table aggregated "
+      .  " select last_name "
+      .  "    , first_name "
+      .  "    , max(timestamp) as timestamp "
+      .  " from " . $mode . "avail_sheet "
+      .  " where month='$month_abbrev' "
+      .  "    and be_tda != 'TRUE' "
+      .  "    and coord_agency='$coord_agency' "
+      .  " group by last_name "
+      .  "    , first_name "
+      )
+      or die("Create/select aggregated failed with error:  " . mysql_error());
+   //
+   $marker = "AVAILABLE";
+   //
+   mysql_query($qry = "drop table if exists shift_avail_count")
+      or die("Query [$qry] failed with error:  " . mysql_error());
+   mysql_query
+      (
+      "create  table shift_avail_count "
+      .  " select aggregated.last_name "
+      .  "    , aggregated.first_name "
+      .  "    , if(d1='$marker',1,0) "
+      .  "    + if(d2='$marker',1,0) "
+      .  "    + if(d3='$marker',1,0) "
+      .  "    + if(d4='$marker',1,0) "
+      .  "    + if(d5='$marker',1,0) "
+      .  "    + if(d6='$marker',1,0) "
+      .  "    + if(d7='$marker',1,0) "
+      .  "    + if(d8='$marker',1,0) "
+      .  "    + if(d9='$marker',1,0) "
+      .  "    + if(d10='$marker',1,0) "
+      .  "    + if(d11='$marker',1,0) "
+      .  "    + if(d12='$marker',1,0) "
+      .  "    + if(d13='$marker',1,0) "
+      .  "    + if(d14='$marker',1,0) "
+      .  "    + if(d15='$marker',1,0) "
+      .  "    + if(d16='$marker',1,0) "
+      .  "    + if(d17='$marker',1,0) "
+      .  "    + if(d18='$marker',1,0) "
+      .  "    + if(d19='$marker',1,0) "
+      .  "    + if(d20='$marker',1,0) "
+      .  "    + if(d21='$marker',1,0) "
+      .  "    + if(d22='$marker',1,0) "
+      .  "    + if(d23='$marker',1,0) "
+      .  "    + if(d24='$marker',1,0) "
+      .  "    + if(d25='$marker',1,0) "
+      .  "    + if(d26='$marker',1,0) "
+      .  "    + if(d27='$marker',1,0) "
+      .  "    + if(d28='$marker',1,0) "
+      .  "    + if(d29='$marker',1,0) "
+      .  "    + if(d30='$marker',1,0) "
+      .  "    + if(d31='$marker',1,0) "
+      .  "    + if(n1='$marker',1,0) "
+      .  "    + if(n2='$marker',1,0) "
+      .  "    + if(n3='$marker',1,0) "
+      .  "    + if(n4='$marker',1,0) "
+      .  "    + if(n5='$marker',1,0) "
+      .  "    + if(n6='$marker',1,0) "
+      .  "    + if(n7='$marker',1,0) "
+      .  "    + if(n8='$marker',1,0) "
+      .  "    + if(n9='$marker',1,0) "
+      .  "    + if(n10='$marker',1,0) "
+      .  "    + if(n11='$marker',1,0) "
+      .  "    + if(n12='$marker',1,0) "
+      .  "    + if(n13='$marker',1,0) "
+      .  "    + if(n14='$marker',1,0) "
+      .  "    + if(n15='$marker',1,0) "
+      .  "    + if(n16='$marker',1,0) "
+      .  "    + if(n17='$marker',1,0) "
+      .  "    + if(n18='$marker',1,0) "
+      .  "    + if(n19='$marker',1,0) "
+      .  "    + if(n20='$marker',1,0) "
+      .  "    + if(n21='$marker',1,0) "
+      .  "    + if(n22='$marker',1,0) "
+      .  "    + if(n23='$marker',1,0) "
+      .  "    + if(n24='$marker',1,0) "
+      .  "    + if(n25='$marker',1,0) "
+      .  "    + if(n26='$marker',1,0) "
+      .  "    + if(n27='$marker',1,0) "
+      .  "    + if(n28='$marker',1,0) "
+      .  "    + if(n29='$marker',1,0) "
+      .  "    + if(n30='$marker',1,0) "
+      .  "    + if(n31='$marker',1,0) "
+      .  "    as per_person_num_avails "
+      .  " from aggregated left join " . $mode . "avail_sheet "
+      .  "    using (last_name, first_name, timestamp)"
+      .  " where month='$month_abbrev' "
+      .  "    and coord_agency='$coord_agency' "
+      )
+      or die("Per_person_num_avails query failed with error:  " . mysql_error());
+   //
+   extract(mysql_fetch_array(mysql_query("select count(*)>0 as be_nonempty from shift_avail_count")));  // Sets $be_nonempty
+   if ($be_nonempty)
+      {
+      $result = mysql_query("select sum(per_person_num_avails) as num_avails from shift_avail_count")
+         or die("NumAvails query failed with error:  " . mysql_error());
+      //
+      if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+      }
+   //
+   error_reporting($saved_error_level);
+   return $num_avails;
+   }
+?>
