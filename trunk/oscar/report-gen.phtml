@@ -397,15 +397,16 @@ else
       }
    }
 //
-// Send the claim ticket to the schedule coordinator.
+// Create the notice.
 //
-$recipient = RoleEmailAddress("schedule-coordinator");
-if ($email_addr == $recipient)
+$result = mysql_query("select 1 as be_trusted from trusted_user where email_address=$email_addr"
+   or die("Trust check failed with error:  " . mysql_error());
+if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator"))
    {
    //
-   // Then it was the schedule coordinator him or herself who requested the report.  Use different subject lines to help
-   // the schedule coordinator distinguish between his or her own reports and those requested by others.
+   // Then send a claim ticket to the requestor directly.
    //
+   $notice_recipient = $email_addr;
    $subject = "Your OSCAR report";
    //
    //          0        1         2         3         4         5         6         7
@@ -417,8 +418,9 @@ if ($email_addr == $recipient)
 else
    {
    //
-   // Someone else requested the report.
+   // Someone else requested the report.  Notify the schedule coordinator.
    //
+   $notice_recipient = RoleEmailAddress("schedule-coordinator");
    $subject = "-> OSCAR request ->";
    //
    // Give the schedule coordinator a chance to approve (weakly or strongly) or disapprove of the request.
@@ -450,7 +452,7 @@ $notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
 //
 $headers = "From: " . RoleEmailAddress("") . "\r\n";
 $headers .= "Reply-to: " . RoleEmailAddress("") . "\r\n";
-if (mail($recipient, $subject, $notice, $headers))
+if (mail($notice_recipient, $subject, $notice, $headers))
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"left");
    echo "<p>The OSCAR system has successfully generated your report.&nbsp;  A claim ticket for the report has been submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.&nbsp; The coordinator will forward the claim ticket to you once screening is complete.</p>";
