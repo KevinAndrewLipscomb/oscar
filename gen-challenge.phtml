@@ -2,6 +2,19 @@
 //
 // $Id$
 //
+$mode="";
+   //
+   // Set to "" for production, "x_" to debug.
+   //
+//
+// Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
+//
+$first_name = $first_name;
+$last_name = $last_name;
+$$applicable_month_num = $applicable_month_num;
+//
+if ($mode) error_reporting(E_ALL);
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -39,8 +52,8 @@ if
    // All required values are present.
    // Connect to the database.
    //
-   mysql_connect(localhost,kalipso,Password());
-   mysql_select_db(oscar);
+   mysql_connect("localhost","kalipso",Password());
+   mysql_select_db("oscar");
    //
    // Generate the challenge message.
    //
@@ -65,7 +78,7 @@ if
    //
    $result = mysql_query
       (
-      "select * from avail_sheet"
+      "select * from " . $mode . "avail_sheet"
       .  " where last_name = \"" . addslashes(addslashes($last_name)) . "\""
       .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
       .  "    and month = '$applicable_month_abbrev'"
@@ -111,9 +124,10 @@ if
             $challenge .= "\n   ---\n\n";
             }
          //
-         // Clear variables for next pass.
+         // Clear variables for next pass except for first_name and last_name (which by definition must match what we queried on, and
+         // which we need for later), and the latest email_addr value (which we'll need later).
          //
-         $timestamp = $first_name = $last_name = $email_addr = $squad = $month = $be_on_team_5 = $be_on_team_30 = $be_tda =
+         $timestamp = $squad = $month = $be_on_team_5 = $be_on_team_30 = $be_tda =
             $num_extras = "";
          $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
             $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 = $d31 = "";
@@ -129,7 +143,7 @@ if
               .  "remove the above record(s) from the\n"
               .  "OSCAR system, click here:\n";
    $challenge .= OscarRootUrl()
-      .  "/retract.phtml?a="
+      .  "/" . $mode . "retract.phtml?a="
       .  base64_encode($first_name)
       .  "&b="
       .  base64_encode($last_name)

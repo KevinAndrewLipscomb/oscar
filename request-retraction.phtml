@@ -2,6 +2,12 @@
 //
 // $Id$
 //
+$mode="";
+   //
+   // Set to "" for production, "x_" to debug.
+   //
+if ($mode) error_reporting(E_ALL);
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -36,7 +42,7 @@ require_once("f_bodyopen.phtml");
         <p>In practice, the retraction process is easy, safe, and secure.  To begin the retraction process, complete the
            following form:</p>
         <br>
-        <form action=gen-challenge.phtml method=post>
+        <form action=<? echo $mode; ?>gen-challenge.phtml method=post>
            <table>
               <tr>
                  <td>Your first name:</td>
