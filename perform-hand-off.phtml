@@ -1,0 +1,495 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_password.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_availlist.phtml");
+require_once("f_sshowavailsheetrecdetail.phtml");
+require_once("f_oscarmailheaders.phtml");
+//
+// Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
+//
+$month_abbrev = $month_abbrev;
+//
+if ($mode) error_reporting(E_ALL);
+//
+unset($HTTP_POST_VARS['month_abbrev']);
+   //
+   // The above unconventional "unset" operation is appropriate for this routine because the remainder of this routine
+   // treats HTTP_POST_VARS as an array of unknown key-value pairs.  By "unsetting" the one and only *known* key-value pair
+   // -- $month_abbrev -- we avoid having to scan past it later.
+   //
+?>
+<html>
+
+<head><title>OSCAR - Relay results</title></head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Relay Results</h1>
+        </td></tr></table>
+        <hr>
+<?
+//
+// Connect to the database.
+//
+if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   {
+   ?>
+   <h2><i>Sorry...</i></h2>
+   <b>
+   <blockquote>
+      <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your relay operation later.</p>"; ?>
+   </blockquote>            
+   </b>
+   <?
+   }
+else
+{
+//
+// $HTTP_POST_VARS holds the array of argument-value pairs that are sent to this page via HTTP's POST method.  From the
+// EMS schedule-coordinator 'Relay unused' form of our perform-gen-report.phtml script, a sample representation of
+// $HTTP_POST_VARS is:
+//
+//    QWxiZXJ0c29u-SG9sbGll-d3=1
+//    QmFrZXI=-UmljaGFyZA==-d7=1
+//    QmFrZXI=-UmljaGFyZA==-n9=1
+//    QnVkeQ==-S2F0aHk=-NONE=1
+//    U3Rlcmxpbmc=-Tm9ybWFu-n8=1
+//    VGFt-S2V2aW4=-d4=1
+//
+// The argument names indicate the availabilities allocated by the EMS schedule-coordinator, in base64_encoded form.  When
+// decoded later by this script, they could be written as:
+//
+//    Albertson-Hollie-d3=1
+//    Baker-Richard-d7=1
+//    Baker-Richard-n9=1
+//    Budy-Kathy-NONE=1
+//    Finch-Linda-n8=1
+//    Tam-Kevin-d4=1
+//
+// The semantics of the first two fields are:
+//
+//    LastName-FirstName
+//
+// The third field is 'd' for day or 'n' for night followed by the day-of-the-month.  So 'd3' is the day of the 3rd and
+// 'n9' is the night of the 9th.  These are the availabilities that should *not* be relayed to the squad-level 
+// coordinators.The third field might also be 'NONE' to indicate that EMS does not intend to allocate any of the member's 
+// availabilities.  The '=1' is the value part, which we ignore.
+//
+
+//
+$caution = " . . . . . [OSCAR-CAUTION::EMT-VS-ST-STATUS-UNKNOWN-ON-RECORDS-RELAYED-FROM-EMS]";
+//
+// Setup temp tables
+//
+//    INTERMEDIATE_AVAIL_SHEET table
+//
+//       Do this lazily.  Instead of maintaining table structure code here, just do a create...select to assure that the
+//       structure of the temp table is an exact match for the structure of the master table throughout the lifetime of the
+//       OSCAR project.
+//
+mysql_query
+   (
+   "create temporary table intermediate_avail_sheet "
+   .  " select * from " . $mode . "avail_sheet "
+   .  "    where month='$month_abbrev' and coord_agency='EMS' "
+   )
+   or die("Creation of temp table intermediate_avail_sheet failed with error: " . mysql_error());
+//
+//    MISSING_RELAY_TARGET table
+//
+mysql_query
+   (
+   "create temporary table missing_relay_target "
+   .  " ( "
+   .  " last_name varchar(32) NOT NULL, "
+   .  " first_name varchar(32) NOT NULL, "
+   .  " PRIMARY KEY (last_name,first_name) "
+   .  " ) "
+   )
+   or die("Creation of temp table missing_relay_target failed with error: " . mysql_error());
+//
+// Initialize $census
+//
+$result = mysql_query
+   (
+   "select coord_agency, count(*) as num_sheets from " . $mode . "avail_sheet "
+   .  "    where coord_agency != 'EMS' "
+   .  "    group by coord_agency "
+   )
+   or die("Census initialization failed with error: " . mysql_error());
+while ($row = mysql_fetch_array($result))
+   {
+   extract($row);
+   $census[$coord_agency] = $num_sheets;
+   }
+//
+// PHP's 'foreach' construct walks an array.  The 'as' option provides a way to extract both the argument name (which is
+// the part that's really of importance to us here) as well as the value (=1), which we simply ignore.
+//
+$ignore_mask = "";
+//
+foreach ($HTTP_POST_VARS as $encoded_avail_spec => $dummy_value)
+   {
+   //
+   // "Explode" (break apart) the $encoded_avail_spec into its constituent parts.
+   //
+   list($encoded_last_name,$encoded_first_name,$target_shift_spec) = explode("-",$encoded_avail_spec);
+   //
+   // Make sure that this entry has not been disqualified by a previous entry who target_shift_spec was "NONE".
+   //
+   if ("$encoded_last_name-$encoded_first_name" != $ignore_mask)
+      {
+      //
+      // Decode the encoded parts.
+      //
+      $target_last_name = base64_decode($encoded_last_name);
+      $target_first_name = base64_decode($encoded_first_name);
+      //
+      // Make sure there's still an avail_sheet that matches what EMS was working with.
+      //
+      $sql = "select * from intermediate_avail_sheet "
+         .  " where last_name='$target_last_name' "
+         .  "    and first_name='$target_first_name' ";
+      //
+      $result = mysql_query($sql) or die("Retrieval of an intermediate_avail_sheet failed with error: " & mysql_error());
+      //
+      if (!mysql_num_rows($result))
+         {
+         //
+         // No avail_sheet matched what EMS was working with.  Store key info for use in a later warning.
+         //
+         mysql_query
+            (
+            "insert ignore into missing_relay_target "
+            .  " set last_name='$target_last_name', "
+            .  "    first_name='$target_first_name' "
+            )
+            or die("Insert into table missing_relay_target failed with error: " . mysql_error());
+         }
+      else
+         {
+         //
+         // One or more matching records found.
+         //
+         extract(mysql_fetch_array($result));
+         if ($squad != "ERS")  // Don't relay any ERS records.
+            {
+            $sql = "update intermediate_avail_sheet "
+               .  " set timestamp=timestamp, "  // Preserve timestamps at all costs.
+               .  "    be_needing_driver='$be_als', "
+               .  "    coord_agency='Rescue$squad' ";
+            //
+            if ($target_shift_spec == "NONE")
+               {
+               //
+               // The member's availabilities should be relayed to his or her squad unaltered.  Also, no further entries in
+               // HTTP_POST_VARS should be considered for this member.
+               //
+               $ignore_mask = "$encoded_last_name-$encoded_first_name";
+               }
+            else
+               {
+               //
+               // The target_shift_spec denotes the actual field in the record that should be blanked out.
+               //
+               $sql .= ", $target_shift_spec='' ";
+               }
+            //
+            if (($be_als == 'FALSE') and (!strstr($note,$caution)))
+               {
+               //
+               // A member (such as a Shock-Trauma Tech) who is NOT ALS for EMS (zone car) purposes might be ALS for squad 
+               // (ambulance) purposes.  OSCAR currently has no way of knowing if the member is an ST or not, so a caution 
+               // note is in order.
+               //
+               $sql .= ", note='" . addslashes($note) . "  $caution' ";
+               }
+            $sql .= " where last_name='$target_last_name' "
+               .  "    and first_name='$target_first_name' ";
+            mysql_query($sql) or die("Intermediate relay update failed with error: " . mysql_error());
+            }
+         }
+      }
+   }
+//
+$relay_select_clause = "select * from intermediate_avail_sheet where coord_agency != 'EMS'";
+   //
+   // Any record so selected must be one of the ones modified by the foreach loop above, because when
+   // intermediate_avail_sheet was created, we only put records whose coord_agency = 'EMS'.
+   //
+//
+mysql_query("insert into " . $mode . "avail_sheet " . $relay_select_clause)
+   or die("Relay insertion failed with error: " . mysql_error());
+//
+$num_rows_affected = mysql_affected_rows();
+//
+// Display indications of successful relays.
+//
+echo "<p>Your relay operation has been processed as follows:</p>\n"
+   . "<ol>\n"
+   . "<li><p><b>Data handling:</b>&nbsp; Availability sheets for the following personnel -- minus the allocations you made "
+   . "-- were successfully processed for use by squad schedule coordinators as indicated.&nbsp; The availability sheets "
+   . "originally submitted to EMS have not been altered.</p>\n"
+   . "<table border=1 cellspacing=0 cellpadding=3>\n"
+   . "<tr bgcolor=#D0D0D0>\n"
+   . "   <td><small>#</small></td>\n"
+   . "   <td><small>Last name</small></td>\n"
+   . "   <td><small>First name</small></td>\n"
+   . "   <td><small>Squad</small></td>\n"
+   . "</tr>\n";
+//
+$result = mysql_query($relay_select_clause)
+   or die("Simple retrieval using relay_select_clause failed with error: " . mysql_error());
+$n = 1;
+while ($row = mysql_fetch_array($result))
+   {
+   extract($row);
+   echo "<tr>\n"
+      . "   <td><small>$n</small></td>\n"
+      . "   <td><small>$last_name</small></td>\n"
+      . "   <td><small>$first_name</small></td>\n"
+      . "   <td><small>$squad</small></td>\n"
+      . "</tr>";
+   $n++;
+   }
+echo "</table>\n";
+//
+if (($num_already_relayed = ($n - 1 - $num_rows_affected)) > 0)
+   {
+   echo "<p><b>Note</b> that <b>$num_already_relayed</b> of these sheets had apparently been relayed before and ";
+   if ($num_already_relayed == 1)
+      {
+      echo "was ";
+      }
+   else
+      {
+      echo "were ";
+      }
+   echo "not actually relayed again.</p>\n";
+   }
+echo "<p>&nbsp;</p></li>\n";
+//
+// Generate appropriate notifications for squad schedule coordinators and display progress indications.
+//
+echo "<li><p><b>Notifications:</b>&nbsp; Email notifications have been sent to squad schedule coordinators as "
+   . "follows:</p>\n"
+   . "<table border=1 cellspacing=0 cellpadding=3>\n"
+   . "<tr bgcolor=#D0D0D0>\n"
+   . "   <td><small>Squad</small></td>\n"
+   . "   <td><small>Relayed sheets</small></td>\n"
+   . "   <td><small>Notification sent...</small></td>\n"
+   . "</tr>\n";
+//
+//    First, determine which squads actually received relayed sheets.
+//
+$result = mysql_query
+   (
+   "select coord_agency, count(*) as num_sheets from " . $mode . "avail_sheet "
+   .  " where coord_agency != 'EMS' "
+   .  " group by coord_agency "
+   )
+   or die("Determination of num_sheets per agency failed with error: " . mysql_error());
+while ($row = mysql_fetch_array($result))
+   {
+   extract($row);
+   if (!key_exists($coord_agency,$census)) $census[$coord_agency] = 0;
+   if (($num_relayed_sheets = ($num_sheets - $census[$coord_agency])) > 0)
+      {
+      //
+      // Determine whether or not the agency is an OSCAR participant.
+      //
+      $participation_test_result = mysql_query
+         ("select 1 from " . $mode . "agency where enumeral='$coord_agency' and be_active='TRUE'")
+         or die("OSCAR participant check failed for $coord_agency with error: " . mysql_error());
+      if (mysql_num_rows($participation_test_result))
+         {
+         //
+         // Agency IS an OSCAR participant.  Send a notice directly to the squad schedule coordinator.
+         //
+         $relay_notice_recipient = RoleEmailAddress("schedule-coordinator",$mode,$coord_agency);
+         $relay_notice_subject = "Relay notice from EMS";
+         $relay_headers = "From: EMS Schedule Coordinator <"
+            . RoleEmailAddress("schedule-coordinator",$mode,"EMS")
+            . ">\r\n"
+            . "Reply-to: EMS Schedule Coordinator <" . RoleEmailAddress("schedule-coordinator",$mode,"EMS") . ">\r\n";
+         //               0        1         2         3         4         5         6         7
+         //               123456789012345678901234567890123456789012345678901234567890123456789012
+         $relay_notice = "Dear $coord_agency Schedule Coordinator,\n\n"
+                       . "I have used OSCAR to relay $num_relayed_sheets availability sheet(s) to $coord_agency.\n\n"
+                       . "Please click here to retrieve an up-to-date\n"
+                       . "compiled availability report.  Be sure to\n"
+                       . "specify \"Get availabilities from $coord_agency\":\n"
+                       . OscarRootUrl() . "/" . $mode . "form-request-report-1.phtml\n\n"
+                       . "If you have any questions, please send me a reply.\n\n";
+         //
+         // Add sig lines.
+         //
+         $relay_notice .= "-- EMS Schedule Coordinator (via OSCAR)\n";
+         $relay_notice .= "-- " . RoleEmailAddress("schedule-coordinator",$mode,"EMS") . "\n";
+         //
+         mail($relay_notice_recipient, $relay_notice_subject, $relay_notice, $relay_headers);
+         //
+         echo "<tr>\n"
+            . "   <td><small>$coord_agency</small></td>\n"
+            . "   <td align=center><small>$num_relayed_sheets</small></td>\n"
+            . "   <td><small>Direct to $relay_notice_recipient</small></td>\n"
+            . "</tr>\n";
+         }
+      else
+         {
+         //
+         // Agency is NOT an OSCAR participant.  Send a message to the EMS schedule coordinator that he can forward as 
+         // appropriate.
+         //
+         $relay_report_recipient = RoleEmailAddress("schedule-coordinator",$mode,"EMS");
+         $relay_report_subject = "OSCAR availability relay for $coord_agency";
+         //               0        1         2         3         4         5         6         7
+         //               123456789012345678901234567890123456789012345678901234567890123456789012
+         $relay_report = "For indirect delivery to $coord_agency schedule coordinator...\n\n\n"
+                       . "EMS -> $coord_agency RELAY REPORT\n"
+                       . "---------------------------------\n";
+         //
+         $report_query_result = mysql_query
+            (
+            "select * from intermediate_avail_sheet where coord_agency = '$coord_agency' order by last_name, first_name"
+            )
+            or die("Indirect report query failed with error:  " . mysql_error());
+         $num_rows = mysql_num_rows($report_query_result);
+         $relay_report .= "Found $num_rows ";
+         if ($num_rows == 1)
+            {
+            $relay_report .= "record.\n\n";
+            }
+         else
+            {
+            $relay_report .= "records.\n\n";
+            }
+         if ($num_rows)
+            {
+            $record_index = 0;
+            while ($row = mysql_fetch_array($report_query_result))
+               {
+               $record_index++;
+               $timestamp = $month = $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $be_third = $be_nondriver = 
+                  $be_needing_driver = $num_extras = $squad = "";
+               $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
+                  $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 = $d31 = "";
+               $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 =
+                  $n17 = $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 = $n31 = "";
+               $note = $expiration = "";
+               extract($row);
+               $relay_report .= sShowAvailSheetRecDetail
+                  (
+                  $timestamp,
+                  $first_name,
+                  $last_name,
+                  $email_addr,
+                  $squad,
+                  $month,
+                  $be_on_team_5,
+                  $be_on_team_30,
+                  $be_tda,
+                  $be_als,
+                  $num_extras,
+                  $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
+                  $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
+                  $note,
+                  $expiration,
+                  1,
+                  $mode,
+                  $coord_agency,
+                  $be_needing_driver,
+                  $be_nondriver,
+                  $be_third
+                  );
+               if ($record_index < $num_rows)
+                  {
+                  $relay_report .= "\n   ---\n\n";
+                  }
+               }
+            }
+         //
+         // Add sig lines.
+         //
+         $relay_report .= "\n\n-- End of OSCAR report ---\n";
+         //
+         mail($relay_report_recipient, $relay_report_subject, $relay_report, OscarMailHeaders());
+         //
+         echo "<tr>\n"
+            . "   <td><small>$coord_agency</small></td>\n"
+            . "   <td align=center><small>$num_relayed_sheets</small></td>\n"
+            . "   <td><small>To YOU for forwarding</small></td>\n"
+            . "</tr>\n";
+         }
+      }
+   }
+echo "</table><p>&nbsp;</p></li>\n";
+//
+// Report missing relay targets.
+//
+$result = mysql_query("select * from missing_relay_target")
+   or die("Query of table missing_relay_target failed with error: " . mysql_error());
+//
+if (mysql_num_rows($result))
+   {
+   echo "<li><p><b>Relay failures:</b>  Data from the following availability sheets could not be relayed because the "
+      . "sheets could no longer be found in OSCAR.&nbsp; These sheets may have been retracted by their submitters:</p>\n"
+      . "<table border=1 cellspacing=0 cellpadding=3>\n"
+      . "<tr bgcolor=#D0D0D0>\n"
+      . "   <td><small>Last name</small></td>\n"
+      . "   <td><small>First name</small></td>\n"
+      . "</tr>\n";
+   while ($row = mysql_fetch_array($result))
+      {
+      extract($row);
+      echo "<tr>\n"
+         . "   <td><small>$last_name</small></td>\n"
+         . "   <td><small>$first_name</small></td>\n"
+         . "</tr>";
+      }
+   echo "</table><p>&nbsp;</p></li>\n";
+   }
+echo "<li><p><b>ERS:</b>&nbsp; Availabilities on sheets with a Home Squad indication of 'ERS' have not been relayed to any "
+   . "squad.</p></li>\n";
+echo "</ol>\n";
+//
+// Drop temp tables.
+//
+mysql_query("drop table missing_relay_target")
+   or die("Drop of table missing_relay_target failed with error:  " . mysql_error());
+mysql_query("drop table intermediate_avail_sheet")
+   or die("Drop of table intermediate_avail_sheet failed with error:  " . mysql_error());
+//
+echo "</blockquote>\n";
+echo "<br><p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
+   . RoleEmailAddress("",$mode) . "\">OSCAR System Administrator</a>.</p>";
+}
+?>
+         <hr>
+         <p><small><small><em><pre>$Id$</pre></em></small></small>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+

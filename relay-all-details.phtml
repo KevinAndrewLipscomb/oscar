@@ -1,0 +1,42 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_roleemailaddress.phtml");
+?>
+<html>
+
+<head><title>OSCAR - Relay All</title></head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+           <h6 align="center">
+              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+           <h1 align="center">Relay All</h1>
+        <hr>
+        <h3><? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>What is <i>Relay all</i>?</h3>
+        <p>OSCAR realizes that it might not be convenient for you to 
+           check off <i>all</i> of your schedule selections in one sitting, so OSCAR only relays a member's data <i>if</i>
+           you have made your intentions for that member clear.</p>
+        <p>If you don't check any of the boxes next to or under a member's entry, OSCAR does <i>not</i> consider your
+           intentions for that member to be clear, so OSCAR won't relay anything about that member to any squad schedule 
+           coordinator.</p>
+        <p>But what if you don't want to allocate <i>any</i> of a member's availabilities for EMS use?&nbsp; What if you
+           want to relay <i>all</i> of a member's availabilities to that member's squad?</p>
+        <p>That's where the <b>Relay all</b> feature comes in.&nbsp; By checking <b>Relay all</b> next to a member's
+           name, you are telling OSCAR to relay all of that member's availabilities to his or her squad.</p>
+        <p>In other words, <b>Relay all</b> tells OSCAR that you <i>deliberately</i> did not allocate any of a member's
+           availabilities, and you <i>want</i> OSCAR to relay that member's availability sheet to his or her squad.</p>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small></center></td>
+    </tr>
+  </table>
+</body>
+
+</html>
+
