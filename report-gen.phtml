@@ -365,6 +365,7 @@ if ($shift_filter == "all")
             .  "    , be_on_team_5 "
             .  "    , be_tda "
             .  "    , be_als "
+            .  "    , num_extras "
             .  "    , note "
             .  "    , num_submissions "
             .  " from aggregated left join " . $mode . "avail_sheet "
@@ -377,7 +378,7 @@ if ($shift_filter == "all")
             {
             while ($row = mysql_fetch_array($result))
                {
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $note =
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $num_extras = $note =
                   $num_submissions = "";
                extract($row);
                $last_name = stripslashes($last_name);
@@ -392,7 +393,9 @@ if ($shift_filter == "all")
                   .  base64_encode($be_authority)
                   .  ">$last_name, $first_name</a>&nbsp; ["
                   .  Properties($be_on_team_5,$be_on_team_30,$be_tda,$be_als,$squad)
-                  .  "]</p>";
+                  .  "]";
+               if ($num_extras) $report .= "&nbsp; <b>(+$num_extras)</b>";
+               $report .= "</p>";
                if (($num_submissions > 1) or ($note != ""))
                   {
                   $report .= "<blockquote>\n";
@@ -403,7 +406,7 @@ if ($shift_filter == "all")
                   $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
                   $report .= "</blockquote>\n<br>\n";
                   }
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $note =
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $num_extras = $note =
                   $num_submissions = "";
                }
             }
