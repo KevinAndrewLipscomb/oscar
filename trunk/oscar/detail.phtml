@@ -37,15 +37,16 @@ mysql_select_db(oscar);
 $result = mysql_query("select * from avail_sheet where last_name = '$last_name' and first_name = '$first_name' and month = '$month'")
    or die("The query failed with error:  " . mysql_error());
 $num_rows = mysql_num_rows($result);
-echo "Found $num_rows ";
+echo "<h4>Found $num_rows ";
 if ($num_rows = 1)
    {
-   echo "record.\n";
+   echo "record.";
    }
 else
    {
-   echo "records.\n";
+   echo "records.";
    }
+echo ">/h4>\n";
 if ($num_rows)
    {
    echo "<blockquote>\n";
@@ -61,7 +62,7 @@ if ($num_rows)
       echo "   <tr><td>On EMS-5 team:</td><td>$be_on_team_5</td></tr>\n";
       echo "   <tr><td>On squad truck team:</td><td>$be_on_team_30</td></tr>\n";
       echo "   <tr><td># extra duties will run:</td><td>$num_extras</td></tr>\n";
-      echo "   <tr><td>Time of submission:</td><td>$timestamp</td></tr>\n";
+      printf("   <tr><td>Time of submission:</td><td>%4d-%2d-%2d %2d:%2d:%2d</td></tr>\n",$timestamp);
       echo "   <tr><td>Record expires:</td><td>$expiration</td></tr>\n";
       echo "   <tr><td>Available days:</td><td>";
       $d = array(1 => $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31);
