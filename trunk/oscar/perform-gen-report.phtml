@@ -98,6 +98,7 @@ require_once("f_beemsschedcoord.phtml");
 require_once("f_htmlofnote.phtml");
 require_once("f_formattednoteappendage.phtml");
 require_once("$foundation_dir/std_style_class.php");
+require_once("f_coordagencyofclearedemailaddr.phtml");
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
@@ -226,6 +227,7 @@ if ($shift_filter == "all")
          }
       else
          {
+         $condition_descriptor .= "authority-of=" . CoordAgencyOfClearedEmailAddr($email_addr,$mode) . "\n";
          $condition_descriptor .= "full-authority=FALSE\n";
          }
       //
