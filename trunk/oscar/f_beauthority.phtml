@@ -18,7 +18,7 @@ function BeAuthority
       "select email_addr as found_email_addr from " . $mode . "authority "
       .  "   where email_addr='$email_addr'"
       .  "      and ( coord_agency='$coord_agency' or coord_agency='EMS' ) "
-      .  "      and has_clearance == 'TRUE' "
+      .  "      and has_clearance='TRUE' "
       )
       or die("BeAuthority query failed with error:  " . mysql_error());
    //
