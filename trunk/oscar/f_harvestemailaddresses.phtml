@@ -1,0 +1,72 @@
+<?
+//
+// $Id$
+//
+function HarvestEmailAddresses($mode = "")
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $result = mysql_query
+      (
+      "select count(*) as count "
+      .  " from " . $mode . "avail_sheet "
+      .  " where expiration < CURRENT_DATE "
+      )
+      or die("Query 1 failed with error: " . mysql_error());
+   $row = mysql_fetch_array($result);
+   $count = 0;
+   extract($row);
+   if ($count)
+      {
+      $agency_result = mysql_query("select distinct coord_agency from authority where role='egroup-manager'")
+         or die("Query 2 failed with error: " . mysql_error());
+      if (mysql_num_rows($agency_result))
+         {
+         while ($agency_row = mysql_fetch_array($agency_result))
+            {
+            $coord_agency = "";
+            extract($agency_row);
+            $harvest_message_subject = "OSCAR email address harvest for $coord_agency";
+            //
+            $harvest_message_recipient = RoleEmailAddress("egroup-manager",$mode,$coord_agency);
+            $query = "select last_name, first_name, email_addr "
+               .  " from " . $mode . "avail_list "
+               .  " where expiration < CURRENT_DATE "
+               .  "    and email_addr not like '%vbgov.com' ";
+            if ($coord_agency != "EMS") $query .= " and coord_agency='$coord_agency' ";
+            $query .= " order by last_name, first_name, email_addr ";
+            $entry_result = mysql_query($query) or die("Query 3 failed with error: " . mysql_error());
+            if ($num_rows = mysql_num_rows($entry_result))
+               {
+               //                  0        1         2         3         4         5         6         7
+               //                  123456789012345678901234567890123456789012345678901234567890123456789012
+               $harvest_message = "Dear egroup manager,\n\n"
+                                . "OSCAR has harvested the following $num_rows email addresses for agency\n"
+                                . "'$coord_agency'.  This report does not include email addresses in the\n"
+                                . "VBGOV.COM domain:\n\n";
+               //
+               while ($entry_row = mysql_fetch_array($entry_result))
+                  {
+                  $last_name = $first_name = $email_addr = "";
+                  extract($entry_row);
+                  $harvest_message .= "   $last_name, $first_name <$email_addr>\n";
+                  }
+               //
+               // Add sig lines.
+               //
+               $harvest_message .= "\n";
+               $harvest_message .= "-- OSCAR\n";
+               $harvest_message .= "-- Home page: " . OscarHomePageUrl() . "\n";
+               $harvest_message .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+               //
+               // Send the mail.
+               //
+               mail($harvest_message_recipient, $harvest_message_subject, $harvest_message, OscarMailHeaders());
+               }
+            }
+         }
+      }
+   error_reporting($saved_error_level);
+   return $count;
+   }
+?>
