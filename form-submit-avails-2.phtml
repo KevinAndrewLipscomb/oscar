@@ -121,7 +121,12 @@ require_once($mode . "f_writecalendarsubform.phtml");
              </ul>
              <?
              }
-          WriteCalendarSubform("Check all shifts for which you are available for at least one type of duty:",$mode);
+          WriteCalendarSubform
+             (
+             $applicable_month_num,
+             "Check all shifts for which you are available for at least one type of duty:",
+             $mode
+             );
           ?>
         <p align="left">How many extra shifts are you willing to be scheduled
           for?&nbsp; <input type="text" name=num_extras size="2" value="0"></p>

@@ -113,7 +113,7 @@ require_once($mode . "f_writecalendarsubform.phtml");
               .  "   <input type=radio name=shift_filter value=some checked>\n"
               .  "      <b>Just one or more</b> shifts, as follows:&nbsp <small><i>(Who can run my duty on... ?)</i></small>\n"
               .  "</blockquote>\n";
-           WriteCalendarSubform($instruction_string,$mode);
+           WriteCalendarSubform($applicable_month_num,$instruction_string,$mode);
            ?>
            <br>
            <p align=left>Briefly explain the reason for your request:<br>
