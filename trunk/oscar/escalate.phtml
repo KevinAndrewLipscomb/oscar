@@ -133,7 +133,7 @@ else
    if ($result)
       {
       PutLibPhotoRandomPlaced("sasquatch",1,"right");
-      echo "<p>The OSCAR system has successfully escalated your request.&nbsp;  Because the report you requested contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress("escalation-level-1-recipient") . "\">Escalation Level 1 Authority</a>.&nbsp; The authority will forward the report to you once screening is complete.</p>";
+      echo "<p>The OSCAR system has successfully escalated your request.&nbsp;  Because the report you requested contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress("escalation-level-$level-recipient") . "\">Escalation Level $level Authority</a>.&nbsp; The authority will forward the report to you once screening is complete.</p>";
       echo "<p><b>Check your email periodically for the report.</b></p>";
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
       }
