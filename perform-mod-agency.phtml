@@ -46,7 +46,7 @@ if ($token != "")
          //
          $sql = "update " . $mode . "agency "
             .  "set be_active='$new_be_active' "
-            .  "where enumeral='$enumeral' "
+            .  "where enumeral='$enumeral' ";
          mysql_query($sql) or die("Update failed with error: " . mysql_error());
          //
          // This single change can have major ramifications for hundreds of individuals.  Notify sysadmin.

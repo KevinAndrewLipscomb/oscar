@@ -62,7 +62,7 @@ require_once("f_roleemailaddress.phtml");
               </table>
            </blockquote>
            <br>
-           <p><b>WARNING:&nbsp; The links on this page send traceable email messages to the Master OSCAR Authority
+           <p><b>WARNING:&nbsp; The buttons on this page send traceable email messages to the Master OSCAR Authority
               (<? echo RoleEmailAddress("master",$mode); ?>).&nbsp; These links are not intended for general use.</i></p>
            <blockquote>
               <table cellpadding=4>
@@ -79,11 +79,15 @@ require_once("f_roleemailaddress.phtml");
                     {
                     extract(mysql_fetch_array($result));
                     echo "<tr>\n"
+                       . "<form action=" . $mode . "perform-prep-mod-agency.phtml method=post>\n"
+                       . "<input type=hidden name=enumeral value=$enumeral>\n"
+                       . "<input type=hidden name=current_be_active value=$be_active>\n"
                        . "<td>$description</td>\n"
                        . "<td align=right>";
                     if ($be_active == "FALSE") echo "NON";
                     echo "PARTICIPANT</td>\n"
-                       . "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=" . $mode . "perform-prep-mod-agency.phtml?enumeral=$enumeral&current_be_active=$be_active>Toggle</a></td>\n"
+                       . "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit value=Toggle></td>\n"
+                       . "</form>\n"
                        . "</tr>\n";
                     }
                  ?>

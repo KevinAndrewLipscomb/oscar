@@ -20,7 +20,9 @@ require_once("f_bodyopen.phtml");
         <hr>
         <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
         <p><b>2002-02-23:&nbsp; </b>Restored the "#num extras will run" indication on schedule coordinator reports.&nbsp; It
-           was originally added on 2001-11-13 but somehow got lost in a subsequent revision.</p>
+           was originally added on 2001-11-13 but somehow got lost in a subsequent revision.&nbsp; Revised the Set Agency
+           Participation page to prevent visiting spiders, bots, etc from triggering the participation toggle feature, and 
+           fixed a syntax error in perform-mod-agency.phtml.</p>
         <p><b>2002-02-21:&nbsp; </b>Implemented feature 496839 -- the robust ability for the EMS schedule coordinator to 
            "relay" members' remaining availabilities to those members' squad schedule coordinators after EMS-level
            allocations have been made.&nbsp; The EMS schedule coordinator can complete such relays even to squad schedule
