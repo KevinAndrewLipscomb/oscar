@@ -1,21 +1,17 @@
 submit
-   module/old: als-avail-sub-form
-   module/old: add-als-avail-sheet
    --
-   module/new: form-submit-avails-1
-   module/new: form-submit-avails-2
-   module/new: perform-add-avail-sheet
+   module: form-submit-avails-1
+   module: form-submit-avails-2
+   module: perform-add-avail-sheet
    --
 enter-tda
    module: ers-tda-input-form
    module: add-ers-tda-inputs
    --
 request-report-screen
-   module/old: request-compiled-avails
-   module/old: report-gen
-   module/new: form-request-report-1
-   module/new: form-request-report-2
-   module/new: perform-gen-report
+   module: form-request-report-1
+   module: form-request-report-2
+   module: perform-gen-report
    module: get-report
    module: detail
    mutexvar: authority, nonauthority
@@ -42,6 +38,6 @@ escalate-1
 escalate-n
    module: [escalate-1]
 retract
-   module: request-retraction
-   module: gen-challenge
+   module: form-request-retraction
+   module: perform-gen-challenge
    module: retract
