@@ -484,7 +484,7 @@ else
    $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
    $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
    $claim_ticket .= "The next authority in the chain is:\n\n";
-   $claim_ticket .= RoleEmailAddress("escalation-level-1-recipient") . "\n\n";
+   $claim_ticket .= "   " . RoleEmailAddress("escalation-level-1-recipient") . "\n\n";
    $claim_ticket .= "To escalate your request to the above\n";
    $claim_ticket .= "authority, click here:\n\n";
    $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=1&digest=$digest\n\n";
