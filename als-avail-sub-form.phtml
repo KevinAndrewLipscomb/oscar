@@ -29,7 +29,7 @@ require_once("f_roleemailaddress.phtml");
         </td></tr></table>
         <hr>
         <?
-        echo "<h3>The OSCAR system is now taking availabilities for <i>" . date("F",mktime(12,0,0,(date("n") + 1))) . "</i>.</h3>\n";
+        echo "<h3>The OSCAR system is now taking availabilities for <i>" . strtoupper(date("F",mktime(12,0,0,(date("n") + 1)))) . "</i>.</h3>\n";
         ?>
         <p>For ALS members only.&nbsp; Starred<sup><b>*</b></sup> fields are required.</p>
         <form method="POST" action="add-avail-sheet.phtml">
