@@ -18,24 +18,46 @@ require_once("f_sendapprovalnotice.phtml");
 <H1 ALIGN=CENTER>Request Approval and Trust Registration</H1>
 <hr>
 <?
-//
-// Connect to the database.
-//
-mysql_connect(localhost,kalipso,Password());
-mysql_select_db(oscar);
-//
-// Insert the trusted email address into the trusted_user table.
-//
-mysql_query("insert into trusted_user set email_address='$email_addr'");
-//
-if (SendApprovalNotice($email_addr,$digest))
+if (
+      ($email_addr != "")
+   and
+      ($digest != "")
+   )
+//then
    {
-   PutLibPhotoRandomPlaced("sasquatch",1,"right");
-   echo "<p>The OSCAR system has performed the following:</p>\n"
-      . "<ul>\n"
-      . "   <li><p>Sent instructions to <i>$email_addr</i> on how to retrieve the requested report;</p></li>\n"
-      . "   <li><p>Registered <i>$email_addr</i> as a trusted user.</p></li>\n"
-      . "</ul>\n";
+   //
+   // Connect to the database.
+   //
+   mysql_connect(localhost,kalipso,Password());
+   mysql_select_db(oscar);
+   //
+   // Insert the trusted email address into the trusted_user table.
+   //
+   mysql_query("insert into trusted_user set email_address='$email_addr'");
+   //
+   if (SendApprovalNotice($email_addr,$digest))
+      {
+      PutLibPhotoRandomPlaced("sasquatch",1,"right");
+      echo "<p>The OSCAR system has performed the following:</p>\n"
+         . "<ul>\n"
+         . "   <li><p>Sent instructions to <i>$email_addr</i> on how to retrieve the requested report;</p></li>\n"
+         . "   <li><p>Registered <i>$email_addr</i> as a trusted user.</p></li>\n"
+         . "</ul>\n";
+      }
+   else
+      {
+      //
+      // Fill the page out with a warning and instructions.
+      //
+      ?>
+      <h2><i>Error!</i></h2>
+      <b>
+      <blockquote>
+         <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
+      </blockquote>            
+      </b>
+      <?
+      }
    }
 else
    {
@@ -46,7 +68,7 @@ else
    <h2><i>Error!</i></h2>
    <b>
    <blockquote>
-      <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
+      <p>Invalid arguments.</p>
    </blockquote>            
    </b>
    <?

@@ -42,10 +42,11 @@ require_once("f_availlist.phtml");
                . "<blockquote><table border=1 cellspacing=0 cellpadding=3>\n"
                . "<tr bgcolor=#D0D0D0>\n"
                . "   <td><small>Timestamp</small></td>\n"
+               . "   <td><small>TDA</small></td>\n"
                . "   <td><small>Sqd</small></td>\n"
                . "   <td><small>Lastname</small></td>\n"
                . "   <td><small>Firstname</small></td>\n"
-               . "   <td><small>Mon</small></td>\n"
+               . "   <td><small>Month</small></td>\n"
                . "   <td align=center><small>Days</small></td>\n"
                . "   <td align=center><small>Nights</small></td>\n"
                . "   <td><small>POC</small></td>\n"
@@ -104,14 +105,7 @@ require_once("f_availlist.phtml");
                      . ", email_addr='" . addslashes(trim($email_addr)) . "'"
                      . ", month='" . $applicable_month_abbrev . "'"
                      . ", squad='ERS'"
-                     . ", be_on_team_30=''"
-                     . ", be_on_team_5=''";
-                        //
-                        // Really shouldn't have to mention the be_on_team_* fields, but since report-gen does an order-by
-                        // on those fields, it's important that we insert values consistently.  add-als-avail-sheet inserts
-                        // either TRUE or '', not FALSE.  If I leave out the above two lines, the default on the column --
-                        // FALSE -- gets in, and messes up the order-by.
-                        //
+                     . ", be_tda='TRUE'";
                   if ($field_a != "") $sql .= ", $field_a='AVAILABLE'";
                   if ($field_b != "") $sql .= ", $field_b='AVAILABLE'";
                   $sql .= ", submitting_node='$REMOTE_ADDR'"
@@ -126,6 +120,8 @@ require_once("f_availlist.phtml");
                         .  "\">OSCAR System Administrator</a>."
                         );
                   //
+                  // Clear calculated vars for next iteration.
+                  //
                   $field_a = $field_b = "";
                   //
                   $result = mysql_query
@@ -135,6 +131,7 @@ require_once("f_availlist.phtml");
                      .  "   , email_addr as extracted_email_addr"
                      .  "   , month"
                      .  "   , squad"
+                     .  "   , be_tda"
                      .  "   , d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, d23, d24, d25, d26, d27, d28, d29, d30, d31"
                      .  "   , n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27, n28, n29, n30, n31"
                      .  "   , expiration"
@@ -143,6 +140,7 @@ require_once("f_availlist.phtml");
                      .  " where month='$applicable_month_abbrev'"
                      .  "    and last_name='" . addslashes(trim($last_name[$i])) . "'"
                      .  "    and first_name='" . addslashes(trim($first_name[$i])) . "'"
+                     .  "    and be_tda='TRUE'"
                      .  " order by timestamp desc"
                      .  " limit 1"
                      );
@@ -154,6 +152,7 @@ require_once("f_availlist.phtml");
                      extract($row = mysql_fetch_array($result));
                      echo "<tr>\n"
                         . "   <td><small>$timestamp</small></td>\n"
+                        . "   <td><small>$be_tda</small></td>\n"
                         . "   <td><small>$squad</small></td>\n"
                         . "   <td><small>$extracted_last_name</small></td>\n"
                         . "   <td><small>$extracted_first_name</small></td>\n"
@@ -186,7 +185,7 @@ require_once("f_availlist.phtml");
                      //
                      // Clear variables for next pass.
                      //
-                     $extracted_first_name = $extracted_last_name = $extracted_email_addr = $month = $squad = "";
+                     $extracted_first_name = $extracted_last_name = $extracted_email_addr = $month = $squad = $be_tda = "";
                      $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
                         $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 =
                         $d31 = "";
@@ -198,12 +197,12 @@ require_once("f_availlist.phtml");
                   else
                      {
                      $be_problem = "TRUE";
-                     echo "<tr><td colspan=9 align=center><b>Error: See explanation below.</b></td></tr>\n";
+                     echo "<tr><td colspan=10 align=center><b>Error: See explanation below.</b></td></tr>\n";
                      }
                   } // if row is processable
                if (($i == count($last_name)) and (!$found_something_to_process))
                   {
-                  echo "<tr><td colspan=9 align=center><b>Warning: Your submission didn't contain any valid TDA"
+                  echo "<tr><td colspan=10 align=center><b>Warning: Your submission didn't contain any valid TDA"
                      . " records.&nbsp; Click your browser's [<-- Back] button to correct the problem.</b></td></tr>\n";
                   }
                } // for row
