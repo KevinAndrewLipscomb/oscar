@@ -1,0 +1,24 @@
+<?
+//
+// $Id$
+//
+function NumSheets($month_abbrev)
+   {
+   error_reporting(E_ALL);
+   //
+   $mode="";
+      //
+      // Set to "" for production, "x_" to debug.
+      //
+   $num_sheets = 0;
+   $result = mysql_query
+      (
+      "select count(*) as num_sheets from oscar." . $mode . "avail_sheet "
+      .  "   where month='$month_abbrev' group by month"
+      )
+      or die("NumSheets query failed with error:  " . mysql_error());
+   if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+   //
+   return $num_sheets;
+   }
+?>
