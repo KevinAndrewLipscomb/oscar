@@ -26,13 +26,12 @@ if ($report_type == "FULL")
    echo "<pre>\n";
    echo "Full availability report for $month generated " . date("l Y-M-d H:i:s T") . "\n\n";
    echo "Legend:\n";
-   echo "   -5-    : Member indicated membership in EMS-5 team\n";
-   echo "   -30-   : Member indicated membership in squad truck team\n";
-   echo "   Rxx    : Member's home rescue squad\n";
-   echo "   ERS    : Member is a VBFD firefighter\n";
-   echo "   7xxxxx : Member's officer code\n";
-   echo "   8xxxxx : Member's officer code\n";
-   echo "   *      : Member entered special request.  See Notes at end of report.\n\n\n";
+   echo "   -5-    : EMS-5 team member\n";
+   echo "   -30-   : Squad truck team member\n";
+   echo "   Rxx    : Home rescue squad\n";
+   echo "   ERS    : VBFD firefighter\n";
+   echo "   8xxxxx : Officer code (also 7xxxxx)\n";
+   echo "   *      : See Notes section for special request.\n\n\n";
    for ($index = 1; $index <= 31; $index++)
       {
       $where_clause_2 = "and d$index='AVAILABLE' ";
@@ -93,8 +92,7 @@ if ($report_type == "FULL")
       }
    ?>
    </pre>
-   <h3>Notes</h3>
-   <blockquote>
+   <h3><ul>Notes</ul></h3>
    <?
    $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"$month\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
    if ($num_rows = mysql_num_rows($result))
@@ -117,9 +115,6 @@ if ($report_type == "FULL")
       {
       echo "None\n";
       }
-   ?>
-   </blockquote>
-   <?
    }
 else
    {
