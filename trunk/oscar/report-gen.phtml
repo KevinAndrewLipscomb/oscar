@@ -55,17 +55,16 @@ $month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
 $month_abbrev = substr($month_word,0,3);
 $where_clause = "month='$month_abbrev' ";
 //
+$be_authority = ($email_addr == RoleEmailAddress("schedule-coordinator"))
+   or ($email_addr == RoleEmailAddress("escalation-level-1-authority"))
+   or ($email_addr == RoleEmailAddress(""));
+//
 if ($report_type == "FULL")
    {
    //
    // Determine if the requestor is an OSCAR system authority (ie, privileged to see special request notes & warnings).
    //
-   if ($be_authority =
-         ($email_addr == RoleEmailAddress("schedule-coordinator"))
-      or
-         ($email_addr == RoleEmailAddress("escalation-level-1-authority"))
-      )
-   //then
+   if ($be_authority)
       {
       $condition_descriptor .= "authority=TRUE\n";
       }
@@ -143,16 +142,24 @@ if ($report_type == "FULL")
                $report .= sprintf("%3s ",$squad);
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $report .= "<a href=detail.phtml?a="
-                  .  base64_encode($last_name)
-                  .  "&b="
-                  .  base64_encode($first_name)
-                  .  "&c="
-                  .  base64_encode($month_abbrev)
-                  .  "&d="
-                  .  base64_encode($be_authority)
-                  .  ">$last_name, $first_name</a>";
-               if ($be_a_note) $report .= " *";
+               if ($be_authority)
+                  {
+                  $report .= "<a href=detail.phtml?a="
+                     .  base64_encode($last_name)
+                     .  "&b="
+                     .  base64_encode($first_name)
+                     .  "&c="
+                     .  base64_encode($month_abbrev)
+                     .  "&d="
+                     .  base64_encode($be_authority)
+                     .  ">"
+                  }
+               $report .= "$last_name, $first_name"
+               if ($be_authority)
+                  {
+                  $report .= "</a>";
+                  if ($be_a_note) $report .= " *";
+                  }
                $report .= "\n";
                $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
                }
@@ -188,16 +195,24 @@ if ($report_type == "FULL")
                $report .= sprintf("%3s ",$squad);
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $report .= "<a href=detail.phtml?a="
-                  .  base64_encode($last_name)
-                  .  "&b="
-                  .  base64_encode($first_name)
-                  .  "&c="
-                  .  base64_encode($month_abbrev)
-                  .  "&d="
-                  .  base64_encode($be_authority)
-                  .  ">$last_name, $first_name</a>";
-               if ($be_a_note) $report .= "*";
+               if ($be_authority)
+                  {
+                  $report .= "<a href=detail.phtml?a="
+                     .  base64_encode($last_name)
+                     .  "&b="
+                     .  base64_encode($first_name)
+                     .  "&c="
+                     .  base64_encode($month_abbrev)
+                     .  "&d="
+                     .  base64_encode($be_authority)
+                     .  ">"
+                  }
+               $report .= "$last_name, $first_name"
+               if ($be_authority)
+                  {
+                  $report .= "</a>";
+                  if ($be_a_note) $report .= "*";
+                  }
                $report .= "\n";
                $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
                }
@@ -413,14 +428,24 @@ else
                   $report .= sprintf("%3s ",$squad);
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
-                  $report .= "<a href=detail.phtml?a="
-                     .  base64_encode($last_name)
-                     .  "&b="
-                     .  base64_encode($first_name)
-                     .  "&c="
-                     .  base64_encode($month_abbrev)
-                     .  ">$last_name, $first_name</a>"
-                     .  "\n";
+                  if ($be_authority)
+                     {
+                     $report .= "<a href=detail.phtml?a="
+                        .  base64_encode($last_name)
+                        .  "&b="
+                        .  base64_encode($first_name)
+                        .  "&c="
+                        .  base64_encode($month_abbrev)
+                        .  "&d="
+                        .  base64_encode($be_authority)
+                        .  ">"
+                     }
+                  $report .= "$last_name, $first_name"
+                  if ($be_authority)
+                     {
+                     $report .= "</a>";
+                     }
+                  $report .= "\n";
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                   }
                }
@@ -454,14 +479,24 @@ else
                   $report .= sprintf("%3s ",$squad);
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
-                  $report .= "<a href=detail.phtml?a="
-                     .  base64_encode($last_name)
-                     .  "&b="
-                     .  base64_encode($first_name)
-                     .  "&c="
-                     .  base64_encode($month_abbrev)
-                     .  ">$last_name, $first_name</a>"
-                     .  "\n";
+                  if ($be_authority)
+                     {
+                     $report .= "<a href=detail.phtml?a="
+                        .  base64_encode($last_name)
+                        .  "&b="
+                        .  base64_encode($first_name)
+                        .  "&c="
+                        .  base64_encode($month_abbrev)
+                        .  "&d="
+                        .  base64_encode($be_authority)
+                        .  ">"
+                     }
+                  $report .= "$last_name, $first_name"
+                  if ($be_authority)
+                     {
+                     $report .= "</a>";
+                     }
+                  $report .= "\n";
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                   }
                }
