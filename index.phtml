@@ -84,10 +84,15 @@ require_once("f_bodyopen.phtml");
                </table>
                <hr>
                <h3>Actions</h3>
-               <ul>
-                  <li><a href="als-avail-sub-form.phtml">Submit an availability sheet.</a><br>
-                  <li>Request compiled availability lists.<br>
-               </ul>
+               <blockquote><table cellspacing=10><tr><td>
+                  <form action=als-avail-sub-form.phtml method=post>
+                  <input type=submit value="Submit an availability sheet">
+                  </form>
+               </td><td>
+                  <form action=request-compiled-avails.phtml method=post>
+                  <input type=submit value="Request compiled availability lists">
+                  </form>
+               </td></tr></table></blockquote>
                <h3>Administrivia</h3>
                <ul>
                   <li>See what's new.<br>
