@@ -13,7 +13,7 @@ require_once("f_roleemailaddress.phtml");
 mysql_connect(localhost,kalipso,Password());
 mysql_select_db(oscar);
 //
-// Retreive timestamp of latest avail_sheet record.  Later, we'll use it to see if database conditions have changed
+// Retrieve timestamp of latest avail_sheet record.  Later, we'll use it to see if database conditions have changed
 // significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
 // generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
 //
@@ -92,7 +92,7 @@ if ($report_type == "FULL")
       //
       // The required report has never been run before under these conditions.  Generate it from scratch and cache it.
       //
-      $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, (note != \"\") as be_a_note from avail_sheet ";
+      $base_sql_statement = "select last_name, first_name, squad, be_on_team_30, be_on_team_5, (note != \"\") as be_a_note from avail_sheet ";
       $report .= "<pre>\n";
       $report .= "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
       $report .= "   +--------------------------------------------+\n";
@@ -132,10 +132,10 @@ if ($report_type == "FULL")
                if ($be_on_team_30) $report .= "30"; else $report .= "--";
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $report .= sprintf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
+               $report .= sprintf("%3s %s, %s ",$squad,$last_name,$first_name);
                if ($be_a_note) $report .= "*";
                $report .= "\n";
-               $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
                }
             }
          else
@@ -149,7 +149,7 @@ if ($report_type == "FULL")
       $report .= "------\n\n";
       for ($night_index = 1; $night_index <= 31; $night_index++)
          {
-         $night_description = date("jS \\n\i\g\h\t (l):",mktime(21,0,0,$month_num,$night_index,$year_num));
+         $night_description = date("jS \\n\i\g\h\\t (l):",mktime(21,0,0,$month_num,$night_index,$year_num));
          $where_clause_2 = "and n$night_index='AVAILABLE' ";
          $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
          $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
@@ -165,10 +165,10 @@ if ($report_type == "FULL")
                if ($be_on_team_30) $report .= "30"; else $report .= "--";
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $report .= sprintf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
+               $report .= sprintf("%3s %s, %s ",$squad,$last_name,$first_name);
                if ($be_a_note) $report .= "*";
                $report .= "\n";
-               $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
                }
             }
          else
@@ -179,7 +179,7 @@ if ($report_type == "FULL")
          }
       $report .= "</pre>\n";
       $report .= "<h3><u>Notes</u></h3>\n";
-      $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"" . substr($month_word,0,3) . "\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
+      $result = mysql_query("select last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"" . substr($month_word,0,3) . "\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
          while ($row = mysql_fetch_array($result))
@@ -191,9 +191,9 @@ if ($report_type == "FULL")
             if ($be_on_team_30) $report .= "30"; else $report .= "--";
             $report .= "- ";
             if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-            $report .= "$squad $cad_num]\n";
+            $report .= "$squad]\n";
             $report .= "<blockquote><i>" . stripslashes($note) . "</i></blockquote>\n<br>";
-            $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
+            $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
             }
          }
       else
@@ -285,7 +285,7 @@ else
       }
    else
       {
-      $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5 from avail_sheet ";
+      $base_sql_statement = "select last_name, first_name, squad, be_on_team_30, be_on_team_5 from avail_sheet ";
       switch ($team_filter)
          {
          case "team_5_only":
@@ -336,9 +336,9 @@ else
                   if ($be_on_team_30) $report .= "30"; else $report .= "--";
                   $report .= "- ";
                   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-                  $report .= sprintf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
+                  $report .= sprintf("%3s %s, %s",$squad,$last_name,$first_name);
                   $report .= "\n";
-                  $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
+                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                   }
                }
             else
@@ -368,9 +368,9 @@ else
                   if ($be_on_team_30) $report .= "30"; else $report .= "--";
                   $report .= "- ";
                   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-                  $report .= sprintf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
+                  $report .= sprintf("%3s %s, %s",$squad,$last_name,$first_name);
                   $report .= "\n";
-                  $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
+                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                   }
                }
             else
