@@ -219,7 +219,7 @@ if ($report_type == "FULL")
       // Calculate the expiration date for this report.  For the mktime() function, the 0th day of the month+1 resolves
       // to the last day of month.
       //
-      $expiration_date = date("Y-m-d",mktime(0,0,0,($month_num + 1),0));
+      $expiration_date = date("Y-m-d",mktime(0,0,0,($month_num + 1),0,$year_num));
       //
       // Store the report in the cache.
       //
