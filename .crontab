@@ -3,5 +3,5 @@
 #
 MAILTO=kevin.lipscomb@kvrs.org
 
-20 03 * * * wget http://www.oscarsystem.com/daily-avail-report.phtml
+30 13 * * * wget http://www.oscarsystem.com/daily-avail-report.phtml
 55 01 23 * * wget http://www.oscarsystem.com/trends.phtml
