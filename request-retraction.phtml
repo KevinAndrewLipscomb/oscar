@@ -47,13 +47,13 @@ require_once("f_bodyopen.phtml");
                  <td><input type=text name=last_name size=32>
               </tr>
               <tr>
-                 <td>Applicable month:</td>
+                 <td>Applicable month:<sup><b>*</b></sup></td>
                  <td><select size=1 name=applicable_month_num>
                     <option value="">Select</option>
                     <?
-                    $current_month_num = date("n");
-                    echo "<option value=" . $current_month_num . ">" . date("F") . "</option>\n";
-                    echo "<option value=" . ($current_month_num + 1) . ">" . date("F",mktime(12,0,0,($current_month_num + 1),1)) . "</option>\n";
+                    $next_month_num = date("n") + 1;
+                    echo "<option value=" . $next_month_num . ">" . date("F",mktime(12,0,0,$next_month_num,1)) . "</option>\n";
+                    echo "<option value=" . ($next_month_num + 1) . ">" . date("F",mktime(12,0,0,($next_month_num + 1),1)) . "</option>\n";
                     ?>
                  </select></td>
               </tr>
