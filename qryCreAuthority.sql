@@ -4,7 +4,7 @@
 # http://phpmyadmin.sourceforge.net/ (download page)
 #
 # Host: localhost
-# Generation Time: November 3, 2001, 1:48 pm
+# Generation Time: November 21, 2001, 2:04 pm
 # Server version: 3.23.32
 # PHP Version: 4.0.6
 # Database : oscar
@@ -16,11 +16,17 @@
 
 CREATE TABLE `authority` (
   `email_addr` varchar(64) NOT NULL default '',
-  `role` varchar(32) default NULL
+  `role` varchar(32) default NULL,
+  `coord_agency` enum('EMS','Rescue1','Rescue2','Rescue4','Rescue5','Rescue6','Rescue9','Rescue13','Rescue14','Rescue15','Rescue16','Rescue17','DiveTeam') NOT NULL default 'EMS',
+  `has_clearance` enum('FALSE','TRUE') NOT NULL default 'FALSE',
+  UNIQUE KEY `email_addr`(`email_addr`,`role`,`coord_agency`)
 ) TYPE=MyISAM;
 
 CREATE TABLE `x_authority` (
   `email_addr` varchar(64) NOT NULL default '',
-  `role` varchar(32) default NULL
+  `role` varchar(32) default NULL,
+  `coord_agency` enum('EMS','Rescue1','Rescue2','Rescue4','Rescue5','Rescue6','Rescue9','Rescue13','Rescue14','Rescue15','Rescue16','Rescue17','DiveTeam') NOT NULL default 'EMS',
+  `has_clearance` enum('FALSE','TRUE') NOT NULL default 'FALSE',
+  UNIQUE KEY `email_addr`(`email_addr`,`role`,`coord_agency`)
 ) TYPE=MyISAM;
 
