@@ -86,7 +86,7 @@ require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
 require_once($mode . "f_properties.phtml");
-require_once("f_beauthority.phtml");
+require_once($mode . "f_beauthority.phtml");
 require_once("f_connectselectdb.phtml");
 require_once($mode . "f_availlist.phtml");
 //
@@ -258,7 +258,7 @@ if ($shift_filter == "all")
             $info_message = "";
          }
       $report .= "<pre>\n";
-      $report .= "Availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "<b><u>$coord_agency</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       if ($coord_agency == "EMS")
          {
          $report .= "   +-------------------------------------------+\n";
@@ -685,7 +685,7 @@ else
          }
       //
       $report .= "<pre>\n";
-      $report .= "Availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "<b><u>$coord_agency</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       if ($coord_agency == "EMS")
          {
          $report .= "   +-----------------------------------------+\n";
