@@ -1,0 +1,24 @@
+<?
+//
+// $Id$
+//
+function Properties
+   (
+   $be_on_team_5,
+   $be_on_team_30,
+   $be_tda,
+   $squad
+   )
+   {
+   $s = "-";
+   if ($be_on_team_5 == "TRUE") $s .= "5"; else $s .= "-";
+   $s .= "-";
+   if ($be_on_team_30 == "TRUE") $s .= "30"; else $s .= "--";
+   $s .= "-";
+   if ($be_tda == "TRUE") $s .= "TDA"; else $s .= "---";
+   $s .= "- ";
+   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+   $s .= sprintf("%3s",$squad);
+   return $s;
+   }
+?>

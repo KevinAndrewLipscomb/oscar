@@ -13,6 +13,7 @@ require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_sendapprovalnotice.phtml");
 require_once("f_oscarmailheaders.phtml");
+require_once("f_properties.phtml");
 //
 $name = trim($name);
 $email_addr = trim($email_addr);
@@ -45,7 +46,7 @@ $report .= "<hr>\n";
 //
 echo $report;
 //
-$presentation_clause = "order by be_on_team_5 desc, be_on_team_30 desc, squad";
+$presentation_clause = " order by be_on_team_5 desc, be_on_team_30 desc, be_tda desc, squad ";
 //
 // The request form, under certain conditions, sends a value of 13 for applicable_month_num.  Cast it into the range 1..12.
 //
@@ -57,7 +58,7 @@ $condition_descriptor .= "month_num=$applicable_month_num\n";
 //
 $month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
 $month_abbrev = substr($month_word,0,3);
-$where_clause = "month='$month_abbrev' ";
+$where_clause = " month='$month_abbrev' ";
 //
 $be_authority =
    (
@@ -110,35 +111,46 @@ if ($shift_filter == "all")
       mysql_query("delete from avail_sheet where expiration < CURRENT_DATE");
       mysql_query("delete from report_cache where expiration < CURRENT_DATE");
       //
-      $base_sql_statement = "select distinct last_name, first_name, squad, be_on_team_30, be_on_team_5, (note != \"\") as be_a_note from avail_sheet ";
+      $base_sql_statement = "select distinct last_name"
+         .  ", first_name"
+         .  ", squad"
+         .  ", be_on_team_30"
+         .  ", be_on_team_5"
+         .  ", be_tda"
+         .  ", (note != \"\") as be_a_note"
+         .  " from avail_sheet ";
       switch ($team_filter)
          {
          case "team_5_only":
-            $where_clause .= "and be_on_team_5 = 'TRUE' ";
+            $where_clause .= " and be_on_team_5 = 'TRUE' ";
             $info_message = "This report ONLY includes EMS-5 team members.";
             break;
          case "team_30_only":
-            $where_clause .= "and be_on_team_30 = 'TRUE' ";
+            $where_clause .= " and be_on_team_30 = 'TRUE' ";
             $info_message = "This report ONLY includes SQUAD TRUCK team members.";
+            break;
+         case "tda_only":
+            $where_clause .= " and be_tda = 'TRUE' ";
+            $info_message = "This report ONLY includes TDA personnel.";
             break;
          }
       $report .= "<pre>\n";
       $report .= "Availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
-      $report .= "   +-------------------------------------+\n";
-      $report .= "   | Legend:                             |\n";
-      $report .= "   |    -5-30- Rxx Lastname, Firstname * |\n";
-      $report .= "   |     ^  ^   ^                      ^ |\n";
-      $report .= "   |     |  |   |                      | |\n";
-      $report .= "   |     |  |   +- Home rescue squad   | |\n";
-      $report .= "   |     |  |      (ERS for VBFD)      | |\n";
-      $report .= "   |     |  |                          | |\n";
-      $report .= "   |     |  +- Squad truck team member | |\n";
-      $report .= "   |     |                             | |\n";
-      $report .= "   |     +- EMS-5 team member          | |\n";
-      $report .= "   |                                   | |\n";
-      $report .= "   |              See special request -+ |\n"; 
-      $report .= "   |              in Note section        |\n";
-      $report .= "   +-------------------------------------+\n\n\n";
+      $report .= "   +-----------------------------------------+\n";
+      $report .= "   | Legend:                                 |\n";
+      $report .= "   |    -5-30-TDA- Rxx Lastname, Firstname * |\n";
+      $report .= "   |     ^  ^       ^                      ^ |\n";
+      $report .= "   |     |  |       |                      | |\n";
+      $report .= "   |     |  |       +- Home rescue squad   | |\n";
+      $report .= "   |     |  |          (ERS for VBFD)      | |\n";
+      $report .= "   |     |  |                              | |\n";
+      $report .= "   |     |  +- Squad truck team member     | |\n";
+      $report .= "   |     |                                 | |\n";
+      $report .= "   |     +- EMS-5 team member              | |\n";
+      $report .= "   |                                       | |\n";
+      $report .= "   |                  See special request -+ |\n"; 
+      $report .= "   |                  in Note section        |\n";
+      $report .= "   +-----------------------------------------+\n\n\n";
       $report .= "This report includes ALL shifts.\n";
       if ($info_message) $report .= "$info_message\n";
       $report .= "\n";
@@ -148,8 +160,8 @@ if ($shift_filter == "all")
       for ($day_index = 1; $day_index <= $days_in_applicable_month; $day_index++)
          {
          $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
-            $where_clause_2 = "and d$day_index='AVAILABLE' ";
-         $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+            $where_clause_2 = " and d$day_index='AVAILABLE' ";
+         $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
          $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
          if ($num_rows = mysql_num_rows($result))
             {
@@ -157,13 +169,7 @@ if ($shift_filter == "all")
             while ($row = mysql_fetch_array($result))
                {
                extract($row);
-               $report .= "   -";
-               if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
-               $report .= "-";
-               if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
-               $report .= "- ";
-               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $report .= sprintf("%3s ",$squad);
+               $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
                if ($be_authority)
@@ -185,7 +191,7 @@ if ($shift_filter == "all")
                   if ($be_a_note) $report .= " *";
                   }
                $report .= "\n";
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_a_note = "";
                }
             }
          else
@@ -201,8 +207,8 @@ if ($shift_filter == "all")
       for ($night_index = 1; $night_index <= $days_in_applicable_month; $night_index++)
          {
          $night_description = date("jS \\n\i\g\h\\t (l):",mktime(21,0,0,$applicable_month_num,$night_index));
-         $where_clause_2 = "and n$night_index='AVAILABLE' ";
-         $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+         $where_clause_2 = " and n$night_index='AVAILABLE' ";
+         $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
          $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
          if ($num_rows = mysql_num_rows($result))
             {
@@ -210,13 +216,7 @@ if ($shift_filter == "all")
             while ($row = mysql_fetch_array($result))
                {
                extract($row);
-               $report .= "   -";
-               if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
-               $report .= "-";
-               if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
-               $report .= "- ";
-               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $report .= sprintf("%3s ",$squad);
+               $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
                if ($be_authority)
@@ -238,7 +238,7 @@ if ($shift_filter == "all")
                   if ($be_a_note) $report .= "*";
                   }
                $report .= "\n";
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_a_note = "";
                }
             }
          else
@@ -256,16 +256,17 @@ if ($shift_filter == "all")
          $report .= "<h3><u>Notes and Warnings</u></h3>\n";
          mysql_query
             (
-            "create temporary table note_and_submission_count"
+            "create temporary table note_and_submission_count "
             .  " select last_name"
             .  "    , first_name"
             .  "    , squad"
             .  "    , be_on_team_30"
             .  "    , be_on_team_5"
+            .  "    , be_tda"
             .  "    , note"
             .  "    , count(*) as num_submissions"
-            .  " from avail_sheet"
-            .  " where month=\"" . substr($month_word,0,3) . "\""
+            .  " from avail_sheet "
+            .  " where $where_clause "
             .  " group by last_name"
             .  "    , first_name"
             )
@@ -288,13 +289,9 @@ if ($shift_filter == "all")
                   .  base64_encode($month_abbrev)
                   .  "&d="
                   .  base64_encode($be_authority)
-                  .  ">$last_name, $first_name</a>&nbsp; [-";
-               if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
-               $report .= "-";
-               if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
-               $report .= "- ";
-               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $report .= "$squad]</p>";
+                  .  ">$last_name, $first_name</a>&nbsp; ["
+                  .  Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad)
+                  .  "]</p>";
                if (($num_submissions > 1) or ($note != ""))
                   {
                   $report .= "<blockquote>\n";
@@ -305,7 +302,7 @@ if ($shift_filter == "all")
                   $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
                   $report .= "</blockquote>\n<br>\n";
                   }
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = $num_submissions = "";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $note = $num_submissions = "";
                }
             }
          else
@@ -394,33 +391,43 @@ else
       }
    else
       {
-      $base_sql_statement = "select distinct last_name, first_name, squad, be_on_team_30, be_on_team_5 from avail_sheet ";
+      $base_sql_statement = "select distinct last_name"
+         .  ", first_name"
+         .  ", squad"
+         .  ", be_on_team_30"
+         .  ", be_on_team_5"
+         .  ", be_tda"
+         .  " from avail_sheet ";
       switch ($team_filter)
          {
          case "team_5_only":
-            $where_clause .= "and be_on_team_5 = 'TRUE' ";
+            $where_clause .= " and be_on_team_5 = 'TRUE' ";
             $info_message = "This report ONLY includes EMS-5 team members.";
             break;
          case "team_30_only":
-            $where_clause .= "and be_on_team_30 = 'TRUE' ";
+            $where_clause .= " and be_on_team_30 = 'TRUE' ";
             $info_message = "This report ONLY includes SQUAD TRUCK team members.";
+            break;
+         case "tda_only":
+            $where_clause .= " and be_tda = 'TRUE' ";
+            $info_message = "This report ONLY includes TDA personnel.";
             break;
          }
       //
       $report .= "<pre>\n";
       $report .= "Availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
-      $report .= "   +-----------------------------------+\n";
-      $report .= "   | Legend:                           |\n";
-      $report .= "   |    -5-30- Rxx Lastname, Firstname |\n";
-      $report .= "   |     ^  ^   ^                      |\n";
-      $report .= "   |     |  |   |                      |\n";
-      $report .= "   |     |  |   +- Home rescue squad   |\n";
-      $report .= "   |     |  |      (ERS for VBFD)      |\n";
-      $report .= "   |     |  |                          |\n";
-      $report .= "   |     |  +- Squad truck team member |\n";
-      $report .= "   |     |                             |\n";
-      $report .= "   |     +- EMS-5 team member          |\n";
-      $report .= "   +-----------------------------------+\n\n\n";
+      $report .= "   +---------------------------------------+\n";
+      $report .= "   | Legend:                               |\n";
+      $report .= "   |    -5-30-TDA- Rxx Lastname, Firstname |\n";
+      $report .= "   |     ^  ^       ^                      |\n";
+      $report .= "   |     |  |       |                      |\n";
+      $report .= "   |     |  |       +- Home rescue squad   |\n";
+      $report .= "   |     |  |          (ERS for VBFD)      |\n";
+      $report .= "   |     |  |                              |\n";
+      $report .= "   |     |  +- Squad truck team member     |\n";
+      $report .= "   |     |                                 |\n";
+      $report .= "   |     +- EMS-5 team member              |\n";
+      $report .= "   +---------------------------------------+\n\n\n";
       $report .= "This report ONLY includes selected shifts.\n";
       if ($info_message) $report .= "$info_message\n";
       $report .= "\n";
@@ -429,8 +436,8 @@ else
          if ($d[$day_index])
             {
             $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
-            $where_clause_2 = "and d$day_index='AVAILABLE' ";
-            $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+            $where_clause_2 = " and d$day_index='AVAILABLE' ";
+            $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
             $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
             if ($num_rows = mysql_num_rows($result))
                {
@@ -438,13 +445,7 @@ else
                while ($row = mysql_fetch_array($result))
                   {
                   extract($row);
-                  $report .= "   -";
-                  if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
-                  $report .= "-";
-                  if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
-                  $report .= "- ";
-                  if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-                  $report .= sprintf("%3s ",$squad);
+                  $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
                   if ($be_authority)
@@ -465,7 +466,7 @@ else
                      $report .= "</a>";
                      }
                   $report .= "\n";
-                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
+                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = "";
                   }
                }
             else
@@ -480,8 +481,8 @@ else
          if ($n[$night_index])
             {
             $night_description = date("jS \\n\i\g\h\\t (l):",mktime(9,0,0,$applicable_month_num,$night_index));
-            $where_clause_2 = "and n$night_index='AVAILABLE' ";
-            $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+            $where_clause_2 = " and n$night_index='AVAILABLE' ";
+            $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
             $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
             if ($num_rows = mysql_num_rows($result))
                {
@@ -489,13 +490,7 @@ else
                while ($row = mysql_fetch_array($result))
                   {
                   extract($row);
-                  $report .= "   -";
-                  if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
-                  $report .= "-";
-                  if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
-                  $report .= "- ";
-                  if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-                  $report .= sprintf("%3s ",$squad);
+                  $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
                   if ($be_authority)
@@ -516,7 +511,7 @@ else
                      $report .= "</a>";
                      }
                   $report .= "\n";
-                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
+                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = "";
                   }
                }
             else
