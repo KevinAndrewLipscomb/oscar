@@ -119,9 +119,27 @@ require_once("f_connectselectdb.phtml");
          //
          // Validate parameters.
          //
-         if ($squad != "")
+         if (($coord_agency == "EMS") and ($squad == ""))
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Error!</i></h2>
+            <b>
+            <blockquote>
+               <p>You did not supply a required parameter.&nbsp; You must supply a value for this field:</p>
+               <ul>
+                  <li><p>Home squad</p>
+               </ul>
+               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problem.</p>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+            }
+         else
          {
-         //
          if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
             {
             //
@@ -289,25 +307,6 @@ require_once("f_connectselectdb.phtml");
             echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
             }
          }
-         else
-            {
-            //
-            // Fill the page out with a warning and instructions.
-            //
-            ?>
-            <h2><i>Error!</i></h2>
-            <b>
-            <blockquote>
-               <p>You did not supply a required parameter.&nbsp; You must supply a value for this field:</p>
-               <ul>
-                  <li><p>Home squad</p>
-               </ul>
-               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problem.</p>
-            </blockquote>            
-            </b>
-            <?
-            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
-            }
          ?>
          <br clear=both>
          <hr>
