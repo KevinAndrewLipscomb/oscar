@@ -53,7 +53,7 @@ echo " from its database.</p>\n";
 if ($num_rows_affected == 0)
    {
    echo "<i>\n"
-      . "A <u>ZERO</u> result can be caused by:\n"
+      . "A <u>zero</u> result can be caused by:\n"
       . "   <ul>\n"
       . "      <li>an attempt to retract records from months gone by;</li>\n"
       . "      <li>an OSCAR bug.</li>\n"
@@ -63,8 +63,7 @@ if ($num_rows_affected == 0)
       . "      <li><a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">the Schedule Coordinator</a></li>\n"
       . "      <li><a href=mailto:\"" . RoleEmailAddress("") . "\">the OSCAR System Administrator</a></li>\n"
       . "   </ul>\n"
-      . "</i>\n"
-      . "<br>\n";
+      . "</i>\n";
    }
 echo "<p><b>Don't forget to <a href="
    . OscarRootUrl()
