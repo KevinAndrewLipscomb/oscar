@@ -3,6 +3,8 @@ submit
    module: form-submit-avails-1
    module: form-submit-avails-2
    module: perform-add-avail-sheet
+   point: submit-to-ems
+   point: submit-to-squad
    --
 enter-tda
    module: ers-tda-input-form
@@ -41,3 +43,25 @@ retract
    module: form-request-retraction
    module: perform-gen-challenge
    module: retract
+relay
+   module: [request-report-screen]
+   module: perform-hand-off
+   mutexvar: member-of-participating-squad, member-of-nonparticipating-squad
+   mutexvar: relay-all, relay-some, relay-none
+   mutexvar: comment, nocomment
+   point: member-of-participating-squad, relay-all, comment
+   point: member-of-participating-squad, relay-all, nocomment
+   point: member-of-participating-squad, relay-some, comment
+   point: member-of-participating-squad, relay-some, nocomment
+   point: member-of-participating-squad, relay-none, comment
+   point: member-of-participating-squad, relay-none, nocomment
+   point: member-of-nonparticipating-squad, relay-all, comment
+   point: member-of-nonparticipating-squad, relay-all, nocomment
+   point: member-of-nonparticipating-squad, relay-some, comment
+   point: member-of-nonparticipating-squad, relay-some, nocomment
+   point: member-of-nonparticipating-squad, relay-none, comment
+   point: member-of-nonparticipating-squad, relay-none, nocomment
+   point: interventing-retraction
+   point: no-intervening-retraction
+   point: relayed-before
+   point: not-relayed-before
