@@ -1,0 +1,308 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+error_reporting(E_ALL);
+//
+$foundation_dir = "../foundation";
+$pear_dir = "../pear";
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_sendapprovalnotice.phtml");
+require_once("f_properties.phtml");
+require_once("f_beauthority.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_availlist.phtml");
+require_once("f_squadofcoordagency.phtml");
+require_once("f_harvestedlist.phtml");
+require_once("f_harvestemailaddresses.phtml");
+require_once("f_beemsschedcoord.phtml");
+require_once("f_htmlofnote.phtml");
+require_once("f_formattednoteappendage.phtml");
+require_once("$foundation_dir/std_style_class.php");
+require_once("Mail.php");
+require_once("$pear_dir/Mail/mime.php");
+//
+$report = "<html>\n";
+$report .= "<body bgcolor=#FFFFFF>\n";
+$report .= "<table align=center width=80%><tr><td>\n";
+$report .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$report .= "<H1 ALIGN=CENTER>Daily Availability Report</H1>\n";
+$report .= "<hr>\n";
+//
+echo $report;
+//
+// Connect to the database.
+//
+if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   $report .= "<p>Sorry, OSCAR's database was temporarily offline at the time this report was attempted.</p>";
+   }
+else
+{
+$be_authority = 1;
+$be_combined_agency_format = 'TRUE';
+//
+// Retrieve timestamp of latest avail_sheet record.  Later, we'll use it to see if database conditions have changed
+// significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
+// generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
+//
+$result = mysql_query
+   (
+   "select max(timestamp) as timestamp_of_latest_submission "
+   .  " from " . $mode . "avail_sheet "
+   .  " where month='" . date('M') . "' "
+   )
+   or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
+$row = mysql_fetch_object($result);
+//
+// Retrieve timestamp of latest relay_journal record for this agency.  If records have been relayed, but no relayed record
+// has a submission time later than the latest non-relayed submission, then knowing the timestamp_of_latest_submission
+// (above) is not sufficient.
+//
+$result = mysql_query
+   (
+   "select max(timestamp) as timestamp_of_latest_relay "
+   .  " from " . $mode . "relay_journal "
+   .  " where month='" . date('M') . "' "
+   )
+   or die("The attempt to select the latest timestamp from the relay journal failed with this error:  " . mysql_error());
+$row = mysql_fetch_object($result);
+//
+$presentation_clause = 'order by be_on_team_5 desc '
+   .  '   , be_on_team_30 desc '
+   .  '   , be_als desc '
+   .  '   , coord_agency asc '
+   .  '   , be_third asc '
+   .  '   , be_nondriver desc '
+   .  '   , be_needing_driver desc ';
+//
+// The request form, under certain conditions, sends a value of 13 for applicable_month_num.  Cast it into the range 1..12.
+//
+$applicable_month_num = date('n');
+$applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
+$days_in_applicable_month = date("t",$applicable_month_time);
+//
+$month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
+$month_abbrev = substr($month_word,0,3);
+$where_clause = " month='$month_abbrev' and be_tda='FALSE' and note not like '%mesg(RELAY)%' ";
+//
+$base_sql_statement = "select distinct last_name"
+   .  ", first_name"
+   .  ", coord_agency"
+   .  ", squad"
+   .  ", be_on_team_30"
+   .  ", be_on_team_5"
+   .  ", be_als"
+   .  ", be_needing_driver"
+   .  ", be_nondriver"
+   .  ", be_third"
+   .  " from " . $mode . "avail_sheet ";
+$info_message = "";
+      //
+      $report .= "<pre>\n";
+      $report .= "<b><u>System-wide</u></b> daily availability report generated " . date("l Y-M-d H:i:s T") . "\n\n";
+      $report .= "This report ONLY includes TODAY's shifts.\n";
+      if ($info_message) $report .= "$info_message\n";
+      $report .= "\n";
+            $day_index = date('j');
+            $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
+            $where_clause_2 = " and d$day_index='AVAILABLE' ";
+            $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
+            $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+            if ($num_rows = mysql_num_rows($result))
+               {
+               $report .= $day_description . "\n";
+               while ($row = mysql_fetch_array($result))
+                  {
+                  $last_name = $first_name = $coord_agency = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als =
+                     $be_third = $be_nondriver = $be_needing_driver = "";
+                  extract($row);
+                  $report .= "   "
+                     .  Properties
+                           (
+                           $be_on_team_5,
+                           $be_on_team_30,
+                           $be_tda,
+                           $be_als,
+                           $squad,
+                           $mode,
+                           $coord_agency,
+                           $be_third,
+                           $be_nondriver,
+                           $be_needing_driver,
+                           $be_combined_agency_format
+                           )
+                     . " ";
+                  $last_name = stripslashes($last_name);
+                  $first_name = stripslashes($first_name);
+                     $report .= "<a href=" . OscarHomePageUrl() . '/' . $mode . "detail.phtml?a="
+                        .  base64_encode($last_name)
+                        .  "&b="
+                        .  base64_encode($first_name)
+                        .  "&c="
+                        .  base64_encode($month_abbrev)
+                        .  "&d="
+                        .  base64_encode($be_authority)
+                        .  "&e="
+                        .  base64_encode($coord_agency)
+                        .  ">";
+                  $report .= "$last_name, $first_name";
+                     $report .= "</a>";
+                  $report .= "\n";
+                  }
+               }
+            else
+               {
+               $report .= $day_description . " None\n";
+               }
+            $report .= "\n";
+            $night_index = $day_index;
+            $night_description = date("jS \\n\i\g\h\\t (l):",mktime(9,0,0,$applicable_month_num,$night_index));
+            $where_clause_2 = " and n$night_index='AVAILABLE' ";
+            $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
+            $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+            if ($num_rows = mysql_num_rows($result))
+               {
+               $report .= $night_description . "\n";
+               while ($row = mysql_fetch_array($result))
+                  {
+                  $last_name = $first_name = $coord_agency = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als =
+                     $be_third = $be_nondriver = $be_needing_driver = "";
+                  extract($row);
+                  $report .= "   "
+                     .  Properties
+                           (
+                           $be_on_team_5,
+                           $be_on_team_30,
+                           $be_tda,
+                           $be_als,
+                           $squad,
+                           $mode,
+                           $coord_agency,
+                           $be_third,
+                           $be_nondriver,
+                           $be_needing_driver,
+                           $be_combined_agency_format
+                           )
+                     . " ";
+                  $last_name = stripslashes($last_name);
+                  $first_name = stripslashes($first_name);
+                     $report .= "<a href=" . OscarHomePageUrl() . '/' . $mode . "detail.phtml?a="
+                        .  base64_encode($last_name)
+                        .  "&b="
+                        .  base64_encode($first_name)
+                        .  "&c="
+                        .  base64_encode($month_abbrev)
+                        .  "&d="
+                        .  base64_encode($be_authority)
+                        .  "&e="
+                        .  base64_encode($coord_agency)
+                        .  ">";
+                  $report .= "$last_name, $first_name";
+                     $report .= "</a>";
+                  $report .= "\n";
+                  }
+               }
+            else
+               {
+               $report .= $night_description . " None\n";
+               }
+            $report .= "\n";
+         $report .= "   +-----------------------------------------+\n";
+         $report .= "   | Legend:                                 |\n";
+         $report .= "   |    -5-30-TDA-Z- Rxx Lastname, Firstname |\n";
+         $report .= "   |     ^  ^     ^   ^                      |\n";
+         $report .= "   |     |  |     |   |                      |\n";
+         $report .= "   |     |  |     |   +- Home rescue squad   |\n";
+         $report .= "   |     |  |     |      (ERS for VBFD)      |\n";
+         $report .= "   |     |  |     |                          |\n";
+         $report .= "   |     |  |     +- Zone Car ALS            |\n";
+         $report .= "   |     |  |                                |\n";
+         $report .= "   |     |  +- Squad truck team member       |\n";
+         $report .= "   |     |                                   |\n";
+         $report .= "   |     +- EMS-5 team member                |\n";
+         $report .= "   |                                         |\n";
+         $report .= "   |    -Aaa-drv-    Rxx Lastname, Firstname |\n";
+         $report .= "   |      ^   ^                              |\n";
+         $report .= "   |      |   |                              |\n";
+         $report .= "   |      |   +- Qualified driver            |\n";
+         $report .= "   |      |                                  |\n";
+         $report .= "   |      +- aic/ALS                         |\n";
+         $report .= "   +-----------------------------------------+\n\n";
+      $report .= "</pre>\n";
+      $report .= "<pre>--- END ---</pre><br>\n";
+      $report .= "<small><i><pre>\$Id$</pre></i></small>\n";
+      $report .= "</td></tr></table>\n";
+      $report .= "</body>\n";
+      $report .= "</html>\n";
+      }
+//                 0        1         2         3         4         5         6         7
+//                 123456789012345678901234567890123456789012345678901234567890123456789012
+$alternate_text = "Sorry, your email program is not capable of correctly displaying OSCAR's\n"
+                . "Daily Availability Report.  Please contact the OSCAR System\n"
+                . "Administrator at <" . RoleEmailAddress("",$mode) . ">.\n";
+//
+// Send the report.
+//
+$email_addr = '';
+$result = mysql_query('select * from ' . $mode . 'daily_report_recipient')
+   or die('Retrieval of daily report recipient list failed with error: ' . mysql_error());
+if (mysql_num_rows($result))
+   {
+   while ($row = mysql_fetch_array($result))
+      {
+      extract($row);  // Sets $email_address
+      $email_addr .= $email_address . ',';
+      }
+   $email_addr = substr($email_addr,0,-1);
+   }
+//
+$headers = array
+   (
+   'To' => RoleEmailAddress('master',$mode),
+   'Bcc' => $email_addr,
+   'From' => 'OSCAR <' . RoleEmailAddress("",$mode) . '>',
+   'Reply-to' => 'OSCAR <' . RoleEmailAddress("",$mode) . '>',
+   'Subject' => 'Daily Availability Report'
+   );
+//
+$mail_mime_obj = new Mail_mime();
+$mail_mime_obj->setTXTBody($alternate_text);
+$mail_mime_obj->setHTMLBody($report);
+$mime_message_body = $mail_mime_obj->get();
+$headers = $mail_mime_obj->headers($headers);
+$mail_message_obj =& Mail::factory('sendmail');
+$result = $mail_message_obj->send($email_addr, $headers, $mime_message_body);
+//
+if ($result)
+   {
+   echo "<p>Success.</p>\n";
+   }
+else
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Error!</i></h2>
+   <?
+   }
+?>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>

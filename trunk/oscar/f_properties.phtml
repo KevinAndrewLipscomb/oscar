@@ -13,7 +13,8 @@ function Properties
    $coord_agency = "EMS",
    $be_third = "",
    $be_nondriver = "",
-   $be_needing_driver = ""
+   $be_needing_driver = "",
+   $be_combined_agency_format = ""
    )
    {
    if ($mode) $saved_error_level = error_reporting(E_ALL);
@@ -28,12 +29,14 @@ function Properties
       if ($be_tda == "TRUE") $s .= "TDA"; else $s .= "---";
       $s .= "-";
       if ($be_als == "TRUE") $s .= "Z"; else $s .= "-";
+      if ($be_combined_agency_format == "TRUE") $s .= "--------";
       $s .= "- ";
       if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
       $s .= sprintf("%3s",$squad);
       }
    else // coord_agency is not EMS
       {
+      if ($be_combined_agency_format == "TRUE") $s .= "-----------";
       //
       // Build patient care indicator: {---|aic|ALS}
       //
@@ -65,6 +68,10 @@ function Properties
          $s .= "drv";
          }
       $s .= "- ";
+      if ($be_combined_agency_format == "TRUE")
+         {
+         $s .= sprintf("%3s",SquadOfCoordAgency($coord_agency,$mode));
+         }
       }
    //
    if ($mode) error_reporting($saved_error_level);
