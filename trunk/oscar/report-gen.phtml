@@ -22,7 +22,7 @@ $presentation_clause = "order by be_on_team_5, be_on_team_30, squad";
 $where_clause = "";
 if ($report_type == "FULL")
    {
-   $where_clause = "month=$month ";
+   $where_clause = "month='$month' ";
    echo "<pre>\n";
    for ($index = 1; $index <= 31; $index++)
       {
