@@ -47,7 +47,7 @@ require_once("f_roleemailaddress.phtml");
             </tr>
             <tr>
               <td>Email address:<sup><b>*</b></sup></td>
-              <td><input type="text" name=email_addr size="64" maxlength=64></td>
+              <td><input type="text" name=email_addr size=40 maxlength=64><small>&nbsp;&nbsp;(of person entering data)</small></td>
             </tr>
             <tr>
               <td>Home squad:<sup><b>*</b></sup></td>
@@ -92,8 +92,15 @@ require_once("f_roleemailaddress.phtml");
                  </ul>
               </td>
               <td align=center valign=middle>
-                 <small><i>If you are not an ALS provider or a member of a special team, you should not yet be using the 
-                    OSCAR system.&nbsp; Submit BLS availabilities to your squad's schedule coordinator instead.</i></small>
+                 <table bgcolor=#E8E8E8>
+                    <tr>
+                       <td align=center valign=center>
+                          <small><i>If you are not an ALS provider or a member of a special team, you should not yet be
+                             using the OSCAR system.&nbsp; Submit BLS availabilities to your squad's schedule coordinator
+                             instead.</i></small>
+                       </td>
+                    </tr>
+                 </table>
               </td>
            </tr>
         </table>
