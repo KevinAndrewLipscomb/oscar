@@ -5,6 +5,7 @@
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
 ?>
 <html>
 <head><title>OSCAR - VBDEMS ALS availability sheet submission</title></head>
@@ -42,7 +43,7 @@ require_once("f_bodyopen.phtml");
             //
             // Connect to the database.
             //
-            mysql_connect(localhost,kalipso,fesface);
+            mysql_connect(localhost,kalipso,Password());
             mysql_select_db(oscar);
             //
             // Create and execute the SQL statement to insert the record.

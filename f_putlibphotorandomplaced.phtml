@@ -2,6 +2,8 @@
 //
 // $Id$
 //
+require_once("f_password.phtml");
+//
 function PutLibPhotoRandomPlaced
    (
    $placement,
@@ -12,7 +14,7 @@ function PutLibPhotoRandomPlaced
    //
    // Connect to the database.
    //
-   $conn = mysql_connect(localhost,kalipso,fesface);
+   $conn = mysql_connect(localhost,kalipso,Password());
    mysql_select_db(kalipso);
    //
    // Create the SQL statement
