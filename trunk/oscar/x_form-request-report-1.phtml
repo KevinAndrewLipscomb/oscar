@@ -1,0 +1,125 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Report Request Form (Part 1)</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Report Request Form (Part 1)</h1>
+        </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td></tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+        {
+        ?>
+        <blockquote>
+           <table align=center bgcolor=#E8E8E8>
+              <tr>
+                 <td align=center valign=middle>
+                    <small>To guard against misuse, OSCAR first sends all generated reports to the appropriate 
+                       schedule coordinator.&nbsp; The coordinator then forwards the report to the email address 
+                       that you specify.&nbsp; Because this process requires human intervention, results may not be 
+                       immediate.</small>
+                 </td>
+              </tr>
+           </table>
+        </blockquote>
+        <p><i>OSCAR's report request process has changed.&nbsp; Requesting a report is now a simple two-step process that 
+           supports centralized as well as squad-based coordination.&nbsp; To complete Part 1, fill out this form and 
+           press the "Continue..." button.</i></p>
+        <form action=<? echo $mode; ?>form-request-report-2.phtml method=post>
+           <table>
+              <tr>
+                 <td>Your name:</td>
+                 <td><input type=text name=name size=64>
+              </tr>
+              <tr>
+                 <td>Your email address:</td>
+                 <td><input type=text name=email_addr size=64>
+              </tr>
+              <tr>
+                 <td>Applicable month:</td>
+                 <td><select size=1 name=applicable_month_num>
+                    <option value="">Select</option>
+                    <?
+                    $current_month_num = date("n");
+                    echo "<option value=" . $current_month_num . ">" . date("F") . "</option>\n";
+                    echo "<option value=" . ($current_month_num + 1) . ">" . date("F",mktime(12,0,0,($current_month_num + 1),1)) . "</option>\n";
+                    echo "<option value=" . ($current_month_num + 2) . ">" . date("F",mktime(12,0,0,($current_month_num + 2),1)) . "</option>\n";
+                    ?>
+                 </select></td>
+              </tr>
+              <tr>
+                 <td>Get availabilities from:</td>
+                 <td>
+                    <select size=1 name=coord_agency>
+                       <option value="">Select</option>
+                       <option value="EMS">EMS Admin</option>
+                       <option value="R01">Rescue 1 - Ocean Park</option>
+                       <option value="R02">Rescue 2 - Davis Corner</option>
+                       <option value="R04">Rescue 4 - Chesapeake Beach</option>
+                       <option value="R05">Rescue 5 - Courthouse</option>
+                       <option value="R06">Rescue 6 - Creeds</option>
+                       <option value="R09">Rescue 9 - Kempsville</option>
+                       <option value="R13">Rescue 13 - Blackwater</option>
+                       <option value="R14">Rescue 14 - Virginia Beach</option>
+                       <option value="R15">Rescue 15 - Knotts Island</option>
+                       <option value="R16">Rescue 16 - Plaza</option>
+                       <option value="R17">Rescue 17 - Sandbridge</option>
+                    </select>
+                 </td>
+              </tr>
+           </table>
+           <br>
+           <p>The next page collects other parameters required to generate your report, including which shifts you are
+              interested in.</p>
+           <p><input type="submit" value="Continue..."><input type="reset"></p>
+        </form>
+        </blockquote>
+        <?
+        }
+        else
+           {
+           ?>
+           <h2><i>Sorry...</i></h2>
+           <b>
+           <blockquote>
+              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your request later.</p>"; ?>
+           </blockquote>            
+           </b>
+           <?
+           }
+        ?>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+

@@ -1,0 +1,248 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Report Request Form (Part 2)</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Report Request Form (Part 2)</h1>
+        </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td></tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+        {
+        //
+        // Validate parameters.
+        //
+        if
+           (
+              ($name != "")
+           and
+              ($email_addr != "")
+           and
+              ($applicable_month_num != "")
+           and
+              ($coord_agency != "")
+           )
+        // then
+        {
+        //
+        // Show what was collected in Part 1.
+        //
+        echo "<br>\n"
+           . "<table>\n"
+           . "   <tr><td>Name:</td><td><b>$name</b></td></tr>\n"
+           . "   <tr><td>Email address:</td><td><b>$email_addr</b></td></tr>\n"
+           . "   <tr><td>Applicable month:</td><td><b>"
+           . date("F",mktime(12,0,0,$applicable_month_num,1))
+           . "</b></td></tr>\n"
+           . "   <tr><td>Coordinating agency:&nbsp;&nbsp;</td><td><b>$coord_agency</b></td></tr>\n"
+           . "</table>\n"
+           . "<br>\n";
+        ?>
+        <p><i>For the values you supplied in Part 1, the following additional information is required.&nbsp; Complete the
+           form below and press the "Submit" button to finish the report request.</i></p>
+        <form action=<? echo $mode; ?>perform-gen-report.phtml method=post>
+           <?
+           echo "<input type=hidden name=name value=\"$name\">\n"
+              . "<input type=hidden name=email_addr value=\"$email_addr\">\n"
+              . "<input type=hidden name=applicable_month_num value=$applicable_month_num>\n"
+              . "<input type=hidden name=coord_agency value=$coord_agency>\n";
+           ?>
+           <table>
+              <tr>
+                 <td>
+                    Include:
+                    <blockquote>
+                       <input type=radio name=team_filter value=everyone checked>Everyone<br>
+                       <?
+                       if ($coord_agency == "EMS")
+                          {
+                          ?>
+                          <input type=radio name=team_filter value=als_only>Only Zone Car ALS providers<br>
+                          <input type=radio name=team_filter value=team_30_only>Only squad truck team members<br>
+                          <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
+                          <input type=radio name=team_filter value=tda_only>Only TDA personnel<br>
+                          <?
+                          }
+                       else
+                          {
+                          ?>
+                          <input type=radio name=team_filter value=released_only>Only released providers<br>
+                          <input type=radio name=team_filter value=drivers_only>Only qualified drivers<br>
+                          <input type=radio name=team_filter value=thirds_only>Only "thirds"<br>
+                          <?
+                          }
+                       ?>
+                       </blockquote>
+                    </td>
+                 </tr>
+             </table>
+             <br>
+          <table border="0" cellpadding="0" cellspacing="0" width="892">
+            <tr>
+              <td width="890" valign="bottom" colspan="3">
+                 Include:
+                 <blockquote>
+                    <input type=radio name=shift_filter value=all>
+                       <b>All shifts</b>&nbsp; (Ignore the checkboxes below.)<br>
+                    <input type=radio name=shift_filter value=some checked>
+                       <b>Just one or more</b> shifts, as follows:&nbsp <small><i>(Who can run my duty on... ?)</i></small>
+                 </blockquote>
+              </td>
+            </tr>
+            <tr>
+              <td width="136" valign="bottom">Leave nonapplicable days blank.
+                <p>&nbsp;</td>
+              <td width="125" valign="bottom">
+                <p align="left">Day shifts</p>
+                <ul>
+                  <li><input type="checkbox" name="d1">1st</li>
+                  <li><input type="checkbox" name="d2">2nd</li>
+                  <li><input type="checkbox" name="d3">3rd</li>
+                  <li><input type="checkbox" name="d4">4th</li>
+                  <li><input type="checkbox" name="d5">5th</li>
+                  <li><input type="checkbox" name="d6">6th</li>
+                  <li><input type="checkbox" name="d7">7th</li>
+                  <li><input type="checkbox" name="d8">8th</li>
+                  <li><input type="checkbox" name="d9">9th</li>
+                  <li><input type="checkbox" name="d10">10th</li>
+                  <li><input type="checkbox" name="d11">11th</li>
+                  <li><input type="checkbox" name="d12">12th</li>
+                  <li><input type="checkbox" name="d13">13th</li>
+                  <li><input type="checkbox" name="d14">14th</li>
+                  <li><input type="checkbox" name="d15">15th</li>
+                  <li><input type="checkbox" name="d16">16th</li>
+                  <li><input type="checkbox" name="d17">17th</li>
+                  <li><input type="checkbox" name="d18">18th</li>
+                  <li><input type="checkbox" name="d19">19th</li>
+                  <li><input type="checkbox" name="d20">20th</li>
+                  <li><input type="checkbox" name="d21">21st</li>
+                  <li><input type="checkbox" name="d22">22nd</li>
+                  <li><input type="checkbox" name="d23">23rd</li>
+                  <li><input type="checkbox" name="d24">24th</li>
+                  <li><input type="checkbox" name="d25">25th</li>
+                  <li><input type="checkbox" name="d26">26th</li>
+                  <li><input type="checkbox" name="d27">27th</li>
+                  <li><input type="checkbox" name="d28">28th</li>
+                  <li><input type="checkbox" name="d29">29th</li>
+                  <li><input type="checkbox" name="d30">30th</li>
+                  <li><input type="checkbox" name="d31">31st</li>
+                </ul>
+              </td>
+              <td width="625" valign="bottom">
+                <p align="left">Night shifts</p>
+                <ul>
+                  <li><input type="checkbox" name="n1">1st</li>
+                  <li><input type="checkbox" name="n2">2nd</li>
+                  <li><input type="checkbox" name="n3">3rd</li>
+                  <li><input type="checkbox" name="n4">4th</li>
+                  <li><input type="checkbox" name="n5">5th</li>
+                  <li><input type="checkbox" name="n6">6th</li>
+                  <li><input type="checkbox" name="n7">7th</li>
+                  <li><input type="checkbox" name="n8">8th</li>
+                  <li><input type="checkbox" name="n9">9th</li>
+                  <li><input type="checkbox" name="n10">10th</li>
+                  <li><input type="checkbox" name="n11">11th</li>
+                  <li><input type="checkbox" name="n12">12th</li>
+                  <li><input type="checkbox" name="n13">13th</li>
+                  <li><input type="checkbox" name="n14">14th</li>
+                  <li><input type="checkbox" name="n15">15th</li>
+                  <li><input type="checkbox" name="n16">16th</li>
+                  <li><input type="checkbox" name="n17">17th</li>
+                  <li><input type="checkbox" name="n18">18th</li>
+                  <li><input type="checkbox" name="n19">19th</li>
+                  <li><input type="checkbox" name="n20">20th</li>
+                  <li><input type="checkbox" name="n21">21st</li>
+                  <li><input type="checkbox" name="n22">22nd</li>
+                  <li><input type="checkbox" name="n23">23rd</li>
+                  <li><input type="checkbox" name="n24">24th</li>
+                  <li><input type="checkbox" name="n25">25th</li>
+                  <li><input type="checkbox" name="n26">26th</li>
+                  <li><input type="checkbox" name="n27">27th</li>
+                  <li><input type="checkbox" name="n28">28th</li>
+                  <li><input type="checkbox" name="n29">29th</li>
+                  <li><input type="checkbox" name="n30">30th</li>
+                  <li><input type="checkbox" name="n31">31st</li>
+                </ul>
+              </td>
+            </tr>
+          </table>
+           <br>
+           <p align=left>Briefly explain the reason for your request:<br>
+           <textarea rows="5" name=reason cols="40"></textarea></p>
+           <p>Please double check your entries before completing your request.</p>
+           <input type=submit value="Submit request"><input type=reset>
+        </form>
+        </blockquote>
+        <?
+        }
+        else
+           {
+           //
+           // Fill the page out with a warning and instructions.
+           //
+           ?>
+           <h2><i>Error!</i></h2>
+           <b>
+           <blockquote>
+              <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
+              <ul>
+                 <li><p>Name</p>
+                 <li><p>Email address</p>
+                 <li><p>Applicable month</p>
+                 <li><p>Coordinating agency</p>
+              </ul>
+              <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
+           </blockquote>            
+           </b>
+           <?
+           echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+           }
+        }
+        else
+           {
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <? echo "<p>OSCAR's database has gone offline.&nbsp; Please retry your request later.</p>"; ?>
+            </blockquote>            
+            </b>
+            <?
+           }
+        ?>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+

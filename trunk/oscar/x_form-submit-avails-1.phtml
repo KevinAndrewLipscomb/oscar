@@ -1,0 +1,117 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Availability Submission (Part 1)</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Availability Submission (Part 1)</h1>
+        </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td></tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+           {
+           ?>
+           <p><i>OSCAR's submission process has changed.&nbsp; Submission is now a simple two-step process that supports 
+              centralized as well as squad-based coordination.&nbsp; To complete Part 1, fill out this form and 
+              press the "Continue..." button.</i></p>
+           <p>All fields on this page are required.</p>
+           <form method="POST" action="<? echo $mode; ?>form-submit-avails-2.phtml">
+             <table>
+               <tr>
+                 <td>First name:</td>
+                 <td><input type="text" name=first_name size="32" maxlength=32></td>
+               </tr>
+               <tr>
+                 <td>Last name:</td>
+                 <td><input type="text" name=last_name size="32" maxlength=32></td>
+               </tr>
+               <tr>
+                 <td>Email address:</td>
+                 <td><input type="text" name=email_addr size=40 maxlength=64><small>&nbsp;&nbsp;(of person entering
+                    data)</small></td>
+               </tr>
+               <tr>
+                  <td>Applicable month:</td>
+                  <td><select size=1 name=applicable_month_num>
+                     <option value="">Select</option>
+                     <?
+                     $next_month_num = date("n") + 1;
+                     echo "<option value=" . $next_month_num . ">" . date("F",mktime(12,0,0,$next_month_num,1)) . "</option>\n";
+                     echo "<option value=" . ($next_month_num + 1) . ">" . date("F",mktime(12,0,0,($next_month_num + 1),1)) . "</option>\n";
+                     ?>
+                  </select></td>
+               </tr>
+               <tr>
+                  <td>Send availabilities to:</td>
+                  <td>
+                     <select size=1 name=coord_agency>
+                        <option value="">Select</option>
+                        <option value="EMS">EMS Admin</option>
+                        <option value="R01">Rescue 1 - Ocean Park</option>
+                        <option value="R02">Rescue 2 - Davis Corner</option>
+                        <option value="R04">Rescue 4 - Chesapeake Beach</option>
+                        <option value="R05">Rescue 5 - Courthouse</option>
+                        <option value="R06">Rescue 6 - Creeds</option>
+                        <option value="R09">Rescue 9 - Kempsville</option>
+                        <option value="R13">Rescue 13 - Blackwater</option>
+                        <option value="R14">Rescue 14 - Virginia Beach</option>
+                        <option value="R15">Rescue 15 - Knotts Island</option>
+                        <option value="R16">Rescue 16 - Plaza</option>
+                        <option value="R17">Rescue 17 - Sandbridge</option>
+                     </select>
+                  </td>
+               </tr>
+             </table>
+            <br>
+            <p>The next page collects details required by your schedule coordinator, including the shifts for which you will
+               be available.</p>
+            <p><input type="submit" value="Continue..."><input type="reset"></p>
+            </form>
+            <?
+            }
+         else
+            {
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your submission later.</p>"; ?>
+            </blockquote>            
+            </b>
+            <?
+            }
+         ?>
+         <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+

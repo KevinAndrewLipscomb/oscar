@@ -1,0 +1,279 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+// Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
+//
+$first_name = $first_name;
+$last_name = $last_name;
+$email_addr = $email_addr;
+$squad = $squad;
+$applicable_month_num = $applicable_month_num;
+$be_on_team_30 = $be_on_team_30;
+$be_on_team_5 = $be_on_team_5;
+$be_als = $be_als;
+$coord_agency = $coord_agency;
+$be_third = $be_third;
+$be_nondriver = $be_nondriver;
+$be_needing_driver = $be_needing_driver;
+$d1 = $d1;
+$d2 = $d2;
+$d3 = $d3;
+$d4 = $d4;
+$d5 = $d5;
+$d6 = $d6;
+$d7 = $d7;
+$d8 = $d8;
+$d9 = $d9;
+$d10 = $d10;
+$d11 = $d11;
+$d12 = $d12;
+$d13 = $d13;
+$d14 = $d14;
+$d15 = $d15;
+$d16 = $d16;
+$d17 = $d17;
+$d18 = $d18;
+$d19 = $d19;
+$d20 = $d20;
+$d21 = $d21;
+$d22 = $d22;
+$d23 = $d23;
+$d24 = $d24;
+$d25 = $d25;
+$d26 = $d26;
+$d27 = $d27;
+$d28 = $d28;
+$d29 = $d29;
+$d30 = $d30;
+$d31 = $d31;
+$n1 = $n1;
+$n2 = $n2;
+$n3 = $n3;
+$n4 = $n4;
+$n5 = $n5;
+$n6 = $n6;
+$n7 = $n7;
+$n8 = $n8;
+$n9 = $n9;
+$n10 = $n10;
+$n11 = $n11;
+$n12 = $n12;
+$n13 = $n13;
+$n14 = $n14;
+$n15 = $n15;
+$n16 = $n16;
+$n17 = $n17;
+$n18 = $n18;
+$n19 = $n19;
+$n20 = $n20;
+$n21 = $n21;
+$n22 = $n22;
+$n23 = $n23;
+$n24 = $n24;
+$n25 = $n25;
+$n26 = $n26;
+$n27 = $n27;
+$n28 = $n28;
+$n29 = $n29;
+$n30 = $n30;
+$n31 = $n31;
+//
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
+require_once("f_availlist.phtml");
+require_once("f_showavailsheetrecdetail.phtml");
+require_once("f_connectselectdb.phtml");
+?>
+<html>
+<head><title>OSCAR - Confirmation</title></head>
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+         <table>
+            <tr>
+               <td>
+                  <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+               </td>
+               <td>
+                  <h6 align="center">
+                  KVEO-IT-PROJECT<br>
+                  <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+                  <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+                  <H1 ALIGN="CENTER">Confirmation</H1>
+               </td>
+            </tr>
+         </table>
+         <hr>
+         <?
+         //
+         if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+            {
+            //
+            // Calculate the expiration date for this availability sheet.  For the expiration date calculation, the 0th day
+            // of month+1 resolves to the last day of month.
+            //
+            $applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
+            $applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
+            $expiration_date = date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0));
+            //
+            // Create and execute the SQL statement to insert the record.
+            //
+            $sql = "insert into " . $mode . "avail_sheet set first_name='" . addslashes(trim($first_name)) . "'"
+               . ", last_name='" . addslashes(trim($last_name)) ."'"
+               . ", email_addr='" . addslashes(trim($email_addr)) . "'"
+               . ", month='" . $applicable_month_abbrev . "'"
+               . ", coord_agency='$coord_agency'";
+            if ($coord_agency == "EMS")
+               {
+               $sql .= ", squad='$squad'";
+               if ($be_on_team_30 == "TRUE") $sql .= ", be_on_team_30='TRUE'";
+               if ($be_on_team_5 == "TRUE") $sql .= ", be_on_team_5='TRUE'";
+               if ($be_als == "TRUE") $sql .= ", be_als='TRUE'";
+               }
+            else
+               {
+               if ($be_third == "TRUE") $sql .= ", be_third='TRUE'";
+               if ($be_nondriver == "TRUE") $sql .= ", be_nondriver='TRUE'";
+               if ($be_needing_driver == "TRUE") $sql .= ", be_needing_driver='TRUE'";
+               }
+            $sql .= ", d1='$d1', d2='$d2', d3='$d3', d4='$d4', d5='$d5', d6='$d6', d7='$d7', d8='$d8', d9='$d9', d10='$d10', d11='$d11', d12='$d12', d13='$d13', d14='$d14', d15='$d15', d16='$d16', d17='$d17', d18='$d18', d19='$d19', d20='$d20', d21='$d21', d22='$d22', d23='$d23', d24='$d24', d25='$d25', d26='$d26', d27='$d27', d28='$d28', d29='$d29', d30='$d30', d31='$d31'"
+               . ", n1='$n1', n2='$n2', n3='$n3', n4='$n4', n5='$n5', n6='$n6', n7='$n7', n8='$n8', n9='$n9', n10='$n10', n11='$n11', n12='$n12', n13='$n13', n14='$n14', n15='$n15', n16='$n16', n17='$n17', n18='$n18', n19='$n19', n20='$n20', n21='$n21', n22='$n22', n23='$n23', n24='$n24', n25='$n25', n26='$n26', n27='$n27', n28='$n28', n29='$n29', n30='$n30', n31='$n31'"
+               . ", num_extras='$num_extras'"
+               . ", note='" . addslashes(trim($note)) . "'"
+               . ", submitting_node='$REMOTE_ADDR'"
+               . ", expiration='$expiration_date'";
+            mysql_query($sql)
+               or die
+                  (
+                  "Sorry, the database operation failed with this error:  <i>"
+                  .  mysql_error()
+                  .  "</i>\n\nPlease notify the <a href=mailto:\""
+                  .  RoleEmailAddress("")
+                  .  "\">OSCAR System Administrator</a>."
+                  );
+            // mail(RoleEmailAddress("")),"OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
+            //
+            // For a more meaningful acknowledgement, reinitialize all the dependent variables and restore them by 
+            // retrieving the very record we just inserted.
+            //
+            $email_addr = $squad = $be_on_team_5 = $be_on_team_30 = $be_als = $coord_agency = $be_third = $be_nondriver =
+               $be_needing_driver = "";
+            $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 = $d17 =
+               $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 = $d31 = "";
+            $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 = $n17 =
+               $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 = $n31 = "";
+            $num_extras = $note = $expiration = "";
+            $be_tda = "";
+               //
+               // Break be_tda out separately so it won't get flagged as an undefined var and so I don't have to declare it
+               // as an argument (above), which it is not in this case.
+               //
+            //
+            $result = mysql_query
+               (
+               $qry = "select * from " . $mode . "avail_sheet"
+               .  " where month='$applicable_month_abbrev'"
+               .  "    and last_name='" . addslashes(trim($last_name)) . "'"
+               .  "    and first_name='" . addslashes(trim($first_name)) . "'"
+               .  " order by timestamp desc"
+               .  " limit 1"
+               );
+            if ($num_rows = mysql_num_rows($result))
+               {
+               //
+               // Reinitialize the independent variables now that the select is done.  This way, anything that gets
+               // displayed is assured to get its value from the extract call below.
+               //
+               $first_name = $last_name = "";
+               //
+               extract($row = mysql_fetch_array($result));
+               //
+               // The insert and subsequent select must've succeeded.
+               //
+               echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
+               echo "<p>Your availability sheet has been successfully entered into the OSCAR System as follows:</p>";
+               echo "<blockquote>\n";
+               ShowAvailSheetRecDetail
+                  (
+                  $timestamp,
+                  $first_name,
+                  $last_name,
+                  $email_addr,
+                  $squad,
+                  $month,
+                  $be_on_team_5,
+                  $be_on_team_30,
+                  $be_tda,
+                  $be_als,
+                  $num_extras,
+                  $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
+                  $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
+                  $note,
+                  $expiration,
+                  1,
+                  $mode,
+                  $coord_agency,
+                  $be_needing_driver,
+                  $be_nondriver,
+                  $be_third
+                  );
+               echo "</blockquote>\n";
+               echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+               }
+            else
+               {
+               //
+               // Fill the page out with a warning and instructions.
+               //
+               ?>
+               <h2><i>Error!</i></h2>
+               <b>
+               <blockquote>
+                  <p>The OSCAR system was unable to find what it thinks it just inserted into the database.&nbsp; Possible causes
+                     include:</p>
+                  <ul>
+                     <li>The network may be very congested.
+                     <li>The database server may be bogged down, or may have gone offline due to error or maintenance.
+                     <li>OSCAR may have a bug.
+                  </ul>
+                  <p>Please try submitting your information again later, or contact the <a href=mailto:\"<? echo 
+                     RoleEmailAddress(""); ?>\">OSCAR System Administrator</a>.</p>
+               </blockquote>            
+               </b>
+               <?
+               }
+            }
+         else
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please retry your submission later.</p>"; ?>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+            }
+         ?>
+         <br clear=both>
+         <hr>
+         <p><small><small><em><pre>$Id$</pre></em></small></small>
+      </td>
+   </tr>
+</table>
+</body>
+</html>
