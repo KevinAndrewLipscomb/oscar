@@ -93,6 +93,7 @@ require_once("f_squadofcoordagency.phtml");
 require_once("f_harvestedlist.phtml");
 require_once("f_harvestemailaddresses.phtml");
 require_once("f_beemsschedcoord.phtml");
+require_once("f_htmlofnote.phtml");
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
@@ -615,7 +616,12 @@ if ($shift_filter == "all")
                $report .= "</table>\n";
                if ($note != "")
                   {
-                  $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
+                  $report .= "   <p><i>" . HtmlOfNote(stripslashes($note),$mode) . "</i></p>\n";
+                  }
+               if ($be_relayable)
+                  {
+                  $report .= "   <small>Relay comment:</small><br>\n"
+                     .  "   <textarea name=$encoded_sheet_key-COMMENT cols=60 rows=2></textarea>\n";
                   }
                $report .= "</blockquote>\n<br>\n";
                }

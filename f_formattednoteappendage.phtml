@@ -1,0 +1,30 @@
+<?
+//
+// $Id$
+//
+function FormattedNoteAppendage
+   (
+   $mode,
+   $condition,
+   $mnemonic,
+   $message,
+   $source = "OSCAR"
+   )
+   {
+   if ($mode) $saved_error_level = error_reporting(E_ALL);
+   //
+   $s =  "<:>msg("
+      .  strtoupper($mnemonic)
+      .  ")from("
+      .  strtoupper($source)
+      .  ")at("
+      .  date("Y-M-d-H:i:s-T")
+      .  ")type("
+      .  strtoupper($condition)
+      .  "): "
+      .  addslashes($message);
+   //
+   if ($mode) error_reporting($saved_error_level);
+   return $s;
+   }
+?>
