@@ -279,6 +279,18 @@ if ($shift_filter == "all")
          }
       $report .= "<pre>\n";
       $report .= "<b><u>$coord_agency</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      //
+      $shortcuts  = "<p>Shortcuts:&nbsp; \n";
+      $shortcuts .= "<a href=#Days>Days</a>";
+      $shortcuts .= "&nbsp; |&nbsp; ";
+      $shortcuts .= "<a href=#Nights>Nights</a>";
+      $shortcuts .= "&nbsp; |&nbsp; ";
+      $shortcuts .= "<a href=#Summaries>Submission summaries</a>";
+      $shortcuts .= "&nbsp; |&nbsp; ";
+      $shortcuts .= "<a href=#End>End</a></p><br>\n";
+      //
+      $report .= "</pre>$shortcuts<pre>";
+      //
       if ($coord_agency == "EMS")
          {
          $report .= "   +-------------------------------------------+\n";
@@ -317,9 +329,10 @@ if ($shift_filter == "all")
       $report .= "This report includes ALL shifts.\n";
       if ($info_message) $report .= "$info_message\n";
       $report .= "\n";
+      $report .= "<a name=Days>";
       $report .= "+------+\n";
       $report .= "| Days |\n";
-      $report .= "+------+\n\n";
+      $report .= "+------+</a>\n\n";
       for ($day_index = 1; $day_index <= $days_in_applicable_month; $day_index++)
          {
          $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
@@ -383,9 +396,13 @@ if ($shift_filter == "all")
          $report .= "\n";
          }
       $report .= "\n";
+      //
+      $report .= "</pre>$shortcuts<pre>";
+      //
+      $report .= "<a name=Nights>";
       $report .= "+--------+\n";
       $report .= "| Nights |\n";
-      $report .= "+--------+\n\n";
+      $report .= "+--------+</a>\n\n";
       for ($night_index = 1; $night_index <= $days_in_applicable_month; $night_index++)
          {
          $night_description = date("jS \\n\i\g\h\\t (l):",mktime(21,0,0,$applicable_month_num,$night_index));
@@ -449,20 +466,32 @@ if ($shift_filter == "all")
          $report .= "\n";
          }
       $report .= "</pre>\n";
+      //
+      $report .= $shortcuts;
+      //
       if ($be_authority)
          {
          //
          // GENERATE NOTES AND WARNINGS.
          //
-         $report .= "<table width=100%><tr><td><h3><u>Submission Summaries</u></h3></td>";
+         $report .= "<h3><u><a name=Summaries>Submission Summaries</a></u></h3>\n";
+         $relay_instructions = "<table width=100%><tr><td><b>EMS Schedule Coordinator:</b></td>"
+            .  "<td align=right><small><a href=" . $mode . "relay-all-details.phtml>What is <b>Relay all</b>?</a></small>"
+            .  "</td></tr></table>\n"
+            .  "<ul>\n"
+            .  "   <li><p>Use the checkboxes to indicate availabilities you have allocated for the centralized "
+            .  "      schedule.&nbsp; Relay comments are optional.</p></li>\n"
+            .  "   <li><p>Press \"Relay unused\" below to pass unallocated availabilities to squad schedule coordinators, "
+            .  "      or \"Reset\" to abort your allocations and start again.</p></li>\n"
+            .  "   <li><p>If you leave <i>all</i> of a member's fields untouched, none of that member's availabilities "
+            .  "      will be relayed at this time (but you may relay them later if you wish).</p></li>\n"
+            .  "</ul>\n";
          if ($be_relayable)
             {
-            $report .= "<td align=right><small><a href=" . $mode . "relay-all-details.phtml>What is "
-               . "<b>Relay all</b>?</a></small></td>\n"
-               . "<form action=" . $mode . "perform-hand-off.phtml method=post>\n"
+            $report .= "<form action=" . $mode . "perform-hand-off.phtml method=post>\n"
                . "<input type=hidden name=month_abbrev value=$month_abbrev>\n";
+            $report .= $relay_instructions;
             }
-         $report .= "</tr></table>\n";
          mysql_query
             (
             "create temporary table aggregated "
@@ -620,8 +649,8 @@ if ($shift_filter == "all")
                   }
                if ($be_relayable)
                   {
-                  $report .= "   <small>Relay comment:</small><br>\n"
-                     .  "   <textarea name=$encoded_sheet_key-COMMENT cols=60 rows=2></textarea>\n";
+                  $report .= "   <p><small>Relay comment:</small><br>\n";
+                  $report .= "   <textarea name=$encoded_sheet_key-COMMENT cols=60 rows=2></textarea></p>\n";
                   }
                $report .= "</blockquote>\n<br>\n";
                }
@@ -635,21 +664,13 @@ if ($shift_filter == "all")
             or die("Drop of aggregated failed with error:  " . mysql_error());
          }
       //
-      $report .= "<pre>--- END ---</pre><br>\n";
+      $report .= "<pre><a name=End>--- END ---</a></pre><br>\n";
+      //
+      $report .= $shortcuts;
       //
       if ($be_relayable)
          {
-         $report .= "<table width=100%><tr><td><b>EMS Schedule Coordinator:</b></td>"
-            .  "<td align=right><small><a href=" . $mode . "relay-all-details.phtml>What is <b>Relay all</b>?</a></small>"
-            .  "</td></tr></table>\n"
-            .  "<ul>\n"
-            .  "   <li><p>Use the above checkboxes to indicate availabilities you have allocated for the centralized "
-            .  "      schedule.</p></li>\n"
-            .  "   <li><p>Press \"Relay unused\" below to pass unallocated availabilities to squad schedule coordinators, or "
-            .  "      \"Reset\" to abort your allocations and start again.</p></li>\n"
-            .  "   <li><p>If you do not indicate how to treat a member, none of that member's availabilities will be "
-            .  "      relayed at this time (but you may relay them later if you wish).</p></li>\n"
-            .  "</ul>\n"
+         $report .= $relay_instructions
             .  "<input type=submit value=\"Relay unused\"><input type=reset>\n"
             .  "</form>\n";
          }
