@@ -350,6 +350,8 @@ echo "<li><p><b>Notifications:</b>&nbsp; Email notifications have been sent to s
    . "   <td><small>Notification sent...</small></td>\n"
    . "</tr>\n";
 //
+//    RELAY NOTIFICATIONS
+//
 //    First, determine which squads actually received relayed sheets.
 //
 $result = mysql_query
@@ -387,9 +389,15 @@ while ($row = mysql_fetch_array($result))
          $relay_notice = "Dear $coord_agency Schedule Coordinator,\n\n"
                        . "I have used OSCAR to relay $num_relayed_sheets availability sheet(s) to $coord_agency.\n\n"
                        . "Please click here to retrieve an up-to-date\n"
-                       . "compiled availability report.  Be sure to\n"
-                       . "specify \"Get availabilities from $coord_agency\":\n"
-                       . OscarRootUrl() . "/" . $mode . "form-request-report-1.phtml\n\n"
+                       . "compiled availability report:\n"
+                       . OscarRootUrl() . "/" . $mode . "perform-gen-report.phtml"
+                       . "?name=" . $coord_agency . "SchedCoord"
+                       . "&email_addr=$relay_notice_recipient"
+                       . "&applicable_month_num=" . date("n",strtotime("$month_abbrev 1"))
+                       . "&coord_agency=$coord_agency"
+                       . "&team_filter=everyone"
+                       . "&shift_filter=all"
+                       . "&relay=TRUE\n\n"
                        . "If you have any questions, please send me a reply.\n\n";
          //
          // Add sig lines.
