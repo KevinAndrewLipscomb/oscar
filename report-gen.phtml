@@ -157,7 +157,12 @@ if ($report_type == "FULL")
                if ($be_on_team_30) $report .= "30"; else $report .= "--";
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $report .= sprintf("%3s %s, %s ",$squad,$last_name,$first_name);
+               $report .= sprintf("%3s ",$squad);
+               $report .= "<a href=detail.phtml?a="
+                  .  base64_encode($last_name)
+                  .  "&b="
+                  .  base64_encode($first_name)
+                  .  ">$last_name, $first_name</a>";
                if ($be_a_note) $report .= "*";
                $report .= "\n";
                $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
@@ -208,7 +213,11 @@ if ($report_type == "FULL")
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
-            $report .= "$last_name, $first_name&nbsp; [-";
+            $report .= "<a href=detail.phtml?a="
+               .  base64_encode($last_name)
+               .  "&b="
+               .  base64_encode($first_name)
+               .  ">$last_name, $first_name</a>&nbsp; [-";
             if ($be_on_team_5) $report .= "5"; else $report .= "-";
             $report .= "-";
             if ($be_on_team_30) $report .= "30"; else $report .= "--";
@@ -368,8 +377,13 @@ else
                   if ($be_on_team_30) $report .= "30"; else $report .= "--";
                   $report .= "- ";
                   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-                  $report .= sprintf("%3s %s, %s",$squad,$last_name,$first_name);
-                  $report .= "\n";
+                  $report .= sprintf("%3s ",$squad);
+                  $report .= "<a href=detail.phtml?a="
+                     .  base64_encode($last_name)
+                     .  "&b="
+                     .  base64_encode($first_name)
+                     .  ">$last_name, $first_name</a>"
+                     .  "\n";
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                   }
                }
@@ -400,8 +414,13 @@ else
                   if ($be_on_team_30) $report .= "30"; else $report .= "--";
                   $report .= "- ";
                   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-                  $report .= sprintf("%3s %s, %s",$squad,$last_name,$first_name);
-                  $report .= "\n";
+                  $report .= sprintf("%3s ",$squad);
+                  $report .= "<a href=detail.phtml?a="
+                     .  base64_encode($last_name)
+                     .  "&b="
+                     .  base64_encode($first_name)
+                     .  ">$last_name, $first_name</a>"
+                     .  "\n";
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                   }
                }
