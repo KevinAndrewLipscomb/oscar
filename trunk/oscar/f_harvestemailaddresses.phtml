@@ -29,11 +29,14 @@ function HarvestEmailAddresses($mode = "")
             $harvest_message_subject = "OSCAR email address harvest for $coord_agency";
             //
             $harvest_message_recipient = RoleEmailAddress("egroup-manager",$mode,$coord_agency);
-            $query = "select last_name, first_name, email_addr "
-               .  " from " . $mode . "avail_list "
+            $query = "select distinct last_name, first_name, email_addr "
+               .  " from " . $mode . "avail_sheet "
                .  " where expiration < CURRENT_DATE "
                .  "    and email_addr not like '%vbgov.com' ";
-            if ($coord_agency != "EMS") $query .= " and coord_agency='$coord_agency' ";
+            if ($coord_agency != "EMS")
+               {
+               $query .= " and coord_agency='$coord_agency' or squad='" . SquadOfCoordAgency($coord_agency,$mode) . "' ";
+               }
             $query .= " order by last_name, first_name, email_addr ";
             $entry_result = mysql_query($query) or die("Query 3 failed with error: " . mysql_error());
             if ($num_rows = mysql_num_rows($entry_result))
@@ -45,12 +48,7 @@ function HarvestEmailAddresses($mode = "")
                                 . "'$coord_agency'.  This report does not include email addresses in the\n"
                                 . "VBGOV.COM domain:\n\n";
                //
-               while ($entry_row = mysql_fetch_array($entry_result))
-                  {
-                  $last_name = $first_name = $email_addr = "";
-                  extract($entry_row);
-                  $harvest_message .= "   $last_name, $first_name <$email_addr>\n";
-                  }
+               $harvest_message .= HarvestedList($entry_result,$mode);
                //
                // Add sig lines.
                //
