@@ -18,9 +18,7 @@ require_once("f_password.phtml");
 mysql_connect(localhost,kalipso,Password());
 mysql_select_db(oscar);
 //
-$base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
 $presentation_clause = "order by be_on_team_5 desc, be_on_team_30 desc, squad";
-$where_clause = "";
 $month_num = date("n");
 $year_num = date("Y");
 if ($relative_month == "NEXT")
@@ -50,9 +48,10 @@ switch ($month_num)
    case 11: $month_word = "NOVEMBER"; break;
    case 12: $month_word = "DECEMBER"; break;
    }
+$where_clause = "month='" . substr($month_word,0,3) ."' ";
 if ($report_type == "FULL")
    {
-   $where_clause = "month='" . substr($month_word,0,3) ."' ";
+   $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
    echo "<pre>\n";
    echo "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
    echo "   +--------------------------------------------+\n";
@@ -162,89 +161,105 @@ if ($report_type == "FULL")
       {
       echo "None\n";
       }
-   echo "<pre>END.</pre>\n\n";
-   echo "<small><i><pre>\$Id$</pre></i></small>\n";
    }
 else
    {
-//   if ($div_spec_criteria != "")
-//      {
-//      $where_clause = $where_clause . "div_spec $div_spec_criteria ";
-//      }
-//   if ($frame_num_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "frame_num $frame_num_criteria ";
-//      }
-//   if ($be_avail_as_huge_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "be_avail_as_huge $be_avail_as_huge_criteria ";
-//      }
-//   if ($caption_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "caption $caption_criteria ";
-//      }
-//   if ($tech_details_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "tech_details $tech_details_criteria ";
-//      }
-//   if ($era_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "era $era_criteria ";
-//      }
-//   if ($copyright_year_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "copyright_year $copyright_year_criteria ";
-//      }
-//   if ($hits_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "hits $hits_criteria ";
-//      }
-//   if ($keywords_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "keywords $keywords_criteria ";
-//      }
-//   if ($placement_criteria != "")
-//      {
-//      if ($where_clause != "")
-//         {
-//         $where_clause = $where_clause . "and ";
-//         }
-//      $where_clause = $where_clause . "placement $placement_criteria ";
-//      }
+   //
+   // Filtered report
+   //
+   $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5 from avail_sheet ";
+   //
+   // Convert sequence of day/night scalars into 1-based arrays for easier looping later.
+   //
+   $d = array(1 => $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31);
+   $n = array(1 => $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31);
+   //
+   echo "<pre>\n";
+   echo "Filtered availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
+   echo "   +------------------------------------------+\n";
+   echo "   | Legend:                                  |\n";
+   echo "   |    -5-30- Rxx 8xxxxx Lastname, Firstname |\n";
+   echo "   |     ^  ^   ^    ^                        |\n";
+   echo "   |     |  |   |    |                        |\n";
+   echo "   |     |  |   |    +- Officer code          |\n";
+   echo "   |     |  |   |       (also 7xxxxx)         |\n";
+   echo "   |     |  |   |                             |\n";
+   echo "   |     |  |   +- Home rescue squad          |\n";
+   echo "   |     |  |      (ERS for VBFD)             |\n";
+   echo "   |     |  |                                 |\n";
+   echo "   |     |  +- Squad truck team member        |\n";
+   echo "   |     |                                    |\n";
+   echo "   |     +- EMS-5 team member                 |\n";
+   echo "   +------------------------------------------+\n\n\n";
+   for ($day_index = 1; $day_index <= 31; $day_index++)
+      {
+      if ($d[$day_index])
+         {
+         $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
+         $where_clause_2 = "and d$day_index='AVAILABLE' ";
+         $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+         $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+         if ($num_rows = mysql_num_rows($result))
+            {
+            echo $day_description . "\n";
+            while ($row = mysql_fetch_array($result))
+               {
+               extract($row);
+               echo "   -";
+               if ($be_on_team_5) echo "5"; else echo "-";
+               echo "-";
+               if ($be_on_team_30) echo "30"; else echo "--";
+               echo "- ";
+               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+               printf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
+               echo "\n";
+               $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
+               }
+            }
+         else
+            {
+            echo $day_description . " None\n";
+            }
+         echo "\n";
+         }
+      }
+   for ($night_index = 1; $night_index <= 31; $night_index++)
+      {
+      if ($n[$night_index])
+         {
+         $night_description = date("jS (l)",mktime(9,0,0,$month_num,$night_index,$year_num)) . " night:";
+         $where_clause_2 = "and n$night_index='AVAILABLE' ";
+         $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+         $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+         if ($num_rows = mysql_num_rows($result))
+            {
+            echo $night_description . "\n";
+            while ($row = mysql_fetch_array($result))
+               {
+               extract($row);
+               echo "   -";
+               if ($be_on_team_5) echo "5"; else echo "-";
+               echo "-";
+               if ($be_on_team_30) echo "30"; else echo "--";
+               echo "- ";
+               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+               printf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
+               echo "\n";
+               $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
+               }
+            }
+         else
+            {
+            echo $night_description . " None\n";
+            }
+         echo "\n";
+         }
+      }
+   ?>
+   </pre>
    }
-//
+echo "<pre>END.</pre>\n\n";
+echo "<small><i><pre>\$Id$</pre></i></small>\n";
 ?>
 </td></tr></table>
 </body>
