@@ -429,11 +429,14 @@ if ($email_addr == $recipient)
    // Then it was the schedule coordinator him or herself who requested the report.  Use different subject lines to help
    // the schedule coordinator distinguish between his or her own reports and those requested by others.
    //
-   $subject = "-> OSCAR report claim ticket ->";
+   $subject = "*YOUR* OSCAR report claim ticket";
    }
 else
    {
-   $subject = "*YOUR* OSCAR report claim ticket";
+   //
+   // Someone else requested the report.
+   //
+   $subject = "-> OSCAR report claim ticket ->";
    }
 $headers = "From: $email_addr\r\n";
 $headers .= "Reply-to: $email_addr\r\n";
