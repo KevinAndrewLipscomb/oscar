@@ -81,11 +81,11 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once($mode . "f_roleemailaddress.phtml");
+require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
-require_once($mode . "f_properties.phtml");
-require_once($mode . "f_beauthority.phtml");
+require_once("f_properties.phtml");
+require_once("f_beauthority.phtml");
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
@@ -344,25 +344,35 @@ if ($shift_filter == "all")
          $report .= "<h3><u>Notes and Warnings</u></h3>\n";
          mysql_query
             (
-            "create temporary table note_and_submission_count "
-            .  " select last_name"
-            .  "    , first_name"
-            .  "    , squad"
-            .  "    , be_on_team_30"
-            .  "    , be_on_team_5"
-            .  "    , be_tda"
-            .  "    , be_als"
-            .  "    , note"
+            "create temporary table aggregated "
+            .  " select last_name "
+            .  "    , first_name "
             .  "    , count(*) as num_submissions"
+            .  "    , max(timestamp) as timestamp "
             .  " from " . $mode . "avail_sheet "
             .  " where $where_clause "
-            .  " group by last_name"
-            .  "    , first_name"
+            .  " group by last_name "
+            .  "    , first_name "
             )
-            or die("Create...select note_and_submission_count failed with error:  " . mysql_error());
+            or die("Create/select aggregated failed with error:  " . mysql_error());
          //
-         $result = mysql_query("select * from note_and_submission_count order by last_name, first_name")
-            or die("Select from note_and_submission_count failed with error:  " . mysql_error());
+         $result = mysql_query
+            (
+            "select aggregated.last_name "
+            .  "    , aggregated.first_name "
+            .  "    , squad "
+            .  "    , be_on_team_30 "
+            .  "    , be_on_team_5 "
+            .  "    , be_tda "
+            .  "    , be_als "
+            .  "    , note "
+            .  "    , num_submissions "
+            .  " from aggregated left join " . $mode . "avail_sheet "
+            .  "    using (last_name, first_name, timestamp)"
+            .  " where $where_clause "
+            .  " order by last_name, first_name "
+            )
+            or die("Select from join failed with error:  " . mysql_error());
          if ($num_rows = mysql_num_rows($result))
             {
             while ($row = mysql_fetch_array($result))
@@ -402,8 +412,8 @@ if ($shift_filter == "all")
             $report .= "None\n";
             }
          //
-         mysql_query("drop table note_and_submission_count")
-            or die("Drop of note_and_submission_count failed with error:  " . mysql_error());
+         mysql_query("drop table aggregated")
+            or die("Drop of aggregated failed with error:  " . mysql_error());
          }
       //
       $report .= "<pre>--- END ---</pre><br>\n";
