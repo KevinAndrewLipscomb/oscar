@@ -8,6 +8,11 @@ require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
 //
+// Connect to the database.
+//
+mysql_connect(localhost,kalipso,Password());
+mysql_select_db(oscar);
+//
 // Retreive timestamp of latest avail_sheet record.  Later, we'll use it to see if database conditions have changed
 // significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
 // generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
@@ -26,9 +31,6 @@ $report .= "<H1 ALIGN=CENTER>Availability Report</H1>\n";
 $report .= "<hr>\n";
 //
 echo $report;
-//
-mysql_connect(localhost,kalipso,Password());
-mysql_select_db(oscar);
 //
 $presentation_clause = "order by be_on_team_5 desc, be_on_team_30 desc, squad";
 $month_num = date("n");
