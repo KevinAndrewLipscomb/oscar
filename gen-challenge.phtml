@@ -51,9 +51,9 @@ if
               .  "sheet submission(s).  This is the challenge message.\n\n"
               .  "The retraction process is not yet complete.  To complete the process,\n"
               .  "you will have to click the link near the bottom of this message.\n\n"
-              .  "You have the following records on file with the OSCAR system.  If you\n"
-              .  "continue with the retraction process, OSCAR will *permanently* delete\n"
-              .  "these records:\n\n";
+              .  "You have the following records on file with the OSCAR system for the\n"
+              .  "month you specified.  If you continue with the retraction process, OSCAR\n"
+              .  " will *permanently* delete these records:\n\n";
    //
    // Determine the three-letter abbreviation for the specified month.
    //
@@ -115,8 +115,8 @@ if
    //             123456789012345678901234567890123456789012345678901234567890123456789012
    $challenge .= "\n"
               .  "To complete the retraction process and\n"
-              .  "remove the above records from the OSCAR\n"
-              .  "system, click here:\n";
+              .  "remove the above record(s) from the\n"
+              .  "OSCAR system, click here:\n";
    $challenge .= OscarRootUrl()
       .  "/retract.phtml?a="
       .  base64_encode($first_name)

@@ -32,7 +32,8 @@ function sShowAvailSheetRecDetail
       .  ":"
       .  substr($timestamp,10,2)
       .  ":"
-      .  substr($timestamp,12,2);
+      .  substr($timestamp,12,2)
+      .  "\n";
    $s .= "FIRST NAME:              " . stripslashes($first_name) . "\n";
    $s .= "LAST NAME:               " . stripslashes($last_name) . "\n";
    $s .= "EMAIL ADDRESS:           " . stripslashes($email_addr) . "\n";
@@ -59,7 +60,7 @@ function sShowAvailSheetRecDetail
    $s .= "\n";
    if ($be_authority == 1)
       {
-      $s .= "NOTE:                 " . stripslashes($note) . "\n";
+      $s .= "NOTE:                    " . stripslashes($note) . "\n";
       }
    $s .= "RECORD EXPIRES:          $expiration\n";
    //
