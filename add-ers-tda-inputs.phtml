@@ -2,12 +2,11 @@
 //
 // $Id$
 //
-error_reporting(E_ALL);
-//
 $mode="";
    //
-   // For production mode, use ""; for debug mode use "x-".
+   // For production mode, use ""; for debug mode use "x_".
    //
+if ($mode) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
@@ -77,6 +76,18 @@ require_once("f_availlist.phtml");
             //
             for ($i = 1; $i <= count($last_name); $i++)
                {
+               //
+               // Init vars
+               //
+               $extracted_first_name = $extracted_last_name = $extracted_email_addr = $month = $squad = $be_tda = "";
+               $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
+                  $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 =
+                  $d31 = "";
+               $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 =
+                  $n17 = $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 =
+                  $n31 = "";
+               $expiration = $timestamp = "";
+               //
                if (
                      ($last_name[$i] != "")
                   and
@@ -192,17 +203,6 @@ require_once("f_availlist.phtml");
                         . "   <td><small>$extracted_email_addr</small></td>\n"
                         . "   <td><small>$expiration</small></td>\n"
                         . "</tr>\n";
-                     //
-                     // Clear variables for next pass.
-                     //
-                     $extracted_first_name = $extracted_last_name = $extracted_email_addr = $month = $squad = $be_tda = "";
-                     $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
-                        $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 =
-                        $d31 = "";
-                     $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 =
-                        $n17 = $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 =
-                        $n31 = "";
-                     $expiration = $timestamp = "";
                      }
                   else
                      {

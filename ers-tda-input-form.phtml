@@ -2,17 +2,16 @@
 //
 // $Id$
 //
-// Assign incoming arguments to themselves so we won't get 'undefined variable' errors later.
+// Assign incoming arguments to themselves *prior* to error_reporting() so we won't get 'undefined variable' errors later.
 //
 $email_addr = $email_addr;
 $applicable_month_num = $applicable_month_num;
 //
-error_reporting(E_ALL);
-//
 $mode="";
    //
-   // For production mode, set to ""; for debug mode, set to "x-".
+   // For production mode, set to ""; for debug mode, set to "x_".
    //
+if ($mode) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
