@@ -11,7 +11,7 @@
 # --------------------------------------------------------
 
 #
-# Table structure for table 'report_cache'
+# Table structure for tables 'report_cache' and 'x_report_cache'
 #
 
 CREATE TABLE `report_cache` (
@@ -21,4 +21,9 @@ CREATE TABLE `report_cache` (
   PRIMARY KEY (`digest`)
 ) TYPE=MyISAM;
 
-
+CREATE TABLE `x_report_cache` (
+  `digest` varchar(32) NOT NULL default '',
+  `report` mediumtext NOT NULL,
+  `expiration` date NOT NULL default '0000-00-00',
+  PRIMARY KEY (`digest`)
+) TYPE=MyISAM;
