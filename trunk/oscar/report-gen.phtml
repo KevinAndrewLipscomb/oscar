@@ -21,11 +21,40 @@ mysql_select_db(oscar);
 $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
 $presentation_clause = "order by be_on_team_5 desc, be_on_team_30 desc, squad";
 $where_clause = "";
+$month_num = date("n");
+$year_num = date("Y");
+if ($relative_month == "NEXT")
+   {
+   if ($month_num < 12)
+      {
+      $month_num++;
+      }
+   else
+      {
+      $month_num = 1;
+      $year_num++;
+      }
+   }
+switch ($month_num)
+   {
+   case 1: $month_word = "JANUARY"; break;
+   case 2: $month_word = "FEBRUARY"; break;
+   case 3: $month_word = "MARCH"; break;
+   case 4: $month_word = "APRIL"; break;
+   case 5: $month_word = "MAY"; break;
+   case 6: $month_word = "JUNE"; break;
+   case 7: $month_word = "JULY"; break;
+   case 8: $month_word = "AUGUST"; break;
+   case 9: $month_word = "SEPTEMBER"; break;
+   case 10: $month_word = "OCTOBER"; break;
+   case 11: $month_word = "NOVEMBER"; break;
+   case 12: $month_word = "DECEMBER"; break;
+   }
 if ($report_type == "FULL")
    {
-   $where_clause = "month='$month' ";
+   $where_clause = "month='" . strstr($month_word,0,3) ."' ";
    echo "<pre>\n";
-   echo "Full availability report for $month generated " . date("l Y-M-d H:i:s T") . "\n\n";
+   echo "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
    echo "   +--------------------------------------------+\n";
    echo "   | Legend:                                    |\n";
    echo "   |    -5-30- Rxx 8xxxxx Lastname, Firstname * |\n";
@@ -43,14 +72,15 @@ if ($report_type == "FULL")
    echo "   |                                          | |\n";
    echo "   |    See special request in Notes section -+ |\n";
    echo "   +--------------------------------------------+\n\n\n";
-   for ($index = 1; $index <= 31; $index++)
+   for ($day_index = 1; $day_index <= 31; $day_index++)
       {
-      $where_clause_2 = "and d$index='AVAILABLE' ";
+      $day_description = date("jS (l) \D\A\Y\:",mktime(9,0,0,$month_num,day_$index,$year_num));
+      $where_clause_2 = "and d$day_index='AVAILABLE' ";
       $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
-         echo "$index day:\n";
+         echo $day_description . "\n";
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
@@ -68,18 +98,19 @@ if ($report_type == "FULL")
          }
       else
          {
-         echo "$index day: None\n";
+         echo $day_description . " None\n";
          }
       echo "\n";
       }
-   for ($index = 1; $index <= 31; $index++)
+   for ($night_index = 1; $night_index <= 31; $night_index++)
       {
-      $where_clause_2 = "and n$index='AVAILABLE' ";
+      $night_description = date("jS (l) \N\I\G\H\T\:",mktime(21,0,0,$month_num,day_$index,$year_num));
+      $where_clause_2 = "and n$night_index='AVAILABLE' ";
       $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
-         echo "$index night:\n";
+         echo $night_description . "\n";
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
@@ -97,7 +128,7 @@ if ($report_type == "FULL")
          }
       else
          {
-         echo "$index night: None\n";
+         echo $night_description . " None\n";
          }
       echo "\n";
       }
