@@ -1,0 +1,28 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarmailheaders.phtml");
+//
+function SendApprovalNotice($email_addr,$digest)
+   {
+   $approval_notice_recipient = $email_addr;
+   $approval_notice_subject = "Your OSCAR report";
+   //
+   //                   0        1         2         3         4         5         6         7
+   //                   123456789012345678901234567890123456789012345678901234567890123456789012
+   $approval_notice =  "The OSCAR Availability Report\n";
+   $approval_notice .= "you requested is available at:\n\n";
+   $approval_notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
+   //
+   // Add sig lines.
+   //
+   $approval_notice .= "-- OSCAR\n";
+   $approval_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
+   $approval_notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+   //
+   // Send the mail.
+   //
+   return mail($approval_notice_recipient, $approval_notice_subject, $approval_notice, OscarMailHeaders());
+   }
+?>

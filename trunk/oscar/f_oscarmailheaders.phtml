@@ -1,0 +1,12 @@
+<?
+//
+// $Id$
+//
+require_once("f_roleemailaddress.phtml");
+//
+function OscarMailHeaders()
+   {
+   return "From: OSCAR <" . RoleEmailAddress("") . ">\r\n"
+      . "Reply-to: OSCAR <" . RoleEmailAddress("") . ">\r\n";
+   }
+?>

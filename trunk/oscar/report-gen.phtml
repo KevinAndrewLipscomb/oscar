@@ -7,6 +7,8 @@ require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
+require_once("f_sendapprovalnotice.phtml");
+require_once("f_oscarmailheaders.phtml");
 //
 // Connect to the database.
 //
@@ -399,9 +401,6 @@ else
 //
 // Create the notice.
 //
-$headers = "From: OSCAR <" . RoleEmailAddress("") . ">\r\n";
-$headers .= "Reply-to: OSCAR <" . RoleEmailAddress("") . ">\r\n";
-//
 $result = mysql_query("select 1 as be_trusted from trusted_user where email_address='$email_addr'")
    or die("Trust check failed with error:  " . mysql_error());
 if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator")))
@@ -409,24 +408,7 @@ if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordi
    //
    // Then send an approval notice to the requestor directly.
    //
-   $approval_notice_recipient = $email_addr;
-   $approval_notice_subject = "Your OSCAR report";
-   //
-   //                0        1         2         3         4         5         6         7
-   //                123456789012345678901234567890123456789012345678901234567890123456789012
-   $approval_notice =  "The OSCAR Availability Report\n";
-   $approval_notice .= "you requested is available at:\n\n";
-   $approval_notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
-   //
-   // Add sig lines.
-   //
-   $approval_notice .= "-- OSCAR\n";
-   $approval_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
-   $approval_notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
-   //
-   // Send the mail.
-   //
-   $result = mail($approval_notice_recipient, $approval_notice_subject, $approval_notice, $headers);
+   $result = SendApprovalNotice($email_addr,$digest);
    }
 else
    {
@@ -444,17 +426,17 @@ else
    $screen_notice .= "a user who identified him or herself as:\n\n";
    $screen_notice .= "   Name:           $name\n";
    $screen_notice .= "   Email address:  $email_addr\n\n";
-   $screen_notice .= "Please take one of the following actions:\n\n";
+   $screen_notice .= "Please take one of the following actions:\n\n\n";
    $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
    $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
    $screen_notice .= "   click here:\n";
-   $screen_notice .= OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n";
+   $screen_notice .= OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
    $screen_notice .= "2. To approve this request WITHOUT registering the\n";
    $screen_notice .= "   user as trusted, click here:\n";
-   $screen_notice .= OscarRootUrl() . "/approve.phtml?digest=$digest\n\n";
-   $screen_notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n";
+   $screen_notice .= OscarRootUrl() . "/approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
+   $screen_notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n\n";
    $screen_notice .= "The report is available for review at:\n";
-   $screen_notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
+   $screen_notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n\n";
    //
    // Add sig lines.
    //
@@ -497,8 +479,8 @@ else
    //
    // Send the mail.
    //
-   $result = mail($screen_notice_recipient, $screen_notice_subject, $screen_notice, $headers)
-      and mail($claim_ticket_recipient, $claim_ticket_subject, $claim_ticket, $headers);
+   $result = mail($screen_notice_recipient, $screen_notice_subject, $screen_notice, OscarMailHeaders())
+      and mail($claim_ticket_recipient, $claim_ticket_subject, $claim_ticket, OscarMailHeaders());
    }
 if ($result)
    {
