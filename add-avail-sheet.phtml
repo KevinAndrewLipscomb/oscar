@@ -21,21 +21,64 @@ require_once("f_bodyopen.phtml");
          <?
          PutLibPhotoRandomPlaced("sasquatch",1,"left");
          //
-         // Connect to the database.
+         // Validate parameters.
          //
-         mysql_connect(localhost,kalipso,fesface);
-         mysql_select_db(oscar);
+         if
+            (
+               (last_name != "")
+            and
+               (cad_num != "")
+            and
+               (email_addr != "")
+            and
+               (month != "")
+            and
+               (squad != "")
+            )
          //
-         // Create and execute the SQL statement to insert the record.
+         // All required values are present.
          //
-         $note = addslashes($note);
-         $sql = "insert into avail_sheet set first_name='$first_name', last_name='$last_name', cad_num='$cad_num', email_addr='$email_addr', month='$month', squad='$squad', be_on_team_30='$be_on_team_30', be_on_team_5='$be_on_team_5', d1='$d1', d2='$d2', d3='$d3', d4='$d4', d5='$d5', d6='$d6', d7='$d7', d8='$d8', d9='$d9', d10='$d10', d11='$d11', d12='$d12', d13='$d13', d14='$d14', d15='$d15', d16='$d16', d17='$d17', d18='$d18', d19='$d19', d20='$d20', d21='$d21', d22='$d22', d23='$d23', d24='$d24', d25='$d25', d26='$d26', d27='$d27', d28='$d28', d29='$d29', d30='$d30', d31='$d31', n1='$n1', n2='$n2', n3='$n3', n4='$n4', n5='$n5', n6='$n6', n7='$n7', n8='$n8', n9='$n9', n10='$n10', n11='$n11', n12='$n12', n13='$n13', n14='$n14', n15='$n15', n16='$n16', n17='$n17', n18='$n18', n19='$n19', n20='$n20', n21='$n21', n22='$n22', n23='$n23', n24='$n24', n25='$n25', n26='$n26', n27='$n27', n28='$n28', n29='$n29', n30='$n30', n31='$n31', num_extras='$num_extras', note='$note'";
-         mysql_query($sql) or die("Sorry, the database operation failed with this error:  " . mysql_error() . "\n\nPlease notify the OSCAR System Administrator.");
-         mail("infotech@kvrs.org","OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
+            {
+            //
+            // Connect to the database.
+            //
+            mysql_connect(localhost,kalipso,fesface);
+            mysql_select_db(oscar);
+            //
+            // Create and execute the SQL statement to insert the record.
+            //
+            $note = addslashes($note);
+            $sql = "insert into avail_sheet set first_name='$first_name', last_name='$last_name', cad_num='$cad_num', email_addr='$email_addr', month='$month', squad='$squad', be_on_team_30='$be_on_team_30', be_on_team_5='$be_on_team_5', d1='$d1', d2='$d2', d3='$d3', d4='$d4', d5='$d5', d6='$d6', d7='$d7', d8='$d8', d9='$d9', d10='$d10', d11='$d11', d12='$d12', d13='$d13', d14='$d14', d15='$d15', d16='$d16', d17='$d17', d18='$d18', d19='$d19', d20='$d20', d21='$d21', d22='$d22', d23='$d23', d24='$d24', d25='$d25', d26='$d26', d27='$d27', d28='$d28', d29='$d29', d30='$d30', d31='$d31', n1='$n1', n2='$n2', n3='$n3', n4='$n4', n5='$n5', n6='$n6', n7='$n7', n8='$n8', n9='$n9', n10='$n10', n11='$n11', n12='$n12', n13='$n13', n14='$n14', n15='$n15', n16='$n16', n17='$n17', n18='$n18', n19='$n19', n20='$n20', n21='$n21', n22='$n22', n23='$n23', n24='$n24', n25='$n25', n26='$n26', n27='$n27', n28='$n28', n29='$n29', n30='$n30', n31='$n31', num_extras='$num_extras', note='$note'";
+            mysql_query($sql) or die("Sorry, the database operation failed with this error:  <i>" . mysql_error() . "</i>\n\nPlease notify the <a href=mailto:infotech@kvrs.org>OSCAR System Administrator</a>.");
+            mail("infotech@kvrs.org","OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
+            ?>
+            <p><b>Thanks!</b></p>
+            <p>Your availability sheet has been successfully entered into the OSCAR System.</p>
+            <p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:infotech@kvrs.org>OSCAR System Administrator</a>.</p>
+            <?
+            }
+         else
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h3><i>Error!</i></h3>
+            <b>
+            <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
+            <ul>
+               <li><p>Last name</p>
+               <li><p>Officer code</p>
+               <li><p>Email address</p>
+               <li><p>Applicable month</p>
+               <li><p>Home squad</p>
+            </ul>
+            <p>Please press your browser's [<-- BACK] button to correct the problems.</p>
+            </b>
+            <p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:infotech@kvrs.org>OSCAR System Administrator</a>.</p>
+            <?
+            }
          ?>
-         <p><b>Thanks!</b></p>
-         <p>Your availability sheet has been successfully entered into the OSCAR System.</p>
-         <p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:infotech@kvrs.org>OSCAR System Administrator</a>.</p>
       </td>
    </tr>
 </table>
