@@ -180,6 +180,9 @@ if ($report_type == "FULL")
          $report .= "\n";
          }
       $report .= "</pre>\n";
+      //
+      // Generate notes.
+      //
       $report .= "<h3><u>Notes</u></h3>\n";
       $result = mysql_query("select last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"" . substr($month_word,0,3) . "\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
@@ -401,7 +404,7 @@ else
 //
 // Create the notice.
 //
-$result = mysql_query("select 1 as be_trusted from trusted_user where email_address='$email_addr'")
+$result = mysql_query("select 1 from trusted_user where email_address='$email_addr'")
    or die("Trust check failed with error:  " . mysql_error());
 if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator")))
    {
@@ -454,7 +457,7 @@ else
    $claim_ticket =  "Your request for an OSCAR Availability Report has been submitted to the\n";
    $claim_ticket .= "VBDEMS Central Schedule Coordinator for screening.  Check your email\n";
    $claim_ticket .= "periodically for approval.\n\n";
-   $claim_ticket .= "Save this message.  It is your report claim ticket.\n\n";
+   $claim_ticket .= "Save this message.  It's the CLAIM TICKET for your report.\n\n";
    $claim_ticket .= "If excessive time goes by and you wish to escalate your request to a\n";
    $claim_ticket .= "higher authority, you can do so by clicking the link near the bottom of\n";
    $claim_ticket .= "this message.\n\n";
