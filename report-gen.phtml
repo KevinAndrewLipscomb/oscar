@@ -24,6 +24,8 @@ if ($report_type == "FULL")
    {
    $where_clause = "month='$month' ";
    echo "<pre>\n";
+   echo "Full availability report for $month\n";
+   echo "Generated " . date("l Y-M-d H:i:s T") . "\n\n";
    for ($index = 1; $index <= 31; $index++)
       {
       $where_clause_2 = "and d$index='AVAILABLE' ";
@@ -35,9 +37,13 @@ if ($report_type == "FULL")
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
-            echo "   $cad_num-$last_name,$first_name ($squad) ";
-            if ($be_on_team_30) echo "[30]";
-            if ($be_on_team_5) echo "[5]";
+            echo "   -";
+            if ($be_on_team_5) echo "5"; else echo "-";
+            echo "-";
+            if ($be_on_team_30) echo "30"; else echo "--";
+            echo "- ";
+            if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+            printf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
             if ($note != "") echo "*";
             echo "\n";
             $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
@@ -60,9 +66,13 @@ if ($report_type == "FULL")
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
-            echo "   $cad_num-$last_name,$first_name ($squad) ";
-            if ($be_on_team_30) echo "[30]";
-            if ($be_on_team_5) echo "[5]";
+            echo "   -";
+            if ($be_on_team_5) echo "5"; else echo "-";
+            echo "-";
+            if ($be_on_team_30) echo "30"; else echo "--";
+            echo "- ";
+            if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+            printf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
             if ($note != "") echo "*";
             echo "\n";
             $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
@@ -74,7 +84,31 @@ if ($report_type == "FULL")
          }
       echo "\n";
       }
-   echo "</pre>\n";
+   ?>
+   </pre>
+   <h3><sup>*</sup>Notes</h3>
+   <blockquote>
+   <?
+   $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=$month" order by last_name, first_name) or die("Query failed with error:  " . mysql_error());
+   if ($num_rows = mysql_num_rows($result))
+      {
+      extract($row);
+      echo "$last_name, $first_name [-";
+      if ($be_on_team_5) echo "5"; else echo "-";
+      echo "-";
+      if ($be_on_team_30) echo "30"; else echo "--";
+      echo "- ";
+      if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+      echo "$squad $cad_num]\n";
+      echo "<blockquote><i>$note</i></blockquote>";
+      }
+   else
+      {
+      echo "None\n";
+      }
+   ?>
+   </blockquote>
+   <?
    }
 else
    {
