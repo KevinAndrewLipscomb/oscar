@@ -53,9 +53,9 @@ require_once("f_roleemailaddress.phtml");
             $applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
             $expiration_date = date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0,$year_num));
             //
-            // Create and execute the SQL statement to insert the record.
+            // Create and execute the SQL statement to insert/replace the record.
             //
-            $sql = "insert into avail_sheet set first_name='" . addslashes($first_name) . "'"
+            $sql = "replace into avail_sheet set first_name='" . addslashes($first_name) . "'"
                . ", last_name='" . addslashes($last_name) ."'"
                . ", email_addr='" . addslashes($email_addr) . "'"
                . ", month='" . strtoupper(date("M",$applicable_month_time)) . "'"
