@@ -16,7 +16,7 @@ require_once("f_agencyselectionlist.phtml");
 <html>
 
 <head>
-<title>OSCAR - Retraction Request Form</title>
+<title>OSCAR - Reconfirmation/Retraction Request Form</title>
 </head>
 
 <? BodyOpen(); ?>
@@ -28,7 +28,7 @@ require_once("f_agencyselectionlist.phtml");
               KVEO-IT-PROJECT<br>
               <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
               <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
-           <h1 align="center">Retraction Request Form</h1>
+           <h1 align="center">Reconfirmation/Retraction Request Form</h1>
         </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
         </td></tr></table>
@@ -40,7 +40,7 @@ require_once("f_agencyselectionlist.phtml");
            <h2><i>Sorry...</i></h2>
            <b>
            <blockquote>
-              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your retraction operation later.</p>"; ?>
+              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try again later.</p>"; ?>
            </blockquote>            
            </b>
            <?
@@ -48,24 +48,25 @@ require_once("f_agencyselectionlist.phtml");
         else
         {
         ?>
-        <p>This form allows you to "take back" what you already submitted to the OSCAR system.</p>
+        <p>This form allows you to reconfirm what you have submitted to the OSCAR system, or even to "take back" your 
+           previous submissions.</p>
         <blockquote>
            <table align=center bgcolor=#E8E8E8>
               <tr>
                  <td align=center valign=middle>
-                    <small><i>To guard against misuse, the OSCAR system authenticates each retraction request by sending a
-                       "challenge message" to the email address <u>originally specified</u> on a person's availability 
-                       sheet.&nbsp; The retraction only takes effect once OSCAR receives a proper response to the 
-                       challenge.</i></small>
+                    <small><i>To guard against misuse, the OSCAR system authenticates each reconfirmation/retraction 
+                       request by sending a "challenge message" to the email address <u>originally specified</u> on a
+                       person's availability sheet.&nbsp; A retraction, if requested, will only take effect once OSCAR
+                       receives a proper response to the challenge.</i></small>
                  </td>
               </tr>
            </table>
         </blockquote>
-        <p>This process allows you to retract <b>all</b> of the availability information that you've submitted for the
-           specified month.&nbsp; Once you trigger the retraction process, you should <b>wait for further instructions</b>
-           that will arrive with the email challenge message.</p>
-        <p>In practice, the retraction process is easy, safe, and secure.  To begin the retraction process, complete the
-           following form:</p>
+        <p>If you are using this form to trigger a <b>retraction</b>, you should <b>wait for further instructions</b>
+           that will arrive with the email challenge message.&nbsp; <b>Do not immediately resubmit</b> after completing
+           this form.</p>
+        <p>In practice, reconfirming or retracting is easy, safe, and secure.  To begin the process, complete
+           the following form:</p>
         <br>
         <blockquote>
            <form action=<? echo $mode; ?>perform-gen-challenge.phtml method=post>
@@ -91,13 +92,13 @@ require_once("f_agencyselectionlist.phtml");
                     </select></td>
                  </tr>
                  <tr>
-                    <td>Retract availabilities from which agency?</td>
+                    <td>Which agency?</td>
                     <td><? AgencySelectionList($mode); ?></td>
                  </tr>
               </table>
               <p>Please double check your entries before completing your request.&nbsp; They must match what you
                  supplied on your availability sheet (although uppercase & lowercase do not matter).</p>
-              <input type=submit value="Request retraction"><input type=reset>
+              <input type=submit value="Send request"><input type=reset>
            </form>
         </blockquote>
         <?
