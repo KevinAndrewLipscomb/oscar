@@ -89,7 +89,7 @@ else
       //                0        1         2         3         4         5         6         7
       //                123456789012345678901234567890123456789012345678901234567890123456789012
       $claim_ticket =  "Your *escalated* request for an OSCAR Availability Report has been\n";
-      $claim_ticket .= "submitted to the Escalation Level $level Authority for screening.  Check\n";
+      $claim_ticket .= "submitted to $screen_notice_recipient for screening.  Check\n";
       $claim_ticket .= "your email periodically for approval.\n\n";
       //
       $next_authority = RoleEmailAddress("escalation-level-$next_level-recipient");
@@ -150,7 +150,7 @@ else
          <p>The OSCAR system encountered an internal error while processing your request.  Please do the following:</p>
          <ul>
             <?
-            echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\"" . RoleEmailAddress("escalation-level-1-recipient") . "\">Escalation Level 1 Authority</a> for the information you need.</p>";
+            echo "<li><p>Use another method (like email or telephone) to ask the authority for the information you need.</p>";
             echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("") . "?subj=OSCAR-bug-report>OSCAR System Administrator</a> know this error occurred.</p>";
             ?>
          </ul>
