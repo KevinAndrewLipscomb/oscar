@@ -79,6 +79,7 @@ if ($report_type == "FULL")
    // retrieve it.
    //
    $condition_descriptor .= "type=FULL\n";
+   $condition_descriptor .= "team_filter=$team_filter\n";
    $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
       or die("The digest calculation failed with this error:  " . mysql_error());
    $row = mysql_fetch_object($result);
@@ -101,6 +102,17 @@ if ($report_type == "FULL")
       mysql_query("delete from report_cache where expiration < CURRENT_DATE");
       //
       $base_sql_statement = "select distinct last_name, first_name, squad, be_on_team_30, be_on_team_5, (note != \"\") as be_a_note from avail_sheet ";
+      switch ($team_filter)
+         {
+         case "team_5_only":
+            $where_clause .= "and be_on_team_5 = 'TRUE' ";
+            $info_message = "This report ONLY includes EMS-5 team members.";
+            break;
+         case "team_30_only":
+            $where_clause .= "and be_on_team_30 = 'TRUE' ";
+            $info_message = "This report ONLY includes SQUAD TRUCK team members.";
+            break;
+         }
       $report .= "<pre>\n";
       $report .= "Full availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       $report .= "   +-------------------------------------+\n";
@@ -118,6 +130,7 @@ if ($report_type == "FULL")
       $report .= "   |              See special request -+ |\n"; 
       $report .= "   |              in Note section        |\n";
       $report .= "   +-------------------------------------+\n\n\n";
+      if ($info_message) $report .= "$info_message\n\n";
       $report .= "+------+\n";
       $report .= "| Days |\n";
       $report .= "+------+\n\n";
@@ -382,11 +395,11 @@ else
          {
          case "team_5_only":
             $where_clause .= "and be_on_team_5 = 'TRUE' ";
-            $info_message = "As requested, this report ONLY includes EMS-5 team members.";
+            $info_message = "This report ONLY includes EMS-5 team members.";
             break;
          case "team_30_only":
             $where_clause .= "and be_on_team_30 = 'TRUE' ";
-            $info_message = "As requested, this report ONLY includes SQUAD TRUCK team members.";
+            $info_message = "This report ONLY includes SQUAD TRUCK team members.";
             break;
          }
       //
