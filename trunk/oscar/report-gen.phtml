@@ -444,6 +444,7 @@ if (mail($recipient, $subject, $claim_ticket, $headers))
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"left");
    echo "<p>The OSCAR system has successfully generated your report.&nbsp;  A claim ticket for the report has been submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.&nbsp; The coordinator will forward the claim ticket to you once screening is complete.</p>";
+   echo "<p><b>Check your email for the claim ticket periodically.</b></p>";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
    echo "<p><b>Thank you</b> for using the OSCAR system!</p>";
    }
