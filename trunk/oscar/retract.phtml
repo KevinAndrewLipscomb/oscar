@@ -1,0 +1,57 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_sendapprovalnotice.phtml");
+//
+?>
+<html>
+<head><title>Retraction Confirmation</title></head>
+<? BodyOpen(); ?>
+<table align=center width=80%><tr><td>
+<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H1 ALIGN=CENTER>Retraction Confirmation</H1>
+<hr>
+<?
+//
+// Decode the arguments.
+//
+$first_name = base64_decode($a);
+$last_name = base64_decode($b);
+$applicable_month_abbrev = base64_decode($c);
+//
+// Connect to the database.
+//
+mysql_connect(localhost,kalipso,Password());
+mysql_select_db(oscar);
+//
+// Delete the appropriate records from the avail_sheet table.
+//
+mysql_query
+   (
+   "delete from avail_sheet"
+   .  " where last_name = \"" . addslashes(addslashes($last_name)) . "\""
+   .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
+   .  "    and month = '$applicable_month_abbrev'"
+   "
+   )
+   or die("Deletion failed with error:  " . mysql_error());
+//
+PutLibPhotoRandomPlaced("sasquatch",1,"right");
+echo "<p>The OSCAR system has deleted the specified record(s) from its database.</p>\n"
+   . "<p><b>Don't forget to <a href="
+   . OscarRootUrl()
+   . "/als-avail-sub-form.phtml>submit an accurate availability sheet</a> by the deadline.</b></p>\n";
+?>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>
