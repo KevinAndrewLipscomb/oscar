@@ -73,7 +73,7 @@ if ($report_type == "FULL")
       {
       //
       // The required report has never been run before under these conditions.  Generate it from scratch and cache it.
-      // This is also a good time to purge the database expired records, as from-scratch requests for full reports don't
+      // This is also a good time to purge the database of expired records, as from-scratch requests for full reports don't
       // happen excessively but do happen regularly.
       //
       mysql_query("delete from avail_sheet where expiration < CURRENT_DATE");
@@ -118,8 +118,13 @@ if ($report_type == "FULL")
                if ($be_on_team_30) $report .= "30"; else $report .= "--";
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $report .= sprintf("%3s %s, %s ",$squad,$last_name,$first_name);
-               if ($be_a_note) $report .= "*";
+               $report .= sprintf("%3s ",$squad);
+               $report .= "<a href=detail.phtml?a="
+                  .  base64_encode($last_name)
+                  .  "&b="
+                  .  base64_encode($first_name)
+                  .  ">$last_name, $first_name</a>";
+               if ($be_a_note) $report .= " *";
                $report .= "\n";
                $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
                }
