@@ -92,7 +92,7 @@ if ($report_type == "FULL")
             if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
             $msg .= "- ";
             if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-            printf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
+            $msg .= sprintf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
             if ($note != "") $msg .= "*";
             $msg .= "\n";
             $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
@@ -125,7 +125,7 @@ if ($report_type == "FULL")
             if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
             $msg .= "- ";
             if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-            printf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
+            $msg .= sprintf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
             if ($note != "") $msg .= "*";
             $msg .= "\n";
             $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
@@ -224,7 +224,7 @@ else
                if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
                $msg .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               printf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
+               $msg .= sprintf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
                $msg .= "\n";
                $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                }
@@ -256,7 +256,7 @@ else
                if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
                $msg .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               printf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
+               $msg .= sprintf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
                $msg .= "\n";
                $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
                }
