@@ -49,18 +49,12 @@ mysql_select_db(oscar);
 $result = mysql_query
    (
    "select * from avail_sheet"
-   .  " where last_name = '" . addslashes($last_name) . "'"
-   .  "    and first_name = '" . addslashes($first_name) . "'"
+   .  " where last_name = \"" . addslashes($last_name) . "\""
+   .  "    and first_name = \"" . addslashes($first_name) . "\""
    .  "    and month = '$month'"
    )
    or die("The query failed with error:  " . mysql_error());
 $num_rows = mysql_num_rows($result);
-//
-echo "<pre>\n";
-echo "Decoded addslashes(\$first_name) = " . addslashes($first_name) . "<br>\n";
-echo "Decoded addslashes(\$last_name) = " . addslashes($last_name) . "<br>\n";
-echo "</pre>\n";
-//
 echo "<h4>Found $num_rows ";
 if ($num_rows == 1)
    {
