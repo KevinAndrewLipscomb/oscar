@@ -531,7 +531,16 @@ else
 //
 $result = mysql_query("select 1 from trusted_user where email_address='$email_addr'")
    or die("Trust check failed with error:  " . mysql_error());
-if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator")))
+if (
+      mysql_num_rows($result)
+   or
+      ($email_addr == RoleEmailAddress("schedule-coordinator"))
+   or
+      ($email_addr == RoleEmailAddress("escalation-level-1-recipient"))
+   or
+      ($email_addr == RoleEmailAddress(""))
+   )
+// then
    {
    //
    // Then send an approval notice to the requestor directly.
