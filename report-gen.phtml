@@ -479,7 +479,7 @@ else
    $claim_ticket .= "   " . RoleEmailAddress("escalation-level-1-recipient") . "\n\n";
    $claim_ticket .= "To escalate your request to the above\n";
    $claim_ticket .= "authority, click here:\n\n";
-   $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=1&digest=$digest&email_addr=$email_addr\n\n";
+   $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
    //
    // Add sig lines.
    //
