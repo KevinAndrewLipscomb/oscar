@@ -17,11 +17,11 @@ require_once("f_bodyopen.phtml");
    <tr>
       <td>
         <h6 align="center"><a href="<? echo OscarHomePageUrl(); ?>">OSCAR</a><br>
-        VBDEMS</h6>
+        <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
         <h1 align="center">Online Availability Submission Form</h1>
         <h2 align="center">for ALS Providers</h2>
         <hr>
-        <p>For ALS members only.  <b>Bold</b> fields are required.</p>
+        <p>For ALS members only.&nbsp; <b>Bold</b> fields are required.</p>
         <form method="POST" action="add-avail-sheet.phtml">
           <table border="0" cellpadding="0" cellspacing="0" width="912">
             <tr>
@@ -34,13 +34,15 @@ require_once("f_bodyopen.phtml");
             </tr>
             <tr>
               <td width="167"><b>Officer code:</b></td>
-              <td width="741"><input type="text" name=cad_num size="6">&nbsp; (Your 7##### or 8##### number)</td>
+              <td width="741"><input type="text" name=cad_num size="6">&nbsp; (<-- Your MDT logon number)</td>
             </tr>
             <tr>
               <td width="167"><b>Email address:</b></td>
               <td width="741"><input type="text" name=email_addr size="64"></td>
             </tr>
+<?
 //$ReviewPoint--
+?>
             <tr>
               <td width="167"><b>Applicable month:</b></td>
               <td width="741"><select size="1" name=month>
