@@ -1,0 +1,26 @@
+<?
+//
+// $Id$
+//
+function HarvestedList
+   (
+   $resource,
+   $mode = ""
+   )
+//
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $s = "";
+   //
+   while ($entry_row = mysql_fetch_array($resource))
+      {
+      $last_name = $first_name = $email_addr = "";
+      extract($entry_row);
+      $s .= "   $last_name, $first_name <$email_addr>\n";
+      }
+   //
+   error_reporting($saved_error_level);
+   return $s;
+   }
+?>

@@ -1,0 +1,22 @@
+<?
+//
+// $Id$
+//
+function SquadOfCoordAgency
+   (
+   $coord_agency,
+   $mode = ""
+   )
+//
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $squad = "";
+   $result = mysql_query("select squad from " . $mode . "squad_of_coord_agency where coord_agency='$coord_agency'")
+      or die("SquadOfCoordAgency query failed with error: " . mysql_error());
+   extract(mysql_fetch_array($result));
+   //
+   error_reporting($saved_error_level);
+   return $squad;
+   }
+?>
