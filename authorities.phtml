@@ -24,24 +24,26 @@ require_once("f_roleemailaddress.phtml");
            their availabilities.&nbsp;  These authorities are:<p>
         <ul>
            <?
-           echo "<li><p>the OSCAR System Administrator (<a href=mailto:\""
-              .  RoleEmailAddress("")
-              .  "\">"
-              .  RoleEmailAddress("")
-              .  ")</p></li>\n";
            echo "<li><p>the Schedule Coordinator (<a href=mailto:\""
               .  RoleEmailAddress("schedule-coordinator")
               .  "\">"
               .  RoleEmailAddress("schedule-coordinator")
-              .  ")</p></li>\n";
+              .  "</a>)</p></li>\n";
            echo "<li><p>the Escalation Level 1 Authority (<a href=mailto:\""
               .  RoleEmailAddress("escalation-level-1-authority")
               .  "\">"
               .  RoleEmailAddress("escalation-level-1-authority")
-              .  ")</p></li>\n";
+              .  "</a>)</p></li>\n";
+           echo "<li><p>the OSCAR System Administrator (<a href=mailto:\""
+              .  RoleEmailAddress("")
+              .  "\">"
+              .  RoleEmailAddress("")
+              .  "</a>)</p></li>\n";
            ?>
         </ul>
         <p>Special request notes are not revealed to any other OSCAR system users.</p>
+        <p>You (or someone familiar with HTML, PHP, and MySQL) can verify the veracity of these claims by browsing the
+           production source code at <<a href=http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/kveo-it-project/oscar/>http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/kveo-it-project/oscar/</a>>.</p>
         <p>If you have questions or concerns about the technical aspects of this process, feel free to contact the
            <a href=mailto:"<? RoleEmailAddress(""); ?>">OSCAR System Administrator</a>.</p>
         <hr>
