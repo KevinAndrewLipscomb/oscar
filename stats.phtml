@@ -37,6 +37,7 @@ require_once("f_connectselectdb.phtml");
          if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
             {
             ?>
+            <br>
             <b>Sheets on file</b>
             <blockquote>
                <table border=1 cellpadding=3>
@@ -71,8 +72,11 @@ require_once("f_connectselectdb.phtml");
                   mysql_query
                      (
                      "create temporary table aggregated "
-                     .  " select * "
-                     .  "    , max(timestamp) as max_timestamp "
+                     .  " select month "
+                     .  "    , last_name "
+                     .  "    , first_name "
+                     .  "    , coord_agency "
+                     .  "    , max(timestamp) as timestamp "
                      .  " from " . $mode . "avail_sheet "
                      .  " where be_tda != 'TRUE' "
                      .  " group by month "
@@ -85,10 +89,10 @@ require_once("f_connectselectdb.phtml");
                   mysql_query
                      (
                      "create temporary table shift_avail_count "
-                     .  " select month "
-                     .  "    , last_name "
-                     .  "    , first_name "
-                     .  "    , coord_agency "
+                     .  " select aggregated.month "
+                     .  "    , aggregated.last_name "
+                     .  "    , aggregated.first_name "
+                     .  "    , aggregated.coord_agency "
                      .  "    , if(d1='$marker',1,0) "
                      .  "    + if(d2='$marker',1,0) "
                      .  "    + if(d3='$marker',1,0) "
@@ -152,7 +156,8 @@ require_once("f_connectselectdb.phtml");
                      .  "    + if(n30='$marker',1,0) "
                      .  "    + if(n31='$marker',1,0) "
                      .  "    as num_avails "
-                     .  " from aggregated "
+                     .  " from aggregated left join " . $mode . "avail_sheet "
+                     .  "    using (month, last_name, first_name, coord_agency, timestamp)"
                      .  " order by num_avails desc"
                      )
                      or die("Create/select shift_avail_count failed with error: " . mysql_error());
@@ -183,14 +188,14 @@ require_once("f_connectselectdb.phtml");
                      {
                      $first_name = $last_name = $num_avails = $month = "";
                      extract($row);
-                     echo "      <li>$first_name $last_name&nbsp; ($num_avails in $month)</li>\n";
+                     echo "      <li>$first_name $last_name&nbsp; ($num_avails in $month for $coord_agency)</li>\n";
                      }
                   echo "   </ol>\n"
                      . "</td></tr>\n";
                   //
                   // Histogram
                   //
-                  echo "<tr><td colspan=2><br>Histogram:<br>\n"
+                  echo "<tr><td colspan=2>Histogram:<br>\n"
                      . "   <blockquote><pre>\n";
                   $result = mysql_query
                      (
@@ -213,6 +218,8 @@ require_once("f_connectselectdb.phtml");
                </table>
             </blockquote>
             <?
+            mysql_query("drop table aggregated, shift_avail_count")
+               or die("Drop of temp tables failed with error:  " . mysql_error());
             }
          else
             {
