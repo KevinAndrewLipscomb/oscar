@@ -47,11 +47,7 @@ else
    $screen_notice_recipient = RoleEmailAddress("escalation-level-" . $level . "-recipient");
    if ($screen_notice_recipient == "NONE")
       {
-      echo "<h2><i>Sorry...</i></h2>\n"
-         . "<blockquote>\n"
-         . "   <p>The OSCAR system does not support Level $level escalation at this time.</p>\n"
-         . "</blockquote>\n";
-      $result = 1;
+      $result=0;
       }
    else
       {
