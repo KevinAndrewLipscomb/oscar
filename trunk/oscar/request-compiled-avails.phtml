@@ -2,10 +2,11 @@
 //
 // $Id$
 //
-//$mode="x-";
+$mode="x_";
    //
-   // Comment out the above for production mode instead of eXperimental mode.
+   // Set mode to "" for production mode, "x_" to debug.
    //
+if ($mode) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
@@ -53,6 +54,7 @@ require_once("f_bodyopen.phtml");
                     $current_month_num = date("n");
                     echo "<option value=" . $current_month_num . ">" . date("F") . "</option>\n";
                     echo "<option value=" . ($current_month_num + 1) . ">" . date("F",mktime(12,0,0,($current_month_num + 1),1)) . "</option>\n";
+                    echo "<option value=" . ($current_month_num + 2) . ">" . date("F",mktime(12,0,0,($current_month_num + 2),1)) . "</option>\n";
                     ?>
                  </select></td>
               </tr>
