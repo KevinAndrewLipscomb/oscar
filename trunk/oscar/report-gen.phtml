@@ -116,7 +116,7 @@ if ($report_type == "FULL")
       $report .= "----\n\n";
       for ($day_index = 1; $day_index <= 31; $day_index++)
          {
-         $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
+         $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$month_num,$day_index,$year_num));
             $where_clause_2 = "and d$day_index='AVAILABLE' ";
          $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
          $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
@@ -149,7 +149,7 @@ if ($report_type == "FULL")
       $report .= "------\n\n";
       for ($night_index = 1; $night_index <= 31; $night_index++)
          {
-         $night_description = date("jS (l)",mktime(21,0,0,$month_num,$night_index,$year_num)) . " night:";
+         $night_description = date("jS \\n\i\g\h\t (l):",mktime(21,0,0,$month_num,$night_index,$year_num));
          $where_clause_2 = "and n$night_index='AVAILABLE' ";
          $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
          $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
@@ -320,7 +320,7 @@ else
          {
          if ($d[$day_index])
             {
-            $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
+            $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$month_num,$day_index,$year_num));
             $where_clause_2 = "and d$day_index='AVAILABLE' ";
             $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
             $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
@@ -352,7 +352,7 @@ else
          {
          if ($n[$night_index])
             {
-            $night_description = date("jS (l)",mktime(9,0,0,$month_num,$night_index,$year_num)) . " night:";
+            $night_description = date("jS \\n\i\g\h\t (l):",mktime(9,0,0,$month_num,$night_index,$year_num));
             $where_clause_2 = "and n$night_index='AVAILABLE' ";
             $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
             $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
@@ -410,12 +410,12 @@ $claim_ticket .= "   Name:           $name\n";
 $claim_ticket .= "   Email address:  $email_addr\n\n";
 $claim_ticket .= "The report is available at the following web address:\n\n";
 $claim_ticket .= "   http://kalipso.phpwebhosting.com/oscar/get-report.phtml?digest=$digest\n\n";
-$claim_ticket .= "If you are the person indicated above, please browse to the above web\n";
-$claim_ticket .= "address to see the report.\n\n";
-$claim_ticket .= "(Schedule coordinator:  This claim ticket is first sent to you for    )\n";
-$claim_ticket .= "(purposes of security screening.  If you agree that the indicated user)\n";
-$claim_ticket .= "(is authorized to receive the linked report, please pass this claim   )\n";
-$claim_ticket .= "(ticket along to the user by pressing your REPLY and SEND buttons.    )\n\n";
+$claim_ticket .= "If you are the requestor, please browse to the above web address to see\n";
+$claim_ticket .= "the report.\n\n";
+$claim_ticket .= "(Schedule coordinator:  This claim ticket is first sent to you for\n";
+$claim_ticket .= "purposes of security screening.  If you agree that the indicated user\n";
+$claim_ticket .= "is authorized to receive the linked report, please pass this claim\n";
+$claim_ticket .= "ticket along to the user by pressing your REPLY and SEND buttons.\n\n";
 $claim_ticket .= "-- OSCAR\n";
 $claim_ticket .= "-- Home page: http://kalipso.phpwebhosting.com/oscar/index.phtml\n";
 $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
