@@ -1,7 +1,6 @@
 CREATE TABLE avail_sheet
    (
    month ENUM("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC") not null,
-   cad_num CHAR (6) not null,
    timestamp TIMESTAMP not null,
    last_name VARCHAR (32) not null,
    first_name VARCHAR (32),
@@ -73,5 +72,6 @@ CREATE TABLE avail_sheet
    n29 ENUM("","AVAILABLE"),
    n30 ENUM("","AVAILABLE"),
    n31 ENUM("","AVAILABLE"),
-   PRIMARY KEY (month, cad_num, timestamp)
+   timestamp TIMESTAMP not null,
+   PRIMARY KEY (month, last_name, first_name)
    )
