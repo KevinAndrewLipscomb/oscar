@@ -11,7 +11,10 @@ function RoleEmailAddress($role)
    switch ($role)
       {
       case "schedule-coordinator":
-         return "infotech@kvrs.org,lipscombka@nnsy.navy.mil,kevin.a.lipscomb@us.pwcglobal.com";
+         return "infotech@kvrs.org";
+         break;
+      case "escalation-level-1-recipient":
+         return "president@kvrs.org";
          break;
       default:
          return "infotech@kvrs.org";

@@ -399,60 +399,108 @@ else
 //
 // Create the notice.
 //
+$headers = "From: " . RoleEmailAddress("") . "\r\n";
+$headers .= "Reply-to: " . RoleEmailAddress("") . "\r\n";
+//
 $result = mysql_query("select 1 as be_trusted from trusted_user where email_address='$email_addr'")
    or die("Trust check failed with error:  " . mysql_error());
 if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator")))
    {
    //
-   // Then send a claim ticket to the requestor directly.
+   // Then send an approval notice to the requestor directly.
    //
-   $notice_recipient = $email_addr;
-   $subject = "Your OSCAR report";
+   $approval_notice_recipient = $email_addr;
+   $approval_notice_subject = "Your OSCAR report";
    //
-   //          0        1         2         3         4         5         6         7
-   //          123456789012345678901234567890123456789012345678901234567890123456789012
-   $notice =  "The OSCAR Availability Report\n";
-   $notice .= "you requested is available at:\n\n";
-   $notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
+   //                0        1         2         3         4         5         6         7
+   //                123456789012345678901234567890123456789012345678901234567890123456789012
+   $approval_notice =  "The OSCAR Availability Report\n";
+   $approval_notice .= "you requested is available at:\n\n";
+   $approval_notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
+   //
+   // Add sig lines.
+   //
+   $approval_notice .= "-- OSCAR\n";
+   $approval_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
+   $approval_notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+   //
+   // Send the mail.
+   //
+   $result = mail($approval_notice_recipient, $approval_notice_subject, $approval_notice, $headers);
    }
 else
    {
    //
    // Someone else requested the report.  Notify the schedule coordinator.
    //
-   $notice_recipient = RoleEmailAddress("schedule-coordinator");
-   $subject = "-> OSCAR request ->";
+   $screen_notice_recipient = RoleEmailAddress("schedule-coordinator");
+   $screen_notice_subject = "-> OSCAR request ->";
    //
    // Give the schedule coordinator a chance to approve (weakly or strongly) or disapprove of the request.
    //
    //          0        1         2         3         4         5         6         7
    //          123456789012345678901234567890123456789012345678901234567890123456789012
-   $notice =  "The OSCAR system has received a request for an Availability Report from\n";
-   $notice .= "a user who identified him or herself as:\n\n";
-   $notice .= "   Name:           $name\n";
-   $notice .= "   Email address:  $email_addr\n\n";
-   $notice .= "Please take one of the following actions:\n\n";
-   $notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
-   $notice .= "   and subsequent OSCAR requests from this user),\n";
-   $notice .= "   click here:\n";
-   $notice .= OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n";
-   $notice .= "2. To approve this request WITHOUT registering the\n";
-   $notice .= "   user as trusted, click here:\n";
-   $notice .= OscarRootUrl() . "/approve.phtml?digest=$digest\n\n";
-   $notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n";
-   $notice .= "The report is available for review at:\n";
-   $notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
+   $screen_notice =  "The OSCAR system has received a request for an Availability Report from\n";
+   $screen_notice .= "a user who identified him or herself as:\n\n";
+   $screen_notice .= "   Name:           $name\n";
+   $screen_notice .= "   Email address:  $email_addr\n\n";
+   $screen_notice .= "Please take one of the following actions:\n\n";
+   $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
+   $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
+   $screen_notice .= "   click here:\n";
+   $screen_notice .= OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n";
+   $screen_notice .= "2. To approve this request WITHOUT registering the\n";
+   $screen_notice .= "   user as trusted, click here:\n";
+   $screen_notice .= OscarRootUrl() . "/approve.phtml?digest=$digest\n\n";
+   $screen_notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n";
+   $screen_notice .= "The report is available for review at:\n";
+   $screen_notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
+   //
+   // Add sig lines.
+   //
+   $screen_notice .= "-- OSCAR\n";
+   $screen_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
+   $screen_notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+   //
+   // Then send a claim ticket to the requestor directly.
+   //
+   $claim_ticket_recipient = $email_addr;
+   $claim_ticket_subject = "OSCAR claim ticket";
+   //
+   //                0        1         2         3         4         5         6         7
+   //                123456789012345678901234567890123456789012345678901234567890123456789012
+   $claim_ticket =  "Your request for an OSCAR Availability Report has been submitted to the\n";
+   $claim_ticket .= "VBDEMS Central Schedule Coordinator for screening.  Check your email\n";
+   $claim_ticket .= "periodically for approval.\n\n";
+   $claim_ticket .= "Save this message.  It is your report claim ticket.\n\n";
+   $claim_ticket .= "If excessive time goes by and you wish to escalate your request to a\n";
+   $claim_ticket .= "higher authority, you can do so by clicking the link near the bottom of\n";
+   $claim_ticket .= "this message.\n\n";
+   $claim_ticket .= "   WARNING\n";
+   $claim_ticket .= "   -------\n";
+   $claim_ticket .= "   Do not escalate your request without due cause.  To do so is to\n";
+   $claim_ticket .= "   'jump the chain of command', which is poor discipline and may be\n";
+   $claim_ticket .= "   punishable.  The option to escalate is provided for cases where the\n";
+   $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
+   $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
+   $claim_ticket .= "The next authority in the chain is:\n\n";
+   $claim_ticket . RoleEmailAddress("escalation-level-1-recipient") . "\n\n";
+   $claim_ticket .= "To escalate your request to the above\n";
+   $claim_ticket .= "authority, click here:\n\n";
+   $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=1&digest=$digest\n\n";
+   //
+   // Add sig lines.
+   //
+   $claim_ticket .= "-- OSCAR\n";
+   $claim_ticket .= "-- Home page: " . OscarHomePageUrl() . "\n";
+   $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+   //
+   // Send the mail.
+   //
+   $result = mail($screen_notice_recipient, $screen_notice_subject, $screen_notice, $headers)
+      and mail($claim_ticket_recipient, $claim_ticket_subject, $claim_ticket, $headers);
    }
-//
-// Add sig lines.
-//
-$notice .= "-- OSCAR\n";
-$notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
-$notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
-//
-$headers = "From: " . RoleEmailAddress("") . "\r\n";
-$headers .= "Reply-to: " . RoleEmailAddress("") . "\r\n";
-if (mail($notice_recipient, $subject, $notice, $headers))
+if ($result)
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"left");
    echo "<p>The OSCAR system has successfully generated your report.&nbsp;  A claim ticket for the report has been submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.&nbsp; The coordinator will forward the claim ticket to you once screening is complete.</p>";
