@@ -404,18 +404,18 @@ else
 //
 //                0        1         2         3         4         5         6         7
 //                123456789012345678901234567890123456789012345678901234567890123456789012
-$claim_ticket =  "This is the claim ticket for an OSCAR report requested by a user who\n";
-$claim_ticket .= "identified him or herself as:\n\n";
+$claim_ticket =  "This is the claim ticket for an OSCAR Availability Report requested by\n";
+$claim_ticket .= "a user who identified him or herself as:\n\n";
 $claim_ticket .= "   Name:           $name\n";
 $claim_ticket .= "   Email address:  $email_addr\n\n";
 $claim_ticket .= "The report is available at the following web address:\n\n";
 $claim_ticket .= "   http://kalipso.phpwebhosting.com/oscar/get-report.html?digest=$digest\n\n";
 $claim_ticket .= "If you are the person indicated above, please browse to the above web\n";
 $claim_ticket .= "address to see the report.\n\n";
-$claim_ticket .= "(Schedule coordinator:  This claim ticket is first sent to you for\n";
-$claim_ticket .= "purposes of security screening.  If you agree that the indicated user\n";
-$claim_ticket .= "is authorized to receive the linked report, please pass this claim\n";
-$claim_ticket .= "ticket along to the user by pressing your REPLY and SEND buttons.\n\n";
+$claim_ticket .= "(Schedule coordinator:  This claim ticket is first sent to you for    )\n";
+$claim_ticket .= "(purposes of security screening.  If you agree that the indicated user)\n";
+$claim_ticket .= "(is authorized to receive the linked report, please pass this claim   )\n";
+$claim_ticket .= "(ticket along to the user by pressing your REPLY and SEND buttons.    )\n\n";
 $claim_ticket .= "-- OSCAR\n";
 $claim_ticket .= "-- Home page: http://kalipso.phpwebhosting.com/oscar/index.phtml\n";
 $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
@@ -435,13 +435,14 @@ else
    {
    $subject = "*YOUR* OSCAR report claim ticket";
    }
-$headers = "From: OSCAR\r\n";
+$headers = "From: (OSCAR)\r\n";
 $headers .= "Reply-to: $email_addr\r\n";
 if (mail($recipient, $subject, $claim_ticket, $headers))
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"left");
-   echo "<p>The OSCAR system has generated your report and submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.&nbsp; The coordinator will forward it to you once screening is complete.</p>";
+   echo "<p>The OSCAR system has successfully generated your report.&nbsp;  A claim ticket for the report has been submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.&nbsp; The coordinator will forward the claim ticket to you once screening is complete.</p>";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+   echo "<p><b>Thank you</b> for using the OSCAR system!</p>";
    }
 else
    {
