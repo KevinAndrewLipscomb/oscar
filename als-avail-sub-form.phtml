@@ -193,7 +193,7 @@ require_once("f_roleemailaddress.phtml");
           <li>
             <p align=left>OSCAR knows you are submitting from
                <?
-               echo GetHostByName($REMOTE_ADDR);
+               echo $REMOTE_ADDR;
                ?>
             </li>
           <li>
