@@ -6,7 +6,8 @@ function NumSheets
    (
    $month_abbrev,
    $mode = "",
-   $coord_agency = ""
+   $coord_agency = "",
+   $email_filter = ""
    )
    {
    error_reporting(E_ALL);
@@ -14,6 +15,15 @@ function NumSheets
    $num_sheets = 0;
    $qry = "select count(*) as num_sheets from oscar." . $mode . "avail_sheet "
       .  "   where month='$month_abbrev' ";
+   switch ($email_filter)
+      {
+	  case "VBGOV":
+	     $qry .= " and email_addr like '%VBGOV.COM%' ";
+		 break;
+      case "NONVBGOV":
+	     $qry .= " and email_addr not like '%VBGOV.COM%' ";
+		 break;
+	  }
    if (!$coord_agency)
       {
       $qry .= " group by month";
