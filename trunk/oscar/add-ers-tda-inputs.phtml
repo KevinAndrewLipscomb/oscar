@@ -2,6 +2,13 @@
 //
 // $Id$
 //
+error_reporting(E_ALL);
+//
+$mode="";
+   //
+   // For production mode, use ""; for debug mode use "x-".
+   //
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -62,8 +69,11 @@ require_once("f_availlist.phtml");
             //
             // Connect to the database.
             //
-            mysql_connect(localhost,kalipso,Password());
-            mysql_select_db(oscar);
+            mysql_connect("localhost","kalipso",Password());
+            mysql_select_db("oscar");
+            //
+            $found_something_to_process = "";
+            $be_problem = "";
             //
             for ($i = 1; $i <= count($last_name); $i++)
                {
@@ -100,7 +110,7 @@ require_once("f_availlist.phtml");
                      }
                   
                   //
-                  $sql = "insert into avail_sheet set first_name='" . addslashes(trim($first_name[$i])) . "'"
+                  $sql = "insert into " . $mode . "avail_sheet set first_name='" . addslashes(trim($first_name[$i])) . "'"
                      . ", last_name='" . addslashes(trim($last_name[$i])) ."'"
                      . ", email_addr='" . addslashes(trim($email_addr)) . "'"
                      . ", month='" . $applicable_month_abbrev . "'"
@@ -136,7 +146,7 @@ require_once("f_availlist.phtml");
                      .  "   , n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27, n28, n29, n30, n31"
                      .  "   , expiration"
                      .  "   , timestamp"
-                     .  " from avail_sheet"
+                     .  " from " . $mode . "avail_sheet"
                      .  " where month='$applicable_month_abbrev'"
                      .  "    and last_name='" . addslashes(trim($last_name[$i])) . "'"
                      .  "    and first_name='" . addslashes(trim($first_name[$i])) . "'"
@@ -203,7 +213,7 @@ require_once("f_availlist.phtml");
                if (($i == count($last_name)) and (!$found_something_to_process))
                   {
                   echo "<tr><td colspan=10 align=center><b>Warning: Your submission didn't contain any valid TDA"
-                     . " records.&nbsp; Click your browser's [<-- Back] button to correct the problem.</b></td></tr>\n";
+                     . " records.&nbsp; Click your browser's [<--&nbsp;Back] button to correct the problem.</b></td></tr>\n";
                   }
                } // for row
             echo "</table></blockquote>\n";
@@ -239,8 +249,8 @@ require_once("f_availlist.phtml");
             echo "</blockquote>\n"
                . "<table cellspacing=10>\n"
                . "   <tr><td colspan=3><h3>Actions</h3></td></tr>\n"
-               . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=ers-tda-input-form.phtml?email_addr=$email_addr&applicable_month_num=$applicable_month_num>Continue</a></b></td><td>submitting TDAs.</td></tr>\n"
-               . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=index.phtml>Return</a></b></td><td>to the OSCAR home page.</td></tr>\n"
+               . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=" . $mode . "ers-tda-input-form.phtml?email_addr=$email_addr&applicable_month_num=$applicable_month_num>Continue</a></b></td><td>to submit TDAs.</td></tr>\n"
+               . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=" . $mode . "index.phtml>Return</a></b></td><td>to the OSCAR home page.</td></tr>\n"
                . "</table>\n";
             }
          else
