@@ -2,6 +2,12 @@
 //
 // $Id$
 //
+$mode="";
+   //
+   // Set mode to "" for production use, "x_" to debug.
+   //
+if ($mode) error_reporting(E_ALL);
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -29,7 +35,7 @@ require_once("f_roleemailaddress.phtml");
         </td></tr></table>
         <hr>
         <p>For centrally-scheduled members only.&nbsp; Starred<sup><b>*</b></sup> fields are required.</p>
-        <form method="POST" action="add-avail-sheet.phtml">
+        <form method="POST" action="<? echo $mode; ?>add-avail-sheet.phtml">
           <table border="0" cellpadding="0" cellspacing="0" width="912">
             <tr>
               <td>First name:<sup><b>*</b></sup></td>

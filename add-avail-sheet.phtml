@@ -2,12 +2,91 @@
 //
 // $Id$
 //
+$mode="";
+   //
+   // Set mode to "" for production use, "x_" to debug.
+   //
+//
+// Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
+//
+$first_name = $first_name;
+$last_name = $last_name;
+$email_addr = $email_addr;
+$squad = $squad;
+$applicable_month_num = $applicable_month_num;
+$be_on_team_30 = $be_on_team_30;
+$be_on_team_5 = $be_on_team_5;
+$d1 = $d1;
+$d2 = $d2;
+$d3 = $d3;
+$d4 = $d4;
+$d5 = $d5;
+$d6 = $d6;
+$d7 = $d7;
+$d8 = $d8;
+$d9 = $d9;
+$d10 = $d10;
+$d11 = $d11;
+$d12 = $d12;
+$d13 = $d13;
+$d14 = $d14;
+$d15 = $d15;
+$d16 = $d16;
+$d17 = $d17;
+$d18 = $d18;
+$d19 = $d19;
+$d20 = $d20;
+$d21 = $d21;
+$d22 = $d22;
+$d23 = $d23;
+$d24 = $d24;
+$d25 = $d25;
+$d26 = $d26;
+$d27 = $d27;
+$d28 = $d28;
+$d29 = $d29;
+$d30 = $d30;
+$d31 = $d31;
+$n1 = $n1;
+$n2 = $n2;
+$n3 = $n3;
+$n4 = $n4;
+$n5 = $n5;
+$n6 = $n6;
+$n7 = $n7;
+$n8 = $n8;
+$n9 = $n9;
+$n10 = $n10;
+$n11 = $n11;
+$n12 = $n12;
+$n13 = $n13;
+$n14 = $n14;
+$n15 = $n15;
+$n16 = $n16;
+$n17 = $n17;
+$n18 = $n18;
+$n19 = $n19;
+$n20 = $n20;
+$n21 = $n21;
+$n22 = $n22;
+$n23 = $n23;
+$n24 = $n24;
+$n25 = $n25;
+$n26 = $n26;
+$n27 = $n27;
+$n28 = $n28;
+$n29 = $n29;
+$n30 = $n30;
+$n31 = $n31;
+//
+if ($mode) error_reporting(E_ALL);
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_showavailsheetrecdetail.phtml");
+require_once($mode . "f_showavailsheetrecdetail.phtml");
 ?>
 <html>
 <head><title>OSCAR - Confirmation</title></head>
@@ -15,11 +94,20 @@ require_once("f_showavailsheetrecdetail.phtml");
 <table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
    <tr>
       <td>
-         <h6 align="center">
-            KVEO-IT-PROJECT<br>
-            <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
-            <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
-         <H1 ALIGN="CENTER">Confirmation</H1>
+         <table>
+            <tr>
+               <td>
+                  <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+               </td>
+               <td>
+                  <h6 align="center">
+                  KVEO-IT-PROJECT<br>
+                  <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+                  <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+                  <H1 ALIGN="CENTER">Confirmation</H1>
+               </td>
+            </tr>
+         </table>
          <hr>
          <?
          //
@@ -42,12 +130,10 @@ require_once("f_showavailsheetrecdetail.phtml");
             //
             // All required values are present.
             //
-            PutLibPhotoRandomPlaced("sasquatch",1,"right");
-            //
             // Connect to the database.
             //
-            mysql_connect(localhost,kalipso,Password());
-            mysql_select_db(oscar);
+            mysql_connect("localhost","kalipso",Password());
+            mysql_select_db("oscar");
             //
             // Calculate the expiration date for this availability sheet.  For the expiration date calculation, the 0th day
             // of month+1 resolves to the last day of month.
@@ -58,7 +144,7 @@ require_once("f_showavailsheetrecdetail.phtml");
             //
             // Create and execute the SQL statement to insert the record.
             //
-            $sql = "insert into avail_sheet set first_name='" . addslashes(trim($first_name)) . "'"
+            $sql = "insert into " . $mode . "avail_sheet set first_name='" . addslashes(trim($first_name)) . "'"
                . ", last_name='" . addslashes(trim($last_name)) ."'"
                . ", email_addr='" . addslashes(trim($email_addr)) . "'"
                . ", month='" . $applicable_month_abbrev . "'"
@@ -91,10 +177,15 @@ require_once("f_showavailsheetrecdetail.phtml");
             $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 = $n17 =
                $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 = $n31 = "";
             $num_extras = $note = $expiration = "";
+            $be_tda = "";
+               //
+               // Break be_tda out separately so it won't get flagged as an undefined var and so I don't have to declare it
+               // as an argument (above), which it is not in this case.
+               //
             //
             $result = mysql_query
                (
-               $qry = "select * from avail_sheet"
+               $qry = "select * from " . $mode . "avail_sheet"
                .  " where month='$applicable_month_abbrev'"
                .  "    and last_name='" . addslashes(trim($last_name)) . "'"
                .  "    and first_name='" . addslashes(trim($first_name)) . "'"
@@ -126,6 +217,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                   $month,
                   $be_on_team_5,
                   $be_on_team_30,
+                  $be_tda,
                   $num_extras,
                   $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
                   $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
@@ -149,10 +241,10 @@ require_once("f_showavailsheetrecdetail.phtml");
                      include:</p>
                   <ul>
                      <li>The network may be very congested.
-                     <li>The database server may be bogged down, or may have gone down due to error or maintenance.
-                     <li>The OSCAR system's query or program logic may be faulty.
+                     <li>The database server may be bogged down, or may have gone offline due to error or maintenance.
+                     <li>OSCAR may have a bug.
                   </ul>
-                  <p>Please try submitting your informatoin again later, or contact the <a href=mailto:\"<? echo 
+                  <p>Please try submitting your information again later, or contact the <a href=mailto:\"<? echo 
                      RoleEmailAddress(""); ?>\">OSCAR System Administrator</a>.</p>
                </blockquote>            
                </b>
@@ -176,7 +268,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                   <li><p>Home squad</p>
                   <li><p>Applicable month</p>
                </ul>
-               <p>Please press your browser's [<-- BACK] button to correct the problems.</p>
+               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
             </blockquote>            
             </b>
             <?

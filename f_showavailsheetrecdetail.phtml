@@ -2,8 +2,6 @@
 //
 // $Id$
 //
-require_once("f_availlist.phtml");
-//
 function ShowAvailSheetRecDetail
    (
    $timestamp,
@@ -23,6 +21,12 @@ function ShowAvailSheetRecDetail
    $be_authority = ""
    )
    {
+   $mode="";
+      //
+      // Set mode to "" for production use, "x_" to debug.
+      //
+   require_once($mode . "f_availlist.phtml");
+   //
    echo "<table cellspacing=5>\n";
    echo "   <tr><td align=right valign=top><b>Time&nbsp;of&nbsp;submission:</b></td><td><b>";
    echo substr($timestamp,0,4)
