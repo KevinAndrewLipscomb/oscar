@@ -103,7 +103,8 @@ require_once("f_showavailsheetrecdetail.phtml");
                );
             if (mysql_num_rows($result))
                {
-               $row = mysql_fetch_row($result);
+               $row = mysql_fetch_row($result)
+                  or die("Attempt to fetch row failed with error:  " . mysql_error());
                extract($row);
                //
                // The insert and subsequent select must've succeeded.
@@ -139,8 +140,13 @@ require_once("f_showavailsheetrecdetail.phtml");
                <h2><i>Error!</i></h2>
                <b>
                <blockquote>
-                  <p>The OSCAR system was unable to find what it thinks it just inserted into the database.</p>
-                  <p>The database may have gone down due to error or maintenance, or the network may be very congested.</p>
+                  <p>The OSCAR system was unable to find what it thinks it just inserted into the database.&nbsp; Possible causes
+                     include:</p>
+                  <ul>
+                     <li>The network may be very congested.
+                     <li>The database server may be bogged down, or may have gone down due to error or maintenance.
+                     <li>The OSCAR system's query or program logic may be faulty.
+                  </ul>
                   <p>Please try submitting your informatoin again later, or contact the <a href=mailto:\"<? echo 
                      RoleEmailAddress(""); ?>\">OSCAR System Administrator</a>.</p>
                </blockquote>            
