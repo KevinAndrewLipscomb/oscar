@@ -2,9 +2,11 @@
 //
 // $Id$
 //
+$foundation_dir = "../foundation";
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
+require_once("$foundation_dir/std_style_class.php");
 ?>
 <html>
 
@@ -19,6 +21,7 @@ require_once("f_bodyopen.phtml");
            <h1 align="center">What's New</h1>
         <hr>
         <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+        <?php echo std_style_class::CatchUpBlurb(); ?>
         <p><b>2002-07-18:&nbsp; </b>Moved yesterday's solution to a newly-created foundation class so that other products
            could make use of it.</p>
         <p><b>2002-07-17:&nbsp; </b>Added a note to the Report Generation form to suggest a workaround for a potential
