@@ -55,6 +55,13 @@ $result = mysql_query
    )
    or die("The query failed with error:  " . mysql_error());
 $num_rows = mysql_num_rows($result);
+//
+echo "<pre>\n";
+echo "Decoded \$first_name = $first_name<br>\n";
+echo "Decoded \$last_name = $last_name<br>\n";
+echo "Decoded \$month = $month<br>\n";
+echo "</pre>\n";
+//
 echo "<h4>Found $num_rows ";
 if ($num_rows == 1)
    {
