@@ -120,6 +120,8 @@ if ($report_type == "FULL")
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                $report .= sprintf("%3s ",$squad);
+               $last_name = stripslashes($last_name);
+               $first_name = stripslashes($first_name);
                $report .= "<a href=detail.phtml?a="
                   .  base64_encode($last_name)
                   .  "&b="
@@ -161,6 +163,8 @@ if ($report_type == "FULL")
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                $report .= sprintf("%3s ",$squad);
+               $last_name = stripslashes($last_name);
+               $first_name = stripslashes($first_name);
                $report .= "<a href=detail.phtml?a="
                   .  base64_encode($last_name)
                   .  "&b="
@@ -218,6 +222,8 @@ if ($report_type == "FULL")
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
+            $last_name = stripslashes($last_name);
+            $first_name = stripslashes($first_name);
             $report .= "<a href=detail.phtml?a="
                .  base64_encode($last_name)
                .  "&b="
@@ -385,6 +391,8 @@ else
                   $report .= "- ";
                   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                   $report .= sprintf("%3s ",$squad);
+                  $last_name = stripslashes($last_name);
+                  $first_name = stripslashes($first_name);
                   $report .= "<a href=detail.phtml?a="
                      .  base64_encode($last_name)
                      .  "&b="
@@ -424,6 +432,8 @@ else
                   $report .= "- ";
                   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                   $report .= sprintf("%3s ",$squad);
+                  $last_name = stripslashes($last_name);
+                  $first_name = stripslashes($first_name);
                   $report .= "<a href=detail.phtml?a="
                      .  base64_encode($last_name)
                      .  "&b="

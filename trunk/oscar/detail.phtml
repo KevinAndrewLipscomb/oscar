@@ -12,8 +12,8 @@ require_once("f_showavailsheetrecdetail.phtml");
 // Give arguments meaningful names.  The obtuse names and base 64 encoding are measly attempts to protect generated URLs to this script
 // from being abused.
 //
-$last_name = base64_decode($a);
-$first_name = base64_decode($b);
+$last_name = addslashes(base64_decode($a));
+$first_name = addslashes(base64_decode($b));
 $month = base64_decode($c);
 //
 ?>
