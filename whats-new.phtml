@@ -19,6 +19,9 @@ require_once("f_bodyopen.phtml");
            <h1 align="center">What's New</h1>
         <hr>
         <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+        <p><b>2002-03-01:&nbsp; </b>Fixed a bug introduced when relay feature was added.&nbsp; The bug caused an annoying
+           warning message on the main and stat pages when OSCAR tried to determine the number of submitters for a month
+           that didn't actually have any submitters.&nbsp; The bug became apparent today because of the month rollover.</p>
         <p><b>2002-02-23:&nbsp; </b>Restored the "#num extras will run" indication on schedule coordinator reports.&nbsp; It
            was originally added on 2001-11-13 but somehow got lost in a subsequent revision.&nbsp; Revised the Set Agency
            Participation page to prevent visiting spiders, bots, etc from triggering the participation toggle feature, and 

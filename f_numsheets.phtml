@@ -11,7 +11,7 @@ function NumSheets
    {
    $saved_error_level = error_reporting(E_ALL);
    //
-   $num_sheets = 0;
+   $num_submitters = 0;
    $qry = "select count(distinct last_name, first_name) as num_submitters from oscar." . $mode . "avail_sheet "
       .  "   where month='$month_abbrev' ";
    if (!$coord_agency)
