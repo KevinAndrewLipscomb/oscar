@@ -350,6 +350,7 @@ echo "<li><p><b>Notifications:</b>&nbsp; Email notifications have been sent to s
    . "   <td><small>Squad</small></td>\n"
    . "   <td><small>Relayed sheets</small></td>\n"
    . "   <td><small>Notification sent...</small></td>\n"
+   . "   <td><small>Pager alerted?</small></td>\n"
    . "</tr>\n";
 //
 //    RELAY NOTIFICATIONS
@@ -438,10 +439,23 @@ while ($row = mysql_fetch_array($result))
          //
          mail($relay_notice_recipient, $relay_notice_subject, $relay_notice, $relay_headers);
          //
+         if (($relay_page_recipient = RoleEmailAddress("schedule-coordinator-pager",$mode,$coord_agency)) != '')
+            {
+            $relay_page_headers = "From: " . RoleEmailAddress("schedule-coordinator",$mode,"EMS") . "\r\n";
+            $relay_page_notice = "Check email for OSCAR RELAY notice";
+            mail($relay_page_recipient,'',$relay_page_notice,'');
+            $be_alerted = 'YES';
+            }
+         else
+            {
+            $be_alerted = 'no known pgr';
+            }
+         //
          echo "<tr>\n"
             . "   <td><small>$coord_agency</small></td>\n"
             . "   <td align=center><small>$num_relayed_sheets</small></td>\n"
             . "   <td><small>Direct to $relay_notice_recipient</small></td>\n"
+            . "   <td><small>$be_alerted</small></td>\n"
             . "</tr>\n";
          }
       else
@@ -528,6 +542,7 @@ while ($row = mysql_fetch_array($result))
             . "   <td><small>$coord_agency</small></td>\n"
             . "   <td align=center><small>$num_relayed_sheets</small></td>\n"
             . "   <td><small>To YOU for forwarding</small></td>\n"
+            . "   <td><small>n/a</small></td>\n"
             . "</tr>\n";
          }
       }
