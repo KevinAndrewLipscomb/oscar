@@ -33,6 +33,8 @@ require_once("f_roleemailaddress.phtml");
                ($email_addr != "")
             and
                ($squad != "")
+            and
+               ($applicable_month_num != "")
             )
          // then
             //
@@ -46,10 +48,9 @@ require_once("f_roleemailaddress.phtml");
             mysql_connect(localhost,kalipso,Password());
             mysql_select_db(oscar);
             //
-            // Calculate the expiration date for this report.  For the expiration date calculation, the 0th day of the
-            // month+1 resolves to the last day of month.
+            // Calculate the expiration date for this availability sheet.  For the expiration date calculation, the 0th day
+            // of month+1 resolves to the last day of month.
             //
-            $applicable_month_num = date("n") + 1;
             $applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
             $expiration_date = date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0));
             //
@@ -88,6 +89,7 @@ require_once("f_roleemailaddress.phtml");
                   <li><p>Last name</p>
                   <li><p>Email address</p>
                   <li><p>Home squad</p>
+                  <li><p>Applicable month</p>
                </ul>
                <p>Please press your browser's [<-- BACK] button to correct the problems.</p>
             </blockquote>            
