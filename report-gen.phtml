@@ -16,6 +16,8 @@ $msg .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">
 $msg .= "<H1 ALIGN=CENTER>Report generation</H1>\n";
 $msg .= "<hr>\n";
 //
+echo $msg;
+//
 mysql_connect(localhost,kalipso,Password());
 mysql_select_db(oscar);
 //
@@ -270,16 +272,48 @@ else
    }
 //
 $msg .= "<pre>--- END ---</pre><br>\n";
-$msg .= "<small><i><pre>$Id$</pre></i></small>\n";
+$msg .= "<small><i><pre>\$Id$</pre></i></small>\n";
 $msg .= "</td></tr></table>\n";
 $msg .= "</body>\n";
 $msg .= "</html>\n";
 //
-//echo $msg;
-//$recipient = RoleEmailAddress("schedule-coordinator");
-$recipient = RoleEmailAddress("");
+$recipient = RoleEmailAddress("schedule-coordinator");
 $subject = "OSCAR report";
-$headers = "Reply-to: $name <$email_addr>\r\n";
+$headers = "From: $name (via OSCAR) <$email_addr>\r\n";
+$headers .= "Reply-to: $name <$email_addr>\r\n";
 $headers .= "Content-type: text/html\r\n";
-mail($recipient, $subject, $msg, $headers);
+if (mail($recipient, $subject, $msg, $headers))
+   {
+   PutLibPhotoRandomPlaced("sasquatch",1,"left");
+   echo "<p>The OSCAR system has generated your report and submitted to the <a href=mailto:" . RoleEmailAddress("schedule-coordinator") . "VBDEMS Central Schedule Coordinator</a> for security screening.</p>";
+   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+   }
+else
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Error!</i></h2>
+   <b>
+   <blockquote>
+      <p>The OSCAR system encountered an internal error while processing your request.  Please do the following:</p>
+      <ul>
+         <?
+         echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:" . RoleEmailAddress("schedule-coordinator") . ">VBDEMS Central Schedule Coordinator</a> for the information you need.</p>";
+         echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>";
+         ?>
+      </ul>
+   </blockquote>            
+   </b>
+   <?
+   }
 ?>
+<br clear=both>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>
