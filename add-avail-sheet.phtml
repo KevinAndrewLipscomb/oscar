@@ -38,10 +38,10 @@ require_once("f_showavailsheetrecdetail.phtml");
                ($applicable_month_num != "")
             )
          // then
+            {
             //
             // All required values are present.
             //
-            {
             PutLibPhotoRandomPlaced("sasquatch",1,"right");
             //
             // Connect to the database.
@@ -76,9 +76,9 @@ require_once("f_showavailsheetrecdetail.phtml");
                   (
                   "Sorry, the database operation failed with this error:  <i>"
                   .  mysql_error()
-                  .  "</i>\n\nPlease notify the <a href=mailto:"
+                  .  "</i>\n\nPlease notify the <a href=mailto:\""
                   .  RoleEmailAddress("")
-                  .  ">OSCAR System Administrator</a>."
+                  .  "\">OSCAR System Administrator</a>."
                   );
             // mail(RoleEmailAddress("")),"OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
             //
@@ -129,7 +129,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                   );
                echo "</blockquote>\n";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
-                }
+               }
             else
                {
                //
@@ -145,6 +145,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                      RoleEmailAddress(""); ?>\">OSCAR System Administrator</a>.</p>
                </blockquote>            
                </b>
+               <?
                }
             }
          else
