@@ -12,8 +12,8 @@ require_once("f_showavailsheetrecdetail.phtml");
 // Give arguments meaningful names.  The obtuse names and base 64 encoding are measly attempts to protect generated URLs to this script
 // from being abused.
 //
-$last_name = addslashes(base64_decode($a));
-$first_name = addslashes(base64_decode($b));
+$last_name = base64_decode($a);
+$first_name = base64_decode($b);
 $month = base64_decode($c);
 //
 ?>
@@ -46,7 +46,13 @@ $month = base64_decode($c);
 mysql_connect(localhost,kalipso,Password());
 mysql_select_db(oscar);
 //
-$result = mysql_query("select * from avail_sheet where last_name = '$last_name' and first_name = '$first_name' and month = '$month'")
+$result = mysql_query
+   (
+   "select * from avail_sheet"
+   .  " where last_name = '" . addslashes($last_name) . "'"
+   .  "    and first_name = '" . addslashes($first_name) . "'"
+   .  "    and month = '$month'"
+   )
    or die("The query failed with error:  " . mysql_error());
 $num_rows = mysql_num_rows($result);
 echo "<h4>Found $num_rows ";
