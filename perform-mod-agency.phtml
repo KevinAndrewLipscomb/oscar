@@ -44,13 +44,28 @@ if ($token != "")
          //
          // Perform the specified update.
          //
-         mysql_query
-            (
-            "update " . $mode . "agency "
+         $sql = "update " . $mode . "agency "
             .  "set be_active='$new_be_active' "
             .  "where enumeral='$enumeral' "
-            )
-            or die("Update failed with error: " . mysql_error());
+         mysql_query($sql) or die("Update failed with error: " . mysql_error());
+         //
+         // This single change can have major ramifications for hundreds of individuals.  Notify sysadmin.
+         //
+         @mail
+            (
+            RoleEmailAddress("",$mode),
+            "OSCAR Participant Change",
+            stripslashes
+               (
+               "The \'OSCAR - "
+               . $mode
+               . "perform-mod-agency.phtml\' script has processed the following operation on behalf of the Master OSCAR "
+               . "Authority:\n\n$sql"
+               )
+            );
+         //
+         // Clean up the pending operation record.
+         //
          mysql_query
             (
             "delete from " . $mode . "pend_mod_agency where token='$token' "
