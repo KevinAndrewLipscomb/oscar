@@ -23,26 +23,13 @@ require_once("f_roleemailaddress.phtml");
         <p>Only OSCAR system authorities have the ability to read the special request notes that users can submit with 
            their availabilities.&nbsp;  These authorities are:<p>
         <ul>
-           <?
-           echo "<li><p>the Schedule Coordinator (<a href=mailto:\""
-              .  RoleEmailAddress("schedule-coordinator")
-              .  "\">"
-              .  RoleEmailAddress("schedule-coordinator")
-              .  "</a>)</p></li>\n";
-           echo "<li><p>the Escalation Level 1 Authority (<a href=mailto:\""
-              .  RoleEmailAddress("escalation-level-1-recipient")
-              .  "\">"
-              .  RoleEmailAddress("escalation-level-1-recipient")
-              .  "</a>)</p></li>\n";
-           echo "<li><p>the OSCAR System Administrator (<a href=mailto:\""
-              .  RoleEmailAddress("")
-              .  "\">"
-              .  RoleEmailAddress("")
-              .  "</a>)</p></li>\n";
-           ?>
+           <li><p>For all submissions, the OSCAR System Administrator;</p>
+           <li><p>For all submissions, the VBDEMS schedule coordinator, backup coordinator(s), Deputy Chief and Chief;</p>
+           <li><p>For submissions to a particular squad, that squad's schedule coordinator, backup coordinator(s),
+              assistant squad commander(s) and squad commander.</p>
         </ul>
         <p>Special request notes are not revealed to any other OSCAR system users.</p>
-        <p>You (or someone familiar with HTML, PHP, and MySQL) can verify the veracity of these claims by browsing the
+        <p>You (or someone familiar with the technology) can verify these claims by browsing the
            production source code at <<a href=http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/kveo-it-project/oscar/>http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/kveo-it-project/oscar/</a>>.</p>
         <p>If you have questions or concerns about the technical aspects of this process, feel free to contact the
            <a href=mailto:"<? echo RoleEmailAddress(""); ?>">OSCAR System Administrator</a>.</p>
