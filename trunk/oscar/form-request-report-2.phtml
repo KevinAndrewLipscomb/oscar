@@ -14,6 +14,7 @@ require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_writecalendarsubform.phtml");
 require_once("f_writecalendarbody.phtml");
+require_once("f_beauthority.phtml");
 ?>
 <html>
 
@@ -37,117 +38,159 @@ require_once("f_writecalendarbody.phtml");
         <hr>
         <?
         if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
-        {
-        //
-        // Validate parameters.
-        //
-        if
-           (
-              ($name != "")
-           and
-              ($email_addr != "")
-           and
-              ($applicable_month_num != "")
-           and
-              ($coord_agency != "")
-           )
-        // then
-        {
-        //
-        // Show what was collected in Part 1.
-        //
-        echo "<br>\n"
-           . "<table>\n"
-           . "   <tr><td>Name:</td><td><b>$name</b></td></tr>\n"
-           . "   <tr><td>Email address:</td><td><b>$email_addr</b></td></tr>\n"
-           . "   <tr><td>Applicable month:</td><td><b>"
-           . date("F",mktime(12,0,0,$applicable_month_num,1))
-           . "</b></td></tr>\n"
-           . "   <tr><td>Coordinating agency:&nbsp;&nbsp;</td><td><b>$coord_agency</b></td></tr>\n"
-           . "</table>\n"
-           . "<br>\n";
-        ?>
-        <p><i>For the values you supplied in Part 1, the following additional information is required.&nbsp; Complete the
-           form below and press the "Submit" button to finish the report request.</i></p>
-        <form action=<? echo $mode; ?>perform-gen-report.phtml method=post>
-           <?
-           echo "<input type=hidden name=name value=\"$name\">\n"
-              . "<input type=hidden name=email_addr value=\"$email_addr\">\n"
-              . "<input type=hidden name=applicable_month_num value=$applicable_month_num>\n"
-              . "<input type=hidden name=coord_agency value=$coord_agency>\n";
-           ?>
-           <table>
-              <tr>
-                 <td>
-                    Include:
-                    <blockquote>
-                       <input type=radio name=team_filter value=everyone checked>Everyone<br>
-                       <?
-                       if ($coord_agency == "EMS")
-                          {
-                          ?>
-                          <input type=radio name=team_filter value=als_only>Only Zone Car ALS providers<br>
-                          <input type=radio name=team_filter value=team_30_only>Only squad truck team members<br>
-                          <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
-                          <input type=radio name=team_filter value=tda_only>Only TDA personnel<br>
-                          <?
-                          }
-                       else
-                          {
-                          ?>
-                          <input type=radio name=team_filter value=released_only>Only released providers<br>
-                          <input type=radio name=team_filter value=drivers_only>Only qualified drivers<br>
-                          <input type=radio name=team_filter value=thirds_only>Only "thirds"<br>
-                          <?
-                          }
-                       ?>
-                       </blockquote>
-                    </td>
-                 </tr>
-             </table>
-             <br>
-           <?
-           $instruction_string = "Include:\n"
-              .  "<blockquote>\n"
-              .  "   <input type=radio name=shift_filter value=all>\n"
-              .  "      <b>All shifts</b>&nbsp; (Ignore the checkboxes below.)<br>\n"
-              .  "   <input type=radio name=shift_filter value=some checked>\n"
-              .  "      <b>Just one or more</b> shifts, as follows:&nbsp <small><i>(Who can run my duty on... ?)</i></small>\n"
-              .  "</blockquote>\n";
-           WriteCalendarSubform($applicable_month_num,$instruction_string,$mode);
-           ?>
-           <br>
-           <p align=left>Briefly explain the reason for your request:<br>
-           <textarea rows="5" name=reason cols="40"></textarea></p>
-           <p>Please double check your entries before completing your request.</p>
-           <input type=submit value="Submit request"><input type=reset>
-        </form>
-        </blockquote>
-        <?
-        }
-        else
            {
            //
-           // Fill the page out with a warning and instructions.
+           // Validate parameters.
            //
-           ?>
-           <h2><i>Error!</i></h2>
-           <b>
-           <blockquote>
-              <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
-              <ul>
-                 <li><p>Name</p>
-                 <li><p>Email address</p>
-                 <li><p>Applicable month</p>
-                 <li><p>Coordinating agency</p>
-              </ul>
-              <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
-           </blockquote>            
-           </b>
-           <?
-           echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+           if
+              (
+                 ($name != "")
+              and
+                 ($email_addr != "")
+              and
+                 ($applicable_month_num != "")
+              and
+                 (($coord_agency != "") or ($cross_agency != ""))
+              )
+           // then
+              {
+              //
+              $valid_all_agencies_request = (($cross_agency != '') and BeAuthority($email_addr,$mode,'EMS'));
+              //
+              if (($coord_agency == '') and !$valid_all_agencies_request)
+                 {
+                 //
+                 // Fill the page out with a warning and instructions.
+                 //
+                 ?>
+                 <h2><i>Sorry...</i></h2>
+                 <b>
+                 <blockquote>
+                    <p>OSCAR only sends <u>All Agencies</u> reports to EMS Authorities, and as far as OSCAR knows,
+                       <u><?php echo $email_addr; ?></u> does not qualify.&nbsp; Consequently, you must supply a value
+                       for this field:</p>
+                    <ul>
+                       <li><p>Coordinating agency</p>
+                    </ul>
+                    <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
+                 </blockquote>            
+                 </b>
+                 <?
+                 echo "<p>For tech support, contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+                 }
+              else
+                 {
+                 //
+                 // Show what was collected in Part 1.
+                 //
+                 echo "<br>\n"
+                    . "<table>\n"
+                    . "   <tr><td>Name:</td><td><b>$name</b></td></tr>\n"
+                    . "   <tr><td>Email address:</td><td><b>$email_addr</b></td></tr>\n"
+                    . "   <tr><td>Applicable month:</td><td><b>"
+                    . date("F",mktime(12,0,0,$applicable_month_num,1))
+                    . "</b></td></tr>\n"
+                    . "   <tr><td>Coordinating agency:&nbsp;&nbsp;</td><td><b>";
+                 if ($valid_all_agencies_request)
+                    {
+                    echo 'ALL';
+                    }
+                 else
+                    {
+                    echo $coord_agency;
+                    }
+                 echo "</b></td></tr>\n"
+                    . "</table>\n"
+                    . "<br>\n";
+                 ?>
+                 <p><i>For the values you supplied in Part 1, the following additional information is required.&nbsp; Complete the
+                    form below and press the "Submit" button to finish the report request.</i></p>
+                 <form action=<? echo $mode; ?>perform-gen-report.phtml method=post>
+                    <?
+                    echo "<input type=hidden name=name value=\"$name\">\n"
+                       . "<input type=hidden name=email_addr value=\"$email_addr\">\n"
+                       . "<input type=hidden name=applicable_month_num value=$applicable_month_num>\n";
+                    if ($valid_all_agencies_request)
+                       {
+                       echo "<input type=hidden name=coord_agency value=\"%\">\n";
+                       }
+                    else
+                       {
+                       echo "<input type=hidden name=coord_agency value=$coord_agency>\n";
+                       ?>
+                       <table>
+                          <tr>
+                             <td>
+                                Include:
+                                <blockquote>
+                                   <input type=radio name=team_filter value=everyone checked>Everyone<br>
+                                   <?
+                                   if ($coord_agency == "EMS")
+                                      {
+                                      ?>
+                                      <input type=radio name=team_filter value=als_only>Only Zone Car ALS providers<br>
+                                      <input type=radio name=team_filter value=team_30_only>Only squad truck team members<br>
+                                      <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
+                                      <input type=radio name=team_filter value=tda_only>Only TDA personnel<br>
+                                      <?
+                                      }
+                                   else
+                                      {
+                                      ?>
+                                      <input type=radio name=team_filter value=released_only>Only released providers<br>
+                                      <input type=radio name=team_filter value=drivers_only>Only qualified drivers<br>
+                                      <input type=radio name=team_filter value=thirds_only>Only "thirds"<br>
+                                      <?
+                                      }
+                                   ?>
+                                </blockquote>
+                             </td>
+                          </tr>
+                       </table>
+                       <br>
+                       <?
+                       }
+                    $instruction_string = "Include:\n"
+                       .  "<blockquote>\n"
+                       .  "   <input type=radio name=shift_filter value=all>\n"
+                       .  "      <b>All shifts</b>&nbsp; (Ignore the checkboxes below.)<br>\n"
+                       .  "   <input type=radio name=shift_filter value=some checked>\n"
+                       .  "      <b>Just one or more</b> shifts, as follows:&nbsp <small><i>(Who can run my duty on... ?)</i></small>\n"
+                       .  "</blockquote>\n";
+                    WriteCalendarSubform($applicable_month_num,$instruction_string,$mode);
+                    ?>
+                    <br>
+                    <p align=left>Briefly explain the reason for your request:<br>
+                    <textarea rows="5" name=reason cols="40"></textarea></p>
+                    <p>Please double check your entries before completing your request.</p>
+                    <input type=submit value="Submit request"><input type=reset>
+                 </form>
+                 <?
+                 }
+              }
+           else
+              {
+              //
+              // Fill the page out with a warning and instructions.
+              //
+              ?>
+              <h2><i>Error!</i></h2>
+              <b>
+              <blockquote>
+                 <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
+                 <ul>
+                    <li><p>Name</p>
+                    <li><p>Email address</p>
+                    <li><p>Applicable month</p>
+                    <li><p>Coordinating agency</p>
+                 </ul>
+                 <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
+              </blockquote>            
+              </b>
+              <?
+              echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+              }
            }
-        }
         else
            {
             ?>

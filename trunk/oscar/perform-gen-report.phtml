@@ -150,13 +150,12 @@ $email_addr = trim($email_addr);
 // significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
 // generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
 //
-$result = mysql_query
-   (
-   "select max(timestamp) as timestamp_of_latest_submission "
+$sql = "select max(timestamp) as timestamp_of_latest_submission "
    .  " from " . $mode . "avail_sheet "
-   .  " where coord_agency='$coord_agency' "
-   )
+   .  " where coord_agency like '$coord_agency' ";
+$result = mysql_query($sql)
    or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
+//
 $row = mysql_fetch_object($result);
 //
 $condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_latest_submission . "\n";
@@ -165,24 +164,34 @@ $condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_l
 // has a submission time later than the latest non-relayed submission, then knowing the timestamp_of_latest_submission
 // (above) is not sufficient.
 //
-$result = mysql_query
-   (
-   "select max(timestamp) as timestamp_of_latest_relay "
+$sql = "select max(timestamp) as timestamp_of_latest_relay "
    .  " from " . $mode . "relay_journal "
-   .  " where coord_agency='$coord_agency' "
-   )
+   .  " where coord_agency like '$coord_agency' ";
+$result = mysql_query($sql)
    or die("The attempt to select the latest timestamp from the relay journal failed with this error:  " . mysql_error());
 $row = mysql_fetch_object($result);
 //
 $condition_descriptor .= "timestamp_of_latest_relay=" . $row->timestamp_of_latest_relay . "\n";
 //
-if ($coord_agency == "EMS")
+$be_combined_agency_format = 'FALSE';
+//
+switch ($coord_agency)
    {
-   $presentation_clause = " order by be_on_team_5 desc, be_on_team_30 desc, be_tda desc, squad ";
-   }
-else
-   {
-   $presentation_clause = " order by be_third asc, be_nondriver desc, be_needing_driver desc ";
+   case '%':
+      $be_combined_agency_format = 'TRUE';
+      $presentation_clause = 'order by be_on_team_5 desc '
+         .  '   , be_on_team_30 desc '
+         .  '   , be_als desc '
+         .  '   , coord_agency asc '
+         .  '   , be_third asc '
+         .  '   , be_nondriver desc '
+         .  '   , be_needing_driver desc ';
+      break;
+   case 'EMS':
+      $presentation_clause = " order by be_on_team_5 desc, be_on_team_30 desc, be_tda desc, squad ";
+      break;
+   default:
+      $presentation_clause = " order by be_third asc, be_nondriver desc, be_needing_driver desc ";
    }
 //
 // The request form, under certain conditions, sends a value of 13 for applicable_month_num.  Cast it into the range 1..12.
@@ -195,7 +204,7 @@ $condition_descriptor .= "month_num=$normalized_month_num\n";
 //
 $month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
 $month_abbrev = substr($month_word,0,3);
-$where_clause = " month='$month_abbrev' and coord_agency='$coord_agency' ";
+$where_clause = " month='$month_abbrev' and coord_agency like '$coord_agency' ";
 //
 $be_authority_for_any_agency = BeAuthority($email_addr,$mode,'%');
 $be_authority_for_this_agency = BeAuthority($email_addr,$mode,$coord_agency);
@@ -271,19 +280,22 @@ if ($shift_filter == "all")
       //
       $base_sql_statement = "select distinct last_name"
          .  ", first_name";
-      if ($coord_agency == "EMS")
+      switch ($coord_agency)
          {
-         $base_sql_statement .= ", squad"
-            .  ", be_on_team_30"
-            .  ", be_on_team_5"
-            .  ", be_tda"
-            .  ", be_als";
-         }
-      else
-         {
-         $base_sql_statement .= ", be_needing_driver"
-            .  ", be_nondriver"
-            .  ", be_third";
+         case '%':
+            $base_sql_statement .= ", coord_agency";
+            // NO BREAK
+         case 'EMS':
+            $base_sql_statement .= ", squad"
+               .  ", be_on_team_30"
+               .  ", be_on_team_5"
+               .  ", be_tda"
+               .  ", be_als";
+            if ($coord_agency != '%') break;
+         default:
+            $base_sql_statement .= ", be_needing_driver"
+               .  ", be_nondriver"
+               .  ", be_third";
          }
       $base_sql_statement .= ", (note != \"\") as be_a_note"
          .  " from " . $mode . "avail_sheet ";
@@ -321,7 +333,16 @@ if ($shift_filter == "all")
             $info_message = "";
          }
       $report .= "<pre>\n";
-      $report .= "<b><u>$coord_agency</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "<b><u>";
+      if ($coord_agency != '%')
+         {
+         $report .= $coord_agency;
+         }
+      else
+         {
+         $report .= 'SYSTEM-WIDE';
+         }
+      $report .= "</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       //
       $shortcuts  = "<p>Shortcuts:&nbsp; \n";
       $shortcuts .= "<a href=#Days>Days</a>";
@@ -354,7 +375,7 @@ if ($shift_filter == "all")
          $report .= "   |                    in Note section        |\n";
          $report .= "   +-------------------------------------------+\n\n\n";
          }
-      else
+      elseif ($coord_agency != '%')
          {
          $report .= "   +------------------------------------+\n";
          $report .= "   | Legend:                            |\n";
@@ -372,6 +393,12 @@ if ($shift_filter == "all")
       $report .= "This report includes ALL shifts.\n";
       if ($info_message) $report .= "$info_message\n";
       $report .= "\n";
+      //
+      // Save the coord_agency value specified in the request form, for use after the Day and Night loops.  In the
+      // following Day and Night loops, the extract($row) statement will overwrite coord_agency.
+      //
+      $saved_coord_agency = $coord_agency;
+      //
       $report .= "<a name=Days>";
       $report .= "+------+\n";
       $report .= "| Days |\n";
@@ -387,7 +414,7 @@ if ($shift_filter == "all")
             $report .= $day_description . "\n";
             while ($row = mysql_fetch_array($result))
                {
-               $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
+               $coord_agency = $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
                   $be_needing_driver = $be_a_note = "";
                extract($row);
                $report .= "   "
@@ -402,7 +429,8 @@ if ($shift_filter == "all")
                         $coord_agency,
                         $be_third,
                         $be_nondriver,
-                        $be_needing_driver
+                        $be_needing_driver,
+                        $be_combined_agency_format
                         )
                   .  " ";
                $last_name = stripslashes($last_name);
@@ -459,7 +487,7 @@ if ($shift_filter == "all")
             $report .= $night_description . "\n";
             while ($row = mysql_fetch_array($result))
                {
-               $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
+               $coord_agency = $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
                   $be_needing_driver = $be_a_note = "";
                extract($row);
                $report .= "   "
@@ -474,7 +502,8 @@ if ($shift_filter == "all")
                         $coord_agency,
                         $be_third,
                         $be_nondriver,
-                        $be_needing_driver
+                        $be_needing_driver,
+                        $be_combined_agency_format
                         )
                   .  " ";
                $last_name = stripslashes($last_name);
@@ -512,6 +541,8 @@ if ($shift_filter == "all")
          $report .= "\n";
          }
       $report .= "</pre>\n";
+      //
+      $coord_agency = $saved_coord_agency;
       //
       $report .= $shortcuts;
       //
@@ -558,20 +589,23 @@ if ($shift_filter == "all")
          //
          $query = "select aggregated.last_name "
             .  "    , aggregated.first_name ";
-         if ($coord_agency == "EMS")
+         switch ($coord_agency)
             {
-            $query .= ", squad"
-               .  ", be_on_team_30"
-               .  ", be_on_team_5"
-               .  ", be_tda"
-               .  ", be_als"
-               .  ", aggregated.timestamp";
-            }
-         else
-            {
-            $query .= ", be_needing_driver"
-               .  ", be_nondriver"
-               .  ", be_third";
+            case '%':
+               $query .= ", coord_agency";
+               // NO BREAK
+            case 'EMS':
+               $query .= ", squad"
+                  .  ", be_on_team_30"
+                  .  ", be_on_team_5"
+                  .  ", be_tda"
+                  .  ", be_als"
+                  .  ", aggregated.timestamp";
+               if ($coord_agency != '%') break;
+            default:
+               $query .= ", be_needing_driver"
+                  .  ", be_nondriver"
+                  .  ", be_third";
             }
          $query .= ", d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18,d19,d20,d21,d22,d23,d24,d25,d26,d27,d28,d29,d30,d31 "
             .  "    , n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14,n15,n16,n17,n18,n19,n20,n21,n22,n23,n24,n25,n26,n27,n28,n29,n30,n31 "
@@ -588,7 +622,7 @@ if ($shift_filter == "all")
             {
             while ($row = mysql_fetch_array($result))
                {
-               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third = 
+               $coord_agency = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third = 
                   $be_nondriver = $be_needing_driver = $num_extras = $note = $num_submissions = $timestamp = "";
                $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
                    $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 =
@@ -633,7 +667,8 @@ if ($shift_filter == "all")
                            $coord_agency,
                            $be_third,
                            $be_nondriver,
-                           $be_needing_driver
+                           $be_needing_driver,
+                           $be_combined_agency_format
                            )
                      .  "]";
                   if ($num_extras) $report .= "&nbsp; <b>(+$num_extras)</b>";
@@ -819,19 +854,22 @@ else
       {
       $base_sql_statement = "select distinct last_name"
          .  ", first_name";
-      if ($coord_agency == "EMS")
+      switch ($coord_agency)
          {
-         $base_sql_statement .= ", squad"
-            .  ", be_on_team_30"
-            .  ", be_on_team_5"
-            .  ", be_tda"
-            .  ", be_als";
-         }
-      else
-         {
-         $base_sql_statement .= ", be_needing_driver"
-            .  ", be_nondriver"
-            .  ", be_third";
+         case '%':
+            $base_sql_statement .= ", coord_agency";
+            // NO BREAK
+         case 'EMS':
+            $base_sql_statement .= ", squad"
+               .  ", be_on_team_30"
+               .  ", be_on_team_5"
+               .  ", be_tda"
+               .  ", be_als";
+            if ($coord_agency != '%') break;
+         default:
+            $base_sql_statement .= ", be_needing_driver"
+               .  ", be_nondriver"
+               .  ", be_third";
          }
       $base_sql_statement .= " from " . $mode . "avail_sheet ";
       switch ($team_filter)
@@ -869,7 +907,16 @@ else
          }
       //
       $report .= "<pre>\n";
-      $report .= "<b><u>$coord_agency</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "<b><u>";
+      if ($coord_agency != '%')
+         {
+         $report .= $coord_agency;
+         }
+      else
+         {
+         $report .= 'SYSTEM-WIDE';
+         }
+      $report .= "</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       if ($coord_agency == "EMS")
          {
          $report .= "   +-----------------------------------------+\n";
@@ -887,7 +934,7 @@ else
          $report .= "   |     +- EMS-5 team member                |\n";
          $report .= "   +-----------------------------------------+\n\n\n";
          }
-      else
+      elseif ($coord_agency != '%')
          {
          $report .= "   +----------------------------------+\n";
          $report .= "   | Legend:                          |\n";
@@ -902,6 +949,12 @@ else
       $report .= "This report ONLY includes selected shifts.\n";
       if ($info_message) $report .= "$info_message\n";
       $report .= "\n";
+      //
+      // Save the coord_agency value specified in the request form, for use after the Day and Night loops.  In the
+      // following Day and Night loops, the extract($row) statement will overwrite coord_agency.
+      //
+      $saved_coord_agency = $coord_agency;
+      //
       for ($day_index = 1; $day_index <= $days_in_applicable_month; $day_index++)
          {
          if ($d[$day_index])
@@ -915,7 +968,7 @@ else
                $report .= $day_description . "\n";
                while ($row = mysql_fetch_array($result))
                   {
-                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
+                  $coord_agency = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
                      $be_nondriver = $be_needing_driver = "";
                   extract($row);
                   $report .= "   "
@@ -930,7 +983,8 @@ else
                            $coord_agency,
                            $be_third,
                            $be_nondriver,
-                           $be_needing_driver
+                           $be_needing_driver,
+                           $be_combined_agency_format
                            )
                      . " ";
                   $last_name = stripslashes($last_name);
@@ -977,7 +1031,7 @@ else
                $report .= $night_description . "\n";
                while ($row = mysql_fetch_array($result))
                   {
-                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
+                  $coord_agency = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
                      $be_nondriver = $be_needing_driver = "";
                   extract($row);
                   $report .= "   "
@@ -992,7 +1046,8 @@ else
                            $coord_agency,
                            $be_third,
                            $be_nondriver,
-                           $be_needing_driver
+                           $be_needing_driver,
+                           $be_combined_agency_format
                            )
                      . " ";
                   $last_name = stripslashes($last_name);
@@ -1027,6 +1082,9 @@ else
             }
          }
       $report .= "</pre>\n";
+      //
+      $coord_agency = $saved_coord_agency;
+      //
       $report .= "<pre>--- END ---</pre><br>\n";
       $report .= "<small><i><pre>\$Id$</pre></i></small>\n";
       $report .= "</td></tr></table>\n";
@@ -1053,7 +1111,7 @@ $result = mysql_query
    "select 1 "
    .  " from " . $mode . "trusted_user "
    .  " where email_address='$email_addr' "
-   .  "    and coord_agency='$coord_agency' "
+   .  "    and coord_agency like '$coord_agency' "
    )
    or die("Trust check failed with error:  " . mysql_error());
 if ($direct_approval = (mysql_num_rows($result) or $be_authority_for_any_agency))
