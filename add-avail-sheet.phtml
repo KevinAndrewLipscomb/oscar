@@ -56,7 +56,7 @@ require_once("f_roleemailaddress.phtml");
             //
             // Create and execute the SQL statement to insert/replace the record.
             //
-            $sql = "replace into avail_sheet set first_name='" . addslashes($first_name) . "'"
+            $sql = "insert into avail_sheet set first_name='" . addslashes($first_name) . "'"
                . ", last_name='" . addslashes($last_name) ."'"
                . ", email_addr='" . addslashes($email_addr) . "'"
                . ", month='" . strtoupper(date("M",$applicable_month_time)) . "'"
