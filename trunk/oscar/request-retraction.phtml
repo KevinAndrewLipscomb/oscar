@@ -26,13 +26,14 @@ require_once("f_bodyopen.phtml");
            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
         </td></tr></table>
         <hr>
+        <p>This form allows you to "take back" what you already submitted to the OSCAR system.</p>
         <p><i>To guard against misuse, the OSCAR system authenticates each retraction request by sending a "challenge
            message" to the email address originally specified on a person's availability sheet.&nbsp; The retraction only 
            takes effect once OSCAR receives a proper response to the challenge.</i></p>
         <p>This process allows you to retract <b>all</b> of the availability information that you've submitted for the
            specified month.&nbsp; Once you trigger the retraction process, you should <b>wait for further instructions</b>
            that will arrive with the email challenge message.</p>
-        <p>In practice, the retraction process is easy, safe, and secure.  To complete the retraction process, complete the
+        <p>In practice, the retraction process is easy, safe, and secure.  To begin the retraction process, complete the
            following form:</p>
         <br>
         <form action=gen-challenge.phtml method=post>
@@ -57,7 +58,8 @@ require_once("f_bodyopen.phtml");
                  </select></td>
               </tr>
            </table>
-           <p>Please double check your entries before completing your request.</p>
+           <p>Please double check your entries before completing your request.&nbsp; They must match the information you
+              supplied on your availability sheet.</p>
            <input type=submit value="Request retraction">
         </form>
         <hr>
