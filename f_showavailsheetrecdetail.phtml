@@ -58,7 +58,7 @@ function ShowAvailSheetRecDetail
       }
    echo substr($avail_nights_string,0,-2);
    echo "</i></td></tr>\n";
-   if ($be_authority)
+   if ($be_authority == 1)
       {
       echo "   <tr><td align=right valign=top>Note:</td><td><i>" . stripslashes($note) . "</i></td></tr>\n";
       }
