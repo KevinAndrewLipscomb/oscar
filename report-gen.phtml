@@ -279,8 +279,8 @@ $msg .= "</html>\n";
 //
 $recipient = RoleEmailAddress("schedule-coordinator");
 $subject = "OSCAR report";
-$headers = "From: $name (via OSCAR) <$email_addr>\r\n";
-$headers .= "Reply-to: $name <$email_addr>\r\n";
+$headers = "From: \"$name\" (via OSCAR) <$email_addr>\r\n";
+$headers .= "Reply-to: \"$name\" <$email_addr>\r\n";
 $headers .= "Content-type: text/html\r\n";
 if (mail($recipient, $subject, $msg, $headers))
    {
