@@ -229,8 +229,33 @@ require_once("f_connectselectdb.phtml");
                //
                // The insert and subsequent select must've succeeded.
                //
-               echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
-               echo "<p>Your availability sheet has been successfully entered into the OSCAR System as follows:</p>";
+               echo "<p><b>Success!&nbsp; OSCAR has accepted your submission.</b></p>\n";
+               echo "<blockquote>\n";
+               //echo "<p>OSCAR wishes to thank its sponsor:</p>\n"
+               //   . "   <table border><tr><td>\n"
+               //   . "   <table cellpadding=10>\n"
+               //   . "      <tr><td align=center colspan=2><img src=fire-brand-banner.jpg></td></tr>\n"
+               //   . "      <tr>\n"
+               //   . "         <td align=center width="50%">\n"
+               //   . "            <h3><font color=red>Fire Brand</font></h3>\n"
+               //   . "            <small>\n"
+               //   . "               <em><a href=http://www.fire-brand.com>Take a look at this month's special!</a></em>\n"
+               //   . "            </small>\n"
+               //   . "         </td>\n"
+               //   . "         <td align=center>\n"
+               //   . "            <small>\n"
+               //   . "               3025 S. Military Highway<br>\n"
+               //   . "               Chesapeake, VA 23323<br>\n"
+               //   . "               (757) 487-4646<br>\n"
+               //   . "               <a href=http://www.fire-brand.com>www.fire-brand.com</a>\n"
+               //   . "            </small>\n"
+               //   . "         </td>\n"
+               //   . "      </tr>\n"
+               //   . "   </table>\n"
+               //   . "   </td></tr></table>\n";
+               echo "Know of someone who deserves a <b>Class Act Award</b>?  <a href=" . $mode . "form-submit-class-act.phtml>Tell EMS Admin!</a>\n";
+               echo "</blockquote>\n";
+               echo "<p>Your availability sheet has been recorded as follows:</p>\n";
                echo "<blockquote>\n";
                ShowAvailSheetRecDetail
                   (
@@ -257,6 +282,7 @@ require_once("f_connectselectdb.phtml");
                   $be_third
                   );
                echo "</blockquote>\n";
+               echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
                }
             else
