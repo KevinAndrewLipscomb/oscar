@@ -123,11 +123,11 @@ if ($report_type == "FULL")
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
                $report .= "<a href=detail.phtml?a="
-                  .  urlencode($last_name)
+                  .  base64_encode($last_name)
                   .  "&b="
-                  .  urlencode($first_name)
+                  .  base64_encode($first_name)
                   .  "&c="
-                  .  urlencode($month_abbrev)
+                  .  base64_encode($month_abbrev)
                   .  ">$last_name, $first_name</a>";
                if ($be_a_note) $report .= " *";
                $report .= "\n";
@@ -166,11 +166,11 @@ if ($report_type == "FULL")
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
                $report .= "<a href=detail.phtml?a="
-                  .  urlencode($last_name)
+                  .  base64_encode($last_name)
                   .  "&b="
-                  .  urlencode($first_name)
+                  .  base64_encode($first_name)
                   .  "&c="
-                  .  urlencode($month_abbrev)
+                  .  base64_encode($month_abbrev)
                   .  ">$last_name, $first_name</a>";
                if ($be_a_note) $report .= "*";
                $report .= "\n";
@@ -225,11 +225,11 @@ if ($report_type == "FULL")
             $last_name = stripslashes($last_name);
             $first_name = stripslashes($first_name);
             $report .= "<a href=detail.phtml?a="
-               .  urlencode($last_name)
+               .  base64_encode($last_name)
                .  "&b="
-               .  urlencode($first_name)
+               .  base64_encode($first_name)
                .  "&c="
-               .  urlencode($month_abbrev)
+               .  base64_encode($month_abbrev)
                .  ">$last_name, $first_name</a>&nbsp; [-";
             if ($be_on_team_5) $report .= "5"; else $report .= "-";
             $report .= "-";
@@ -394,11 +394,11 @@ else
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
                   $report .= "<a href=detail.phtml?a="
-                     .  urlencode($last_name)
+                     .  base64_encode($last_name)
                      .  "&b="
-                     .  urlencode($first_name)
+                     .  base64_encode($first_name)
                      .  "&c="
-                     .  urlencode($month_abbrev)
+                     .  base64_encode($month_abbrev)
                      .  ">$last_name, $first_name</a>"
                      .  "\n";
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
@@ -435,11 +435,11 @@ else
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
                   $report .= "<a href=detail.phtml?a="
-                     .  urlencode($last_name)
+                     .  base64_encode($last_name)
                      .  "&b="
-                     .  urlencode($first_name)
+                     .  base64_encode($first_name)
                      .  "&c="
-                     .  urlencode($month_abbrev)
+                     .  base64_encode($month_abbrev)
                      .  ">$last_name, $first_name</a>"
                      .  "\n";
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
