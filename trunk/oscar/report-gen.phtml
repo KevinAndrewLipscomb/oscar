@@ -94,6 +94,7 @@ if ($report_type == "FULL")
       {
       while ($row = mysql_fetch_array($result))
          {
+         extract($row);
          echo "$last_name, $first_name [-";
          if ($be_on_team_5) echo "5"; else echo "-";
          echo "-";
@@ -101,7 +102,8 @@ if ($report_type == "FULL")
          echo "- ";
          if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
          echo "$squad $cad_num]\n";
-         echo "<blockquote><i>$note</i></blockquote>";
+         echo "<blockquote><i><p>$note</p></i></blockquote>";
+         $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
          }
       }
    else
