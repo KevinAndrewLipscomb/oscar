@@ -1,0 +1,96 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_connectselectdb.phtml");
+//
+?>
+<html>
+<head><title>Remove Trust</title></head>
+<? BodyOpen(); ?>
+<table align=center width=80%><tr><td>
+<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H1 ALIGN=CENTER>Remove Trust</H1>
+<hr>
+<?
+//
+// Validate parameters
+//
+if
+   (
+      ($a != "")
+   and
+      ($b != "")
+   )
+// then
+   {
+   //
+   // Connect to the database.
+   //
+   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+      {
+      $email_address = base64_decode($a);
+      $squad = base64_decode($b);
+      //
+      // Perform the specified update.
+      //
+      mysql_query
+         (
+         "delete from " . $mode . "trusted_user "
+         .  "where email_address='$email_address' "
+         .  "   and coord_agency='$squad' "
+         )
+         or die("Deletion failed with error: " . mysql_error());
+      //
+      PutLibPhotoRandomPlaced("sasquatch",1,"right");
+      echo "<p><b>$email_address</b> is no longer trusted by agency <b>$squad</b>.</p>";
+      }
+   else
+      {
+      //
+      // Fill the page out with a warning and instructions.
+      //
+      ?>
+      <h2><i>Sorry...</i></h2>
+      <b>
+      <blockquote>
+         <p>OSCAR's database is temporarily unavailable.&nbsp; Please try your modification operation later.</p>
+      </blockquote>            
+      </b>
+      <?
+      }
+   }
+else
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Error!</i></h2>
+   <b>
+   <blockquote>
+      <p>Invalid arguments.</p>
+   </blockquote>            
+   </b>
+   <?
+   }
+?>
+<br clear=both>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+require_once("f_agencyselectionlist.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Set trust</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Set Trust</h1>
+        </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td></tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+           {
+           ?>
+           <h2><i>Sorry...</i></h2>
+           <b>
+           <blockquote>
+              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try again later.</p>"; ?>
+           </blockquote>            
+           </b>
+           <?
+           }
+        else
+           {
+           ?>
+           <p>This form allows schedule coordinators to control which users may directly receive compiled availability
+              reports.</p>
+           <blockquote>
+              <table align=center bgcolor=#E8E8E8>
+                 <tr>
+                    <td align=center valign=middle>
+                       <small><i>To guard against misuse, the OSCAR system authenticates each modification request by
+                          sending a "challenge message" to the registered email address of the appropriate authority.&nbsp;
+                          Modifications only take effect once OSCAR receives a proper response to the
+                          challenge.</i></small>
+                    </td>
+                 </tr>
+              </table>
+           </blockquote>
+           <br>
+           <table>
+              <tr>
+                 <td valign=top><li>&nbsp;</li></td>
+                 <td valign=top>
+                    <p><b>To add a user</b> to the Trusted User table, have that user request a compiled availability
+                       report from you.&nbsp; Then follow the instructions that appear in the "-> OSCAR Request ->"
+                       message that OSCAR will send you.<p>
+                    <p>Once a user is trusted by a schedule coordinator, he or she can retrieve compiled availability
+                       reports <i>for that coordinator's agency</i> directly from OSCAR.</p>
+                    <p>&nbsp;</p>
+                 </td>
+              </tr>
+              <tr>
+                 <td valign=top><li>&nbsp;</li></td>
+                 <td valign=top>
+                    <p><b>To remove a user</b> from the Trusted User table, complete this form:</p>
+                    <form action=<? echo $mode; ?>perform-prep-mod-trust.phtml method=post>
+                       Which agency?&nbsp; <? AgencySelectionList($mode); ?> <input type="submit" value="Submit">
+                    </form>
+                    <p>A user who is not in the Trusted User table will only receive a compiled availability report once
+                       OSCAR has attained the appropriate schedule coordinator's approval to forward the report to the
+                       user.</p>
+                    <p>&nbsp;</p>
+                 </td>
+              </tr>
+           </table>
+           <?
+           }
+        ?>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+

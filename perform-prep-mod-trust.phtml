@@ -1,0 +1,156 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+// Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
+//
+$coord_agency = $coord_agency;
+//
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_squadofcoordagency.phtml");
+//
+$html = "<html>\n";
+$html .= "<head><title>Remove Trust</title></head>\n";
+$html .= "<body bgcolor=#FFFFFF>\n";
+$html .= "<table align=center width=80%><tr><td>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H1 ALIGN=CENTER>Remove Trust</H1>\n";
+$html .= "<hr>\n";
+//
+echo $html;
+//
+// Validate parameters.
+//
+if ($coord_agency != "")
+   {
+   //
+   // All required values are present.
+   // Connect to the database.
+   //
+   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+      {
+      ?>
+      <h2><i>Sorry...</i></h2>
+      <b>
+      <blockquote>
+         <? echo "<p>OSCAR's database has gone offline.&nbsp; Please try your trust removal operation later.</p>"; ?>
+      </blockquote>            
+      </b>
+      <?
+      }
+   else
+   {
+   $squad = SquadOfCoordAgency($coord_agency);
+   //
+   // Retrieve the list of trusted users for the specified agency.
+   //
+   $result = mysql_query("select email_address from " . $mode . "trusted_user where coord_agency='$squad'")
+      or die("Query failed with error: " . mysql_error());
+   //
+   // Generate the appropriate email message.
+   //
+   if ($num_rows = mysql_num_rows($result))
+      {
+      //             0        1         2         3         4         5         6         7
+      //             123456789012345678901234567890123456789012345678901234567890123456789012
+      $challenge = "";
+      $challenge .= "Someone at IP address $REMOTE_ADDR (possibly you) wants to remove one or\n"
+                 .  "more users from the $coord_agency Trusted User table.\n\n"
+                 .  "A user who is removed from the Trusted User table will only receive a\n"
+                 .  "compiled availability report once OSCAR has attained your approval to\n"
+                 .  "forward the report to the user.\n\n"
+                 .  "To leave the table alone, DO NOTHING.\n\n";
+      while ($row = mysql_fetch_array($result))
+         {
+         extract($row);
+         $challenge .= "To remove $email_address, click here:\n"
+                    .  OscarRootUrl()
+                    .  "/" . $mode . "untrust.phtml?a="
+                    .  base64_encode($email_address)
+                    .  "&b="
+                    .  base64_encode($squad)
+                    .  "\n\n";
+         }
+      }
+   else
+      {
+      //             0        1         2         3         4         5         6         7
+      //             123456789012345678901234567890123456789012345678901234567890123456789012
+      $challenge = "";
+      $challenge .= "Someone at IP address $REMOTE_ADDR (possibly you) wants to remove one or\n"
+                 .  "more users from the $coord_agency Trusted User table.\n\n"
+                 .  "However, no trusted users were found for agency '$coord_agency'.\n\n";
+      }
+   //
+   // Add sig lines.
+   //
+   $challenge .= "-- OSCAR\n"
+              .  "-- Home page: " . OscarHomePageUrl() . "\n"
+              .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+   //
+   // Send the mail.
+   //
+   $sched_coord_email_addr = RoleEmailAddress("schedule-coordinator",$mode,$coord_agency);
+   $result = mail($sched_coord_email_addr, "OSCAR Modification Challenge", $challenge, OscarMailHeaders());
+   //
+   if ($result)
+      {
+      PutLibPhotoRandomPlaced("sasquatch",1,"right");
+      echo "<p>The OSCAR system has sent a challenge message to <b>$sched_coord_email_addr</b>.</p>\n"
+         . "<p><b>Check your email periodically for the challenge message, which contains instructions for completing the "
+         . "trust removal process.</b></p>\n"
+         . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
+         .  RoleEmailAddress("",$mode)
+         .  "\">OSCAR System Administrator</a>.</p>";
+      }
+   else
+      {
+      //
+      // Fill the page out with a warning and instructions.
+      //
+      ?>
+      <h2><i>Error!</i></h2>
+      <b>
+      <blockquote>
+         <p>The OSCAR system encountered an internal error while processing your request.&nbsp; Contact the
+            <a href=mailto:"<? echo RoleEmailAddress("",$mode); ?>">OSCAR System Administrator</a>.</p>
+      </blockquote>            
+      </b>
+      <?
+      }
+   }
+   }
+else
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Error!</i></h2>
+   <b>
+   <blockquote>
+      <p>Invalid parameters</p>
+   </blockquote>            
+   </b>
+   <?
+   }
+?>
+<br clear=both>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>
