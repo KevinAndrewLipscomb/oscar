@@ -1,0 +1,404 @@
+<?
+//
+// $Id$
+//
+function WriteCalendarBody
+   (
+   $d_or_n,
+   $day_of_week_of_1st,
+   $num_days_in_applicable_month = 31,
+   $mode = ""
+   )
+//
+   {
+   switch ($day_of_week_of_1st)
+      {
+      case 0:
+         //
+         // Week 1
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=1; $i<=7; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 2
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=8; $i<=14; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 3
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=15; $i<=21; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 4
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=22; $i<=28; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 5
+         //
+         if ($num_days_in_applicable_month > 28)
+            {
+            echo "<tr bgcolor=#E8E8E8>\n";
+            for ($i=29; $i<=$num_days_in_applicable_month; $i++)
+               {
+               echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+               }
+            echo "<td colspan=" . (35 - $num_days_in_applicable_month) . ">&nbsp;</td>\n";
+            echo "</tr>\n";
+            }
+         break;
+      case 1:
+         //
+         // Week 1
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         echo "<td>&nbsp;</td>\n";
+         for ($i=1; $i<=6; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 2
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=7; $i<=13; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 3
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=14; $i<=20; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 4
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=21; $i<=27; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 5
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=28; $i<=$num_days_in_applicable_month; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+            echo "<td colspan=" . (34 - $num_days_in_applicable_month) . ">&nbsp;</td>\n";
+         echo "</tr>\n";
+         break;
+      case 2:
+         //
+         // Week 1
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         echo "<td colspan=2>&nbsp;</td>\n";
+         for ($i=1; $i<=5; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 2
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=6; $i<=12; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 3
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=13; $i<=19; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 4
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=20; $i<=26; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 5
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=27; $i<=$num_days_in_applicable_month; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "<td colspan=" . (33 - $num_days_in_applicable_month) . ">&nbsp;</td>\n";
+         echo "</tr>\n";
+         break;
+      case 3:
+         //
+         // Week 1
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         echo "<td colspan=3>&nbsp;</td>\n";
+         for ($i=1; $i<=4; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 2
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=5; $i<=11; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 3
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=12; $i<=18; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 4
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=19; $i<=25; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 5
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=26; $i<=$num_days_in_applicable_month; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "<td colspan=" . (32 - $num_days_in_applicable_month) . ">&nbsp;</td>\n";
+         echo "</tr>\n";
+         break;
+      case 4:
+         //
+         // Week 1
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         echo "<td colspan=4>&nbsp;</td>\n";
+         for ($i=1; $i<=3; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 2
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=4; $i<=10; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 3
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=11; $i<=17; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 4
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=18; $i<=24; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 5
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=25; $i<=$num_days_in_applicable_month; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         $num_blanks = 31 - $num_days_in_applicable_month;
+         if ($num_blanks > 0)
+            {
+            echo "<td colspan=$num_blanks>&nbsp;</td>\n";
+            }
+         echo "</tr>\n";
+         break;
+      case 5:
+         //
+         // Week 1
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         echo "<td colspan=5>&nbsp;</td>\n";
+         for ($i=1; $i<=2; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 2
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=3; $i<=9; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 3
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=10; $i<=16; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 4
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=17; $i<=23; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 5
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=24; $i<=30; $i++)
+            {
+            if ($i <= $num_days_in_applicable_month)
+               {
+               echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+               }
+            }
+         $num_blanks = 30 - $num_days_in_applicable_month;
+         if ($num_blanks > 0)
+            {
+            echo "<td colspan=$num_blanks>&nbsp;</td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 6
+         //
+         if ($num_days_in_applicable_month == 31)
+            {
+            echo "<tr bgcolor=#E8E8E8>\n";
+            echo "<td align=right>31<input type=checkbox name=$d_or_n" . "31 value=\"AVAILABLE\"></td>\n";
+            echo "<td colspan=6>&nbsp;</td>\n";
+            echo "</tr>\n";
+            }
+         break;
+      case 6:
+         //
+         // Week 1
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         echo "<td colspan=6>&nbsp;</td>\n";
+         echo "<td align=right>1<input type=checkbox name=$d_or_n" . "1 value=\"AVAILABLE\"></td>\n";
+         echo "</tr>\n";
+         //
+         // Week 2
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=2; $i<=8; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 3
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=9; $i<=15; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 4
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=16; $i<=22; $i++)
+            {
+            echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 5
+         //
+         echo "<tr bgcolor=#E8E8E8>\n";
+         for ($i=23; $i<=29; $i++)
+            {
+            if ($i <= $num_days_in_applicable_month)
+               {
+               echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+               }
+            }
+         if ($num_days_in_applicable_month == 28)
+            {
+            echo "<td>&nbsp;</td>\n";
+            }
+         echo "</tr>\n";
+         //
+         // Week 6
+         //
+         if ($num_days_in_applicable_month > 29)
+            {
+            echo "<tr bgcolor=#E8E8E8>\n";
+            for ($i=30; $i<=$num_days_in_applicable_month; $i++)
+               {
+               echo "<td align=right>$i<input type=checkbox name=$d_or_n$i value=\"AVAILABLE\"></td>\n";
+               }
+            $num_blanks = 36 - $num_days_in_applicable_month;
+            if ($num_blanks > 0)
+               {
+               echo "<td colspan=$num_blanks>&nbsp;</td>\n";
+               }
+            echo "</tr>\n";
+            }
+         break;
+      }
+   }
+?>
