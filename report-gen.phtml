@@ -26,6 +26,14 @@ if ($report_type == "FULL")
    echo "<pre>\n";
    echo "Full availability report for $month\n";
    echo "Generated " . date("l Y-M-d H:i:s T") . "\n\n";
+   echo "Legend:\n";
+   echo "   -5-    : Member indicated membership in EMS-5 team\n";
+   echo "   -30-   : Member indicated membership in squad truck team\n";
+   echo "   Rxx    : Member's home rescue squad\n";
+   echo "   ERS    : Member is a VBFD firefighter\n";
+   echo "   7xxxxx : Member's officer code\n";
+   ehco "   8xxxxx : Member's officer code\n";
+   echo "   *      : Member entered special request.  See Notes at end of report.\n\n";
    for ($index = 1; $index <= 31; $index++)
       {
       $where_clause_2 = "and d$index='AVAILABLE' ";
@@ -89,7 +97,7 @@ if ($report_type == "FULL")
    <h3><sup>*</sup>Notes</h3>
    <blockquote>
    <?
-   $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month='$month' order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
+   $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"$month\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
    if ($num_rows = mysql_num_rows($result))
       {
       while ($row = mysql_fetch_array($result))
@@ -102,7 +110,7 @@ if ($report_type == "FULL")
          echo "- ";
          if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
          echo "$squad $cad_num]\n";
-         echo "<blockquote><i><p>$note</p></i></blockquote>";
+         echo "<blockquote><i>" . stripslashes($note) . "<br></i></blockquote>";
          $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
          }
       }
