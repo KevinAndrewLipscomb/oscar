@@ -19,15 +19,29 @@
 </head>
 <body>
 
-<table>
+<table bgcolor="silver" width="100%">
+   <tr><td align="center" bgcolor="silver" colspan=5><small><small><b>KVEO-IT-PROJECT<b></small></small></td>
    <tr>
       <td>
-         <a href="{THEME_DIRECTORY}images/logo.jpg">
-            <img src="{THEME_DIRECTORY}images/logo_small.jpg" alt="OscarPlus sponsor logo" border="0" />
-         </a>
-      </td>
-      <td>
-         <h1>OscarPLUS for <i>Virginia Beach Rescue Council</i></h1>
+         <table bgcolor="white" cellspacing="0" width="100%">
+            <tr>
+               <td align="center" bgcolor="white" valign="middle">
+                  <a href="{THEME_DIRECTORY}images/logo.jpg">
+                     <img src="{THEME_DIRECTORY}images/logo_small.jpg" alt="Site sponsor logo" border="0" />
+                  </a>
+               </td>
+               <td bgcolor="white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+               <td align="center" bgcolor="white" valign="middle">
+                  <h1>OscarPLUS for <i>BeachEMS</i></h1>
+               </td>
+               <td bgcolor="white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+               <td align="center" bgcolor="white" valign="middle">
+                  <a href="{THEME_DIRECTORY}images/logo.jpg">
+                     <img src="{THEME_DIRECTORY}images/logo_small.jpg" alt="Site sponsor logo" border="0" />
+                  </a>
+               </td>
+            </tr>
+         </table>
       </td>
    </tr>
 </table>
