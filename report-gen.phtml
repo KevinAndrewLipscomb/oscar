@@ -31,7 +31,7 @@ if ($report_type == "FULL")
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
-         echo "Day $index:\n";
+         echo "$index day:\n";
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
@@ -45,7 +45,7 @@ if ($report_type == "FULL")
          }
       else
          {
-         echo "Day $index: None\n";
+         echo "$index day: None\n";
          }
       echo "\n";
       }
@@ -56,7 +56,7 @@ if ($report_type == "FULL")
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
-         echo "Night $index:\n";
+         echo "$index night:\n";
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
@@ -70,7 +70,7 @@ if ($report_type == "FULL")
          }
       else
          {
-         echo "Night $index: None\n";
+         echo "$index night: None\n";
          }
       echo "\n";
       }
