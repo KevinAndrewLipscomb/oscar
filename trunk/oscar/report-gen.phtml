@@ -225,7 +225,7 @@ if ($report_type == "FULL")
          $report .= "None\n";
          }
       //
-      mysql_query("drop note_and_submission_count")
+      mysql_query("drop table note_and_submission_count")
          or die("Drop of note_and_submission_count failed with error:  " . mysql_error());
       //
       $report .= "<pre>--- END ---</pre><br>\n";
