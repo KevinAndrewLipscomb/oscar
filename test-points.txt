@@ -1,12 +1,21 @@
 submit
-   module: als-avail-sub-form
-   module: add-als-avail-sheet
+   module/old: als-avail-sub-form
+   module/old: add-als-avail-sheet
+   --
+   module/new: form-submit-avails-1
+   module/new: form-submit-avails-2
+   module/new: perform-add-avail-sheet
+   --
 enter-tda
    module: ers-tda-input-form
    module: add-ers-tda-inputs
+   --
 request-report-screen
-   module: request-compiled-avails
-   module: report-gen
+   module/old: request-compiled-avails
+   module/old: report-gen
+   module/new: form-request-report-1
+   module/new: form-request-report-2
+   module/new: perform-gen-report
    module: get-report
    module: detail
    mutexvar: authority, nonauthority
@@ -20,6 +29,7 @@ request-report-screen
    point: nonauthority, team-filter, all-shifts
    point: nonauthority, everyone, selected-shifts
    point: nonauthority, team-filter, selected-shifts
+   --
 approve
    module: [request-report-screen]
    module: approve
