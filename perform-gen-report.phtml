@@ -414,7 +414,8 @@ if ($shift_filter == "all")
             $report .= $day_description . "\n";
             while ($row = mysql_fetch_array($result))
                {
-               $coord_agency = $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
+               if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
+               $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
                   $be_needing_driver = $be_a_note = "";
                extract($row);
                $report .= "   "
@@ -487,7 +488,8 @@ if ($shift_filter == "all")
             $report .= $night_description . "\n";
             while ($row = mysql_fetch_array($result))
                {
-               $coord_agency = $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
+               if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
+               $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
                   $be_needing_driver = $be_a_note = "";
                extract($row);
                $report .= "   "
@@ -622,7 +624,8 @@ if ($shift_filter == "all")
             {
             while ($row = mysql_fetch_array($result))
                {
-               $coord_agency = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third = 
+               if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third = 
                   $be_nondriver = $be_needing_driver = $num_extras = $note = $num_submissions = $timestamp = "";
                $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
                    $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 =
@@ -968,7 +971,8 @@ else
                $report .= $day_description . "\n";
                while ($row = mysql_fetch_array($result))
                   {
-                  $coord_agency = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
+                  if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
+                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
                      $be_nondriver = $be_needing_driver = "";
                   extract($row);
                   $report .= "   "
@@ -1031,7 +1035,8 @@ else
                $report .= $night_description . "\n";
                while ($row = mysql_fetch_array($result))
                   {
-                  $coord_agency = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
+                  if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
+                  $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
                      $be_nondriver = $be_needing_driver = "";
                   extract($row);
                   $report .= "   "
