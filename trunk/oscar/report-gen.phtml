@@ -397,26 +397,6 @@ else
       }
    }
 //
-// Generate the claim ticket.
-//
-//                0        1         2         3         4         5         6         7
-//                123456789012345678901234567890123456789012345678901234567890123456789012
-$claim_ticket =  "This is the claim ticket for an OSCAR Availability Report requested by\n";
-$claim_ticket .= "a user who identified him or herself as:\n\n";
-$claim_ticket .= "   Name:           $name\n";
-$claim_ticket .= "   Email address:  $email_addr\n\n";
-$claim_ticket .= "The report is available at the following web address:\n\n";
-$claim_ticket .= "   http://kalipso.phpwebhosting.com/oscar/get-report.phtml?digest=$digest\n\n";
-$claim_ticket .= "If you are the requestor, please browse to the above web address to see\n";
-$claim_ticket .= "the report.\n\n";
-$claim_ticket .= "(Schedule coordinator:  This claim ticket is first sent to you for\n";
-$claim_ticket .= "purposes of security screening.  If you agree that the indicated user\n";
-$claim_ticket .= "is authorized to receive the linked report, please pass this claim\n";
-$claim_ticket .= "ticket along to the user by pressing your REPLY and SEND buttons.\n\n";
-$claim_ticket .= "-- OSCAR\n";
-$claim_ticket .= "-- Home page: http://kalipso.phpwebhosting.com/oscar/index.phtml\n";
-$claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
-//
 // Send the claim ticket to the schedule coordinator.
 //
 $recipient = RoleEmailAddress("schedule-coordinator");
@@ -426,24 +406,54 @@ if ($email_addr == $recipient)
    // Then it was the schedule coordinator him or herself who requested the report.  Use different subject lines to help
    // the schedule coordinator distinguish between his or her own reports and those requested by others.
    //
-   $subject = "*YOUR* OSCAR report claim ticket";
+   $subject = "Your OSCAR report";
+   //
+   //          0        1         2         3         4         5         6         7
+   //          123456789012345678901234567890123456789012345678901234567890123456789012
+   $notice =  "The OSCAR Availability Report you requested is available at:\n\n";
+   $notice .= "   " . OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
    }
 else
    {
    //
    // Someone else requested the report.
    //
-   $subject = "-> OSCAR report claim ticket ->";
+   $subject = "-> OSCAR request ->";
+   //
+   // Give the schedule coordinator a chance to approve (weakly or strongly) or disapprove of the request.
+   //
+   //          0        1         2         3         4         5         6         7
+   //          123456789012345678901234567890123456789012345678901234567890123456789012
+   $notice =  "The OSCAR system has received a request for an Availability Report from\n";
+   $notice .= "a user who identified him or herself as:\n\n";
+   $notice .= "   Name:           $name\n";
+   $notice .= "   Email address:  $email_addr\n\n";
+   $notice .= "Please take one of the following actions:\n\n";
+   $notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this and subsequent\n";
+   $notice .= "   OSCAR requests from this user), click here:\n";
+   $notice .= "      " . OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n";
+   $notice .= "2. To approve this request WITHOUT registering the user as trusted,\n";
+   $notice .= "   click here:\n";
+   $notice .= "      " . OscarRootUrl() . "/approve.phtml?digest=$digest\n\n";
+   $notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n";
+   $notice .= "The report is available for review at the following web address:\n\n";
+   $notice .= "   http://kalipso.phpwebhosting.com/oscar/get-report.phtml?digest=$digest\n\n";
    }
-$headers = "From: $email_addr\r\n";
-$headers .= "Reply-to: $email_addr\r\n";
-if (mail($recipient, $subject, $claim_ticket, $headers))
+//
+// Add sig lines.
+//
+$notice .= "-- OSCAR\n";
+$notice .= "-- Home page: http://kalipso.phpwebhosting.com/oscar/index.phtml\n";
+$notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+//
+$headers = "From: " . RoleEmailAddress("") . "\r\n";
+$headers .= "Reply-to: " . RoleEmailAddress("") . "\r\n";
+if (mail($recipient, $subject, $notice, $headers))
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"left");
    echo "<p>The OSCAR system has successfully generated your report.&nbsp;  A claim ticket for the report has been submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.&nbsp; The coordinator will forward the claim ticket to you once screening is complete.</p>";
    echo "<p><b>Check your email for the claim ticket periodically.</b></p>";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
-   echo "<p><b>Thank you</b> for using the OSCAR system!</p>";
    }
 else
    {
