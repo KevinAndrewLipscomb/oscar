@@ -49,8 +49,8 @@ mysql_select_db(oscar);
 $result = mysql_query
    (
    "select * from avail_sheet"
-   .  " where last_name = \"" . addslashes($last_name) . "\""
-   .  "    and first_name = \"" . addslashes($first_name) . "\""
+   .  " where last_name = \"" . addslashes(addslashes($last_name)) . "\""
+   .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
    .  "    and month = '$month'"
    )
    or die("The query failed with error:  " . mysql_error());
