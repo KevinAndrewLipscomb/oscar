@@ -61,9 +61,9 @@ if ($report_type == "FULL")
             {
             extract($row);
             echo "   $cad_num-$last_name,$first_name ($squad) ";
-            if ($be_on_team_30) echo "/30";
-            if ($be_on_team_5) echo "/5";
-            if ($note != "") echo "/*";
+            if ($be_on_team_30) echo "[30]";
+            if ($be_on_team_5) echo "[5]";
+            if ($note != "") echo "*";
             echo "\n";
             $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
             }
