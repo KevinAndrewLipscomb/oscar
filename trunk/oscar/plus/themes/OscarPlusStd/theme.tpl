@@ -19,9 +19,18 @@
 </head>
 <body>
 
-<a href=".">
-<img src="{THEME_DIRECTORY}images/logo.jpg" alt="OscarPlus sponsor logo" border="0" />
-</a>
+<table>
+   <tr>
+      <td>
+         <a href="{THEME_DIRECTORY}images/logo.jpg">
+            <img src="{THEME_DIRECTORY}images/logo_small.jpg" alt="OscarPlus sponsor logo" border="0" />
+         </a>
+      </td>
+      <td>
+         <h1>OscarPLUS for <i>Virginia Beach Rescue Council</i></h1>
+      </td>
+   </tr>
+</table>
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%" summary="Layout table">
   <tr>
