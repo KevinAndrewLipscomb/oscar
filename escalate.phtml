@@ -41,21 +41,20 @@ if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordi
    }
 else
    {
-   $highest_level = 1;
-   if ($level > $highest_level)
+   //
+   // Notify the next authority in the chain.
+   //
+   $screen_notice_recipient = RoleEmailAddress("escalation-level-" . $level . "-recipient");
+   if ($screen_notice_recipient == "NONE")
       {
-      echo "<h3><i>Sorry...</i></h3>\n"
+      echo "<h2><i>Sorry...</i></h2>\n"
          . "<blockquote>\n"
-         . "   <p>The OSCAR system does not support escalation past Level $highest_level at this time.</p>\n"
+         . "   <p>The OSCAR system does not support Level $level escalation at this time.</p>\n"
          . "</blockquote>\n";
-      $result = 0;
+      $result = 1;
       }
    else
       {
-      //
-      // Notify the next authority in the chain.
-      //
-      $screen_notice_recipient = RoleEmailAddress("escalation-level-1-recipient");
       $screen_notice_subject = "-> Escalated OSCAR request ->";
       //
       // Give the authority a chance to approve (weakly or strongly) or disapprove of the request.
@@ -90,6 +89,7 @@ else
       //
       $claim_ticket_recipient = $email_addr;
       $claim_ticket_subject = "OSCAR claim ticket";
+      $next_level = $level + 1;
       //
       //                0        1         2         3         4         5         6         7
       //                123456789012345678901234567890123456789012345678901234567890123456789012
@@ -109,10 +109,10 @@ else
       $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
       $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
       $claim_ticket .= "The next authority in the chain is:\n\n";
-      $claim_ticket .= "   " . RoleEmailAddress("escalation-level-2-recipient") . "\n\n";
+      $claim_ticket .= "   " . RoleEmailAddress("escalation-level-" . $next_level . "-recipient") . "\n\n";
       $claim_ticket .= "To escalate your request to the above\n";
       $claim_ticket .= "authority, click here:\n\n";
-      $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=2&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
+      $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=" . $next_level . "&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
       //
       // Add sig lines.
       //
@@ -145,7 +145,7 @@ else
          <ul>
             <?
             echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\"" . RoleEmailAddress("escalation-level-1-recipient") . "\">Escalation Level 1 Authority</a> for the information you need.</p>";
-            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>";
+            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("") . "?subj=OSCAR-bug-report>OSCAR System Administrator</a> know this error occurred.</p>";
             ?>
          </ul>
       </blockquote>            
