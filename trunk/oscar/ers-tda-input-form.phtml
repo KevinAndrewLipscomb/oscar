@@ -30,14 +30,14 @@ require_once("f_roleemailaddress.phtml");
         <hr>
         <p>This form is intended for the use of VBFD Scheduling Officers.</p>
         <form method="POST" action="add-ers-tda-inputs.phtml">
-           <table>
-                 <?
-                 if ((!$email_addr) or (!$applicable_month_num))
-                    {
-                    //
-                    // Prompt user for email_addr and aplicable_month_num.
-                    //
-                    ?>
+              <?
+              if ((!$email_addr) or (!$applicable_month_num))
+                 {
+                 //
+                 // Prompt user for email_addr and aplicable_month_num.
+                 //
+                 ?>
+                 <table>
                     <tr>
                        <td>Scheduling officer email address:</td>
                        <td><input type=text name=email_addr size="64" maxlength=64></td>
@@ -46,21 +46,24 @@ require_once("f_roleemailaddress.phtml");
                        <td>Applicable month:</td>
                        <td><select size=1 name=applicable_month_num>
                           <option value="">Select</option>
-                             <?
-                             $next_month_num = date("n") + 1;
-                             echo "<option value=" . $next_month_num . ">" . date("F",mktime(12,0,0,$next_month_num,1)) . "</option>\n";
-                             echo "<option value=" . ($next_month_num + 1) . ">" . date("F",mktime(12,0,0,($next_month_num + 1),1)) . "</option>\n";
-                             ?>
+                          <?
+                          $next_month_num = date("n") + 1;
+                          echo "<option value=" . $next_month_num . ">" . date("F",mktime(12,0,0,$next_month_num,1)) . "</option>\n";
+                          echo "<option value=" . ($next_month_num + 1) . ">" . date("F",mktime(12,0,0,($next_month_num + 1),1)) . "</option>\n";
+                          ?>
                        </select></td>
                     </tr>
-                    <?
-                    }
-                 else
-                    {
-                    //
-                    // Reuse values passed in.
-                    //
-                    ?>
+                 </table>
+                 <h3><br>Temporary Duty Assignments</h3>
+                 <?
+                 }
+              else
+                 {
+                 //
+                 // Reuse values passed in.
+                 //
+                 ?>
+                 <table>
                     <tr>
                        <td>Scheduling officer email address:</td>
                        <?
@@ -79,27 +82,28 @@ require_once("f_roleemailaddress.phtml");
                           . "</td>\n";
                        ?>
                     </tr>
-                    <?
-                    }
+                 </table>
+                 <h3><br>Temporary Duty Assignments <i>(continued)</i></h3>
+                 <?
+                 }
                  ?>
-           </table>
-           <h3><br>Temporary Duty Assignments</h3>
            <blockquote>
            <table cellpadding=3>
               <tr>
                  <td colspan=2 align=center valign=middle>Paramedic-firefighter</td>
-                 <td rowspan=2 align=center valign=middle>Day of<br>month</td>
-                 <td rowspan=2 align=center valign=middle>Day<br>(0800-2000)/<br>Night<br>(2000-0800)</td>
+                 <td colspan=2 align=center valign=middle>Zone car shift</td>
               </tr>
               <tr>
                  <td align=center valign=middle>Last name</td>
                  <td align=center valign=middle>First name</td>
+                 <td align=center valign=middle>Day of<br>month</td>
+                 <td align=center valign=middle>Day<br>(0800-2000)/<br>Night<br>(2000-0800)</td>
               </tr>
               <?
               //
               // Set up a standard shift_num option list.
               //
-              $shift_num_option_list = "<option value=\"\">Select</option>\n"
+              $shift_num_option_list = "<option></option>\n"
                  .  "<option>1</option>\n"
                  .  "<option>2</option>\n"
                  .  "<option>3</option>\n"
@@ -134,7 +138,7 @@ require_once("f_roleemailaddress.phtml");
               //
               // Set up a standard shift_day_night option_list.
               //
-              $shift_day_night_option_list = "<option value=\"\">Select</option>\n"
+              $shift_day_night_option_list = "<option></option>\n"
                  .  "<option value=day>day</option>\n"
                  .  "<option value=night>night</option>\n";
               //
@@ -145,27 +149,27 @@ require_once("f_roleemailaddress.phtml");
                  ?>
                  <tr><td colspan=4><hr></td></tr>
                  <tr>
-                    <td rowspan=2 align=center valign=middle><input type=text name=last_name size=15 maxlength=32>,</td>
-                    <td rowspan=2 align=center valign=middle><input type=text name=first_name size=15 maxlength=32></td>
+                    <td rowspan=2 align=center valign=middle><input type=text name="last_name[<? echo $i; ?>]" size=15 maxlength=32>,</td>
+                    <td rowspan=2 align=center valign=middle><input type=text name="first_name[<? echo $i; ?>]" size=15 maxlength=32></td>
                     <td align=center valign=middle>
-                       <select name=shift_a_num>
+                       <select name="shift_a_num[<? echo $i; ?>]">
                           <? echo $shift_num_option_list; ?>
                        </select>
                     </td>
                     <td align=center valign=middle>
-                       <select name=shift_a_day_night>
+                       <select name="shift_a_day_night[<? echo $i; ?>]">
                           <? echo $shift_day_night_option_list; ?>
                        </select>
                     </td>
                  </tr>
                  <tr>
                     <td align=center valign=middle>
-                       <select name=shift_b_num>
+                       <select name="shift_b_num[<? echo $i; ?>]">
                           <? echo $shift_num_option_list; ?>
                        </select>
                     </td>
                     <td align=center valign=middle>
-                       <select name=shift_b_day_night>
+                       <select name="shift_b_day_night[<? echo $i; ?>]">
                           <? echo $shift_day_night_option_list; ?>
                        </select>
                     </td>
@@ -175,7 +179,12 @@ require_once("f_roleemailaddress.phtml");
               ?>
            </table>
            </blockquote>
-           <p><small>(You'll have a chance to submit more TDAs after you press Submit.)</small></p>
+           <small>
+           <ul>
+             <li>Any row without a last name, first name, and at least one zone car shift will not be processed.
+             <li>You'll have a chance to submit more TDAs after you press Submit.
+           </ul>
+           </small>
            <p><input type="submit" value="Submit"><input type="reset" value="Reset"></p>
         </form>
         <hr>

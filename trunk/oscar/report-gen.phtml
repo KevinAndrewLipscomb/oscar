@@ -158,9 +158,9 @@ if ($shift_filter == "all")
                {
                extract($row);
                $report .= "   -";
-               if ($be_on_team_5) $report .= "5"; else $report .= "-";
+               if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
                $report .= "-";
-               if ($be_on_team_30) $report .= "30"; else $report .= "--";
+               if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                $report .= sprintf("%3s ",$squad);
@@ -211,9 +211,9 @@ if ($shift_filter == "all")
                {
                extract($row);
                $report .= "   -";
-               if ($be_on_team_5) $report .= "5"; else $report .= "-";
+               if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
                $report .= "-";
-               if ($be_on_team_30) $report .= "30"; else $report .= "--";
+               if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                $report .= sprintf("%3s ",$squad);
@@ -289,9 +289,9 @@ if ($shift_filter == "all")
                   .  "&d="
                   .  base64_encode($be_authority)
                   .  ">$last_name, $first_name</a>&nbsp; [-";
-               if ($be_on_team_5) $report .= "5"; else $report .= "-";
+               if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
                $report .= "-";
-               if ($be_on_team_30) $report .= "30"; else $report .= "--";
+               if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                $report .= "$squad]</p>";
@@ -439,9 +439,9 @@ else
                   {
                   extract($row);
                   $report .= "   -";
-                  if ($be_on_team_5) $report .= "5"; else $report .= "-";
+                  if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
                   $report .= "-";
-                  if ($be_on_team_30) $report .= "30"; else $report .= "--";
+                  if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
                   $report .= "- ";
                   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                   $report .= sprintf("%3s ",$squad);
@@ -490,9 +490,9 @@ else
                   {
                   extract($row);
                   $report .= "   -";
-                  if ($be_on_team_5) $report .= "5"; else $report .= "-";
+                  if ($be_on_team_5 == "TRUE") $report .= "5"; else $report .= "-";
                   $report .= "-";
-                  if ($be_on_team_30) $report .= "30"; else $report .= "--";
+                  if ($be_on_team_30 == "TRUE") $report .= "30"; else $report .= "--";
                   $report .= "- ";
                   if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
                   $report .= sprintf("%3s ",$squad);
