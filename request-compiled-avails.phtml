@@ -63,7 +63,7 @@ require_once("f_bodyopen.phtml");
               </tr>
            </table>
            <p>Please double check your entries before completing your request.</p>
-           <input type=submit value="Request FULL report">
+           <input type=submit value="Request FULL report" disabled>
         </form>
         </blockquote>
         <br><br>
@@ -102,8 +102,12 @@ require_once("f_bodyopen.phtml");
               </tr>
            </table>
            <br>
-           <input type="checkbox" name=limit_to_team_30 value="TRUE">Limit report to members of the Squad Truck Team.<br>
-           <input type="checkbox" name=limit_to_team_5 value="TRUE">Limit report to members of the EMS-5 Team.<br>
+           Include:
+           <blockquote>
+              <input type=radio name=team_filter value=everyone checked>Everyone<br>
+              <input type=radio name=team_filter value=team_30_only>Only squad truck team members<br>
+              <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
+           </blockquote>
            <br>
           <table border="0" cellpadding="0" cellspacing="0" width="892">
             <tr>
@@ -188,7 +192,7 @@ require_once("f_bodyopen.phtml");
             </tr>
           </table>
            <p>Please double check your entries before completing your request.</p>
-           <input type=submit value="Request filtered report">
+           <input type=submit value="Request filtered report" disabled>
         </form>
         </blockquote>
         <hr>
