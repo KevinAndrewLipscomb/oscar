@@ -18,7 +18,16 @@ function AvailList
    //
    for ($i=1; $i<=31; $i++)
       {
-      if ($v[$i]) $avail_string .= date("jS, ",mktime(12,0,0,"",$i));
+      if ($v[$i]) $avail_string .= date("jS, ",mktime(12,0,0,1,$i));
+         //
+         // The call to mktime() gets us the day number (j) and the ordinal value (S) for time:
+         //
+         //    currentyear-01-$i 12:00:00
+         //
+         // This works for us because no matter what the actual month of interest is, because January of any year has all
+         // 31 days and all 31 proper ordinal values, and those are the only elements we're really interested in.  The
+         // choice of noon is arbitrary.
+         //
       }
    return substr($avail_string,0,-2);
    }
