@@ -28,11 +28,11 @@ $first_name = trim($first_name);
 $last_name = trim($last_name);
 //
 $html = "<html>\n";
-$html .= "<head><title>Retraction Request</title></head>\n";
+$html .= "<head><title>Reconfirmation/Retraction Request</title></head>\n";
 $html .= "<body bgcolor=#FFFFFF>\n";
 $html .= "<table align=center width=80%><tr><td>\n";
 $html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
-$html .= "<H1 ALIGN=CENTER>Retraction Request</H1>\n";
+$html .= "<H1 ALIGN=CENTER>Reconfirmation/Retraction Request</H1>\n";
 $html .= "<hr>\n";
 //
 echo $html;
@@ -74,13 +74,13 @@ if
    //             0        1         2         3         4         5         6         7
    //             123456789012345678901234567890123456789012345678901234567890123456789012
    $challenge = "";
-   $challenge .= "The OSCAR system has received your request to retract your $coord_agency\n"
-              .  "availability sheet submission(s).  This is the challenge message.\n\n"
-              .  "The retraction process is not yet complete.  To complete the process,\n"
-              .  "you must click the link near the bottom of this message.\n\n"
+   $challenge .= "Someone (possibly you) sent a request to OSCAR to reconfirm or retract\n"
+              .  "your $coord_agency availability sheet submission(s).\n\n"
+              .  "If your intention is to retract these submissions, be advised that\n"
+              .  "RETRACTION IS NOT YET COMPLETE.  To complete the retraction process, you\n"
+              .  "must click the link near the bottom of this message.\n\n"
               .  "You have the following records on file with the OSCAR system for the\n"
-              .  "month and agency you specified.  If you continue with the retraction\n"
-              .  "process, OSCAR will *permanently* delete these records:\n\n";
+              .  "month and agency you specified:\n\n";
    //
    // Determine the three-letter abbreviation for the specified month.
    //
@@ -156,22 +156,22 @@ if
    //             0        1         2         3         4         5         6         7
    //             123456789012345678901234567890123456789012345678901234567890123456789012
    $challenge .= "\n"
-              .  "To complete the retraction process and\n"
-              .  "remove the above record(s) from the\n"
-              .  "OSCAR system, click here:\n";
-   $challenge .= OscarRootUrl()
-      .  "/" . $mode . "retract.phtml?a="
-      .  base64_encode($first_name)
-      .  "&b="
-      .  base64_encode($last_name)
-      .  "&c="
-      .  base64_encode($applicable_month_num)
-      .  "&d="
-      .  base64_encode($email_addr)
-      .  "&e="
-      .  base64_encode($coord_agency);
-   $challenge .= "\n\n"
-              .  "TO ABORT the retraction process, DO NOTHING.\n\n";
+              .  "If you want to RETRACT (*permanently*\n"
+              .  "remove) the above record(s) from the\n"
+              .  "OSCAR system, click here:\n"
+              .  OscarRootUrl()
+              .  "/" . $mode . "retract.phtml?a="
+              .  base64_encode($first_name)
+              .  "&b="
+              .  base64_encode($last_name)
+              .  "&c="
+              .  base64_encode($applicable_month_num)
+              .  "&d="
+              .  base64_encode($email_addr)
+              .  "&e="
+              .  base64_encode($coord_agency)
+              .  "\n\n"
+              .  "To let OSCAR keep the above records, DO NOTHING.\n\n";
    //
    // Add sig lines.
    //
@@ -181,15 +181,15 @@ if
    //
    // Send the mail.
    //
-   $result = mail($email_addr, "OSCAR Retraction Challenge", $challenge, OscarMailHeaders());
+   $result = mail($email_addr, "OSCAR Reconfirm/Retract Challenge", $challenge, OscarMailHeaders());
    //
    if ($result)
       {
       PutLibPhotoRandomPlaced("sasquatch",1,"right");
-      echo "<p>The OSCAR system has sent the challenge message to <b>$email_addr</b>.&nbsp; When you receive the "
-         .  "challenge message, follow the instructions contained therein.&nbsp; The retraction only takes effect once "
-         .  "OSCAR receives a proper response to the challenge.</p>";
-      echo "<p><b>RETRACTION IS NOT YET COMPLETE.<br>Check your email periodically for the challenge message.</b></p>";
+      echo "<p>The OSCAR system has sent the reconfirmation/challenge message to <b>$email_addr</b>.</p>";
+      echo "<p>If you intend to retract your submissions, be advised that <u>retraction is not yet complete</u>.&nbsp; "
+         .  "Check your email periodically for the challenge message, which contains instructions for completing the "
+         .  "retraction process.</b></p>";
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
          .  RoleEmailAddress("",$mode)
          .  "\">OSCAR System Administrator</a>.</p>";
@@ -208,7 +208,7 @@ if
             <?
             echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\""
                .  RoleEmailAddress("schedule-coordinator",$mode,$coord_agency)
-               .  "\">$coord_agency Schedule Coordinator</a> to retract your submission(s).</p>";
+               .  "\">$coord_agency Schedule Coordinator</a> to reconfirm or retract your submission(s).</p>";
             echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System "
                .  "Administrator</a> know this error occurred.</p>";
             ?>
