@@ -84,28 +84,18 @@ require_once("f_roleemailaddress.phtml");
                   </tr>
                </table>
                <hr>
-               <h3>Actions</h3>
-               <blockquote>
-                  <form action=als-avail-sub-form.phtml method=post>
-                  <input type=submit value="Submit an availability sheet">
-                  </form>
-                  <form action=request-compiled-avails.phtml method=post>
-                  <input type=submit value="Request a compiled availability report">
-                  </form>
-                  <form action=request-retraction.phtml method=post>
-                  <input type=submit value="Retract previous submissions">
-                  </form>
-               </blockquote>
-               <h3>Administrivia</h3>
-               <ul>
-                  <li><p><a href=whats-new.phtml>See what's new.</a></p>
-                  <li><p><a href=privacy.phtml>Read the OSCAR system Privacy Policy</a></p>
-                  <li><p><font color=888888>Learn how your organization can subscribe to this service.</font></p>
-                  <li><p><a href=develop.phtml>Learn how to become a <b>KVEO-IT-PROJECT</b> open-source developer.</a></p>
-                  <?
-                  echo "<li><p><a href=mailto:" . RoleEmailAddress("") . ">Contact the OSCAR System Administrator.</a></p>";
-                  ?>
-               </ul>
+               <table cellspacing=10>
+                  <tr><td colspan=3><h3>Actions</h3></td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=als-avail-sub-form.phtml>Submit</a></b></td><td>an availability sheet.<!-- &nbsp;&nbsp;&nbsp;<small><i>(BCs make assignments <a href=ers-tda-input-form.phtml>here</a>.)</i></small> --></td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=request-compiled-avails.phtml>Request</a></b></td><td>a compiled availability report.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=request-retraction.phtml>Retract</a></b></td><td>previous submissions.</td></tr>
+                  <tr><td colspan=3><h3><br>Administrivia</h3></td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=whats-new.phtml>See</a></b></td><td>what's new.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=privacy.phtml>Read</a></b></td><td>the privacy policy.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><font color=888888>Subscribe</font></b></td><td>your organization to this service.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=develop.phtml>Become</a></b></td><td>a <b>kveo-it-project</b> open-source developer.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=mailto:"<? echo RoleEmailAddress(""); ?>">Contact</a></b></td><td>the OSCAR System Administrator.</td></tr>
+               </table>
                <hr>
                <p><small><i>Built with<a href="http://www.mysql.com"> MySQL </a>and<a href="http://www.php.net"> PHP </a>.</i></small></p>
                <p><small><small><em><pre>$Id$</pre></em></small></small>
