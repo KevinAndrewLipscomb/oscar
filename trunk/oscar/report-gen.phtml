@@ -89,7 +89,7 @@ if ($report_type == "FULL")
    <h3><sup>*</sup>Notes</h3>
    <blockquote>
    <?
-   $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=$month" order by last_name, first_name) or die("Query failed with error:  " . mysql_error());
+   $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=$month order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
    if ($num_rows = mysql_num_rows($result))
       {
       extract($row);
