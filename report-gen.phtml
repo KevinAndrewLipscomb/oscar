@@ -11,9 +11,9 @@ require_once("f_password.phtml");
 $msg = "<html>\n";
 $msg .= "<head><title>Report generation</title></head>\n";
 $msg .= BodyOpen() . "\n";
-$msg .= "<table align=center width="80%"><tr><td>\n";
-$msg .= "<H6 ALIGN="CENTER">KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
-$msg .= "<H1 ALIGN="CENTER">Report generation</H1>\n";
+$msg .= "<table align=center width=80%><tr><td>\n";
+$msg .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$msg .= "<H1 ALIGN=CENTER>Report generation</H1>\n";
 $msg .= "<hr>\n";
 //
 mysql_connect(localhost,kalipso,Password());
@@ -137,10 +137,8 @@ if ($report_type == "FULL")
          }
       $msg .= "\n";
       }
-   ?>
-   </pre>
-   <h3><u>Notes</u></h3>
-   <?
+   $msg .= "</pre>\n";
+   $msg .= "<h3><u>Notes</u></h3>\n";
    $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"" . substr($month_word,0,3) . "\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
    if ($num_rows = mysql_num_rows($result))
       {
