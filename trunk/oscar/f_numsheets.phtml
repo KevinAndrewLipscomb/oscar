@@ -9,7 +9,7 @@ function NumSheets
    $coord_agency = ""
    )
    {
-   error_reporting(E_ALL);
+   $saved_error_level = error_reporting(E_ALL);
    //
    $num_sheets = 0;
    $qry = "select count(*) as num_sheets from oscar." . $mode . "avail_sheet "
@@ -27,6 +27,7 @@ function NumSheets
       or die("NumSheets query failed with error:  " . mysql_error());
    if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
    //
+   error_reporting($saved_error_level);
    return $num_sheets;
    }
 ?>
