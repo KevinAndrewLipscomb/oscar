@@ -53,7 +53,7 @@ require_once("f_agencyselectionlist.phtml");
                </tr>
                <tr>
                  <td>Email address:</td>
-                 <td><input type="text" name=email_addr size=40 maxlength=64><small>&nbsp;&nbsp;(of person entering
+                 <td><input type="text" name=email_addr size=40 maxlength=64></td><td valign=middle><small>(of person entering
                     data)</small></td>
                </tr>
                <tr>
@@ -69,7 +69,8 @@ require_once("f_agencyselectionlist.phtml");
                </tr>
                <tr>
                   <td>Send availabilities to:</td>
-                  <td><? AgencySelectionList($mode); ?></td>
+                  <td><? AgencySelectionList($mode); ?></td><td valign=middle><small>If you get scheduled by both EMS and your squad,
+                     send <b>only</b> to EMS.&nbsp; EMS will relay leftover availabilities to your squad.</small></td>
                </tr>
              </table>
             <br>
