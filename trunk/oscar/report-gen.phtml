@@ -472,7 +472,7 @@ else
    $claim_ticket .= "   " . RoleEmailAddress("escalation-level-1-recipient") . "\n\n";
    $claim_ticket .= "To escalate your request to the above\n";
    $claim_ticket .= "authority, click here:\n\n";
-   $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=1&digest=$digest\n\n";
+   $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=1&digest=$digest&email_addr=$email_addr\n\n";
    //
    // Add sig lines.
    //
@@ -487,7 +487,7 @@ else
    }
 if ($result)
    {
-   PutLibPhotoRandomPlaced("sasquatch",1,"left");
+   PutLibPhotoRandomPlaced("sasquatch",1,"right");
    echo "<p>The OSCAR system has successfully generated your report.&nbsp;  Because the report contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once screening is complete.</p>";
    echo "<p><b>Check your email periodically for the report.</b></p>";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
@@ -513,7 +513,6 @@ else
    <?
    }
 ?>
-<br clear=both>
 <hr>
 <p><small><small><em><pre>$Id$</pre></em></small></small>
 </td>
