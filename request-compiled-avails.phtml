@@ -21,12 +21,13 @@ require_once("f_bodyopen.phtml");
               KVEO-IT-PROJECT<br>
               <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
               <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
-           <h1 align="center">Compiled Availabilities Report Request Form</h1>
+           <h1 align="center">Compiled Availability Report Request Form</h1>
         </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
         </td></tr></table>
         <hr>
         <p>To guard against misuse, the OSCAR system first sends all generated reports to the VBDEMS Central Schedule Coordinator.&nbsp; The coordinator then forwards the report to the email address that you specify.&nbsp; Because this process requires human intervention, results are not immediate.</p>
+        <br>
         <h3><a name=FullReport></a>Full (entire month's) report</h3>
         <blockquote>
         <p>Full reports show all availabilities entered into the OSCAR system for an entire month.&nbsp; Such voluminous data is usually only required by schedule coordinators, certain officers, and auditors.&nbsp; Front line providers are usually better off requesting <a href=#FilteredReport>filtered reports</a>.</p>
@@ -62,12 +63,13 @@ require_once("f_bodyopen.phtml");
               </tr>
            </table>
            <p>Please double check your entries before completing your request.</p>
-           <input type=submit value="Request full report">
+           <input type=submit value="Request FULL report">
         </form>
         </blockquote>
         <br><br>
         <h3><a name=FilteredReport></a>Filtered report</h3>
         <blockquote>
+        <p>This report answers the question, "Who might be available to cover my duty?"</p>
         <form action=request-filtered-report.phtml method=post>
            <table>
               <tr>
@@ -99,6 +101,92 @@ require_once("f_bodyopen.phtml");
                  </td>
               </tr>
            </table>
+           <br>
+           <input type="checkbox" name=limit_to_team_30 value="TRUE">Limit report to members of the Squad Truck Team.<br>
+           <input type="checkbox" name=limit_to_team_5 value="TRUE">Limit report to members of the EMS-5 Team.<br>
+           <br>
+          <table border="0" cellpadding="0" cellspacing="0" width="892">
+            <tr>
+              <td width="890" valign="bottom" colspan="3">Select the shifts to include in the report:
+                 <p>&nbsp;</td>
+            </tr>
+            <tr>
+              <td width="136" valign="bottom">Leave nonapplicable days blank.
+                <p>&nbsp;</td>
+              <td width="125" valign="bottom">
+                <p align="left">Day shifts</p>
+                <ul>
+                  <li><input type="checkbox" name="d1">1st</li>
+                  <li><input type="checkbox" name="d2">2nd</li>
+                  <li><input type="checkbox" name="d3">3rd</li>
+                  <li><input type="checkbox" name="d4">4th</li>
+                  <li><input type="checkbox" name="d5">5th</li>
+                  <li><input type="checkbox" name="d6">6th</li>
+                  <li><input type="checkbox" name="d7">7th</li>
+                  <li><input type="checkbox" name="d8">8th</li>
+                  <li><input type="checkbox" name="d9">9th</li>
+                  <li><input type="checkbox" name="d10">10th</li>
+                  <li><input type="checkbox" name="d11">11th</li>
+                  <li><input type="checkbox" name="d12">12th</li>
+                  <li><input type="checkbox" name="d13">13th</li>
+                  <li><input type="checkbox" name="d14">14th</li>
+                  <li><input type="checkbox" name="d15">15th</li>
+                  <li><input type="checkbox" name="d16">16th</li>
+                  <li><input type="checkbox" name="d17">17th</li>
+                  <li><input type="checkbox" name="d18">18th</li>
+                  <li><input type="checkbox" name="d19">19th</li>
+                  <li><input type="checkbox" name="d20">20th</li>
+                  <li><input type="checkbox" name="d21">21st</li>
+                  <li><input type="checkbox" name="d22">22nd</li>
+                  <li><input type="checkbox" name="d23">23rd</li>
+                  <li><input type="checkbox" name="d24">24th</li>
+                  <li><input type="checkbox" name="d25">25th</li>
+                  <li><input type="checkbox" name="d26">26th</li>
+                  <li><input type="checkbox" name="d27">27th</li>
+                  <li><input type="checkbox" name="d28">28th</li>
+                  <li><input type="checkbox" name="d29">29th</li>
+                  <li><input type="checkbox" name="d30">30th</li>
+                  <li><input type="checkbox" name="d31">31st</li>
+                </ul>
+              </td>
+              <td width="625" valign="bottom">
+                <p align="left">Night shifts</p>
+                <ul>
+                  <li><input type="checkbox" name="n1">1st</li>
+                  <li><input type="checkbox" name="n2">2nd</li>
+                  <li><input type="checkbox" name="n3">3rd</li>
+                  <li><input type="checkbox" name="n4">4th</li>
+                  <li><input type="checkbox" name="n5">5th</li>
+                  <li><input type="checkbox" name="n6">6th</li>
+                  <li><input type="checkbox" name="n7">7th</li>
+                  <li><input type="checkbox" name="n8">8th</li>
+                  <li><input type="checkbox" name="n9">9th</li>
+                  <li><input type="checkbox" name="n10">10th</li>
+                  <li><input type="checkbox" name="n11">11th</li>
+                  <li><input type="checkbox" name="n12">12th</li>
+                  <li><input type="checkbox" name="n13">13th</li>
+                  <li><input type="checkbox" name="n14">14th</li>
+                  <li><input type="checkbox" name="n15">15th</li>
+                  <li><input type="checkbox" name="n16">16th</li>
+                  <li><input type="checkbox" name="n17">17th</li>
+                  <li><input type="checkbox" name="n18">18th</li>
+                  <li><input type="checkbox" name="n19">19th</li>
+                  <li><input type="checkbox" name="n20">20th</li>
+                  <li><input type="checkbox" name="n21">21st</li>
+                  <li><input type="checkbox" name="n22">22nd</li>
+                  <li><input type="checkbox" name="n23">23rd</li>
+                  <li><input type="checkbox" name="n24">24th</li>
+                  <li><input type="checkbox" name="n25">25th</li>
+                  <li><input type="checkbox" name="n26">26th</li>
+                  <li><input type="checkbox" name="n27">27th</li>
+                  <li><input type="checkbox" name="n28">28th</li>
+                  <li><input type="checkbox" name="n29">29th</li>
+                  <li><input type="checkbox" name="n30">30th</li>
+                  <li><input type="checkbox" name="n31">31st</li>
+                </ul>
+              </td>
+            </tr>
+          </table>
            <p>Please double check your entries before completing your request.</p>
            <input type=submit value="Request filtered report">
         </form>
