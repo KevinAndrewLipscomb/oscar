@@ -23,8 +23,7 @@ if (SendApprovalNotice($email_addr,$digest))
    PutLibPhotoRandomPlaced("sasquatch",1,"right");
    echo "<p>The OSCAR system has performed the following:</p>\n"
       . "<ul\n"
-      . "   <li><p>Registered your approval of user $email_addr's request;</p></li>\n"
-      . "   <li><p>Sent the user instructions on how to retrieve the requested report.</p></li>\n"
+      . "   <li><p>Sent instructions to <i>$email_addr</i> on how to retrieve the requested report.</p></li>\n"
       . "</ul>\n";
    }
 else
