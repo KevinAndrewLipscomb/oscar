@@ -8,15 +8,23 @@ require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
 //
-$msg = "<html>\n";
-$msg .= "<head><title>Report generation</title></head>\n";
-$msg .= BodyOpen() . "\n";
-$msg .= "<table align=center width=80%><tr><td>\n";
-$msg .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
-$msg .= "<H1 ALIGN=CENTER>Availability Report</H1>\n";
-$msg .= "<hr>\n";
+// Retreive timestamp of latest avail_sheet record.  Later, we'll use it to see if database conditions have changed
+// significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
+// generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
 //
-echo $msg;
+$result = mysql_query("select max(timestamp) as timestamp_of_latest_submission from avail_sheet")
+   or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
+$condition_descriptor = "timestamp_of_latest_submission=" . mysql_fetch_object($result)->timestamp_of_latest_submission . "\n";
+//
+$report = "<html>\n";
+$report .= "<head><title>Report generation</title></head>\n";
+$report .= BodyOpen() . "\n";
+$report .= "<table align=center width=80%><tr><td>\n";
+$report .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$report .= "<H1 ALIGN=CENTER>Availability Report</H1>\n";
+$report .= "<hr>\n";
+//
+echo $report;
 //
 mysql_connect(localhost,kalipso,Password());
 mysql_select_db(oscar);
@@ -36,6 +44,10 @@ if ($relative_month == "NEXT")
       $year_num++;
       }
    }
+//
+$condition_descriptor .= "month_num=$month_num\n";
+$condition_descriptor .= "year_num=$year_num\n";
+//
 switch ($month_num)
    {
    case 1: $month_word = "JANUARY"; break;
@@ -54,113 +66,150 @@ switch ($month_num)
 $where_clause = "month='" . substr($month_word,0,3) ."' ";
 if ($report_type == "FULL")
    {
-   $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
-   $msg .= "<pre>\n";
-   $msg .= "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
-   $msg .= "   +--------------------------------------------+\n";
-   $msg .= "   | Legend:                                    |\n";
-   $msg .= "   |    -5-30- Rxx 8xxxxx Lastname, Firstname * |\n";
-   $msg .= "   |     ^  ^   ^    ^                        ^ |\n";
-   $msg .= "   |     |  |   |    |                        | |\n";
-   $msg .= "   |     |  |   |    +- Officer code          | |\n";
-   $msg .= "   |     |  |   |       (also 7xxxxx)         | |\n";
-   $msg .= "   |     |  |   |                             | |\n";
-   $msg .= "   |     |  |   +- Home rescue squad          | |\n";
-   $msg .= "   |     |  |      (ERS for VBFD)             | |\n";
-   $msg .= "   |     |  |                                 | |\n";
-   $msg .= "   |     |  +- Squad truck team member        | |\n";
-   $msg .= "   |     |                                    | |\n";
-   $msg .= "   |     +- EMS-5 team member                 | |\n";
-   $msg .= "   |                                          | |\n";
-   $msg .= "   |    See special request in Notes section -+ |\n";
-   $msg .= "   +--------------------------------------------+\n\n\n";
-   $msg .= "Days\n";
-   $msg .= "----\n\n";
-   for ($day_index = 1; $day_index <= 31; $day_index++)
+   //
+   // Full report
+   //
+   // Maybe the required report has already been run under these same conditions, and cached in the database.  If so, just
+   // retrieve it.
+   //
+   $condition_descriptor .= "type=FULL\n";
+   $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
+      or die("The digest calculation failed with this error:  " . mysql_error());
+   $digest = mysql_fetch_object($result)->digest;
+   $result = mysql_query("select report from report_cache where digest = $digest")
+      or die("The cache check failed with error:  " . mysql_error());
+   if (mysql_num_rows($result))
       {
-      $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
-      $where_clause_2 = "and d$day_index='AVAILABLE' ";
-      $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
-      $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-      if ($num_rows = mysql_num_rows($result))
-         {
-         $msg .= $day_description . "\n";
-         while ($row = mysql_fetch_array($result))
-            {
-            extract($row);
-            $msg .= "   -";
-            if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
-            $msg .= "-";
-            if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
-            $msg .= "- ";
-            if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-            $msg .= sprintf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
-            if ($note != "") $msg .= "*";
-            $msg .= "\n";
-            $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
-            }
-         }
-      else
-         {
-         $msg .= $day_description . " None\n";
-         }
-      $msg .= "\n";
-      }
-   $msg .= "\n";
-   $msg .= "Nights\n";
-   $msg .= "------\n\n";
-   for ($night_index = 1; $night_index <= 31; $night_index++)
-      {
-      $night_description = date("jS (l)",mktime(21,0,0,$month_num,$night_index,$year_num)) . " night:";
-      $where_clause_2 = "and n$night_index='AVAILABLE' ";
-      $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
-      $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-      if ($num_rows = mysql_num_rows($result))
-         {
-         $msg .= $night_description . "\n";
-         while ($row = mysql_fetch_array($result))
-            {
-            extract($row);
-            $msg .= "   -";
-            if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
-            $msg .= "-";
-            if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
-            $msg .= "- ";
-            if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-            $msg .= sprintf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
-            if ($note != "") $msg .= "*";
-            $msg .= "\n";
-            $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
-            }
-         }
-      else
-         {
-         $msg .= $night_description . " None\n";
-         }
-      $msg .= "\n";
-      }
-   $msg .= "</pre>\n";
-   $msg .= "<h3><u>Notes</u></h3>\n";
-   $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"" . substr($month_word,0,3) . "\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
-   if ($num_rows = mysql_num_rows($result))
-      {
-      while ($row = mysql_fetch_array($result))
-         {
-         extract($row);
-         $msg .= "$last_name, $first_name&nbsp; [-";
-         if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
-         $msg .= "-";
-         if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
-         $msg .= "- ";
-         if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-         $msg .= "$squad $cad_num]\n";
-         $msg .= "<blockquote><i>" . stripslashes($note) . "</i></blockquote>\n<br>";
-         $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
-         }
+      $report = mysql_fetch_object($result)->report;
       }
    else
       {
-      $msg .= "None\n";
+      //
+      // The required report has never been run before under these conditions.  Generate it from scratch and cache it.
+      //
+      $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, (note != "") as be_a_note from avail_sheet ";
+      $report .= "<pre>\n";
+      $report .= "Full availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
+      $report .= "   +--------------------------------------------+\n";
+      $report .= "   | Legend:                                    |\n";
+      $report .= "   |    -5-30- Rxx 8xxxxx Lastname, Firstname * |\n";
+      $report .= "   |     ^  ^   ^    ^                        ^ |\n";
+      $report .= "   |     |  |   |    |                        | |\n";
+      $report .= "   |     |  |   |    +- Officer code          | |\n";
+      $report .= "   |     |  |   |       (also 7xxxxx)         | |\n";
+      $report .= "   |     |  |   |                             | |\n";
+      $report .= "   |     |  |   +- Home rescue squad          | |\n";
+      $report .= "   |     |  |      (ERS for VBFD)             | |\n";
+      $report .= "   |     |  |                                 | |\n";
+      $report .= "   |     |  +- Squad truck team member        | |\n";
+      $report .= "   |     |                                    | |\n";
+      $report .= "   |     +- EMS-5 team member                 | |\n";
+      $report .= "   |                                          | |\n";
+      $report .= "   |    See special request in Notes section -+ |\n";
+      $report .= "   +--------------------------------------------+\n\n\n";
+      $report .= "Days\n";
+      $report .= "----\n\n";
+      for ($day_index = 1; $day_index <= 31; $day_index++)
+         {
+         $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
+            $where_clause_2 = "and d$day_index='AVAILABLE' ";
+         $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+         $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+         if ($num_rows = mysql_num_rows($result))
+            {
+            $report .= $day_description . "\n";
+            while ($row = mysql_fetch_array($result))
+               {
+               extract($row);
+               $report .= "   -";
+               if ($be_on_team_5) $report .= "5"; else $report .= "-";
+               $report .= "-";
+               if ($be_on_team_30) $report .= "30"; else $report .= "--";
+               $report .= "- ";
+               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+               $report .= sprintf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
+               if ($be_a_note) $report .= "*";
+               $report .= "\n";
+               $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
+               }
+            }
+         else
+            {
+            $report .= $day_description . " None\n";
+            }
+         $report .= "\n";
+         }
+      $report .= "\n";
+      $report .= "Nights\n";
+      $report .= "------\n\n";
+      for ($night_index = 1; $night_index <= 31; $night_index++)
+         {
+         $night_description = date("jS (l)",mktime(21,0,0,$month_num,$night_index,$year_num)) . " night:";
+         $where_clause_2 = "and n$night_index='AVAILABLE' ";
+         $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+         $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+         if ($num_rows = mysql_num_rows($result))
+            {
+            $report .= $night_description . "\n";
+            while ($row = mysql_fetch_array($result))
+               {
+               extract($row);
+               $report .= "   -";
+               if ($be_on_team_5) $report .= "5"; else $report .= "-";
+               $report .= "-";
+               if ($be_on_team_30) $report .= "30"; else $report .= "--";
+               $report .= "- ";
+               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+               $report .= sprintf("%3s %6s %s, %s ",$squad,$cad_num,$last_name,$first_name);
+               if ($be_a_note) $report .= "*";
+               $report .= "\n";
+               $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_a_note = "";
+               }
+            }
+         else
+            {
+            $report .= $night_description . " None\n";
+            }
+         $report .= "\n";
+         }
+      $report .= "</pre>\n";
+      $report .= "<h3><u>Notes</u></h3>\n";
+      $result = mysql_query("select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet where month=\"" . substr($month_word,0,3) . "\" and note != \"\" order by last_name, first_name") or die("Query failed with error:  " . mysql_error());
+      if ($num_rows = mysql_num_rows($result))
+         {
+         while ($row = mysql_fetch_array($result))
+            {
+            extract($row);
+            $report .= "$last_name, $first_name&nbsp; [-";
+            if ($be_on_team_5) $report .= "5"; else $report .= "-";
+            $report .= "-";
+            if ($be_on_team_30) $report .= "30"; else $report .= "--";
+            $report .= "- ";
+            if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+            $report .= "$squad $cad_num]\n";
+            $report .= "<blockquote><i>" . stripslashes($note) . "</i></blockquote>\n<br>";
+            $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
+            }
+         }
+      else
+         {
+         $report .= "None\n";
+         }
+      $report .= "<pre>--- END ---</pre><br>\n";
+      $report .= "<small><i><pre>\$Id$</pre></i></small>\n";
+      $report .= "</td></tr></table>\n";
+      $report .= "</body>\n";
+      $report .= "</html>\n";
+      //
+      // Calculate the expiration date for this report.  For the mktime() function, the 0th day of the month+1 resolves
+      // to the last day of month.
+      //
+      $expiration_date = date("Y-m-d",mktime(0,0,0,($month_num + 1),0,$year_num))
+      //
+      // Store the report in the cache.
+      //
+      $result = mysql_query("insert into report_cache set digest=$digest, report=$report, expiration=$expiration_date)
+         or die("Report insertion failed with this error:  " . mysql_error());
       }
    }
 else
@@ -168,121 +217,218 @@ else
    //
    // Filtered report
    //
-   $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5 from avail_sheet ";
-   switch ($team_filter)
-      {
-      case "team_5_only":
-         $where_clause .= "and be_on_team_5 = 'TRUE' ";
-         $info_message = "As requested, this report ONLY includes EMS-5 team members.";
-         break;
-      case "team_30_only":
-         $where_clause .= "and be_on_team_30 = 'TRUE' ";
-         $info_message = "As requested, this report ONLY includes SQUAD TRUCK team members.";
-         break;
-      }
    //
    // Convert sequence of day/night scalars into 1-based arrays for easier looping later.
    //
    $d = array(1 => $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31);
    $n = array(1 => $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31);
    //
-   $msg .= "<pre>\n";
-   $msg .= "Filtered availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
-   $msg .= "   +------------------------------------------+\n";
-   $msg .= "   | Legend:                                  |\n";
-   $msg .= "   |    -5-30- Rxx 8xxxxx Lastname, Firstname |\n";
-   $msg .= "   |     ^  ^   ^    ^                        |\n";
-   $msg .= "   |     |  |   |    |                        |\n";
-   $msg .= "   |     |  |   |    +- Officer code          |\n";
-   $msg .= "   |     |  |   |       (also 7xxxxx)         |\n";
-   $msg .= "   |     |  |   |                             |\n";
-   $msg .= "   |     |  |   +- Home rescue squad          |\n";
-   $msg .= "   |     |  |      (ERS for VBFD)             |\n";
-   $msg .= "   |     |  |                                 |\n";
-   $msg .= "   |     |  +- Squad truck team member        |\n";
-   $msg .= "   |     |                                    |\n";
-   $msg .= "   |     +- EMS-5 team member                 |\n";
-   $msg .= "   +------------------------------------------+\n\n\n";
-   if ($info_message) $msg .= "$info_message\n\n";
-   for ($day_index = 1; $day_index <= 31; $day_index++)
+   // Maybe the required report has already been run under these same conditions, and cached in the database.  If so, just
+   // retrieve it.
+   //
+   $condition_descriptor .= "type=FILTERED\n";
+   $condition_descriptor .= "team_filter=$team_filter\n";
+   $condition_descriptor .= "days=";
+   for (i=1; i<=31; i++)
       {
-      if ($d[$day_index])
+      if ($d[$i])
          {
-         $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
-         $where_clause_2 = "and d$day_index='AVAILABLE' ";
-         $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
-         $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-         if ($num_rows = mysql_num_rows($result))
-            {
-            $msg .= $day_description . "\n";
-            while ($row = mysql_fetch_array($result))
-               {
-               extract($row);
-               $msg .= "   -";
-               if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
-               $msg .= "-";
-               if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
-               $msg .= "- ";
-               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $msg .= sprintf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
-               $msg .= "\n";
-               $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
-               }
-            }
-         else
-            {
-            $msg .= $day_description . " None\n";
-            }
-         $msg .= "\n";
+         $condition_descriptor .= "1";
+         $expiration_day = $i;
+         }
+      else
+         {
+         $condition_descriptor .= "0";
          }
       }
-   for ($night_index = 1; $night_index <= 31; $night_index++)
+   $condition_descriptor .= "\n";
+   $condition_descriptor .= "nights=";
+   for (i=1; i<=31; i++)
       {
-      if ($n[$night_index])
+      if ($n[$i])
          {
-         $night_description = date("jS (l)",mktime(9,0,0,$month_num,$night_index,$year_num)) . " night:";
-         $where_clause_2 = "and n$night_index='AVAILABLE' ";
-         $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
-         $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-         if ($num_rows = mysql_num_rows($result))
-            {
-            $msg .= $night_description . "\n";
-            while ($row = mysql_fetch_array($result))
-               {
-               extract($row);
-               $msg .= "   -";
-               if ($be_on_team_5) $msg .= "5"; else $msg .= "-";
-               $msg .= "-";
-               if ($be_on_team_30) $msg .= "30"; else $msg .= "--";
-               $msg .= "- ";
-               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $msg .= sprintf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
-               $msg .= "\n";
-               $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
-               }
-            }
-         else
-            {
-            $msg .= $night_description . " None\n";
-            }
-         $msg .= "\n";
+         $condition_descriptor .= "1";
+         if ($i > $expiration_day) $expiration_day = $i;
+         }
+      else
+         {
+         $condition_descriptor .= "0";
          }
       }
-   $msg .= "</pre>\n";
+   for (i=1; i<=31; i++)
+      {
+      if ($d[$i])
+         {
+         $condition_descriptor .= "1";
+         }
+      else
+         {
+         $condition_descriptor .= "0";
+         }
+      }
+   $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
+      or die("The digest calculation failed with this error:  " . mysql_error());
+   $digest = mysql_fetch_object($result)->digest;
+   $result = mysql_query("select report from report_cache where digest = $digest")
+      or die("The cache check failed with error:  " . mysql_error());
+   if (mysql_num_rows($result))
+      {
+      $report = mysql_fetch_object($result)->report;
+      }
+   else
+      {
+      $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5 from avail_sheet ";
+      switch ($team_filter)
+         {
+         case "team_5_only":
+            $where_clause .= "and be_on_team_5 = 'TRUE' ";
+            $info_message = "As requested, this report ONLY includes EMS-5 team members.";
+            break;
+         case "team_30_only":
+            $where_clause .= "and be_on_team_30 = 'TRUE' ";
+            $info_message = "As requested, this report ONLY includes SQUAD TRUCK team members.";
+            break;
+         }
+      //
+      $report .= "<pre>\n";
+      $report .= "Filtered availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
+      $report .= "   +------------------------------------------+\n";
+      $report .= "   | Legend:                                  |\n";
+      $report .= "   |    -5-30- Rxx 8xxxxx Lastname, Firstname |\n";
+      $report .= "   |     ^  ^   ^    ^                        |\n";
+      $report .= "   |     |  |   |    |                        |\n";
+      $report .= "   |     |  |   |    +- Officer code          |\n";
+      $report .= "   |     |  |   |       (also 7xxxxx)         |\n";
+      $report .= "   |     |  |   |                             |\n";
+      $report .= "   |     |  |   +- Home rescue squad          |\n";
+      $report .= "   |     |  |      (ERS for VBFD)             |\n";
+      $report .= "   |     |  |                                 |\n";
+      $report .= "   |     |  +- Squad truck team member        |\n";
+      $report .= "   |     |                                    |\n";
+      $report .= "   |     +- EMS-5 team member                 |\n";
+      $report .= "   +------------------------------------------+\n\n\n";
+      if ($info_message) $report .= "$info_message\n\n";
+      for ($day_index = 1; $day_index <= 31; $day_index++)
+         {
+         if ($d[$day_index])
+            {
+            $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
+            $where_clause_2 = "and d$day_index='AVAILABLE' ";
+            $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+            $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+            if ($num_rows = mysql_num_rows($result))
+               {
+               $report .= $day_description . "\n";
+               while ($row = mysql_fetch_array($result))
+                  {
+                  extract($row);
+                  $report .= "   -";
+                  if ($be_on_team_5) $report .= "5"; else $report .= "-";
+                  $report .= "-";
+                  if ($be_on_team_30) $report .= "30"; else $report .= "--";
+                  $report .= "- ";
+                  if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+                  $report .= sprintf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
+                  $report .= "\n";
+                  $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
+                  }
+               }
+            else
+               {
+               $report .= $day_description . " None\n";
+               }
+            $report .= "\n";
+            }
+         }
+      for ($night_index = 1; $night_index <= 31; $night_index++)
+         {
+         if ($n[$night_index])
+            {
+            $night_description = date("jS (l)",mktime(9,0,0,$month_num,$night_index,$year_num)) . " night:";
+            $where_clause_2 = "and n$night_index='AVAILABLE' ";
+            $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+            $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+            if ($num_rows = mysql_num_rows($result))
+               {
+               $report .= $night_description . "\n";
+               while ($row = mysql_fetch_array($result))
+                  {
+                  extract($row);
+                  $report .= "   -";
+                  if ($be_on_team_5) $report .= "5"; else $report .= "-";
+                  $report .= "-";
+                  if ($be_on_team_30) $report .= "30"; else $report .= "--";
+                  $report .= "- ";
+                  if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+                  $report .= sprintf("%3s %6s %s, %s",$squad,$cad_num,$last_name,$first_name);
+                  $report .= "\n";
+                  $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
+                  }
+               }
+            else
+               {
+               $report .= $night_description . " None\n";
+               }
+            $report .= "\n";
+            }
+         }
+      $report .= "</pre>\n";
+      $report .= "<pre>--- END ---</pre><br>\n";
+      $report .= "<small><i><pre>\$Id$</pre></i></small>\n";
+      $report .= "</td></tr></table>\n";
+      $report .= "</body>\n";
+      $report .= "</html>\n";
+      //
+      // Calculate the expiration date for this report.  For the mktime() function, the 0th day of the month+1 resolves
+      // to the last day of month.
+      //
+      $expiration_date = date("Y-m-d",mktime(0,0,0,$month_num,$expiration_day,$year_num))
+      //
+      // Store the report in the cache.
+      //
+      $result = mysql_query("insert into report_cache set digest=$digest, report=$report, expiration=$expiration_date)
+         or die("Report insertion failed with this error:  " . mysql_error());
+      }
    }
 //
-$msg .= "<pre>--- END ---</pre><br>\n";
-$msg .= "<small><i><pre>\$Id$</pre></i></small>\n";
-$msg .= "</td></tr></table>\n";
-$msg .= "</body>\n";
-$msg .= "</html>\n";
+// Generate the claim ticket.
+//
+//                0        1         2         3         4         5         6         7
+//                123456789012345678901234567890123456789012345678901234567890123456789012
+$claim_ticket =  "This is the claim ticket for an OSCAR report requested by a user who\n";
+$claim_ticket .= "identified him or herself as:\n\n";
+$claim_ticket .= "   Name:           $name\n";
+$claim_ticket .= "   Email address:  $email_addr\n\n";
+$claim_ticket .= "The report is available at the following web address:\n\n";
+$claim_ticket .= "   http://kalipso.phpwebhosting.com/oscar/get-report.html?digest=$digest\n\n";
+$claim_ticket .= "If you are the person indicated above, please browse to the above web\n";
+$claim_ticket .= "address to see the report.\n\n";
+$claim_ticket .= "(Schedule coordinator:  This claim ticket is first sent to you for\n";
+$claim_ticket .= "purposes of security screening.  If you agree that the indicated user\n";
+$claim_ticket .= "is authorized to receive the linked report, please pass this claim\n";
+$claim_ticket .= "ticket along to the user by pressing your REPLY and SEND buttons.\n\n";
+$claim_ticket .= "-- OSCAR\n";
+$claim_ticket .= "-- Home page: http://kalipso.phpwebhosting.com/oscar/index.phtml\n";
+$claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+//
+// Send the claim ticket to the schedule coordinator.
 //
 $recipient = RoleEmailAddress("schedule-coordinator");
-$subject = "OSCAR report";
-$headers = "From: (OSCAR user $name) <$email_addr>\r\n";
+if ($email_addr == $recipient)
+   {
+   //
+   // Then it was the schedule coordinator him or herself who requested the report.  Use different subject lines to help
+   // the schedule coordinator distinguish between his or her own reports and those requested by others.
+   //
+   $subject = "-> OSCAR report claim ticket ->";
+   }
+else
+   {
+   $subject = "*YOUR* OSCAR report claim ticket";
+   }
+$headers = "From: OSCAR\r\n";
 $headers .= "Reply-to: $email_addr\r\n";
-$headers .= "Content-type: text/html\r\n";
-if (mail($recipient, $subject, $msg, $headers))
+if (mail($recipient, $subject, $claim_ticket, $headers))
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"left");
    echo "<p>The OSCAR system has generated your report and submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.&nbsp; The coordinator will forward it to you once screening is complete.</p>";
