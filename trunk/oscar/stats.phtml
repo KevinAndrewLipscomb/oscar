@@ -1,0 +1,237 @@
+<?
+//
+// $Id$
+//
+error_reporting(E_ALL);
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_numsheets.phtml");
+require_once("f_connectselectdb.phtml");
+?>
+<html>
+
+<head><title>OSCAR - Detailed statistics</title></head>
+
+<? BodyOpen(); ?>
+<table width="80%" align="center">
+   <tr>
+      <td>
+         <table>
+            <tr>
+               <td>
+                  <h6 align="center">
+                     KVEO-IT-PROJECT<br>
+                     <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a>
+                  </h6>
+                  <h1 align="center">Detailed statistics</h1>
+               </td>
+               <td><? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?></td>
+            </tr>
+         </table>
+         <hr>
+         <?
+         if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+            {
+            ?>
+            <b>Sheets on file</b>
+            <blockquote>
+               <table border=1 cellpadding=3>
+                  <?
+                  //
+                  // Calculate month numbers and abbreviations.
+                  //
+                  $after_next_month_num = ($next_month_num = ($current_month_num = date("n")) + 1) + 1;
+                  $current_month_abbrev = date("M");
+                  $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
+                  $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
+                  ?>
+                  <tr bgcolor=#E8E8E8>
+                     <td align=center>&nbsp;<? echo $current_month_abbrev; ?>&nbsp;</td>
+                     <td align=center>&nbsp;<? echo $next_month_abbrev; ?>&nbsp;</td>
+                     <td align=center>&nbsp;<? echo $after_next_month_abbrev; ?>&nbsp;</td>
+                  </tr>
+                  <tr>
+                     <?
+                     echo "<td align=center>" . NumSheets($current_month_abbrev) . "</td>\n";
+                     echo "<td align=center>" . NumSheets($next_month_abbrev) . "</td>\n";
+                     echo "<td align=center>" . NumSheets($after_next_month_abbrev) . "</td>\n";
+                     ?>
+                  </tr>
+               </table>
+            </blockquote>
+            <br>
+            <b>Number of shifts made available per person (excluding TDAs)</b>
+            <blockquote>
+               <table cellpadding=1>
+                  <?
+                  mysql_query
+                     (
+                     "create temporary table aggregated "
+                     .  " select * "
+                     .  "    , max(timestamp) as max_timestamp "
+                     .  " from " . $mode . "avail_sheet "
+                     .  " where be_tda != 'TRUE' "
+                     .  " group by month "
+                     .  "    , last_name "
+                     .  "    , first_name "
+                     .  "    , coord_agency "
+                     )
+                     or die("Create/select aggregated failed with error:  " . mysql_error());
+                  $marker = "AVAILABLE";
+                  mysql_query
+                     (
+                     "create temporary table shift_avail_count "
+                     .  " select month "
+                     .  "    , last_name "
+                     .  "    , first_name "
+                     .  "    , coord_agency "
+                     .  "    , if(d1='$marker',1,0) "
+                     .  "    + if(d2='$marker',1,0) "
+                     .  "    + if(d3='$marker',1,0) "
+                     .  "    + if(d4='$marker',1,0) "
+                     .  "    + if(d5='$marker',1,0) "
+                     .  "    + if(d6='$marker',1,0) "
+                     .  "    + if(d7='$marker',1,0) "
+                     .  "    + if(d8='$marker',1,0) "
+                     .  "    + if(d9='$marker',1,0) "
+                     .  "    + if(d10='$marker',1,0) "
+                     .  "    + if(d11='$marker',1,0) "
+                     .  "    + if(d12='$marker',1,0) "
+                     .  "    + if(d13='$marker',1,0) "
+                     .  "    + if(d14='$marker',1,0) "
+                     .  "    + if(d15='$marker',1,0) "
+                     .  "    + if(d16='$marker',1,0) "
+                     .  "    + if(d17='$marker',1,0) "
+                     .  "    + if(d18='$marker',1,0) "
+                     .  "    + if(d19='$marker',1,0) "
+                     .  "    + if(d20='$marker',1,0) "
+                     .  "    + if(d21='$marker',1,0) "
+                     .  "    + if(d22='$marker',1,0) "
+                     .  "    + if(d23='$marker',1,0) "
+                     .  "    + if(d24='$marker',1,0) "
+                     .  "    + if(d25='$marker',1,0) "
+                     .  "    + if(d26='$marker',1,0) "
+                     .  "    + if(d27='$marker',1,0) "
+                     .  "    + if(d28='$marker',1,0) "
+                     .  "    + if(d29='$marker',1,0) "
+                     .  "    + if(d30='$marker',1,0) "
+                     .  "    + if(d31='$marker',1,0) "
+                     .  "    + if(n1='$marker',1,0) "
+                     .  "    + if(n2='$marker',1,0) "
+                     .  "    + if(n3='$marker',1,0) "
+                     .  "    + if(n4='$marker',1,0) "
+                     .  "    + if(n5='$marker',1,0) "
+                     .  "    + if(n6='$marker',1,0) "
+                     .  "    + if(n7='$marker',1,0) "
+                     .  "    + if(n8='$marker',1,0) "
+                     .  "    + if(n9='$marker',1,0) "
+                     .  "    + if(n10='$marker',1,0) "
+                     .  "    + if(n11='$marker',1,0) "
+                     .  "    + if(n12='$marker',1,0) "
+                     .  "    + if(n13='$marker',1,0) "
+                     .  "    + if(n14='$marker',1,0) "
+                     .  "    + if(n15='$marker',1,0) "
+                     .  "    + if(n16='$marker',1,0) "
+                     .  "    + if(n17='$marker',1,0) "
+                     .  "    + if(n18='$marker',1,0) "
+                     .  "    + if(n19='$marker',1,0) "
+                     .  "    + if(n20='$marker',1,0) "
+                     .  "    + if(n21='$marker',1,0) "
+                     .  "    + if(n22='$marker',1,0) "
+                     .  "    + if(n23='$marker',1,0) "
+                     .  "    + if(n24='$marker',1,0) "
+                     .  "    + if(n25='$marker',1,0) "
+                     .  "    + if(n26='$marker',1,0) "
+                     .  "    + if(n27='$marker',1,0) "
+                     .  "    + if(n28='$marker',1,0) "
+                     .  "    + if(n29='$marker',1,0) "
+                     .  "    + if(n30='$marker',1,0) "
+                     .  "    + if(n31='$marker',1,0) "
+                     .  "    as num_avails "
+                     .  " from aggregated "
+                     .  " order by num_avails desc"
+                     )
+                     or die("Create/select shift_avail_count failed with error: " . mysql_error());
+                  //
+                  // Average and stddev
+                  //
+                  $result = mysql_query
+                     (
+                     "select avg(num_avails) as average"
+                     .  "   , stddev(num_avails) as stddev"
+                     .  " from shift_avail_count "
+                     )
+                     or die("Select 1 failed with error: " . mysql_error());
+                  extract(mysql_fetch_array($result));
+                  //
+                  echo "<tr><td>Average:</td><td>$average</td></tr>\n";
+                  echo "<tr><td>Standard deviation:</td><td>$stddev</td></tr>\n";
+                  //
+                  // Most available personnel
+                  //
+                  echo "<tr><td colspan=2>\n"
+                     . "   <br>Most available personnel:\n"
+                     . "   <ol>\n";
+                  $result = mysql_query("select * from shift_avail_count limit 5")
+                     or die("Select 2 failed with error: " . mysql_error());
+                  //
+                  while ($row = mysql_fetch_array($result))
+                     {
+                     $first_name = $last_name = $num_avails = $month = "";
+                     extract($row);
+                     echo "      <li>$first_name $last_name&nbsp; ($num_avails in $month)</li>\n";
+                     }
+                  echo "   </ol>\n"
+                     . "</td></tr>\n";
+                  //
+                  // Histogram
+                  //
+                  echo "<tr><td colspan=2><br>Histogram:<br>\n"
+                     . "   <blockquote><pre>\n";
+                  $result = mysql_query
+                     (
+                     "select num_avails, count(*) as occurrences "
+                     .  " from shift_avail_count group by num_avails"
+                     )
+                     or die("Select 3 failed with error: " . mysql_error());
+                  //
+                  while ($row = mysql_fetch_array($result))
+                     {
+                     $num_avails = $occurrences = "";
+                     extract($row);
+                     printf("%2d: ",$num_avails);
+                     for ($i=1; $i<=$occurrences; $i++) echo "#";
+                     echo "\n";
+                     }
+                  echo "</pre></blockquote>\n"
+                     . "</td></tr>\n";
+                  ?>
+               </table>
+            </blockquote>
+            <?
+            }
+         else
+            {
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <p>OSCAR's database is temporarily offline.&nbsp; Please check back later.</p>
+            </blockquote>            
+            </b>
+            <?
+            }
+            ?>
+         <hr>
+         <p><small><small><em><pre>$Id$</pre></em></small></small>
+      </td>
+   </tr>
+</table>
+</body>
+
+</html>
+

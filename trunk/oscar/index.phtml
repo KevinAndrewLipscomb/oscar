@@ -10,9 +10,9 @@ $mode = RunMode($PHP_SELF);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once($mode . "f_roleemailaddress.phtml");
+require_once("f_roleemailaddress.phtml");
 require_once("f_password.phtml");
-require_once($mode . "f_numsheets.phtml");
+require_once("f_numsheets.phtml");
 require_once("f_serverstatus.phtml");
 require_once("f_connectselectdb.phtml");
 //
@@ -145,7 +145,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                               $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
                               $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
                               ?>
-                              <tr bgcolor=#D0D0D0><td colspan=3 align=center><small><i>Sheets&nbsp;on&nbsp;file&nbsp; <small><font color=#888888>(more&nbsp;stats)</font></i></small></td></tr>
+                              <tr bgcolor=#D0D0D0><td colspan=3 align=center><small><i>Sheets&nbsp;on&nbsp;file&nbsp; <small><a href=<? echo $mode; ?>stats.phtml>(more&nbsp;stats)</a></i></small></td></tr>
                               <tr bgcolor=#E8E8E8>
                                  <td align=center><small><i><? echo $current_month_abbrev; ?></i></small></td>
                                  <td align=center><small><i><? echo $next_month_abbrev; ?></i></small></td>
