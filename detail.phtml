@@ -15,7 +15,14 @@ require_once("f_showavailsheetrecdetail.phtml");
 $last_name = base64_decode($a);
 $first_name = base64_decode($b);
 $month = base64_decode($c);
-$be_authority = base64_decode($d);
+if ($d)
+   {
+   $be_authority = base64_decode($d);
+   }
+else
+   {
+   $be_authority = "";
+   }
 //
 ?>
 <html>
