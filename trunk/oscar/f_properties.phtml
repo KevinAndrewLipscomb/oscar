@@ -40,6 +40,11 @@ function Properties
       //
       // Build patient care indicator: {---|aic|ALS}
       //
+      if ($be_on_team_5 == "TRUE") $s .= "5"; else $s .= "-";
+            $s .= "-";
+      if ($be_on_team_30 == "TRUE") $s .= "30"; else $s .= "--";
+            $s .= "-";
+            
       if ($be_third == "TRUE")
          {
          $s .="---";
