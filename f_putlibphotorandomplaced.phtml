@@ -42,8 +42,8 @@ function PutLibPhotoRandomPlaced
             //
             // This sets up the $div_spec and $frame_num variables.
             //
-         $image_source_spec = "http://www.oscarsystem.com/photolib/div/$div_spec/$frame_num-i.jpg";
-         echo "<a href=\"http://www.oscarsystem.com/photolib/present-photo.phtml?div_spec=$div_spec&frame_num=$frame_num\">\n";
+         $image_source_spec = "http://kalipso.phpwebhosting.com/photolib/div/$div_spec/$frame_num-i.jpg";
+         echo "<a href=\"http://kalipso.phpwebhosting.com/photolib/present-photo.phtml?div_spec=$div_spec&frame_num=$frame_num\">\n";
          $size = @GetImageSize("$image_source_spec");
          echo "   <img border=\"2\" src=$image_source_spec $size[3] align=$align>\n";
          echo "</a>\n";
