@@ -167,7 +167,7 @@ require_once("f_connectselectdb.phtml");
             //
             @mail
                (
-               RoleEmailAddress("",$mode),
+               RoleEmailAddress("failsafe-recipient",$mode),
                "OSCAR insert op",
                stripslashes
                   (
