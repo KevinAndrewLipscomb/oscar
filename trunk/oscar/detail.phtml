@@ -56,7 +56,7 @@ if ($num_rows)
       $record_index++;
       extract($row);
       echo "<table cellspacing=5>\n";
-      echo "   <tr><td align=right><b>Time of submission:</td><td><i>";
+      echo "   <tr><td align=right><b>Time of submission:</td><td>";
       echo substr($timestamp,0,4)
          .  "-"
          .  substr($timestamp,4,2)
@@ -68,7 +68,7 @@ if ($num_rows)
          .  substr($timestamp,10,2)
          .  ":"
          .  substr($timestamp,12,2);
-      echo "   </i></b></td></tr>\n";
+      echo "   </b></td></tr>\n";
       echo "   <tr><td align=right>First name:</td><td><i>" . stripslashes($first_name) . "</i></td></tr>\n";
       echo "   <tr><td align=right>Last name:</td><td><i>" . stripslashes($last_name) . "</i></td></tr>\n";
       echo "   <tr><td align=right>Email address:</td><td><i><a href=mailto:\"" . stripslashes($email_addr) . "\">" . stripslashes($email_addr) . "</a></i></td></tr>\n";
