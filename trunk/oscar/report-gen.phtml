@@ -46,6 +46,8 @@ $presentation_clause = "order by be_on_team_5 desc, be_on_team_30 desc, squad";
 // The request form, under certain conditions, sends a value of 13 for applicable_month_num.  Cast it into the range 1..12.
 //
 $applicable_month_num = date("n",mktime(12,0,0,$applicable_month_num,1));
+$applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
+$days_in_applicable_month = date("t",$applicable_month_time);
 //
 $condition_descriptor .= "month_num=$applicable_month_num\n";
 //
@@ -120,7 +122,7 @@ if ($report_type == "FULL")
       $report .= "+------+\n";
       $report .= "| Days |\n";
       $report .= "+------+\n\n";
-      for ($day_index = 1; $day_index <= 31; $day_index++)
+      for ($day_index = 1; $day_index <= $days_in_applicable_month; $day_index++)
          {
          $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
             $where_clause_2 = "and d$day_index='AVAILABLE' ";
@@ -165,7 +167,7 @@ if ($report_type == "FULL")
       $report .= "+--------+\n";
       $report .= "| Nights |\n";
       $report .= "+--------+\n\n";
-      for ($night_index = 1; $night_index <= 31; $night_index++)
+      for ($night_index = 1; $night_index <= $days_in_applicable_month; $night_index++)
          {
          $night_description = date("jS \\n\i\g\h\\t (l):",mktime(21,0,0,$applicable_month_num,$night_index));
          $where_clause_2 = "and n$night_index='AVAILABLE' ";
@@ -320,7 +322,7 @@ else
    $condition_descriptor .= "type=FILTERED\n";
    $condition_descriptor .= "team_filter=$team_filter\n";
    $condition_descriptor .= "days=";
-   for ($i=1; $i<=31; $i++)
+   for ($i=1; $i<=$days_in_applicable_month; $i++)
       {
       if ($d[$i])
          {
@@ -334,7 +336,7 @@ else
       }
    $condition_descriptor .= "\n";
    $condition_descriptor .= "nights=";
-   for ($i=1; $i<=31; $i++)
+   for ($i=1; $i<=$days_in_applicable_month; $i++)
       {
       if ($n[$i])
          {
@@ -346,17 +348,7 @@ else
          $condition_descriptor .= "0";
          }
       }
-   for ($i=1; $i<=31; $i++)
-      {
-      if ($d[$i])
-         {
-         $condition_descriptor .= "1";
-         }
-      else
-         {
-         $condition_descriptor .= "0";
-         }
-      }
+   $condition_descriptor .= "\n";
    $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
       or die("The digest calculation failed with this error:  " . mysql_error());
    $row = mysql_fetch_object($result);
@@ -398,7 +390,7 @@ else
       $report .= "   |     +- EMS-5 team member          |\n";
       $report .= "   +-----------------------------------+\n\n\n";
       if ($info_message) $report .= "$info_message\n\n";
-      for ($day_index = 1; $day_index <= 31; $day_index++)
+      for ($day_index = 1; $day_index <= $days_in_applicable_month; $day_index++)
          {
          if ($d[$day_index])
             {
@@ -439,7 +431,7 @@ else
             $report .= "\n";
             }
          }
-      for ($night_index = 1; $night_index <= 31; $night_index++)
+      for ($night_index = 1; $night_index <= $days_in_applicable_month; $night_index++)
          {
          if ($n[$night_index])
             {
