@@ -10,7 +10,7 @@ function HtmlOfNote
    {
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
-   $s =  str_replace("<:>","<br>:<br>",$note);   
+   $s =  str_replace("<br:br>","<br>:<br>",$note);
    //
    if ($mode) error_reporting($saved_error_level);
    return $s;
