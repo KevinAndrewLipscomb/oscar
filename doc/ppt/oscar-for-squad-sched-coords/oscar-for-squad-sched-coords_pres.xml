@@ -1,0 +1,401 @@
+<xml xmlns:v="urn:schemas-microsoft-com:vml"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:p="urn:schemas-microsoft-com:office:powerpoint">
+ <p:presentation hidecomments="t">
+  <p:master id="5" type="main" href="oscar-for-squad-sched-coords_master05.htm"
+   xmlhref="oscar-for-squad-sched-coords_master05.xml" template="Training"
+   layout="title_body" slots="title,body,dateTime,footer,slideNumber">
+   <p:schemes>
+    <p:colorscheme
+     colors="#0000FF,#FFFFFF,#000000,#FFCC66,#00CCFF,#FFFF00,#FF0033,#3366FF"/>
+    <p:colorscheme
+     colors="#FFFFFF,#000000,#CCECFF,#000000,#6699FF,#00CCCC,#CC99FF,#66CCFF"/>
+    <p:colorscheme
+     colors="#FFFFFF,#000000,#FFFFFF,#000000,#CBCBCB,#969696,#5F5F5F,#EAEAEA"/>
+    <p:colorscheme
+     colors="#008080,#FFFFFF,#000000,#FFCC66,#0099CC,#FFFF00,#6600CC,#009999"/>
+    <p:colorscheme
+     colors="#993300,#FFFFFF,#000000,#FFCC66,#FF6633,#FFFF00,#CC0000,#CC6600"/>
+   </p:schemes>
+  </p:master>
+  <p:master id="6" type="title" href="oscar-for-squad-sched-coords_master06.htm"
+   xmlhref="oscar-for-squad-sched-coords_master06.xml" layout="title_subtitle"
+   slots="centerTitle,subTitle,dateTime,footer,slideNumber"/>
+  <p:master id="1" type="notes" href="oscar-for-squad-sched-coords_master01.htm"
+   layout="notes" slots="header,dateTime,slideImage,body,footer,slideNumber"/>
+  <p:master id="2" type="handout"
+   href="oscar-for-squad-sched-coords_master02.htm" layout="handout"
+   slots="header,dateTime,footer,slideNumber"/>
+  <p:slide id="1" href="oscar-for-squad-sched-coords_slide0001.htm"
+   masterhref="oscar-for-squad-sched-coords_master06.htm"
+   layout="title_subtitle" slots="centerTitle,subTitle"/>
+  <p:slide id="2" href="oscar-for-squad-sched-coords_slide0002.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="106" href="oscar-for-squad-sched-coords_slide0106.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="10" href="oscar-for-squad-sched-coords_slide0010.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="11" href="oscar-for-squad-sched-coords_slide0011.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="6" href="oscar-for-squad-sched-coords_slide0006.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="12" href="oscar-for-squad-sched-coords_slide0012.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="112" href="oscar-for-squad-sched-coords_slide0112.htm"
+   masterhref="oscar-for-squad-sched-coords_master06.htm"
+   layout="title_subtitle" slots="centerTitle,subTitle"/>
+  <p:slide id="14" href="oscar-for-squad-sched-coords_slide0014.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="17" href="oscar-for-squad-sched-coords_slide0017.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="13" href="oscar-for-squad-sched-coords_slide0013.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="19" href="oscar-for-squad-sched-coords_slide0019.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="21" href="oscar-for-squad-sched-coords_slide0021.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="22" href="oscar-for-squad-sched-coords_slide0022.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="23" href="oscar-for-squad-sched-coords_slide0023.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="25" href="oscar-for-squad-sched-coords_slide0025.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="27" href="oscar-for-squad-sched-coords_slide0027.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="28" href="oscar-for-squad-sched-coords_slide0028.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="26" href="oscar-for-squad-sched-coords_slide0026.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="34" href="oscar-for-squad-sched-coords_slide0034.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="32" href="oscar-for-squad-sched-coords_slide0032.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="30" href="oscar-for-squad-sched-coords_slide0030.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="29" href="oscar-for-squad-sched-coords_slide0029.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="35" href="oscar-for-squad-sched-coords_slide0035.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="37" href="oscar-for-squad-sched-coords_slide0037.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="38" href="oscar-for-squad-sched-coords_slide0038.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="39" href="oscar-for-squad-sched-coords_slide0039.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="40" href="oscar-for-squad-sched-coords_slide0040.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="41" href="oscar-for-squad-sched-coords_slide0041.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="42" href="oscar-for-squad-sched-coords_slide0042.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="43" href="oscar-for-squad-sched-coords_slide0043.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="44" href="oscar-for-squad-sched-coords_slide0044.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="45" href="oscar-for-squad-sched-coords_slide0045.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="46" href="oscar-for-squad-sched-coords_slide0046.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="47" href="oscar-for-squad-sched-coords_slide0047.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="48" href="oscar-for-squad-sched-coords_slide0048.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="49" href="oscar-for-squad-sched-coords_slide0049.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="50" href="oscar-for-squad-sched-coords_slide0050.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="51" href="oscar-for-squad-sched-coords_slide0051.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="52" href="oscar-for-squad-sched-coords_slide0052.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="53" href="oscar-for-squad-sched-coords_slide0053.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="54" href="oscar-for-squad-sched-coords_slide0054.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="55" href="oscar-for-squad-sched-coords_slide0055.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="56" href="oscar-for-squad-sched-coords_slide0056.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="57" href="oscar-for-squad-sched-coords_slide0057.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="58" href="oscar-for-squad-sched-coords_slide0058.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="59" href="oscar-for-squad-sched-coords_slide0059.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="60" href="oscar-for-squad-sched-coords_slide0060.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="61" href="oscar-for-squad-sched-coords_slide0061.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="62" href="oscar-for-squad-sched-coords_slide0062.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="105" href="oscar-for-squad-sched-coords_slide0105.htm"
+   masterhref="oscar-for-squad-sched-coords_master06.htm"
+   layout="title_subtitle" slots="centerTitle,subTitle"/>
+  <p:slide id="113" href="oscar-for-squad-sched-coords_slide0113.htm"
+   masterhref="oscar-for-squad-sched-coords_master06.htm"
+   layout="title_subtitle" slots="centerTitle,subTitle"/>
+  <p:slide id="63" href="oscar-for-squad-sched-coords_slide0063.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="64" href="oscar-for-squad-sched-coords_slide0064.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="66" href="oscar-for-squad-sched-coords_slide0066.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="65" href="oscar-for-squad-sched-coords_slide0065.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="190" href="oscar-for-squad-sched-coords_slide0190.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="67" href="oscar-for-squad-sched-coords_slide0067.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="68" href="oscar-for-squad-sched-coords_slide0068.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="69" href="oscar-for-squad-sched-coords_slide0069.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="70" href="oscar-for-squad-sched-coords_slide0070.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="71" href="oscar-for-squad-sched-coords_slide0071.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="143" href="oscar-for-squad-sched-coords_slide0143.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="72" href="oscar-for-squad-sched-coords_slide0072.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="73" href="oscar-for-squad-sched-coords_slide0073.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="74" href="oscar-for-squad-sched-coords_slide0074.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="180" href="oscar-for-squad-sched-coords_slide0180.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="181" href="oscar-for-squad-sched-coords_slide0181.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="182" href="oscar-for-squad-sched-coords_slide0182.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="75" href="oscar-for-squad-sched-coords_slide0075.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="183" href="oscar-for-squad-sched-coords_slide0183.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="76" href="oscar-for-squad-sched-coords_slide0076.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="184" href="oscar-for-squad-sched-coords_slide0184.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="78" href="oscar-for-squad-sched-coords_slide0078.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="185" href="oscar-for-squad-sched-coords_slide0185.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="79" href="oscar-for-squad-sched-coords_slide0079.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="82" href="oscar-for-squad-sched-coords_slide0082.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="186" href="oscar-for-squad-sched-coords_slide0186.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="187" href="oscar-for-squad-sched-coords_slide0187.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="188" href="oscar-for-squad-sched-coords_slide0188.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="84" href="oscar-for-squad-sched-coords_slide0084.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="83" href="oscar-for-squad-sched-coords_slide0083.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="85" href="oscar-for-squad-sched-coords_slide0085.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="86" href="oscar-for-squad-sched-coords_slide0086.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="87" href="oscar-for-squad-sched-coords_slide0087.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="144" href="oscar-for-squad-sched-coords_slide0144.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="145" href="oscar-for-squad-sched-coords_slide0145.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="146" href="oscar-for-squad-sched-coords_slide0146.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="147" href="oscar-for-squad-sched-coords_slide0147.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="148" href="oscar-for-squad-sched-coords_slide0148.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="149" href="oscar-for-squad-sched-coords_slide0149.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="88" href="oscar-for-squad-sched-coords_slide0088.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="89" href="oscar-for-squad-sched-coords_slide0089.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="90" href="oscar-for-squad-sched-coords_slide0090.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="189" href="oscar-for-squad-sched-coords_slide0189.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="91" href="oscar-for-squad-sched-coords_slide0091.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="92" href="oscar-for-squad-sched-coords_slide0092.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="93" href="oscar-for-squad-sched-coords_slide0093.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="151" href="oscar-for-squad-sched-coords_slide0151.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="150" href="oscar-for-squad-sched-coords_slide0150.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="94" href="oscar-for-squad-sched-coords_slide0094.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="152" href="oscar-for-squad-sched-coords_slide0152.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="95" href="oscar-for-squad-sched-coords_slide0095.htm"
+   masterhref="oscar-for-squad-sched-coords_master06.htm"
+   layout="title_subtitle" slots="centerTitle,subTitle"/>
+  <p:slide id="115" href="oscar-for-squad-sched-coords_slide0115.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="116" href="oscar-for-squad-sched-coords_slide0116.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="118" href="oscar-for-squad-sched-coords_slide0118.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="153" href="oscar-for-squad-sched-coords_slide0153.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="156" href="oscar-for-squad-sched-coords_slide0156.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="154" href="oscar-for-squad-sched-coords_slide0154.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="155" href="oscar-for-squad-sched-coords_slide0155.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="120" href="oscar-for-squad-sched-coords_slide0120.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="157" href="oscar-for-squad-sched-coords_slide0157.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="158" href="oscar-for-squad-sched-coords_slide0158.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="159" href="oscar-for-squad-sched-coords_slide0159.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="121" href="oscar-for-squad-sched-coords_slide0121.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="122" href="oscar-for-squad-sched-coords_slide0122.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="123" href="oscar-for-squad-sched-coords_slide0123.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="138" href="oscar-for-squad-sched-coords_slide0138.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="124" href="oscar-for-squad-sched-coords_slide0124.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="160" href="oscar-for-squad-sched-coords_slide0160.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="125" href="oscar-for-squad-sched-coords_slide0125.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="161" href="oscar-for-squad-sched-coords_slide0161.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="162" href="oscar-for-squad-sched-coords_slide0162.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="126" href="oscar-for-squad-sched-coords_slide0126.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="128" href="oscar-for-squad-sched-coords_slide0128.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="163" href="oscar-for-squad-sched-coords_slide0163.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="164" href="oscar-for-squad-sched-coords_slide0164.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="129" href="oscar-for-squad-sched-coords_slide0129.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="130" href="oscar-for-squad-sched-coords_slide0130.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="131" href="oscar-for-squad-sched-coords_slide0131.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="132" href="oscar-for-squad-sched-coords_slide0132.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="133" href="oscar-for-squad-sched-coords_slide0133.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="134" href="oscar-for-squad-sched-coords_slide0134.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="135" href="oscar-for-squad-sched-coords_slide0135.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="140" href="oscar-for-squad-sched-coords_slide0140.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="165" href="oscar-for-squad-sched-coords_slide0165.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="166" href="oscar-for-squad-sched-coords_slide0166.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="167" href="oscar-for-squad-sched-coords_slide0167.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="139" href="oscar-for-squad-sched-coords_slide0139.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="168" href="oscar-for-squad-sched-coords_slide0168.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="169" href="oscar-for-squad-sched-coords_slide0169.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="137" href="oscar-for-squad-sched-coords_slide0137.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="141" href="oscar-for-squad-sched-coords_slide0141.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="142" href="oscar-for-squad-sched-coords_slide0142.htm"
+   masterhref="oscar-for-squad-sched-coords_master06.htm"
+   layout="title_subtitle" slots="centerTitle,subTitle"/>
+  <p:slide id="114" href="oscar-for-squad-sched-coords_slide0114.htm"
+   masterhref="oscar-for-squad-sched-coords_master06.htm"
+   layout="title_subtitle" slots="centerTitle,subTitle"/>
+  <p:slide id="96" href="oscar-for-squad-sched-coords_slide0096.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="170" href="oscar-for-squad-sched-coords_slide0170.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="97" href="oscar-for-squad-sched-coords_slide0097.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="171" href="oscar-for-squad-sched-coords_slide0171.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="172" href="oscar-for-squad-sched-coords_slide0172.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="173" href="oscar-for-squad-sched-coords_slide0173.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="98" href="oscar-for-squad-sched-coords_slide0098.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="99" href="oscar-for-squad-sched-coords_slide0099.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="174" href="oscar-for-squad-sched-coords_slide0174.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="100" href="oscar-for-squad-sched-coords_slide0100.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="175" href="oscar-for-squad-sched-coords_slide0175.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="101" href="oscar-for-squad-sched-coords_slide0101.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="176" href="oscar-for-squad-sched-coords_slide0176.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="102" href="oscar-for-squad-sched-coords_slide0102.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="177" href="oscar-for-squad-sched-coords_slide0177.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="178" href="oscar-for-squad-sched-coords_slide0178.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="103" href="oscar-for-squad-sched-coords_slide0103.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="179" href="oscar-for-squad-sched-coords_slide0179.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="104" href="oscar-for-squad-sched-coords_slide0104.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="119" href="oscar-for-squad-sched-coords_slide0119.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="107" href="oscar-for-squad-sched-coords_slide0107.htm"
+   masterhref="oscar-for-squad-sched-coords_master06.htm"
+   layout="title_subtitle" slots="centerTitle,subTitle"/>
+  <p:slide id="108" href="oscar-for-squad-sched-coords_slide0108.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="8" href="oscar-for-squad-sched-coords_slide0008.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="109" href="oscar-for-squad-sched-coords_slide0109.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="111" href="oscar-for-squad-sched-coords_slide0111.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="110" href="oscar-for-squad-sched-coords_slide0110.htm"
+   layout="title_body" slots="title,body"/>
+  <p:slide id="9" href="oscar-for-squad-sched-coords_slide0009.htm"
+   layout="title_body" slots="title,body"/>
+  <p:viewstate type="slideView" restoredtop="753" manualadjusttop="t"/>
+  <p:slideshowsettings pencolor="schemeText"/>
+  <p:font name="Times New Roman" charset="0" type="4"/>
+  <p:font name="Arial" charset="0" type="4" family="34"/>
+  <p:font name="Wingdings" charset="2" type="4" family="2"/>
+  <p:font name="Brush Script MT" charset="0" type="4" family="66"/>
+  <p:font name="Courier New" charset="0" type="4" family="49"/>
+  <p:headersfooters slidenumber="t"
+   footerstr="www.VaBeachEMS.com -- www.OscarSystem.com" nouserdate="t"
+   noheader="t" todaydate="t"/>
+  <p:headersfooters notes="t" slidenumber="t"/>
+  <p:pptdocumentsettings hideslideanimation="t"/>
+  <p:htmlpublishsettings browsersupport="v4"
+   href="C:\Documents and Settings\seaslug\My Documents\Sandbox\kveo-it-project\oscar\doc\ppt\oscar-for-squad-sched-coords\oscar-for-squad-sched-coords.htm"/>
+ </p:presentation>
+ <o:shapedefaults v:ext="edit" spidmax="230402">
+  <v:stroke startarrowwidth="narrow" startarrowlength="short" endarrowwidth="narrow"
+   endarrowlength="short" color2="none [0]" weight="1pt"/>
+  <o:colormru v:ext="edit" colors="#0cf,#fc0,#ff6,silver,gray,#9c0,#ffc"/>
+  <o:colormenu v:ext="edit" fillcolor="none" strokecolor="none [6]"/>
+ </o:shapedefaults></xml>
