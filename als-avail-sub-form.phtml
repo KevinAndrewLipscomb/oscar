@@ -28,10 +28,7 @@ require_once("f_roleemailaddress.phtml");
            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
         </td></tr></table>
         <hr>
-        <?
-        echo "<h3>The OSCAR system is now taking availabilities for <u>" . strtoupper(date("F",mktime(12,0,0,(date("n") + 1)))) . "</u>.</h3>\n";
-        ?>
-        <p>For ALS members only.&nbsp; Starred<sup><b>*</b></sup> fields are required.</p>
+        <p>For centrally-scheduled members only.&nbsp; Starred<sup><b>*</b></sup> fields are required.</p>
         <form method="POST" action="add-avail-sheet.phtml">
           <table border="0" cellpadding="0" cellspacing="0" width="912">
             <tr>
@@ -63,6 +60,17 @@ require_once("f_roleemailaddress.phtml");
                   <option value="17">17 - Sandbridge</option>
                   <option value="ERS">ERS - VBFD</option>
                 </select></td>
+            </tr>
+            <tr>
+               <td>Applicable month:<sup><b>*</b></sup></td>
+               <td><select size=1 name=applicable_month_num>
+                  <option value="">Select</option>
+                  <?
+                  $next_month_num = date("n") + 1;
+                  echo "<option value=" . $next_month_num . ">" . date("F",mktime(12,0,0,$next_month_num,1)) . "</option>\n";
+                  echo "<option value=" . ($next_month_num + 1) . ">" . date("F",mktime(12,0,0,($next_month_num + 1),1)) . "</option>\n";
+                  ?>
+               </select></td>
             </tr>
           </table>
   </center>
