@@ -135,7 +135,7 @@ if
    //
    // Send the mail.
    //
-   $result = mail($email_addr, $challenge_subject, "OSCAR Retraction Challenge", OscarMailHeaders());
+   $result = mail($email_addr, "OSCAR Retraction Challenge", $challenge, OscarMailHeaders());
    //
    if ($result)
       {
