@@ -1,0 +1,27 @@
+<?
+//
+// $Id$
+//
+function BeEmsSchedCoord
+   (
+   $email_addr,
+   $mode = ""   )
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $found_email_addr = "";
+   //
+   $result = mysql_query
+      (
+      "select 1 from " . $mode . "authority "
+      .  "   where email_addr='$email_addr' "
+      .  "      and role='schedule-coordinator' "
+      .  "      and coord_agency='EMS' "
+      .  "      and has_clearance='TRUE' "
+      )
+      or die("BeEmsSchedCoord query failed with error:  " . mysql_error());
+   //
+   error_reporting($saved_error_level);
+   return (mysql_num_rows($result));
+   }
+?>
