@@ -274,7 +274,7 @@ if ($report_type == "FULL")
                extract($row);
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $report .= "<a href=detail.phtml?a="
+               $report .= "<p><a href=detail.phtml?a="
                   .  base64_encode($last_name)
                   .  "&b="
                   .  base64_encode($first_name)
@@ -288,7 +288,7 @@ if ($report_type == "FULL")
                if ($be_on_team_30) $report .= "30"; else $report .= "--";
                $report .= "- ";
                if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-               $report .= "$squad]\n";
+               $report .= "$squad]</p>";
                if (($num_submissions > 1) or ($note != ""))
                   {
                   $report .= "<blockquote>\n";
