@@ -16,8 +16,8 @@ $be_on_team_30 = $be_on_team_30;
 $be_on_team_5 = $be_on_team_5;
 $be_als = $be_als;
 $coord_agency = $coord_agency;
-$be_third = $be_third;
-$be_nondriver = $be_nondriver;
+$be_third = !$be_aic;  //Same logic, different user interface
+$be_nondriver = !$be_driver;  //Same logic, different user interface
 $be_needing_driver = $be_needing_driver;
 $d1 = $d1;
 $d2 = $d2;
@@ -93,6 +93,12 @@ require_once("f_availlist.phtml");
 require_once("f_htmlofnote.phtml");
 require_once("f_showavailsheetrecdetail.phtml");
 require_once("f_connectselectdb.phtml");
+//
+// Preserve intended logic, which is that be_needing_driver actually indicates be_ALS.  If one is ALS, then one is clearly
+// not a third.
+//
+if ($be_needing_driver) $be_third = FALSE;
+//
 ?>
 <html>
 <head><title>OSCAR - Confirmation</title></head>
