@@ -197,17 +197,28 @@ $month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
 $month_abbrev = substr($month_word,0,3);
 $where_clause = " month='$month_abbrev' and coord_agency='$coord_agency' ";
 //
-$be_authority = BeAuthority($email_addr,$mode,$coord_agency);
-$be_relayable = (BeEmsSchedCoord($email_addr,$mode) and ($coord_agency == "EMS"));
+$be_authority_for_any_agency = BeAuthority($email_addr,$mode,'%');
+$be_authority_for_this_agency = BeAuthority($email_addr,$mode,$coord_agency);
+$be_ems_sched_coord = BeEmsSchedCoord($email_addr,$mode);
+$be_relayable = ($be_ems_sched_coord and ($coord_agency == "EMS"));
 //
 if ($shift_filter == "all")
    {
    //
    // Determine if the requestor is an OSCAR system authority (ie, privileged to see special request notes & warnings).
    //
-   if ($be_authority)
+   if ($be_authority_for_any_agency)
       {
-      $condition_descriptor .= "authority=TRUE\n";
+      $condition_descriptor .= "partial-authority=TRUE\n";
+      //
+      if ($be_authority_for_this_agency)
+         {
+         $condition_descriptor .= "full-authority=TRUE\n";
+         }
+      else
+         {
+         $condition_descriptor .= "full-authority=FALSE\n";
+         }
       //
       if ($be_relayable)
          {
@@ -247,10 +258,11 @@ if ($shift_filter == "all")
       //
       // The required report has never been run before under these conditions.  Generate it from scratch and cache it.
       //
-      if ($be_authority)
+      if ($be_ems_sched_coord)
          {
          // Then this is also a good time to harvest email addresses and to purge the database of expired records, as
-         // from-scratch requests from authorities for full reports don't happen excessively but do happen regularly.
+         // from-scratch requests from the EMS schedule coordinator for full reports don't happen excessively but do happen
+         // regularly.
          //
          HarvestEmailAddresses($mode);
          mysql_query("delete from " . $mode . "avail_sheet where expiration < CURRENT_DATE");
@@ -395,8 +407,10 @@ if ($shift_filter == "all")
                   .  " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               if ($be_authority)
+               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($email_addr,$mode,('Rescue' . $squad)));
+               if ($be_authority_to_member)
                   {
+                  $highlighted_squad = 'Rescue' . $squad;
                   $report .= "<a href=" . $mode . "detail.phtml?a="
                      .  base64_encode($last_name)
                      .  "&b="
@@ -404,13 +418,13 @@ if ($shift_filter == "all")
                      .  "&c="
                      .  base64_encode($month_abbrev)
                      .  "&d="
-                     .  base64_encode($be_authority)
+                     .  base64_encode($be_authority_to_member)
                      .  "&e="
                      .  base64_encode($coord_agency)
                      .  ">";
                   }
                $report .= "$last_name, $first_name";
-               if ($be_authority)
+               if ($be_authority_to_member)
                   {
                   $report .= "</a>";
                   if ($be_a_note) $report .= " *";
@@ -465,7 +479,8 @@ if ($shift_filter == "all")
                   .  " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               if ($be_authority)
+               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($email_addr,$mode,('Rescue' . $squad)));
+               if ($be_authority_to_member)
                   {
                   $report .= "<a href=" . $mode . "detail.phtml?a="
                      .  base64_encode($last_name)
@@ -474,16 +489,16 @@ if ($shift_filter == "all")
                      .  "&c="
                      .  base64_encode($month_abbrev)
                      .  "&d="
-                     .  base64_encode($be_authority)
+                     .  base64_encode($be_authority_to_member)
                      .  "&e="
                      .  base64_encode($coord_agency)
                      .  ">";
                   }
                $report .= "$last_name, $first_name";
-               if ($be_authority)
+               if ($be_authority_to_member)
                   {
                   $report .= "</a>";
-                  if ($be_a_note) $report .= "*";
+                  if ($be_a_note) $report .= " *";
                   }
                $report .= "\n";
                $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third = 
@@ -500,12 +515,16 @@ if ($shift_filter == "all")
       //
       $report .= $shortcuts;
       //
-      if ($be_authority)
+      if ($be_authority_for_any_agency)
          {
          //
          // GENERATE NOTES AND WARNINGS.
          //
          $report .= "<h3><u><a name=Summaries>Submission Summaries</a></u></h3>\n";
+         if (!$be_authority_for_this_agency)
+            {
+            $report .= "<p><b>This section ONLY includes personnel from $highlighted_squad who sent submissions to agency EMS.</b></p>\n";
+            }
          $relay_instructions = "<table width=100%><tr><td><b>EMS Schedule Coordinator:</b></td>"
             .  "<td align=right><small><a href=" . $mode . "relay-all-details.phtml>What is <b>Relay all</b>?</a></small>"
             .  "</td></tr></table>\n"
@@ -578,122 +597,127 @@ if ($shift_filter == "all")
                   $n17 = $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 =
                   $n31 = "";
                extract($row);
-               $last_name = stripslashes($last_name);
-               $first_name = stripslashes($first_name);
                //
-               $encoded_last_name = base64_encode($last_name);
-               $encoded_first_name = base64_encode($first_name);
-               //
-               if ($be_relayable)
+               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($email_addr,$mode,('Rescue' . $squad)));
+               if ($be_authority_to_member)
                   {
-                  $encoded_sheet_key = $encoded_last_name . "-" . $encoded_first_name;
-                  }
-               $report .= "<table width=100%><tr><td><a href=" . $mode . "detail.phtml?a="
-                  .  $encoded_last_name
-                  .  "&b="
-                  .  $encoded_first_name
-                  .  "&c="
-                  .  base64_encode($month_abbrev)
-                  .  "&d="
-                  .  base64_encode($be_authority)
-                  .  "&e="
-                  .  base64_encode($coord_agency)
-                  .  ">$last_name, $first_name</a>&nbsp; ["
-                  .  Properties
+                  $last_name = stripslashes($last_name);
+                  $first_name = stripslashes($first_name);
+                  //
+                  $encoded_last_name = base64_encode($last_name);
+                  $encoded_first_name = base64_encode($first_name);
+                  //
+                  if ($be_relayable)
+                     {
+                     $encoded_sheet_key = $encoded_last_name . "-" . $encoded_first_name;
+                     }
+                  $report .= "<table width=100%><tr><td><a href=" . $mode . "detail.phtml?a="
+                     .  $encoded_last_name
+                     .  "&b="
+                     .  $encoded_first_name
+                     .  "&c="
+                     .  base64_encode($month_abbrev)
+                     .  "&d="
+                     .  base64_encode($be_authority_for_any_agency)
+                     .  "&e="
+                     .  base64_encode($coord_agency)
+                     .  ">$last_name, $first_name</a>&nbsp; ["
+                     .  Properties
+                           (
+                           $be_on_team_5,
+                           $be_on_team_30,
+                           $be_tda,
+                           $be_als,
+                           $squad,
+                           $mode,
+                           $coord_agency,
+                           $be_third,
+                           $be_nondriver,
+                           $be_needing_driver
+                           )
+                     .  "]";
+                  if ($num_extras) $report .= "&nbsp; <b>(+$num_extras)</b>";
+                  $report .= "</td>";
+                  if ($be_relayable)
+                     {
+                     $report .= "<td align=right><input type=checkbox name=$encoded_sheet_key-NONE value=1>"
+                        .  "<small>Relay all</small></td>";
+                     }
+                  $report .= "</tr></table>\n"
+                     .  "<blockquote>\n";
+                  if ($num_submissions > 1)
+                     {
+                     $report .= "<p><b>" . HtmlOfNote
                         (
-                        $be_on_team_5,
-                        $be_on_team_30,
-                        $be_tda,
-                        $be_als,
-                        $squad,
-                        $mode,
-                        $coord_agency,
-                        $be_third,
-                        $be_nondriver,
-                        $be_needing_driver
-                        )
-                  .  "]";
-               if ($num_extras) $report .= "&nbsp; <b>(+$num_extras)</b>";
-               $report .= "</td>";
-               if ($be_relayable)
-                  {
-                  $report .= "<td align=right><input type=checkbox name=$encoded_sheet_key-NONE value=1>"
-                     .  "<small>Relay all</small></td>";
-                  }
-               $report .= "</tr></table>\n"
-                  .  "<blockquote>\n";
-               if ($num_submissions > 1)
-                  {
-                  $report .= "<p><b>" . HtmlOfNote
-                     (
-                     FormattedNoteAppendage
-                        (
-                        $mode,
-                        "WARNING",
-                        "MULTSUB",
-                        "Submission count = $num_submissions, verification recommended."
-                        )
-                     );
-                  $report .= "</b></p>\n";
-                  }
-               $report .= "<table>\n";
-               $report .= "<tr><td valign=top>Days:</td><td valign=top>";
-               if ($be_relayable)
-                  {
-                  $report .= AvailList
-                    (
-                    $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
-                    "",
-                    "use_spaces",
-                    $mode,
-                    $encoded_sheet_key . "-d"
-                    );
-                  }
-               else
-                  {
-                  $report .= AvailList
-                    (
-                    $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
-                    "",
-                    "use_spaces",
-                    $mode
-                    );
-                  }
-               $report .= "</td></tr>\n"
-                  . "   <tr><td valign=top>Nights:</td><td valign=top>";
-               if ($be_relayable)
-                  {
-                  $report .= AvailList
-                    (
-                    $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
-                    "",
-                    "use_spaces",
-                    $mode,
-                    $encoded_sheet_key . "-n"
-                    );
-                  }
-               else
-                  {
-                  $report .= AvailList
-                    (
-                    $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
-                    "",
-                    "use_spaces",
-                    $mode
-                    );
-                  }
-               $report .= "</td></tr>\n";
-               $report .= "</table>\n";
-               if ($note != "")
-                  {
-                  $report .= "   <p><i>" . HtmlOfNote(stripslashes($note),$mode) . "</i></p>\n";
-                  }
-               if ($be_relayable)
-                  {
-                  $report .= "   <p><small>Relay comment:</small><br>\n";
-                  $report .= "   <textarea name=$encoded_sheet_key-COMMENT cols=60 rows=2></textarea></p>\n";
-                  }
-               $report .= "</blockquote>\n<br>\n";
+                        FormattedNoteAppendage
+                           (
+                           $mode,
+                           "WARNING",
+                           "MULTSUB",
+                           "Submission count = $num_submissions, verification recommended."
+                           )
+                        );
+                     $report .= "</b></p>\n";
+                     }
+                  $report .= "<table>\n";
+                  $report .= "<tr><td valign=top>Days:</td><td valign=top>";
+                  if ($be_relayable)
+                     {
+                     $report .= AvailList
+                       (
+                       $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
+                       "",
+                       "use_spaces",
+                       $mode,
+                       $encoded_sheet_key . "-d"
+                       );
+                     }
+                  else
+                     {
+                     $report .= AvailList
+                       (
+                       $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
+                       "",
+                       "use_spaces",
+                       $mode
+                       );
+                     }
+                  $report .= "</td></tr>\n"
+                     . "   <tr><td valign=top>Nights:</td><td valign=top>";
+                  if ($be_relayable)
+                     {
+                     $report .= AvailList
+                       (
+                       $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
+                       "",
+                       "use_spaces",
+                       $mode,
+                       $encoded_sheet_key . "-n"
+                       );
+                     }
+                  else
+                     {
+                     $report .= AvailList
+                       (
+                       $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
+                       "",
+                       "use_spaces",
+                       $mode
+                       );
+                     }
+                  $report .= "</td></tr>\n";
+                  $report .= "</table>\n";
+                  if ($note != "")
+                     {
+                     $report .= "   <p><i>" . HtmlOfNote(stripslashes($note),$mode) . "</i></p>\n";
+                     }
+                  if ($be_relayable)
+                     {
+                     $report .= "   <p><small>Relay comment:</small><br>\n";
+                     $report .= "   <textarea name=$encoded_sheet_key-COMMENT cols=60 rows=2></textarea></p>\n";
+                     }
+                  $report .= "</blockquote>\n<br>\n";
+                  } // if ($be_authority_to_member)
                }
             }
          else
@@ -911,7 +935,7 @@ else
                      . " ";
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
-                  if ($be_authority)
+                  if ($be_authority_for_this_agency)
                      {
                      $report .= "<a href=" . $mode . "detail.phtml?a="
                         .  base64_encode($last_name)
@@ -920,13 +944,13 @@ else
                         .  "&c="
                         .  base64_encode($month_abbrev)
                         .  "&d="
-                        .  base64_encode($be_authority)
+                        .  base64_encode($be_authority_for_this_agency)
                         .  "&e="
                         .  base64_encode($coord_agency)
                         .  ">";
                      }
                   $report .= "$last_name, $first_name";
-                  if ($be_authority)
+                  if ($be_authority_for_this_agency)
                      {
                      $report .= "</a>";
                      }
@@ -973,7 +997,7 @@ else
                      . " ";
                   $last_name = stripslashes($last_name);
                   $first_name = stripslashes($first_name);
-                  if ($be_authority)
+                  if ($be_authority_for_this_agency)
                      {
                      $report .= "<a href=" . $mode . "detail.phtml?a="
                         .  base64_encode($last_name)
@@ -982,13 +1006,13 @@ else
                         .  "&c="
                         .  base64_encode($month_abbrev)
                         .  "&d="
-                        .  base64_encode($be_authority)
+                        .  base64_encode($be_authority_for_this_agency)
                         .  "&e="
                         .  base64_encode($coord_agency)
                         .  ">";
                      }
                   $report .= "$last_name, $first_name";
-                  if ($be_authority)
+                  if ($be_authority_for_this_agency)
                      {
                      $report .= "</a>";
                      }
@@ -1032,7 +1056,7 @@ $result = mysql_query
    .  "    and coord_agency='$coord_agency' "
    )
    or die("Trust check failed with error:  " . mysql_error());
-if ($direct_approval = (mysql_num_rows($result) or $be_authority))
+if ($direct_approval = (mysql_num_rows($result) or $be_authority_for_any_agency))
    {
    //
    // Then send an approval notice to the requestor directly.
