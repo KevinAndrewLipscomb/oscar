@@ -38,7 +38,7 @@ $result = mysql_query("select * from avail_sheet where last_name = '$last_name' 
    or die("The query failed with error:  " . mysql_error());
 $num_rows = mysql_num_rows($result);
 echo "<h4>Found $num_rows ";
-if ($num_rows = 1)
+if ($num_rows == 1)
    {
    echo "record.";
    }
@@ -94,6 +94,7 @@ if ($num_rows)
       echo "</td></tr>\n";
       echo "   <tr><td>Note:</td><td>" . stripslashes($note) . "</td></tr>\n";
       echo "</table>\n";
+      echo "<hr>\n";
       }
    echo "</blockquote>\n";
    }
