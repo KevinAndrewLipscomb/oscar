@@ -401,7 +401,7 @@ else
 //
 $result = mysql_query("select 1 as be_trusted from trusted_user where email_address=$email_addr")
    or die("Trust check failed with error:  " . mysql_error());
-if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator"))
+if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator")))
    {
    //
    // Then send a claim ticket to the requestor directly.
