@@ -11,11 +11,11 @@ require_once("f_sendapprovalnotice.phtml");
 //
 ?>
 <html>
-<head><title>Availability Report Request Approval</title></head>
+<head><title>Request Approval</title></head>
 <? BodyOpen(); ?>
 <table align=center width=80%><tr><td>
 <H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
-<H1 ALIGN=CENTER>Availability Report Request Approval</H1>
+<H1 ALIGN=CENTER>Request Approval</H1>
 <hr>
 <?
 if (SendApprovalNotice($email_addr,$digest))
