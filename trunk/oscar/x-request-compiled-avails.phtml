@@ -1,0 +1,173 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Compiled Availability Report Request Form</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Compiled Availability Report Request Form</h1>
+        </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td></tr></table>
+        <hr>
+        <p><i>To guard against misuse, the OSCAR system first sends all generated reports to the VBDEMS Central Schedule 
+           Coordinator.&nbsp; The coordinator then forwards the report to the email address that you specify.&nbsp; 
+           Because this process requires human intervention, results may not be immediate.</i></p>
+        <br>
+        <form action=report-gen.phtml method=post>
+           <table>
+              <tr>
+                 <td>Your name:</td>
+                 <td><input type=text name=name size=64>
+              </tr>
+              <tr>
+                 <td>Your email address:</td>
+                 <td><input type=text name=email_addr size=64>
+              </tr>
+              <tr>
+                 <td>Applicable month:</td>
+                 <td><select size=1 name=applicable_month_num>
+                    <option value="">Select</option>
+                    <?
+                    $current_month_num = date("n");
+                    echo "<option value=" . $current_month_num . ">" . date("F") . "</option>\n";
+                    echo "<option value=" . ($current_month_num + 1) . ">" . date("F",mktime(12,0,0,($current_month_num + 1),1)) . "</option>\n";
+                    ?>
+                 </select></td>
+              </tr>
+           </table>
+           <br>
+           <table>
+              <tr>
+                 <td>
+                    Include:
+                    <blockquote>
+                       <input type=radio name=team_filter value=everyone checked>Everyone<br>
+                       <input type=radio name=team_filter value=team_30_only>Only squad truck team members<br>
+                       <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
+                    </blockquote>
+                 </td>
+              </tr>
+          </table>
+          <br>
+          <table border="0" cellpadding="0" cellspacing="0" width="892">
+            <tr>
+              <td width="890" valign="bottom" colspan="3">
+                 Include:
+                 <blockquote>
+                    <input type=radio name=shift_filter value=all>
+                       <b>All shifts</b>&nbsp; (Ignore the checkboxes below.)<br>
+                    <input type=radio name=shift_filter value=some checked>
+                       <b>Just one or more</b> shifts, as follows:&nbsp <small><i>(Who can run my duty on... ?)</i></small>
+                 </blockquote>
+              </td>
+            </tr>
+            <tr>
+              <td width="136" valign="bottom">Leave nonapplicable days blank.
+                <p>&nbsp;</td>
+              <td width="125" valign="bottom">
+                <p align="left">Day shifts</p>
+                <ul>
+                  <li><input type="checkbox" name="d1">1st</li>
+                  <li><input type="checkbox" name="d2">2nd</li>
+                  <li><input type="checkbox" name="d3">3rd</li>
+                  <li><input type="checkbox" name="d4">4th</li>
+                  <li><input type="checkbox" name="d5">5th</li>
+                  <li><input type="checkbox" name="d6">6th</li>
+                  <li><input type="checkbox" name="d7">7th</li>
+                  <li><input type="checkbox" name="d8">8th</li>
+                  <li><input type="checkbox" name="d9">9th</li>
+                  <li><input type="checkbox" name="d10">10th</li>
+                  <li><input type="checkbox" name="d11">11th</li>
+                  <li><input type="checkbox" name="d12">12th</li>
+                  <li><input type="checkbox" name="d13">13th</li>
+                  <li><input type="checkbox" name="d14">14th</li>
+                  <li><input type="checkbox" name="d15">15th</li>
+                  <li><input type="checkbox" name="d16">16th</li>
+                  <li><input type="checkbox" name="d17">17th</li>
+                  <li><input type="checkbox" name="d18">18th</li>
+                  <li><input type="checkbox" name="d19">19th</li>
+                  <li><input type="checkbox" name="d20">20th</li>
+                  <li><input type="checkbox" name="d21">21st</li>
+                  <li><input type="checkbox" name="d22">22nd</li>
+                  <li><input type="checkbox" name="d23">23rd</li>
+                  <li><input type="checkbox" name="d24">24th</li>
+                  <li><input type="checkbox" name="d25">25th</li>
+                  <li><input type="checkbox" name="d26">26th</li>
+                  <li><input type="checkbox" name="d27">27th</li>
+                  <li><input type="checkbox" name="d28">28th</li>
+                  <li><input type="checkbox" name="d29">29th</li>
+                  <li><input type="checkbox" name="d30">30th</li>
+                  <li><input type="checkbox" name="d31">31st</li>
+                </ul>
+              </td>
+              <td width="625" valign="bottom">
+                <p align="left">Night shifts</p>
+                <ul>
+                  <li><input type="checkbox" name="n1">1st</li>
+                  <li><input type="checkbox" name="n2">2nd</li>
+                  <li><input type="checkbox" name="n3">3rd</li>
+                  <li><input type="checkbox" name="n4">4th</li>
+                  <li><input type="checkbox" name="n5">5th</li>
+                  <li><input type="checkbox" name="n6">6th</li>
+                  <li><input type="checkbox" name="n7">7th</li>
+                  <li><input type="checkbox" name="n8">8th</li>
+                  <li><input type="checkbox" name="n9">9th</li>
+                  <li><input type="checkbox" name="n10">10th</li>
+                  <li><input type="checkbox" name="n11">11th</li>
+                  <li><input type="checkbox" name="n12">12th</li>
+                  <li><input type="checkbox" name="n13">13th</li>
+                  <li><input type="checkbox" name="n14">14th</li>
+                  <li><input type="checkbox" name="n15">15th</li>
+                  <li><input type="checkbox" name="n16">16th</li>
+                  <li><input type="checkbox" name="n17">17th</li>
+                  <li><input type="checkbox" name="n18">18th</li>
+                  <li><input type="checkbox" name="n19">19th</li>
+                  <li><input type="checkbox" name="n20">20th</li>
+                  <li><input type="checkbox" name="n21">21st</li>
+                  <li><input type="checkbox" name="n22">22nd</li>
+                  <li><input type="checkbox" name="n23">23rd</li>
+                  <li><input type="checkbox" name="n24">24th</li>
+                  <li><input type="checkbox" name="n25">25th</li>
+                  <li><input type="checkbox" name="n26">26th</li>
+                  <li><input type="checkbox" name="n27">27th</li>
+                  <li><input type="checkbox" name="n28">28th</li>
+                  <li><input type="checkbox" name="n29">29th</li>
+                  <li><input type="checkbox" name="n30">30th</li>
+                  <li><input type="checkbox" name="n31">31st</li>
+                </ul>
+              </td>
+            </tr>
+          </table>
+           <br>
+           <p align=left>Briefly explain the reason for your request:<br>
+           <textarea rows="5" name=reason cols="40"></textarea></p>
+           <p>Please double check your entries before completing your request.</p>
+           <input type=submit value="Submit request"><input type=reset>
+        </form>
+        </blockquote>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+
