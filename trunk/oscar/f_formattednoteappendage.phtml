@@ -13,15 +13,17 @@ function FormattedNoteAppendage
    {
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
-   $s =  "<:>msg("
-      .  strtoupper($mnemonic)
-      .  ")from("
-      .  strtoupper($source)
-      .  ")at("
-      .  date("Y-M-d-H:i:s-T")
-      .  ")type("
-      .  strtoupper($condition)
-      .  "): "
+   $pad_mask = "................";
+   //
+   $s =  "<br:br>"
+      .  "<tt>"
+      .  str_pad("mesg(" . strtoupper($mnemonic) . ")",16,$pad_mask)
+      .  "from(" .  strtoupper($source) .  ")"
+      .  "<br>"
+      .  str_pad("type(" . strtoupper($condition) . ")",16,$pad_mask)
+      .  "time(" .  date("Y-m-d-H:i-T") . ")"
+      .  "</tt>"
+      .  "<br>"
       .  addslashes($message);
    //
    if ($mode) error_reporting($saved_error_level);

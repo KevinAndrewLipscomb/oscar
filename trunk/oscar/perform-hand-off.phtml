@@ -222,7 +222,7 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                }
             elseif ($parameter == "COMMENT")
                {
-               if (!strstr($note,"msg(COMMENT)"))
+               if (!strstr($note,"mesg(COMMENT)"))
                   {
                   $note_appendage_ems_comment = FormattedNoteAppendage
                      (
@@ -243,7 +243,7 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                }
             //
             $note_appendage_relay = "";
-            if (!strstr($note,"msg(RELAY)"))
+            if (!strstr($note,"mesg(RELAY)"))
                {
                $note_appendage_relay = FormattedNoteAppendage
                   (
@@ -254,7 +254,7 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                   );
                }
             $note_appendage_emtorst = "";
-            if (($be_als == 'FALSE') and (!strstr($note,"msg(EMTORST)")))
+            if (($be_als == 'FALSE') and (!strstr($note,"mesg(EMTORST)")))
                {
                //
                // A member (such as a Shock-Trauma Tech) who is NOT ALS for EMS (zone car) purposes might be ALS for squad 
@@ -266,10 +266,10 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                   $mode,
                   "WARNING",  // condition
                   "EMTORST",  // mnemonic
-                  "Unable to advise whether this person is an EMT or an ST."
+                  "EMT versus ST status is unknown to OSCAR on records relayed from EMS."
                   );
                }
-            if ($note_appendage = ($note_appendage_relay . $note_appendage_ems_comment . $note_appendage_emtorst))
+            if ($note_appendage = ($note_appendage_ems_comment . $note_appendage_relay . $note_appendage_emtorst))
                {
                $sql .= ", note='" . addslashes($note) . $note_appendage . "'";
                }

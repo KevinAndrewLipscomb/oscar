@@ -12,12 +12,16 @@ function PlainTextOfNote
    {
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
-   // Reduce whitespace in the incoming $note, to keep its plaintext appearance consistent with its HTML appearance.
+   // Eliminate "pre" tags since this routine assumes everything is "pre"formatted.
+   //
+   $note = str_replace("<tt>","",$note);
+   $note = str_replace("</tt>","",$note);
+   //
+   // Reduce newlines in the incoming $note, to keep its plaintext appearance consistent with its HTML appearance.
    //
    $note = str_replace("\r\n"," ",$note);
    $note = str_replace("\r"," ",$note);
    $note = str_replace("\n"," ",$note);
-   $note = str_replace("  "," ",$note);
    //
    // Set up a break string for the wordwrap function that contains a newline followed by enough spaces to push the
    // remaining text past the specified left margin.
@@ -25,9 +29,13 @@ function PlainTextOfNote
    $break = "\n";
    for ($i=1; $i<=$left_margin; $i++) $break .= " ";
    //
-   // Replace our proprietary addendum indicator with something appropriate in this context.
+   // Replace our proprietary addendum indicators with something appropriate in this context.
    //
-   $note = str_replace("<:>",($break . ":" . $break),$note);
+   $note = str_replace("<br:br>",($break . ":" . $break),$note);
+   //
+   // Replace standard break indicators with hard newlines.
+   //
+   $note = str_replace("<br>",$break,$note);
    //
    $note = wordwrap($note,($right_margin - $left_margin),$break);
    //
