@@ -1,0 +1,109 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+require_once("f_agencyselectionlist.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Set Role (Part 1)</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Set Role (Part 1)</h1>
+        </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td></tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+           {
+           ?>
+           <h2><i>Sorry...</i></h2>
+           <b>
+           <blockquote>
+              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try again later.</p>"; ?>
+           </blockquote>            
+           </b>
+           <?
+           }
+        else
+           {
+           ?>
+           <p>This form allows OSCAR Authorities to change OSCAR Role settings.</p>
+           <blockquote>
+              <table align=center bgcolor=#E8E8E8>
+                 <tr>
+                    <td align=center valign=middle>
+                       <small><i>To guard against misuse, the OSCAR system authenticates each modification request by
+                          sending a "challenge message" to the registered email address of the appropriate authority.&nbsp;
+                          Modifications only take effect once OSCAR receives a proper response to the
+                          challenge.</i></small>
+                    </td>
+                 </tr>
+              </table>
+           </blockquote>
+           <br>
+           <form action=<? echo $mode; ?>form-set-role-2.phtml method=post>
+              Select the Agency-Role combination that you want to change:
+              <blockquote>
+                 <?
+                 $result = mysql_query("select enumeral from " . $mode . "agency ")
+                    or die("Agency query failed with error: " . mysql_error());
+                 echo "<select name=agency>\n";
+                 if (mysql_num_rows($result) > 1)
+                    {
+                    echo "<option value=\"\">Select</option>\n";
+                    }
+                 //
+                 while($row = mysql_fetch_array($result))
+                    {
+                    $enumeral = "";
+                    extract($row);
+                    echo "<option value=\"$enumeral\">$enumeral</option>\n";
+                    }
+                 //
+                 echo "</select>\n";
+                 ?>
+                 <select name=role>
+                    <option value="">Select</option>
+                    <option value=schedule-coordinator>Schedule Coordinator</option>
+                    <option value=escalation-level-1-recipient>Escalation Level 1 Recipient</option>
+                    <option value=escalation-level-2-recipient>Escalation Level 2 Recipient</option>
+                    <option value=escalation-level-3-recipient>Escalation Level 3 Recipient</option>
+                    <option value=egroup-manager>Egroup Manager</option>
+                    <option value=other>Other</option>
+                 </select>
+              </blockquote>
+              <input type="submit" value="Continue...">
+           </form>
+           <?
+           }
+        ?>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+
