@@ -1,0 +1,28 @@
+<?
+//
+// $Id$
+//
+function CoordAgencyOfClearedEmailAddr
+   (
+   $email_addr,
+   $mode = ""
+   )
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $coord_agency = "";
+   //
+   $result = mysql_query
+      (
+      "select coord_agency from " . $mode . "authority "
+      .  "   where email_addr='$email_addr'"
+      .  "      and has_clearance='TRUE' "
+      )
+      or die("CoordAgencyOfClearedEmailAddr query failed with error:  " . mysql_error());
+   //
+   if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+   //
+   error_reporting($saved_error_level);
+   return $coord_agency;
+   }
+?>
