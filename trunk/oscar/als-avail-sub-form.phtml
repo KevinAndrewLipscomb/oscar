@@ -1,77 +1,29 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphoto.phtml");
+require_once("f_bodyopen.phtml");
+?>
 <html>
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<title>KVRS - ALS Availability Submission Form</title>
+<title>OSCAR - VBDEMS ALS Availability Submission Form</title>
 </head>
 
-<body>
-  <center>
-  <table border="0" cellpadding="0" cellspacing="0" width="80%">
-    <tr>
-      <td width="100%">
-        <h6 align="center">KEMPSVILLE VOLUNTEER RESCUE SQUAD<br>
-        OFFICE OF THE SCHEDULE SERGEANT</h6>
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <h6 align="center"><a href="<? echo OscarHomePageUrl(); ?>">OSCAR</a><br>
+        VBDEMS</h6>
         <h1 align="center">Online Availability Submission Form</h1>
         <h2 align="center">for ALS Providers</h2>
         <hr>
         <p>For ALS members only.</p>
-        <!--webbot BOT="GeneratedScript" PREVIEW=" " startspan --><script Language="JavaScript"><!--
-function FrontPage_Form1_Validator(theForm)
-{
-
-  if (theForm.ApplicableMonth.selectedIndex < 0)
-  {
-    alert("Please select one of the \"ApplicableMonth\" options.");
-    theForm.ApplicableMonth.focus();
-    return (false);
-  }
-
-  if (theForm.ApplicableMonth.selectedIndex == 0)
-  {
-    alert("The first \"ApplicableMonth\" option is not a valid selection.  Please choose one of the other options.");
-    theForm.ApplicableMonth.focus();
-    return (false);
-  }
-
-  if (theForm.HomeSquad.selectedIndex == 0)
-  {
-    alert("The first \"HomeSquad\" option is not a valid selection.  Please choose one of the other options.");
-    theForm.HomeSquad.focus();
-    return (false);
-  }
-
-  var checkOK = "0123456789-,";
-  var checkStr = theForm.ExtraShifts.value;
-  var allValid = true;
-  var decPoints = 0;
-  var allNum = "";
-  for (i = 0;  i < checkStr.length;  i++)
-  {
-    ch = checkStr.charAt(i);
-    for (j = 0;  j < checkOK.length;  j++)
-      if (ch == checkOK.charAt(j))
-        break;
-    if (j == checkOK.length)
-    {
-      allValid = false;
-      break;
-    }
-    if (ch != ",")
-      allNum += ch;
-  }
-  if (!allValid)
-  {
-    alert("Please enter only digit characters in the \"ExtraShifts\" field.");
-    theForm.ExtraShifts.focus();
-    return (false);
-  }
-  return (true);
-}
-//--></script><!--webbot BOT="GeneratedScript" endspan --><form method="POST" action="../../_vti_bin/shtml.dll/role/schedule-sgt/als-avail-sub-form.html" onsubmit="return FrontPage_Form1_Validator(this)" name="FrontPage_Form1" webbot-action="--WEBBOT-SELF--">
-          <!--webbot bot="SaveResults" S-Email-Format="TEXT/PRE" S-Email-Address="ebrazle@vbgov.com" B-Email-Label-Fields="TRUE" B-Email-ReplyTo-From-Field="TRUE" S-Email-ReplyTo="EmailAddress" B-Email-Subject-From-Field="FALSE" S-Email-Subject="Online Availability Sheet" S-Builtin-Fields U-Confirmation-Url="success-als.htm" startspan --><input TYPE="hidden" NAME="VTI-GROUP" VALUE="0"><!--webbot bot="SaveResults" endspan i-checksum="43374" -->
+        <form method="POST" action="add-avail-sheet.phtml">
+//$ReviewPoint--
           <table border="0" cellpadding="0" cellspacing="0" width="912">
             <tr>
               <td width="167">Name:</td>
@@ -83,7 +35,7 @@ function FrontPage_Form1_Validator(theForm)
             </tr>
             <tr>
               <td width="167">Applicable month:</td>
-              <td width="741"><!--webbot bot="Validation" B-Value-Required="TRUE" B-Disallow-First-Item="TRUE" --><select size="1" name="ApplicableMonth">
+              <td width="741"><select size="1" name="ApplicableMonth">
                   <option>Select</option>
                   <option>January</option>
                   <option>February</option>
@@ -103,7 +55,7 @@ function FrontPage_Form1_Validator(theForm)
   <center>
             <tr>
               <td width="167">Home squad:</td>
-              <td width="741"><!--webbot bot="Validation" B-Disallow-First-Item="TRUE" --><select size="1" name="HomeSquad">
+              <td width="741"><select size="1" name="HomeSquad">
                   <option>Select</option>
                   <option>1 - Ocean Park</option>
                   <option>2 - Davis Corner</option>
@@ -214,7 +166,7 @@ function FrontPage_Form1_Validator(theForm)
           </table>
         </div>
         <p align="left">How many extra shifts are you willing to be scheduled
-          for?&nbsp; <!--webbot bot="Validation" S-Data-Type="Integer" S-Number-Separators="," --><input type="text" name="ExtraShifts" size="2" value="0"></p>
+          for?&nbsp; <input type="text" name="ExtraShifts" size="2" value="0"></p>
           <blockquote>
             <table border="1">
                <tr>
