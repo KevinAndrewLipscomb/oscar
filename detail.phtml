@@ -53,15 +53,15 @@ if ($num_rows)
       {
       extract($row);
       echo "<table>\n";
-      echo "   <tr><td>First name:</td><td>$first_name</td></tr>\n";
-      echo "   <tr><td>Last name:</td><td>$last_name</td></tr>\n";
-      echo "   <tr><td>Email address:</td><td><a href=mailto:\"$email_addr\">$email_addr</a></td></tr>\n";
+      echo "   <tr><td>First name:</td><td>" . stripslashes($first_name) . "</td></tr>\n";
+      echo "   <tr><td>Last name:</td><td>" . stripslashes($last_name) . "</td></tr>\n";
+      echo "   <tr><td>Email address:</td><td><a href=mailto:\"" . stripslashes($email_addr) . "\">" . stripslashes($email_addr) . "</a></td></tr>\n";
       echo "   <tr><td>Home squad:</td><td>$squad</td></tr>\n";
       echo "   <tr><td>Applicable month:</td><td>$month</td></tr>\n";
       echo "   <tr><td>On EMS-5 team:</td><td>$be_on_team_5</td></tr>\n";
       echo "   <tr><td>On squad truck team:</td><td>$be_on_team_30</td></tr>\n";
       echo "   <tr><td># extra duties will run:</td><td>$num_extras</td></tr>\n";
-      echo "   <tr><td>Time of submission:</td><td>" . date("Y-m-d H:i:s T",$timestamp) . "</td></tr>\n";
+      echo "   <tr><td>Time of submission:</td><td>$timestamp</td></tr>\n";
       echo "   <tr><td>Record expires:</td><td>$expiration</td></tr>\n";
       echo "   <tr><td>Available days:</td><td>";
       $d = array(1 => $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31);
@@ -79,7 +79,7 @@ if ($num_rows)
          }
       echo substr($avail_nights_string,0,-2);
       echo "</td></tr>\n";
-      echo "   <tr><td>Note:</td><td>$note</td></tr>\n";
+      echo "   <tr><td>Note:</td><td>" . stripslashes($note) . "</td></tr>\n";
       echo "</table>\n";
       }
    echo "</blockquote>\n";
