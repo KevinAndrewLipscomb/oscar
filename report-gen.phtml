@@ -435,7 +435,7 @@ else
    {
    $subject = "*YOUR* OSCAR report claim ticket";
    }
-$headers = "From: (OSCAR)\r\n";
+$headers = "From: $email_addr\r\n";
 $headers .= "Reply-to: $email_addr\r\n";
 if (mail($recipient, $subject, $claim_ticket, $headers))
    {
