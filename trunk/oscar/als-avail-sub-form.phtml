@@ -23,7 +23,6 @@ require_once("f_bodyopen.phtml");
         <hr>
         <p>For ALS members only.  <b>Bold</b> fields are required.</p>
         <form method="POST" action="add-avail-sheet.phtml">
-//$ReviewPoint--
           <table border="0" cellpadding="0" cellspacing="0" width="912">
             <tr>
               <td width="167">First name:</td>
@@ -41,42 +40,41 @@ require_once("f_bodyopen.phtml");
               <td width="167"><b>Email address:</b></td>
               <td width="741"><input type="text" name=email_addr size="64"></td>
             </tr>
+//$ReviewPoint--
             <tr>
               <td width="167"><b>Applicable month:</b></td>
               <td width="741"><select size="1" name=month>
-                  <option>Select</option>
-                  <option>January</option>
-                  <option>February</option>
-                  <option>March</option>
-                  <option>April</option>
-                  <option>May</option>
-                  <option>June</option>
-                  <option>July</option>
-                  <option>August</option>
-                  <option>September</option>
-                  <option>October</option>
-                  <option>November</option>
-                  <option>December</option>
+                  <option value="">Select</option>
+                  <option value="JAN">January</option>
+                  <option value="FEB">February</option>
+                  <option value="MAR">March</option>
+                  <option value="APR">April</option>
+                  <option value="MAY">May</option>
+                  <option value="JUN">June</option>
+                  <option value="JUL">July</option>
+                  <option value="AUG">August</option>
+                  <option value="SEP">September</option>
+                  <option value="OCT">October</option>
+                  <option value="NOV">November</option>
+                  <option value="DEC">December</option>
                 </select></td>
             </tr>
-  </center>
-  <center>
             <tr>
               <td width="167"><b>Home squad:</b></td>
               <td width="741"><select size="1" name=squad>
-                  <option>Select</option>
-                  <option>1 - Ocean Park</option>
-                  <option>2 - Davis Corner</option>
-                  <option>4 - Chesapeake Beach</option>
-                  <option>5 - Courthouse</option>
-                  <option>6 - Creeds</option>
-                  <option>9 - Kempsville</option>
-                  <option>13 - Blackwater</option>
-                  <option>14 - Virginia Beach</option>
-                  <option>15 - Knotts Island</option>
-                  <option>16 - Plaza</option>
-                  <option>17 - Sandbridge</option>
-                  <option>ERS - VBFD</option>
+                  <option value="">Select</option>
+                  <option value="1">1 - Ocean Park</option>
+                  <option value="2">2 - Davis Corner</option>
+                  <option value="4">4 - Chesapeake Beach</option>
+                  <option value="5">5 - Courthouse</option>
+                  <option value="6">6 - Creeds</option>
+                  <option value="9">9 - Kempsville</option>
+                  <option value="13">13 - Blackwater</option>
+                  <option value="14">14 - Virginia Beach</option>
+                  <option value="15">15 - Knotts Island</option>
+                  <option value="16">16 - Plaza</option>
+                  <option value="17">17 - Sandbridge</option>
+                  <option value="0">ERS - VBFD</option>
                 </select></td>
             </tr>
           </table>
