@@ -73,7 +73,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                . ", expiration='$expiration_date'";
             mysql_query($sql) or die("Sorry, the database operation failed with this error:  <i>" . mysql_error() . "</i>\n\nPlease notify the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.");
             // mail(RoleEmailAddress("")),"OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
-            echo "<p><b>Thanks!</b></p>";
+            echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
             echo "<p>Your availability sheet has been successfully entered into the OSCAR System as follows:</p>";
             echo "<blockquote>\n";
             ShowAvailSheetRecDetail
