@@ -277,7 +277,7 @@ $msg .= "</html>\n";
 //
 //echo $msg;
 //$recipient = RoleEmailAddress("schedule-coordinator");
-$recipient = RoleEmailAddress();
+$recipient = RoleEmailAddress("");
 $subject = "OSCAR report";
 $headers = "Reply-to: $name <$email_addr>\r\n";
 $headers .= "Content-type: text/html\r\n";
