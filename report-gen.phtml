@@ -2,6 +2,10 @@
 //
 // $Id$
 //
+//$mode="x-";
+   //
+   // Comment out the above for production mode instead of eXperimental mode.
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -64,7 +68,7 @@ $be_authority =
       ($email_addr == RoleEmailAddress(""))
    );
 //
-if ($report_type == "FULL")
+if ($shift_filter == "all")
    {
    //
    // Determine if the requestor is an OSCAR system authority (ie, privileged to see special request notes & warnings).
@@ -83,7 +87,7 @@ if ($report_type == "FULL")
    // Maybe the required report has already been run under these same conditions, and cached in the database.  If so, just
    // retrieve it.
    //
-   $condition_descriptor .= "type=FULL\n";
+   $condition_descriptor .= "shift_filter=all\n";
    $condition_descriptor .= "team_filter=$team_filter\n";
    $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
       or die("The digest calculation failed with this error:  " . mysql_error());
@@ -119,7 +123,7 @@ if ($report_type == "FULL")
             break;
          }
       $report .= "<pre>\n";
-      $report .= "Full availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "Availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       $report .= "   +-------------------------------------+\n";
       $report .= "   | Legend:                             |\n";
       $report .= "   |    -5-30- Rxx Lastname, Firstname * |\n";
@@ -135,7 +139,9 @@ if ($report_type == "FULL")
       $report .= "   |              See special request -+ |\n"; 
       $report .= "   |              in Note section        |\n";
       $report .= "   +-------------------------------------+\n\n\n";
-      if ($info_message) $report .= "$info_message\n\n";
+      $report .= "This report includes ALL shifts.\n";
+      if ($info_message) $report .= "$info_message\n";
+      $report .= "\n";
       $report .= "+------+\n";
       $report .= "| Days |\n";
       $report .= "+------+\n\n";
@@ -334,7 +340,7 @@ if ($report_type == "FULL")
 else
    {
    //
-   // Filtered report
+   // shift_filter must be "some"
    //
    //
    // Convert sequence of day/night scalars into 1-based arrays for easier looping later.
@@ -345,7 +351,7 @@ else
    // Maybe the required report has already been run under these same conditions, and cached in the database.  If so, just
    // retrieve it.
    //
-   $condition_descriptor .= "type=FILTERED\n";
+   $condition_descriptor .= "shift_filter=some\n";
    $condition_descriptor .= "team_filter=$team_filter\n";
    $condition_descriptor .= "days=";
    for ($i=1; $i<=$days_in_applicable_month; $i++)
@@ -402,7 +408,7 @@ else
          }
       //
       $report .= "<pre>\n";
-      $report .= "Filtered availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "Availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       $report .= "   +-----------------------------------+\n";
       $report .= "   | Legend:                           |\n";
       $report .= "   |    -5-30- Rxx Lastname, Firstname |\n";
@@ -415,7 +421,9 @@ else
       $report .= "   |     |                             |\n";
       $report .= "   |     +- EMS-5 team member          |\n";
       $report .= "   +-----------------------------------+\n\n\n";
-      if ($info_message) $report .= "$info_message\n\n";
+      $report .= "This report ONLY includes selected shifts.\n";
+      if ($info_message) $report .= "$info_message\n";
+      $report .= "\n";
       for ($day_index = 1; $day_index <= $days_in_applicable_month; $day_index++)
          {
          if ($d[$day_index])
@@ -563,17 +571,21 @@ else
    //
    // Someone else requested the report.  Notify the schedule coordinator.
    //
-   $screen_notice_recipient = RoleEmailAddress("schedule-coordinator");
+   $screen_notice_recipient = RoleEmailAddress($mode . "schedule-coordinator");
    $screen_notice_subject = "-> OSCAR request ->";
    //
    // Give the schedule coordinator a chance to approve (weakly or strongly) or disapprove of the request.
    //
-   //          0        1         2         3         4         5         6         7
-   //          123456789012345678901234567890123456789012345678901234567890123456789012
+   //                 0        1         2         3         4         5         6         7
+   //                 123456789012345678901234567890123456789012345678901234567890123456789012
    $screen_notice =  "The OSCAR system has received a request for an Availability Report from\n";
    $screen_notice .= "a user who identified him or herself as:\n\n";
    $screen_notice .= "   Name:           $name\n";
    $screen_notice .= "   Email address:  $email_addr\n\n";
+   $screen_notice .= "The user gave this reason for the request:\n";
+   $screen_notice .= "---BEGIN REASON---\n";
+   $screen_notice .= $reason . "\n";
+   $screen_notice .= "---END REASON---\n\n";
    $screen_notice .= "Please take one of the following actions:\n\n\n";
    $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
    $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
@@ -614,7 +626,7 @@ else
    $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
    $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
    $claim_ticket .= "The next authority in the chain is:\n\n";
-   $claim_ticket .= "   " . RoleEmailAddress("escalation-level-1-recipient") . "\n\n";
+   $claim_ticket .= "   " . RoleEmailAddress($mode . "escalation-level-1-recipient") . "\n\n";
    $claim_ticket .= "To escalate your request to the above\n";
    $claim_ticket .= "authority, click here:\n\n";
    $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
@@ -633,7 +645,7 @@ else
 if ($result)
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"right");
-   echo "<p>The OSCAR system has successfully generated your report.&nbsp;  Because the report contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once screening is complete.</p>";
+   echo "<p>The OSCAR system has successfully generated your report.&nbsp;  Because the report contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress($mode . "schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once screening is complete.</p>";
    echo "<p><b>Check your email periodically for the report.</b></p>";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
    }

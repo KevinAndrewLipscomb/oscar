@@ -2,6 +2,11 @@
 //
 // $Id$
 //
+//$mode="x-";
+   //
+   // Comment out the above for production mode instead of eXperimental mode.
+   //
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -9,7 +14,7 @@ require_once("f_bodyopen.phtml");
 <html>
 
 <head>
-<title>OSCAR - VBDEMS Compiled Availability Report Request Form</title>
+<title>OSCAR - Compiled Availability Report Request Form</title>
 </head>
 
 <? BodyOpen(); ?>
@@ -30,13 +35,7 @@ require_once("f_bodyopen.phtml");
            Coordinator.&nbsp; The coordinator then forwards the report to the email address that you specify.&nbsp; 
            Because this process requires human intervention, results may not be immediate.</i></p>
         <br>
-        <h3><a name=FilteredReport></a>Filtered report</h3>
-        <blockquote>
-        <p>The filtered report answers the question, "Who might be available to cover my duty?"</p>
-        <p>Schedule coordinators, certain officers, and auditors are usually better off <a href=#FullReport><b>requesting 
-           Full Reports</b></a>.</p>
-        <form action=report-gen.phtml method=post>
-           <input type=hidden name=report_type value="FILTERED">
+        <form action=<? echo $mode; ?>report-gen.phtml method=post>
            <table>
               <tr>
                  <td>Your name:</td>
@@ -69,16 +68,20 @@ require_once("f_bodyopen.phtml");
                        <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
                     </blockquote>
                  </td>
-                 <td align=center valign=middle>
-                    Don't want to filter?&nbsp; Try a <a href=#FullReport><b>Full Report</b></a>.
-                 </td>
               </tr>
           </table>
           <br>
           <table border="0" cellpadding="0" cellspacing="0" width="892">
             <tr>
-              <td width="890" valign="bottom" colspan="3">Select the shifts to include in the report:
-                 <p>&nbsp;</td>
+              <td width="890" valign="bottom" colspan="3">
+                 Include:
+                 <blockquote>
+                    <input type=radio name=shift_filter value=all>
+                       <b>All shifts</b>&nbsp; (Ignore the checkboxes below.)<br>
+                    <input type=radio name=shift_filter value=some checked>
+                       <b>Just one or more</b> shifts, as follows:&nbsp <small><i>(Who can run my duty on... ?)</i></small>
+                 </blockquote>
+              </td>
             </tr>
             <tr>
               <td width="136" valign="bottom">Leave nonapplicable days blank.
@@ -157,48 +160,11 @@ require_once("f_bodyopen.phtml");
               </td>
             </tr>
           </table>
-           <p>Please double check your entries before completing your request.</p>
-           <input type=submit value="Request filtered report"><input type=reset>
-        </form>
-        </blockquote>
-        <br><br>
-        <h3><a name=FullReport></a>Full (entire month's) report</h3>
-        <blockquote>
-        <p>Full reports show all availabilities entered into the OSCAR system for an entire month.&nbsp; Such voluminous 
-           data is usually only required by schedule coordinators, certain officers, and auditors.&nbsp; Front line 
-           providers are usually better off requesting <a href=#FilteredReport><b>Filtered Reports</b></a>.</p>
-        <form action=report-gen.phtml method=post>
-           <input type=hidden name=report_type value="FULL">
-           <table>
-              <tr>
-                 <td>Your name:</td>
-                 <td><input type=text name=name size=64>
-              </tr>
-              <tr>
-                 <td>Your email address:</td>
-                 <td><input type=text name=email_addr size=64>
-              </tr>
-              <tr>
-                 <td>Applicable month:</td>
-                 <td><select size=1 name=applicable_month_num>
-                    <option value="">Select</option>
-                    <?
-                    $current_month_num = date("n");
-                    echo "<option value=" . $current_month_num . ">" . date("F") . "</option>\n";
-                    echo "<option value=" . ($current_month_num + 1) . ">" . date("F",mktime(12,0,0,($current_month_num + 1),1)) . "</option>\n";
-                    ?>
-                 </select></td>
-              </tr>
-           </table>
            <br>
-           Include:
-              <blockquote>
-                 <input type=radio name=team_filter value=everyone checked>Everyone<br>
-                 <input type=radio name=team_filter value=team_30_only>Only squad truck team members<br>
-                 <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
-              </blockquote>
+           <p align=left>Briefly explain the reason for your request:<br>
+           <textarea rows="5" name=reason cols="40"></textarea></p>
            <p>Please double check your entries before completing your request.</p>
-           <input type=submit value="Request FULL report"><input type=reset>
+           <input type=submit value="Submit request"><input type=reset>
         </form>
         </blockquote>
         <hr>
