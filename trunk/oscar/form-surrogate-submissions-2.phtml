@@ -11,6 +11,8 @@ $mode = RunMode($PHP_SELF);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("$foundation_dir/f_bodyopen.phtml");
+require_once("$foundation_dir/f_connectselectdb.phtml");
+require_once("f_roleemailaddress.phtml");
 //
 // Accept user-supplied parameters and copy them into local variables.
 //
@@ -26,7 +28,7 @@ $coord_agency = $_coord_agency;
 <title>OSCAR - Surrogate Submissions Form (Part 2)</title>
 </head>
 
-<? BodyOpen(); ?>
+<?php BodyOpen(); ?>
 <table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
    <tr>
       <td>
@@ -38,173 +40,84 @@ $coord_agency = $_coord_agency;
             <h1 align="center">Surrogate Submissions Form (Part 2)</h1>
             <h2 align="center">for scheduling officers and their designees</h2>
          </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+            <?php PutLibPhotoRandomPlaced("sasquatch",1); ?>
          </td></tr></table>
          <hr>
-        <p>This form is intended for the use of scheduling officers and their surrogates.</p>
-        <form method="POST" action="<? echo $mode; ?>perform-surrogate-submissions.phtml">
-              <?
-              if ((!$email_addr) or (!$applicable_month_num) or (!$coord_agency))
-                 {
-                 //
-                 // Prompt user for email_addr and aplicable_month_num.
-                 //
-                 ?>
-                 <table>
-                    <tr>
-                       <td>Scheduling officer email address:</td>
-                       <td><input type=text name=email_addr size="64" maxlength=64></td>
-                    </tr>
-                    <tr>
-                       <td>Applicable month:</td>
-                       <td><select size=1 name=applicable_month_num>
-                          <option value="">Select</option>
-                          <?
-                          $next_month_num = date("n") + 1;
-                          echo "<option value=" . $next_month_num . ">" . date("F",mktime(12,0,0,$next_month_num,1)) . "</option>\n";
-                          echo "<option value=" . ($next_month_num + 1) . ">" . date("F",mktime(12,0,0,($next_month_num + 1),1)) . "</option>\n";
-                          ?>
-                       </select></td>
-                    </tr>
-                 </table>
-                 <h3><br>Temporary Duty Assignments</h3>
-                 <?
-                 }
-              else
-                 {
-                 //
-                 // Reuse values passed in.
-                 //
-                 ?>
-                 <table>
-                    <tr>
-                       <td>Scheduling officer email address:</td>
-                       <?
-                       echo "<td>"
-                          . "<input type=hidden name=email_addr value=\"$email_addr\">"
-                          . "<b>$email_addr</b>"
-                          . "</td>\n";
-                       ?>
-                    </tr>
-                    <tr>
-                       <td>Applicable month:</td>
-                       <?
-                       echo "<td>"
-                          . "<input type=hidden name=applicable_month_num value=\"$applicable_month_num\">"
-                          . "<b>" . date("F",mktime(12,0,0,$applicable_month_num,1)) . "</b>"
-                          . "</td>\n";
-                       ?>
-                    </tr>
-                 </table>
-                 <h3><br>Temporary Duty Assignments <i>(continued)</i></h3>
-                 <?
-                 }
-                 ?>
-           <blockquote>
-           <table cellpadding=3>
-              <tr>
-                 <td colspan=2 align=center valign=middle>Paramedic-firefighter</td>
-                 <td colspan=2 align=center valign=middle>Zone car shift</td>
-              </tr>
-              <tr>
-                 <td align=center valign=middle>Last name</td>
-                 <td align=center valign=middle>First name</td>
-                 <td align=center valign=middle>Day of<br>month</td>
-                 <td align=center valign=middle>Day<br>(0800-2000)/<br>Night<br>(2000-0800)</td>
-              </tr>
-              <?
-              //
-              // Set up a standard shift_num option list.
-              //
-              $shift_num_option_list = "<option></option>\n"
-                 .  "<option>1</option>\n"
-                 .  "<option>2</option>\n"
-                 .  "<option>3</option>\n"
-                 .  "<option>4</option>\n"
-                 .  "<option>5</option>\n"
-                 .  "<option>6</option>\n"
-                 .  "<option>7</option>\n"
-                 .  "<option>8</option>\n"
-                 .  "<option>9</option>\n"
-                 .  "<option>10</option>\n"
-                 .  "<option>11</option>\n"
-                 .  "<option>12</option>\n"
-                 .  "<option>13</option>\n"
-                 .  "<option>14</option>\n"
-                 .  "<option>15</option>\n"
-                 .  "<option>16</option>\n"
-                 .  "<option>17</option>\n"
-                 .  "<option>18</option>\n"
-                 .  "<option>19</option>\n"
-                 .  "<option>20</option>\n"
-                 .  "<option>21</option>\n"
-                 .  "<option>22</option>\n"
-                 .  "<option>23</option>\n"
-                 .  "<option>24</option>\n"
-                 .  "<option>25</option>\n"
-                 .  "<option>26</option>\n"
-                 .  "<option>27</option>\n"
-                 .  "<option>28</option>\n"
-                 .  "<option>29</option>\n"
-                 .  "<option>30</option>\n"
-                 .  "<option>31</option>\n";
-              //
-              // Set up a standard shift_day_night option_list.
-              //
-              $shift_day_night_option_list = "<option></option>\n"
-                 .  "<option value=day>day</option>\n"
-                 .  "<option value=night>night</option>\n";
-              //
-              // Make a bunch of identical rows.
-              //
-              for ($i = 1; $i <= 8; $i++)
-                 {
-                 ?>
-                 <tr><td colspan=4><hr></td></tr>
-                 <tr>
-                    <td rowspan=2 align=center valign=middle><input type=text name="last_name[<? echo $i; ?>]" size=15 maxlength=32>,</td>
-                    <td rowspan=2 align=center valign=middle><input type=text name="first_name[<? echo $i; ?>]" size=15 maxlength=32></td>
-                    <td align=center valign=middle>
-                       <select name="shift_a_num[<? echo $i; ?>]">
-                          <? echo $shift_num_option_list; ?>
-                       </select>
-                    </td>
-                    <td align=center valign=middle>
-                       <select name="shift_a_day_night[<? echo $i; ?>]">
-                          <? echo $shift_day_night_option_list; ?>
-                       </select>
-                    </td>
-                 </tr>
-                 <tr>
-                    <td align=center valign=middle>
-                       <select name="shift_b_num[<? echo $i; ?>]">
-                          <? echo $shift_num_option_list; ?>
-                       </select>
-                    </td>
-                    <td align=center valign=middle>
-                       <select name="shift_b_day_night[<? echo $i; ?>]">
-                          <? echo $shift_day_night_option_list; ?>
-                       </select>
-                    </td>
-                 </tr>
-                 <?
-                 }
-              ?>
-           </table>
-           </blockquote>
-           <small>
-           <ul>
-             <li>Any row without a last name, first name, and at least one zone car shift will not be processed.
-             <li>You'll have a chance to submit more TDAs after you press Submit.
-           </ul>
-           </small>
-           <p><input type="submit" value="Submit"><input type="reset" value="Reset"></p>
-        </form>
-        <hr>
-        <small><small><em><pre>$Id$</pre></em></small></small>
-       </td>
-    </tr>
-  </table>
+         <?php
+         if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+            {
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <?php echo "<p>OSCAR's database has gone offline.&nbsp; Please retry the submission process later.</p>"; ?>
+            </blockquote>            
+            </b>
+            <?php
+            }
+         else
+            {
+            //
+            // Validate parameters.
+            //
+            if (($email_addr == "") or ($applicable_month_num == "") or ($coord_agency == ""))
+               {
+               //
+               // Fill the page out with a warning and instructions.
+               //
+               ?>
+               <h2><i>Error!</i></h2>
+               <b>
+               <blockquote>
+                  <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these
+                     fields:</p>
+                  <ul>
+                     <li><p>Email address</p>
+                     <li><p>Applicable month</p>
+                     <li><p>Recieving agency</p>
+                  </ul>
+                  <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
+               </blockquote>            
+               </b>
+               <?php
+               echo "<p>If you have feedback about the technical aspects of this process, please contact the "
+                  . "<a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+               }
+            else
+               {
+               //
+               // Show what was collected in Part 1.
+               //
+               echo "<br>\n"
+                  . "<table>\n"
+                  . "   <tr><td>Surrogate submitter email address:</td><td><b>$email_addr</b></td></tr>\n"
+                  . "   <tr><td>Applicable month:</td><td><b>"
+                  . date("F",mktime(12,0,0,$applicable_month_num,1))
+                  . "</b></td></tr>\n"
+                  . "   <tr><td>Coordinating agency:&nbsp;&nbsp;</td><td><b>$coord_agency</b></td></tr>\n"
+                  . "</table>\n"
+                  . "<br>\n";
+               ?>
+               <p><i>For the values you supplied in Part 1, the following additional information is required.&nbsp;
+                  Complete the form below and press the "Submit" button to finish the process.</i></p>
+               <form>
+                  <small>
+                     <ul>
+                        <li>Any row without a last name, first name, and at least one shift will not be processed.
+                        <li>You'll have a chance to make more submissions after you press Submit.
+                     </ul>
+                  </small>
+                  <p><input type="submit" value="Submit"><input type="reset" value="Reset"></p>
+               </form>
+               <?php
+               }
+            }
+            ?>
+         <hr>
+         <small><small><em><pre>$Id$</pre></em></small></small>
+      </td>
+   </tr>
+</table>
 </body>
 
 </html>
