@@ -98,7 +98,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                .  " where month='$applicable_month_abbrev'"
                .  "    and last_name='" . addslashes(trim($last_name)) . "'"
                .  "    and first_name='" . addslashes(trim($first_name)) . "'"
-               .  " order by timestamp"
+               .  " order by timestamp desc"
                .  " limit 1"
                );
             if (mysql_num_rows($result)
