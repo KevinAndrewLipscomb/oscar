@@ -20,7 +20,8 @@ require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_sshowavailsheetrecdetail.phtml");
+require_once("f_availlist.phtml");
+require_once($mode . "f_sshowavailsheetrecdetail.phtml");
 require_once("f_oscarmailheaders.phtml");
 //
 $first_name = trim($first_name);
@@ -30,7 +31,7 @@ $html = "<html>\n";
 $html .= "<head><title>Retraction Request</title></head>\n";
 $html .= "<body bgcolor=#FFFFFF>\n";
 $html .= "<table align=center width=80%><tr><td>\n";
-$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
 $html .= "<H1 ALIGN=CENTER>Retraction Request</H1>\n";
 $html .= "<hr>\n";
 //
@@ -112,6 +113,7 @@ if
             $be_on_team_5,
             $be_on_team_30,
             $be_tda,
+            $be_als,
             $num_extras,
             $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
             $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
@@ -127,8 +129,7 @@ if
          // Clear variables for next pass except for first_name and last_name (which by definition must match what we queried on, and
          // which we need for later), and the latest email_addr value (which we'll need later).
          //
-         $timestamp = $squad = $month = $be_on_team_5 = $be_on_team_30 = $be_tda =
-            $num_extras = "";
+         $timestamp = $squad = $month = $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $num_extras = "";
          $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
             $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 = $d31 = "";
          $n1 = $n2 = $n3 = $n4 = $n5 = $n6 = $n7 = $n8 = $n9 = $n10 = $n11 = $n12 = $n13 = $n14 = $n15 = $n16 =
@@ -156,7 +157,7 @@ if
    //
    $challenge .= "-- OSCAR\n"
               .  "-- Home page: " . OscarHomePageUrl() . "\n"
-              .  "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+              .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
    //
    // Send the mail.
    //
@@ -170,7 +171,7 @@ if
          .  "OSCAR receives a proper response to the challenge.</p>";
       echo "<p><b>Check your email periodically for the challenge message.</b></p>";
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress("")
+         .  RoleEmailAddress("",$mode)
          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
@@ -186,9 +187,9 @@ if
          <ul>
             <?
             echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\""
-               .  RoleEmailAddress("schedule-coordinator")
+               .  RoleEmailAddress("schedule-coordinator",$mode)
                .  "\">VBDEMS Central Schedule Coordinator</a> to retract your submission(s).</p>";
-            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System "
+            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System "
                .  "Administrator</a> know this error occurred.</p>";
             ?>
          </ul>
@@ -216,7 +217,7 @@ else
    </blockquote>            
    </b>
    <?
-   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("",$mode) . ">OSCAR System Administrator</a>.</p>";
    }
 ?>
 <br clear=both>

@@ -4,7 +4,7 @@
 # http://phpmyadmin.sourceforge.net/ (download page)
 #
 # Host: localhost
-# Generation Time: October 27, 2001, 8:15 pm
+# Generation Time: November 4, 2001, 4:23 pm
 # Server version: 3.23.32
 # PHP Version: 4.0.6
 # Database : oscar
@@ -23,6 +23,7 @@ CREATE TABLE `avail_sheet` (
   `be_on_team_5` enum('FALSE','TRUE') NOT NULL default 'FALSE',
   `be_on_team_30` enum('FALSE','TRUE') NOT NULL default 'FALSE',
   `be_tda` enum('FALSE','TRUE') NOT NULL default 'FALSE',
+  `be_als` enum('FALSE','TRUE') NOT NULL default 'FALSE',
   `num_extras` tinyint(4) default NULL,
   `note` text,
   `d1` enum('','AVAILABLE') default NULL,
@@ -102,6 +103,7 @@ CREATE TABLE `x_avail_sheet` (
   `be_on_team_5` enum('FALSE','TRUE') NOT NULL default 'FALSE',
   `be_on_team_30` enum('FALSE','TRUE') NOT NULL default 'FALSE',
   `be_tda` enum('FALSE','TRUE') NOT NULL default 'FALSE',
+  `be_als` enum('FALSE','TRUE') NOT NULL default 'FALSE',
   `num_extras` tinyint(4) default NULL,
   `note` text,
   `d1` enum('','AVAILABLE') default NULL,
