@@ -82,7 +82,7 @@ if ($report_type == "FULL")
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
-         echo $day_description . "\n";
+         $msg .= $day_description . "\n";
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
@@ -100,7 +100,7 @@ if ($report_type == "FULL")
          }
       else
          {
-         echo $day_description . " None\n";
+         $msg .= $day_description . " None\n";
          }
       $msg .= "\n";
       }
@@ -115,7 +115,7 @@ if ($report_type == "FULL")
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
-         echo $night_description . "\n";
+         $msg .= $night_description . "\n";
          while ($row = mysql_fetch_array($result))
             {
             extract($row);
@@ -133,7 +133,7 @@ if ($report_type == "FULL")
          }
       else
          {
-         echo $night_description . " None\n";
+         $msg .= $night_description . " None\n";
          }
       $msg .= "\n";
       }
@@ -212,7 +212,7 @@ else
          $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
          if ($num_rows = mysql_num_rows($result))
             {
-            echo $day_description . "\n";
+            $msg .= $day_description . "\n";
             while ($row = mysql_fetch_array($result))
                {
                extract($row);
@@ -229,7 +229,7 @@ else
             }
          else
             {
-            echo $day_description . " None\n";
+            $msg .= $day_description . " None\n";
             }
          $msg .= "\n";
          }
@@ -244,7 +244,7 @@ else
          $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
          if ($num_rows = mysql_num_rows($result))
             {
-            echo $night_description . "\n";
+            $msg .= $night_description . "\n";
             while ($row = mysql_fetch_array($result))
                {
                extract($row);
@@ -261,7 +261,7 @@ else
             }
          else
             {
-            echo $night_description . " None\n";
+            $msg .= $night_description . " None\n";
             }
          $msg .= "\n";
          }
