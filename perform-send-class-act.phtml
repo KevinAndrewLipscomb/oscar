@@ -102,7 +102,10 @@ if
       // Send the mail.
       //
       $recipient = RoleEmailAddress('class-act-coord',$mode);
-      $result = mail($recipient, "Class Act Nomination (via OSCAR)", $message, OscarMailHeaders());
+      $from_reply_to_value = stripslashes(trim($submitter)) . '<' . stripslashes(trim($emailaddr)) . '>';
+      $header_block = "From: $from_reply_to_value\r\n"
+         . "Reply-to: $from_reply_to_value\r\n";
+      $result = mail($recipient, "Class Act Nomination (via OSCAR)", $message, $header_block);
       //
       if ($result)
          {
