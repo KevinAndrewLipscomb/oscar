@@ -1,0 +1,37 @@
+submit
+   module: als-avail-sub-form
+   module: add-als-avail-sheet
+enter-tda
+   module: ers-tda-input-form
+   module: add-ers-tda-inputs
+request-report-screen
+   module: request-compiled-avails
+   module: report-gen
+   module: get-report
+   module: detail
+   mutexvar: authority, nonauthority
+   mutexvar: everyone, team-filter
+   mutexvar: all-shifts, selected-shifts
+   point: authority, everyone, all-shifts
+   point: authority, team-filter, all-shifts
+   point: authority, everyone, selected-shifts
+   point: authority, team-filter, selected-shifts
+   point: nonauthority, everyone, all-shifts
+   point: nonauthority, team-filter, all-shifts
+   point: nonauthority, everyone, selected-shifts
+   point: nonauthority, team-filter, selected-shifts
+approve
+   module: [request-report-screen]
+   module: approve
+approve-and-trust
+   module: [request-report-screen]
+   module: approve-and-trust
+escalate-1
+   module: [approve]
+   module: escalate
+escalate-n
+   module: [escalate-1]
+retract
+   module: request-retraction
+   module: gen-challenge
+   module: retract

@@ -2,10 +2,8 @@
 //
 // $Id$
 //
-$mode="";
-   //
-   // Set to "" for production, "x_" to debug.
-   //
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
@@ -21,9 +19,10 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once("f_roleemailaddress.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
+require_once("f_connectselectdb.phtml");
 //
 ?>
 <html>
@@ -50,8 +49,7 @@ $applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
 //
 // Connect to the database.
 //
-mysql_connect("localhost","kalipso",Password());
-mysql_select_db("oscar");
+ConnectSelectDb("localhost","kalipso",Password(),"oscar");
 //
 // Delete the appropriate records from the avail_sheet table.
 //

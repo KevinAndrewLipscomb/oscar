@@ -2,30 +2,52 @@
 //
 // $Id$
 //
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once("f_roleemailaddress.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
+require_once("f_connectselectdb.phtml");
 //
 ?>
 <html>
 <head><title>Request Approval</title></head>
 <? BodyOpen(); ?>
 <table align=center width=80%><tr><td>
-<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
 <H1 ALIGN=CENTER>Request Approval</H1>
 <hr>
 <?
-if (SendApprovalNotice($email_addr,$digest))
+if (ConnectSelectDb("localhost","kalipso",Password(),"oscar"))
    {
-   PutLibPhotoRandomPlaced("sasquatch",1,"right");
-   echo "<p>The OSCAR system has performed the following:</p>\n"
-      . "<ul\n"
-      . "   <li><p>Sent instructions to <i>$email_addr</i> on how to retrieve the requested report.</p></li>\n"
-      . "</ul>\n";
+   if (SendApprovalNotice($email_addr,$digest,$mode))
+      {
+      PutLibPhotoRandomPlaced("sasquatch",1,"right");
+      echo "<p>The OSCAR system has performed the following:</p>\n"
+         . "<ul\n"
+         . "   <li><p>Sent instructions to <i>$email_addr</i> on how to retrieve the requested report.</p></li>\n"
+         . "</ul>\n";
+      }
+   else
+      {
+      //
+      // Fill the page out with a warning and instructions.
+      //
+      ?>
+      <h2><i>Error!</i></h2>
+      <b>
+      <blockquote>
+         <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
+      </blockquote>            
+      </b>
+      <?
+      }
    }
 else
    {
@@ -33,10 +55,10 @@ else
    // Fill the page out with a warning and instructions.
    //
    ?>
-   <h2><i>Error!</i></h2>
+   <h2><i>Sorry...</i></h2>
    <b>
    <blockquote>
-      <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
+      <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try this approval later.</p>"; ?>
    </blockquote>            
    </b>
    <?

@@ -7,16 +7,14 @@
 $email_addr = $email_addr;
 $applicable_month_num = $applicable_month_num;
 //
-$mode="";
-   //
-   // For production mode, set to ""; for debug mode, set to "x_".
-   //
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
 if ($mode) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_roleemailaddress.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
 ?>
 <html>
 
