@@ -279,13 +279,13 @@ $msg .= "</html>\n";
 //
 $recipient = RoleEmailAddress("schedule-coordinator");
 $subject = "OSCAR report";
-$headers = "From: \"$name\" (via OSCAR) <$email_addr>\r\n";
-$headers .= "Reply-to: \"$name\" <$email_addr>\r\n";
+$headers = "From: (OSCAR user $name) <$email_addr>\r\n";
+$headers .= "Reply-to: $email_addr\r\n";
 $headers .= "Content-type: text/html\r\n";
 if (mail($recipient, $subject, $msg, $headers))
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"left");
-   echo "<p>The OSCAR system has generated your report and submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.</p>";
+   echo "<p>The OSCAR system has generated your report and submitted it to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for security screening.&nbsp; The coordinator will forward it to you once screening is complete.</p>";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
    }
 else
