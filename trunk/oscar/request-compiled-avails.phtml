@@ -28,38 +28,7 @@ require_once("f_bodyopen.phtml");
         <hr>
         <p><i>To guard against misuse, the OSCAR system first sends all generated reports to the VBDEMS Central Schedule Coordinator.&nbsp; The coordinator then forwards the report to the email address that you specify.&nbsp; Because this process requires human intervention, results are not immediate.</i></p>
         <br>
-        <h3><a name=FullReport></a>Full (entire month's) report</h3>
-        <blockquote>
-        <p>Full reports show all availabilities entered into the OSCAR system for an entire month, along with all special request information.&nbsp; Such voluminous data is usually only required by schedule coordinators, certain officers, and auditors.&nbsp; Front line providers are usually better off requesting <a href=#FilteredReport>filtered reports</a>.</p>
-        <form action=report-gen.phtml method=post>
-           <input type=hidden name=report_type value="FULL">
-           <table>
-              <tr>
-                 <td>Your name:</td>
-                 <td><input type=text name=name size=64>
-              </tr>
-              <tr>
-                 <td>Your email address:</td>
-                 <td><input type=text name=email_addr size=64>
-              </tr>
-              <tr>
-                 <td>Applicable month:</td>
-                 <td>
-                    <select name=relative_month>
-                       <option value="">Select</option>
-                       <option value=CURRENT>This month</option>
-                       <option value=NEXT>Next month</option>
-                    </select>
-                 </td>
-              </tr>
-           </table>
-           <p>Please double check your entries before completing your request.</p>
-           <input type=submit value="Request FULL report">
-        </form>
-        </blockquote>
-        <br><br>
         <h3><a name=FilteredReport></a>Filtered report</h3>
-        <i>(Not yet available)</i>
         <blockquote>
         <p>The filtered report answers the question, "Who might be available to cover my duty?"&nbsp; Filtered reports do not include special request information.</p>
         <form action=report-gen.phtml method=post>
@@ -75,13 +44,14 @@ require_once("f_bodyopen.phtml");
               </tr>
               <tr>
                  <td>Applicable month:</td>
-                 <td>
-                    <select name=relative_month>
-                       <option value="">Select</option>
-                       <option value=CURRENT>This month</option>
-                       <option value=NEXT>Next month</option>
-                    </select>
-                 </td>
+                 <td><select size=1 name=applicable_month_num>
+                    <option value="">Select</option>
+                    <?
+                    $current_month_num = date("n");
+                    echo "<option value=" . $current_month_num . ">" . date("F") . "</option>\n";
+                    echo "<option value=" . ($current_month_num + 1) . ">" . date("F",mktime(12,0,0,($current_month_num + 1),1)) . "</option>\n";
+                    ?>
+                 </select></td>
               </tr>
            </table>
            <br>
@@ -176,6 +146,37 @@ require_once("f_bodyopen.phtml");
           </table>
            <p>Please double check your entries before completing your request.</p>
            <input type=submit value="Request filtered report">
+        </form>
+        </blockquote>
+        <br><br>
+        <h3><a name=FullReport></a>Full (entire month's) report</h3>
+        <blockquote>
+        <p>Full reports show all availabilities entered into the OSCAR system for an entire month, along with all special request information.&nbsp; Such voluminous data is usually only required by schedule coordinators, certain officers, and auditors.&nbsp; Front line providers are usually better off requesting <a href=#FilteredReport>filtered reports</a>.</p>
+        <form action=report-gen.phtml method=post>
+           <input type=hidden name=report_type value="FULL">
+           <table>
+              <tr>
+                 <td>Your name:</td>
+                 <td><input type=text name=name size=64>
+              </tr>
+              <tr>
+                 <td>Your email address:</td>
+                 <td><input type=text name=email_addr size=64>
+              </tr>
+              <tr>
+                 <td>Applicable month:</td>
+                 <td><select size=1 name=applicable_month_num>
+                    <option value="">Select</option>
+                    <?
+                    $current_month_num = date("n");
+                    echo "<option value=" . $current_month_num . ">" . date("F") . "</option>\n";
+                    echo "<option value=" . ($current_month_num + 1) . ">" . date("F",mktime(12,0,0,($current_month_num + 1),1)) . "</option>\n";
+                    ?>
+                 </select></td>
+              </tr>
+           </table>
+           <p>Please double check your entries before completing your request.</p>
+           <input type=submit value="Request FULL report">
         </form>
         </blockquote>
         <hr>
