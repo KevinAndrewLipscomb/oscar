@@ -76,7 +76,7 @@ if ($report_type == "FULL")
    echo "----\n\n";
    for ($day_index = 1; $day_index <= 31; $day_index++)
       {
-      $day_description = date("jS (l) \d\a\y\:",mktime(9,0,0,$month_num,$day_index,$year_num));
+      $day_description = date("jS (l)",mktime(9,0,0,$month_num,$day_index,$year_num)) . " day:";
       $where_clause_2 = "and d$day_index='AVAILABLE' ";
       $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
@@ -109,7 +109,7 @@ if ($report_type == "FULL")
    echo "------\n\n";
    for ($night_index = 1; $night_index <= 31; $night_index++)
       {
-      $night_description = date("jS (l) \n\i\g\h\t\:",mktime(21,0,0,$month_num,$night_index,$year_num));
+      $night_description = date("jS (l)",mktime(21,0,0,$month_num,$night_index,$year_num)) . " night:";
       $where_clause_2 = "and n$night_index='AVAILABLE' ";
       $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
