@@ -131,7 +131,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                      ?>
                      <tr>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td align=right valign=top><b><a href=<? echo $mode; ?>als-avail-sub-form.phtml>Submit</a></b></td><td valign=top>an&nbsp;availability&nbsp;sheet.&nbsp;&nbsp <small><i>(BCs,&nbsp;enter&nbsp;TDAs&nbsp;<a href=<? echo $mode; ?>ers-tda-input-form.phtml>here</a>.)</i></small></td>
+                        <td align=right valign=top><b><a href=<? echo $mode; ?>form-submit-avails-1.phtml>Submit</a></b></td><td valign=top>an&nbsp;availability&nbsp;sheet.&nbsp;&nbsp <small><i>(BCs,&nbsp;enter&nbsp;TDAs&nbsp;<a href=<? echo $mode; ?>ers-tda-input-form.phtml>here</a>.)</i></small></td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td rowspan=3 valign=top>
                            <p><i><small>Server status: <? echo ServerStatus(); ?></small></i></p>
@@ -161,8 +161,8 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                            </table>
                         </td>
                      </tr>
-                     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>request-compiled-avails.phtml>Request</a></b></td><td valign=top>a compiled availability report.</td></tr>
-                     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>request-retraction.phtml>Retract</a></b></td><td valign=top>previous submissions.</td></tr>
+                     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>form-request-report-1.phtml>Request</a></b></td><td valign=top>a compiled availability report.</td></tr>
+                     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>form-request-retraction.phtml>Retract</a></b></td><td valign=top>previous submissions.</td></tr>
                      <?
                      }
                   else
