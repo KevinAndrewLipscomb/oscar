@@ -18,7 +18,7 @@ mysql_connect(localhost,kalipso,fesface);
 mysql_select_db(oscar);
 //
 $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
-$presentation_clause = "order by be_on_team_5, be_on_team_30, squad";
+$presentation_clause = "order by be_on_team_5 desc, be_on_team_30 desc, squad";
 $where_clause = "";
 if ($report_type == "FULL")
    {
