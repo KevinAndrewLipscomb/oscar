@@ -2,6 +2,18 @@
 //
 // $Id$
 //
+// Assign incoming arguments to themselves so we won't get 'undefined variable' errors later.
+//
+$email_addr = $email_addr;
+$applicable_month_num = $applicable_month_num;
+//
+error_reporting(E_ALL);
+//
+$mode="";
+   //
+   // For production mode, set to ""; for debug mode, set to "x-".
+   //
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -29,7 +41,7 @@ require_once("f_roleemailaddress.phtml");
         </td></tr></table>
         <hr>
         <p>This form is intended for the use of VBFD Scheduling Officers.</p>
-        <form method="POST" action="add-ers-tda-inputs.phtml">
+        <form method="POST" action="<? echo $mode; ?>add-ers-tda-inputs.phtml">
               <?
               if ((!$email_addr) or (!$applicable_month_num))
                  {
