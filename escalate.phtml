@@ -94,25 +94,30 @@ else
       //                0        1         2         3         4         5         6         7
       //                123456789012345678901234567890123456789012345678901234567890123456789012
       $claim_ticket =  "Your *escalated* request for an OSCAR Availability Report has been\n";
-      $claim_ticket .= "submitted to the Escalation Level 1 Authority for screening.  Check\n";
+      $claim_ticket .= "submitted to the Escalation Level $level Authority for screening.  Check\n";
       $claim_ticket .= "your email periodically for approval.\n\n";
       $claim_ticket .= "Save this message and discard the previous claim ticket.  This is the\n";
       $claim_ticket .= "NEW CLAIM TICKET for your report.\n\n";
-      $claim_ticket .= "If excessive time goes by and you wish to escalate your request to a\n";
-      $claim_ticket .= "higher authority, you can do so by clicking the link near the bottom of\n";
-      $claim_ticket .= "this message.\n\n";
-      $claim_ticket .= "   WARNING\n";
-      $claim_ticket .= "   -------\n";
-      $claim_ticket .= "   Do not escalate your request without due cause.  To do so is to\n";
-      $claim_ticket .= "   'jump the chain of command', which is poor discipline and may be\n";
-      $claim_ticket .= "   punishable.  The option to escalate is provided for cases where the\n";
-      $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
-      $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
-      $claim_ticket .= "The next authority in the chain is:\n\n";
-      $claim_ticket .= "   " . RoleEmailAddress("escalation-level-" . $next_level . "-recipient") . "\n\n";
-      $claim_ticket .= "To escalate your request to the above\n";
-      $claim_ticket .= "authority, click here:\n\n";
-      $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=" . $next_level . "&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
+      //
+      $next_authority = RoleEmailAddress("escalation-level-$next_level-recipient");
+      if ($next_authority != "NONE")
+         {
+         $claim_ticket .= "If excessive time goes by and you wish to escalate your request to a\n";
+         $claim_ticket .= "higher authority, you can do so by clicking the link near the bottom of\n";
+         $claim_ticket .= "this message.\n\n";
+         $claim_ticket .= "   WARNING\n";
+         $claim_ticket .= "   -------\n";
+         $claim_ticket .= "   Do not escalate your request without due cause.  To do so is to\n";
+         $claim_ticket .= "   'jump the chain of command', which is poor discipline and may be\n";
+         $claim_ticket .= "   punishable.  The option to escalate is provided for cases where the\n";
+         $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
+         $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
+         $claim_ticket .= "The next authority in the chain is:\n\n";
+         $claim_ticket .= "   $next_authority\n\n";
+         $claim_ticket .= "To escalate your request to the above\n";
+         $claim_ticket .= "authority, click here:\n\n";
+         $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=" . $next_level . "&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
+         }
       //
       // Add sig lines.
       //
