@@ -112,15 +112,25 @@ require_once("f_writecalendarbody.phtml");
              }
           else
              {
+             echo "<p>Check all that apply as of today's date:</p>\n";
+             //
+             $warning_expiration_time = mktime(0,0,0,3,20,2004);
+             if (time() < $warning_expiration_time)
+                {
+                echo "<blockquote>\n";
+                echo "<p><b><i>WARNING:&nbsp; This section has changed.  Read each item carefully!</i></b></p>\n";
+                }
              ?>
-             <p>Check all that apply as of today's date:</p>
              <ul>
-                <li><input type=checkbox name=be_third value="TRUE">I am a "third" on the ambulance (or a Driver/NON-AIC).</li>
-                <li><input type=checkbox name=be_nondriver value="TRUE">I am <b>not</b> qualified to drive the
-                   ambulances.</li>
+                <li><input type=checkbox name=be_driver value="TRUE">I am a driver.</li>
+                <li><input type=checkbox name=be_aic value="TRUE">I am an AIC.</li>
                 <li><input type=checkbox name=be_needing_driver value="TRUE">I am an ALS provider (includes ST).</li>
              </ul>
              <?
+             if (time() < $warning_expiration_time)
+                {
+                echo "</blockquote>\n";
+                }
              }
           WriteCalendarSubform
              (
@@ -131,20 +141,6 @@ require_once("f_writecalendarbody.phtml");
           ?>
         <p align="left">How many extra shifts are you willing to be scheduled
           for?&nbsp; <input type="text" name=num_extras size="2" value="0"></p>
-          <blockquote>
-            <table border="1">
-               <tr>
-                  <td width="100%">
-                     <p align="center"><u>Survey box</u><br>
-                     <small>Please take a moment to fill out the survey questions,
-                     if any.</small></p>
-                     <ul>
-                        <li>No survey questions at this time.</li>
-                     </ul>
-                  </td>
-               </tr>
-            </table>
-          </blockquote>
           <p align=left>Special requests (will only be visible to <a href=authorities.phtml>OSCAR authorities</a>):<br>
              (If you can only run parts of any shifts you marked available, enter the details here.)<br>
           <textarea rows="8" name=note cols="60"></textarea></p>
