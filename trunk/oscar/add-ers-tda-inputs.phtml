@@ -10,7 +10,7 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once($mode . "f_roleemailaddress.phtml");
+require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
 ?>
 <html>
@@ -136,6 +136,17 @@ require_once("f_availlist.phtml");
                         .  RoleEmailAddress("")
                         .  "\">OSCAR System Administrator</a>."
                         );
+                  @mail
+                     (
+                     RoleEmailAddress("failsafe-recipient",$mode),
+                     "OSCAR insert op",
+                     stripslashes
+                        (
+                        "The \'OSCAR - "
+                        . $mode
+                        . "add-ers-tda-inputs.phtml\' script has processed the following operation:\n\n$sql"
+                        )
+                     );
                   //
                   // Clear calculated vars for next iteration.
                   //
