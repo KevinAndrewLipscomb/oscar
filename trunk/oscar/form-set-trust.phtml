@@ -79,9 +79,13 @@ require_once("f_agencyselectionlist.phtml");
                  <td valign=top><li>&nbsp;</li></td>
                  <td valign=top>
                     <p><b>To remove a user</b> from the Trusted User table, complete this form:</p>
-                    <form action=<? echo $mode; ?>perform-prep-mod-trust.phtml method=post>
-                       Which agency?&nbsp; <? AgencySelectionList($mode); ?> <input type="submit" value="Submit">
-                    </form>
+                    <blockquote>
+                       <b>WARNING:&nbsp; This form sends a traceable email message to the appropriate schedule
+                       coordinator.&nbsp; It is not intended for general use.</b>
+                       <form action=<? echo $mode; ?>perform-prep-mod-trust.phtml method=post>
+                          Which agency?&nbsp; <? AgencySelectionList($mode); ?> <input type="submit" value="Submit">
+                       </form>
+                    </blockquote>
                     <p>A user who is not in the Trusted User table will only receive a compiled availability report once
                        OSCAR has attained the appropriate schedule coordinator's approval to forward the report to the
                        user.</p>
