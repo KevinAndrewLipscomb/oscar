@@ -49,7 +49,7 @@ if ($report_type == "FULL")
          }
       echo "\n";
       }
-   for ($index = 1; $index <= 31; $index++;)
+   for ($index = 1; $index <= 31; $index++)
       {
       $where_clause_2 = "and n$index='AVAILABLE' ";
       $sql_statement = stripslashes($sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
