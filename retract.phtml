@@ -19,7 +19,7 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once($mode . "f_roleemailaddress.phtml");
+require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
 require_once("f_connectselectdb.phtml");
@@ -40,7 +40,7 @@ $first_name = base64_decode($a);
 $last_name = base64_decode($b);
 $applicable_month_num = base64_decode($c);
 $email_addr = base64_decode($d);
-$squad = base64_decode($e);
+$coord_agency = base64_decode($e);
 //
 // Determine the three-letter abbreviation for the specified month.
 //
@@ -49,16 +49,29 @@ $applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
 //
 // Connect to the database.
 //
-ConnectSelectDb("localhost","kalipso",Password(),"oscar");
+if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   {
+   ?>
+   <h2><i>Sorry...</i></h2>
+   <b>
+   <blockquote>
+      <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your retraction operation later.</p>"; ?>
+   </blockquote>            
+   </b>
+   <?
+   }
+else
+{
 //
 // Delete the appropriate records from the avail_sheet table.
 //
 mysql_query
    (
    "delete from " . $mode . "avail_sheet "
-   .  " where last_name = \"" . addslashes(addslashes($last_name)) . "\""
-   .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
-   .  "    and month = '$applicable_month_abbrev'"
+   .  " where month = '$applicable_month_abbrev' "
+   .  "    and last_name = \"" . addslashes(addslashes($last_name)) . "\" "
+   .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\" "
+   .  "    and coord_agency = '$coord_agency' "
    )
    or die("Delete failed with error:  " . mysql_error());
 if ($num_rows_affected = mysql_affected_rows())
@@ -69,9 +82,11 @@ if ($num_rows_affected = mysql_affected_rows())
       .  " set last_name = \"" . addslashes(addslashes($last_name)) . "\""
       .  "    , first_name = \"" . addslashes(addslashes($first_name)) . "\""
       .  "    , email_addr = \"" . addslashes(addslashes($email_addr)) . "\""
-      .  "    , squad = '$squad'"
+      .  "    , coord_agency = '$coord_agency'"
       .  "    , month = '$applicable_month_abbrev'"
-      .  "    , note='</i><b>*** WARNING: User at IP address $REMOTE_ADDR retracted all availabilities on " . date("l Y-M-d H:i:s T") . ".</b><i>'"
+      .  "    , be_third = 'TRUE'"
+      .  "    , be_nondriver = 'TRUE'"
+      .  "    , note='</i><b>*** WARNING: User (@$REMOTE_ADDR) retracted all availabilities on " . date("l Y-M-d H:i:s T") . ".</b><i>'"
       .  "    , expiration='" . date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0)) . "'"
       )
       or die("Finalization query failed with error:  " . mysql_error());
@@ -92,18 +107,18 @@ if ($num_rows_affected == 0)
       . "   </ul>\n"
       . "If you suspect a bug, please report the problem to the following people:\n"
       . "   <ul>\n"
-      . "      <li><a href=mailto:\"" . RoleEmailAddress("schedule-coordinator",$mode) . "\">the Schedule Coordinator</a></li>\n"
+      . "      <li><a href=mailto:\"" . RoleEmailAddress("schedule-coordinator",$mode,$coord_agency) . "\">the $coord_agency Schedule Coordinator</a></li>\n"
       . "      <li><a href=mailto:\"" . RoleEmailAddress("",$mode) . "\">the OSCAR System Administrator</a></li>\n"
       . "   </ul>\n"
       . "</i>\n";
    }
 echo "<p><b>Don't forget to <a href="
    . OscarRootUrl()
-   . "/" . $mode . "als-avail-sub-form.phtml>submit an accurate availability sheet</a> by the deadline.</b></p>\n"
+   . "/" . $mode . "form-submit-avails-1.phtml>submit an accurate availability sheet</a> to agency \"$coord_agency\" by the deadline.</b></p>\n"
    . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
    . RoleEmailAddress("",$mode)
    . "\">OSCAR System Administrator</a>.</p>";
-
+}
 ?>
 <hr>
 <p><small><small><em><pre>$Id$</pre></em></small></small>
