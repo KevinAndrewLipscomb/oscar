@@ -168,6 +168,15 @@ else
    // Filtered report
    //
    $base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5 from avail_sheet ";
+   switch ($team_filter)
+      {
+      case "team_5_only":
+         $where_clause .= "and be_on_team_5 = 'TRUE' ";
+         break;
+      case "team_30_only":
+         $where_clause .= "and be_on_team_30 = 'TRUE' ";
+         break;
+      }
    //
    // Convert sequence of day/night scalars into 1-based arrays for easier looping later.
    //
@@ -259,7 +268,6 @@ else
    }
 ?>
 <pre>--- END ---</pre><br>
-<br>
 <small><i><pre>$Id$</pre></i></small>
 </td></tr></table>
 </body>
