@@ -32,6 +32,7 @@ require_once("f_bodyopen.phtml");
         <blockquote>
         <p>Full reports show all availabilities entered into the OSCAR system for an entire month.&nbsp; Such voluminous data is usually only required by schedule coordinators, certain officers, and auditors.&nbsp; Front line providers are usually better off requesting <a href=#FilteredReport>filtered reports</a>.</p>
         <form action=request-full-report.phtml method=post>
+           <input type=hidden name=report_type value="FULL">
            <table>
               <tr>
                  <td>Your name:</td>
@@ -71,6 +72,7 @@ require_once("f_bodyopen.phtml");
         <blockquote>
         <p>This report answers the question, "Who might be available to cover my duty?"</p>
         <form action=request-filtered-report.phtml method=post>
+           <input type=hidden name=report_type value="FILTERED">
            <table>
               <tr>
                  <td>Your name:</td>
