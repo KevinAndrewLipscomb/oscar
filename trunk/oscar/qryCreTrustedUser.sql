@@ -11,7 +11,7 @@
 # --------------------------------------------------------
 
 #
-# Table structure for table 'trusted_user'
+# Table structure for tables 'trusted_user' and 'x_trusted_user'
 #
 
 CREATE TABLE `trusted_user` (
@@ -19,4 +19,7 @@ CREATE TABLE `trusted_user` (
   PRIMARY KEY (`email_address`)
 ) TYPE=MyISAM;
 
-
+CREATE TABLE `x_trusted_user` (
+  `email_address` varchar(64) NOT NULL default '',
+  PRIMARY KEY (`email_address`)
+) TYPE=MyISAM;
