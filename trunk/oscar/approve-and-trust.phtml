@@ -19,6 +19,11 @@ require_once("f_sendapprovalnotice.phtml");
 <hr>
 <?
 //
+// Connect to the database.
+//
+mysql_connect(localhost,kalipso,Password());
+mysql_select_db(oscar);
+//
 // Insert the trusted email address into the trusted_user table.
 //
 mysql_query("insert into trusted_user set email_address='$email_addr'")
