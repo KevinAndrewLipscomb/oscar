@@ -109,7 +109,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                //
                $first_name = $last_name = "";
                //
-               extract($row = mysql_fetch_row($result));
+               extract($row = mysql_fetch_array($result));
                //
                // The insert and subsequent select must've succeeded.
                //
