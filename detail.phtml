@@ -57,9 +57,8 @@ $result = mysql_query
 $num_rows = mysql_num_rows($result);
 //
 echo "<pre>\n";
-echo "Decoded \$first_name = $first_name<br>\n";
-echo "Decoded \$last_name = $last_name<br>\n";
-echo "Decoded \$month = $month<br>\n";
+echo "Decoded addslashes(\$first_name) = " . addslashes($first_name) . "<br>\n";
+echo "Decoded addslashes(\$last_name) = " . addslashes($last_name) . "<br>\n";
 echo "</pre>\n";
 //
 echo "<h4>Found $num_rows ";
