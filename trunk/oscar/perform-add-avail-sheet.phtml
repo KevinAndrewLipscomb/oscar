@@ -92,6 +92,7 @@ require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
 require_once("f_showavailsheetrecdetail.phtml");
 require_once("f_connectselectdb.phtml");
+require_once("f_squadofcoordagency.phtml");
 ?>
 <html>
 <head><title>OSCAR - Confirmation</title></head>
@@ -132,7 +133,7 @@ require_once("f_connectselectdb.phtml");
                . ", last_name='" . addslashes(trim($last_name)) ."'"
                . ", email_addr='" . addslashes(trim($email_addr)) . "'"
                . ", month='" . $applicable_month_abbrev . "'"
-               . ", coord_agency='$coord_agency'";
+               . ", coord_agency='" . SquadOfCoordAgency($coord_agency,$mode) . "'";
             if ($coord_agency == "EMS")
                {
                $sql .= ", squad='$squad'";
