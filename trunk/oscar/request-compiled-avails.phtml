@@ -26,10 +26,16 @@ require_once("f_bodyopen.phtml");
            <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
         </td></tr></table>
         <hr>
-        <p>To guard against misuse of the OSCAR system, all generated reports are first sent to the VBDEMS Central Schedule Coordinator.&nbsp; Upon the coordinator's approval, the report will be forwarded to the email address that you specify.</p>
+        <p>To guard against misuse, the OSCAR system first sends all generated reports to the VBDEMS Central Schedule Coordinator.&nbsp; The coordinator then forwards the report to the email address that you specify.&nbsp; Because this process requires human intervention, results are not immediate.</p>
+        <h3><a name=FullReport></a>Full (entire month's) report</h3>
         <blockquote>
+        <p>Full reports show all availabilities entered into the OSCAR system for an entire month.&nbsp; Such voluminous data is usually only required by schedule coordinators, certain officers, and auditors.&nbsp; Front line providers are usually better off requesting <a href=#FilteredReport>filtered reports</a>.</p>
         <form action=request-full-report.phtml method=post>
            <table>
+              <tr>
+                 <td>Your name:</td>
+                 <td><input type=text name=name size=64>
+              </tr>
               <tr>
                  <td>Your email address:</td>
                  <td><input type=text name=email_addr size=64>
@@ -55,9 +61,48 @@ require_once("f_bodyopen.phtml");
                  </td>
               </tr>
            </table>
+           <p>Please double check your entries before completing your request.</p>
            <input type=submit value="Request full report">
         </form>
+        </blockquote>
+        <br><br>
+        <h3><a name=FilteredReport></a>Filtered report</h3>
         <blockquote>
+        <form action=request-filtered-report.phtml method=post>
+           <table>
+              <tr>
+                 <td>Your name:</td>
+                 <td><input type=text name=name size=64>
+              </tr>
+              <tr>
+                 <td>Your email address:</td>
+                 <td><input type=text name=email_addr size=64>
+              </tr>
+              <tr>
+                 <td>Applicable month:</td>
+                 <td>
+                    <select size="1" name=month>
+                       <option value="">Select</option>
+                       <option value="JAN">January</option>
+                       <option value="FEB">February</option>
+                       <option value="MAR">March</option>
+                       <option value="APR">April</option>
+                       <option value="MAY">May</option>
+                       <option value="JUN">June</option>
+                       <option value="JUL">July</option>
+                       <option value="AUG">August</option>
+                       <option value="SEP">September</option>
+                       <option value="OCT">October</option>
+                       <option value="NOV">November</option>
+                       <option value="DEC">December</option>
+                    </select>
+                 </td>
+              </tr>
+           </table>
+           <p>Please double check your entries before completing your request.</p>
+           <input type=submit value="Request filtered report">
+        </form>
+        </blockquote>
         <hr>
         <p><small><small><em><pre>$Id$</pre></em></small></small>
        </td>
