@@ -2,12 +2,16 @@
 //
 // $Id$
 //
+// Note:
+//    To expand a role into multiple email addresses, separate the addresses
+/     with a comma ONLY -- no spaces.
+//
 function RoleEmailAddress($role)
    {
    switch ($role)
       {
       case "schedule-coordinator":
-         return "infotech@kvrs.org, lipscombka@nnsy.navy.mil, kevin.a.lipscomb@us.pwcglobal.com";
+         return "infotech@kvrs.org,lipscombka@nnsy.navy.mil,kevin.a.lipscomb@us.pwcglobal.com";
          break;
       default:
          return "infotech@kvrs.org";
