@@ -17,7 +17,7 @@ require_once("f_bodyopen.phtml");
 mysql_connect(localhost,kalipso,fesface);
 mysql_select_db(oscar);
 //
-$sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
+$base_sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
 $presentation_clause = "order by be_on_team_5, be_on_team_30, squad";
 $where_clause = "";
 if ($report_type == "FULL")
@@ -27,7 +27,7 @@ if ($report_type == "FULL")
    for ($index = 1; $index <= 31; $index++)
       {
       $where_clause_2 = "and d$index='AVAILABLE' ";
-      $sql_statement = stripslashes($sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+      $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
@@ -40,7 +40,7 @@ if ($report_type == "FULL")
             if ($be_on_team_5) echo "[5]";
             if ($note != "") echo "*";
             echo "\n";
-            $div_spec = $frame_num = $caption = $tech_details = "";
+            $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
             }
          }
       else
@@ -52,7 +52,7 @@ if ($report_type == "FULL")
    for ($index = 1; $index <= 31; $index++)
       {
       $where_clause_2 = "and n$index='AVAILABLE' ";
-      $sql_statement = stripslashes($sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+      $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
       $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
       if ($num_rows = mysql_num_rows($result))
          {
@@ -65,7 +65,7 @@ if ($report_type == "FULL")
             if ($be_on_team_5) echo "/5";
             if ($note != "") echo "/*";
             echo "\n";
-            $div_spec = $frame_num = $caption = $tech_details = "";
+            $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
             }
          }
       else
