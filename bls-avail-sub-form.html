@@ -1,0 +1,246 @@
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>KVRS - BLS Availability Submission Form</title>
+</head>
+
+<body>
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" width="80%">
+    <tr>
+      <td width="100%">
+        <h6 align="center">KEMPSVILLE VOLUNTEER RESCUE SQUAD<br>
+        OFFICE OF THE SCHEDULE SERGEANT</h6>
+        <h1 align="center">Online Availability Submission Form</h1>
+        <h2 align="center">for BLS Providers</h2>
+        <hr>
+        <p>For KVRS members only.</p>
+        <!--webbot BOT="GeneratedScript" PREVIEW=" " startspan --><script Language="JavaScript"><!--
+function FrontPage_Form1_Validator(theForm)
+{
+
+  if (theForm.ApplicableMonth.selectedIndex < 0)
+  {
+    alert("Please select one of the \"ApplicableMonth\" options.");
+    theForm.ApplicableMonth.focus();
+    return (false);
+  }
+
+  if (theForm.ApplicableMonth.selectedIndex == 0)
+  {
+    alert("The first \"ApplicableMonth\" option is not a valid selection.  Please choose one of the other options.");
+    theForm.ApplicableMonth.focus();
+    return (false);
+  }
+
+  var checkOK = "0123456789-,";
+  var checkStr = theForm.ExtraShifts.value;
+  var allValid = true;
+  var decPoints = 0;
+  var allNum = "";
+  for (i = 0;  i < checkStr.length;  i++)
+  {
+    ch = checkStr.charAt(i);
+    for (j = 0;  j < checkOK.length;  j++)
+      if (ch == checkOK.charAt(j))
+        break;
+    if (j == checkOK.length)
+    {
+      allValid = false;
+      break;
+    }
+    if (ch != ",")
+      allNum += ch;
+  }
+  if (!allValid)
+  {
+    alert("Please enter only digit characters in the \"ExtraShifts\" field.");
+    theForm.ExtraShifts.focus();
+    return (false);
+  }
+  return (true);
+}
+//--></script><!--webbot BOT="GeneratedScript" endspan --><form method="POST" action="../../_derived/nortbots.htm" onsubmit="location.href='../../_derived/nortbots.htm';return false;" name="FrontPage_Form1" webbot-action="--WEBBOT-SELF--" WEBBOT-onSubmit="return FrontPage_Form1_Validator(this)">
+          <!--webbot bot="SaveResults" startspan S-Email-Format="TEXT/PRE"
+          S-Email-Address="vbrsq989@msn.com" B-Email-Label-Fields="TRUE"
+          B-Email-ReplyTo-From-Field="TRUE" S-Email-ReplyTo="EmailAddress"
+          B-Email-Subject-From-Field="FALSE"
+          S-Email-Subject="Online Availability Sheet" S-Builtin-Fields
+          U-Confirmation-Url="success-bls.htm" --><strong>[FrontPage Save Results Component]</strong><!--webbot
+          bot="SaveResults" endspan i-checksum="6561" -->
+          <table border="0" cellpadding="0" cellspacing="0" width="912">
+            <tr>
+              <td width="167">Name:</td>
+              <td width="741"><input type="text" name="Name" size="60"></td>
+            </tr>
+            <tr>
+              <td width="167">Email address:</td>
+              <td width="741"><input type="text" name="EmailAddress" size="60"></td>
+            </tr>
+            <tr>
+              <td width="167">Applicable month:</td>
+              <td width="741"><!--webbot bot="Validation"
+               B-Value-Required="TRUE" B-Disallow-First-Item="TRUE" --><select size="1" name="ApplicableMonth">
+                  <option>Select</option>
+                  <option>January</option>
+                  <option>February</option>
+                  <option>March</option>
+                  <option>April</option>
+                  <option>May</option>
+                  <option>June</option>
+                  <option>July</option>
+                  <option>August</option>
+                  <option>September</option>
+                  <option>October</option>
+                  <option>November</option>
+                  <option>December</option>
+                </select></td>
+            </tr>
+  </center>
+  <center>
+          </table>
+  </center>
+        <p>Check all that apply as of today's date:</p>
+        <ul>
+          <li><input type="checkbox" name="Trainee" value="YES, I AM A TRAINEE">I
+            am a trainee.</li>
+          <li><input type="checkbox" name="ALSProvider" value="YES, I AM AN ALS PROVIDER">I
+            am an ST, CT, or PM.</li>
+          <li><input type="checkbox" name="Driver" value="NO, I AM NOT A DRIVER">I
+            am NOT a driver.</li>
+        </ul>
+        <div align="left">
+          <table border="0" cellpadding="0" cellspacing="0" width="892">
+            <tr>
+              <td width="890" valign="bottom" colspan="3">Check all shifts for
+                which you are available for at least one type of duty:
+                <p>&nbsp;</td>
+            </tr>
+            <tr>
+              <td width="136" valign="bottom">Leave nonapplicable days blank.
+               <p>&nbsp;</td>
+              <td width="125" valign="bottom">
+                <p align="left">Day shifts</p>
+                <ul>
+                  <li><input type="checkbox" name="D1" value="AVAILABLE">1st</li>
+                  <li><input type="checkbox" name="D2" value="AVAILABLE">2nd</li>
+                  <li><input type="checkbox" name="D3" value="AVAILABLE">3rd</li>
+                  <li><input type="checkbox" name="D4" value="AVAILABLE">4th</li>
+                  <li><input type="checkbox" name="D5" value="AVAILABLE">5th</li>
+                  <li><input type="checkbox" name="D6" value="AVAILABLE">6th</li>
+                  <li><input type="checkbox" name="D7" value="AVAILABLE">7th</li>
+                  <li><input type="checkbox" name="D8" value="AVAILABLE">8th</li>
+                  <li><input type="checkbox" name="D9" value="AVAILABLE">9th</li>
+                  <li><input type="checkbox" name="D10" value="AVAILABLE">10th</li>
+                  <li><input type="checkbox" name="D11" value="AVAILABLE">11th</li>
+                  <li><input type="checkbox" name="D12" value="AVAILABLE">12th</li>
+                  <li><input type="checkbox" name="D13" value="AVAILABLE">13th</li>
+                  <li><input type="checkbox" name="D14" value="AVAILABLE">14th</li>
+                  <li><input type="checkbox" name="D15" value="AVAILABLE">15th</li>
+                  <li><input type="checkbox" name="D16" value="AVAILABLE">16th</li>
+                  <li><input type="checkbox" name="D17" value="AVAILABLE">17th</li>
+                  <li><input type="checkbox" name="D18" value="AVAILABLE">18th</li>
+                  <li><input type="checkbox" name="D19" value="AVAILABLE">19th</li>
+                  <li><input type="checkbox" name="D20" value="AVAILABLE">20th</li>
+                  <li><input type="checkbox" name="D21" value="AVAILABLE">21st</li>
+                  <li><input type="checkbox" name="D22" value="AVAILABLE">22nd</li>
+                  <li><input type="checkbox" name="D23" value="AVAILABLE">23rd</li>
+                  <li><input type="checkbox" name="D24" value="AVAILABLE">24th</li>
+                  <li><input type="checkbox" name="D25" value="AVAILABLE">25th</li>
+                  <li><input type="checkbox" name="D26" value="AVAILABLE">26th</li>
+                  <li><input type="checkbox" name="D27" value="AVAILABLE">27th</li>
+                  <li><input type="checkbox" name="D28" value="AVAILABLE">28th</li>
+                  <li><input type="checkbox" name="D29" value="AVAILABLE">29th</li>
+                  <li><input type="checkbox" name="D30" value="AVAILABLE">30th</li>
+                  <li><input type="checkbox" name="D31" value="AVAILABLE">31st</li>
+                </ul>
+              </td>
+              <td width="625" valign="bottom">
+                <p align="left">Night shifts</p>
+                <ul>
+                  <li><input type="checkbox" name="N1" value="AVAILABLE">1st</li>
+                  <li><input type="checkbox" name="N2" value="AVAILABLE">2nd</li>
+                  <li><input type="checkbox" name="N3" value="AVAILABLE">3rd</li>
+                  <li><input type="checkbox" name="N4" value="AVAILABLE">4th</li>
+                  <li><input type="checkbox" name="N5" value="AVAILABLE">5th</li>
+                  <li><input type="checkbox" name="N6" value="AVAILABLE">6th</li>
+                  <li><input type="checkbox" name="N7" value="AVAILABLE">7th</li>
+                  <li><input type="checkbox" name="N8" value="AVAILABLE">8th</li>
+                  <li><input type="checkbox" name="N9" value="AVAILABLE">9th</li>
+                  <li><input type="checkbox" name="N10" value="AVAILABLE">10th</li>
+                  <li><input type="checkbox" name="N11" value="AVAILABLE">11th</li>
+                  <li><input type="checkbox" name="N12" value="AVAILABLE">12th</li>
+                  <li><input type="checkbox" name="N13" value="AVAILABLE">13th</li>
+                  <li><input type="checkbox" name="N14" value="AVAILABLE">14th</li>
+                  <li><input type="checkbox" name="N15" value="AVAILABLE">15th</li>
+                  <li><input type="checkbox" name="N16" value="AVAILABLE">16th</li>
+                  <li><input type="checkbox" name="N17" value="AVAILABLE">17th</li>
+                  <li><input type="checkbox" name="N18" value="AVAILABLE">18th</li>
+                  <li><input type="checkbox" name="N19" value="AVAILABLE">19th</li>
+                  <li><input type="checkbox" name="N20" value="AVAILABLE">20th</li>
+                  <li><input type="checkbox" name="N21" value="AVAILABLE">21st</li>
+                  <li><input type="checkbox" name="N22" value="AVAILABLE">22nd</li>
+                  <li><input type="checkbox" name="N23" value="AVAILABLE">23rd</li>
+                  <li><input type="checkbox" name="N24" value="AVAILABLE">24th</li>
+                  <li><input type="checkbox" name="N25" value="AVAILABLE">25th</li>
+                  <li><input type="checkbox" name="N26" value="AVAILABLE">26th</li>
+                  <li><input type="checkbox" name="N27" value="AVAILABLE">27th</li>
+                  <li><input type="checkbox" name="N28" value="AVAILABLE">28th</li>
+                  <li><input type="checkbox" name="N29" value="AVAILABLE">29th</li>
+                  <li><input type="checkbox" name="N30" value="AVAILABLE">30th</li>
+                  <li><input type="checkbox" name="N31" value="AVAILABLE">31st</li>
+                </ul>
+              </td>
+            </tr>
+          </table>
+        </div>
+          <p align="left">How many extra shifts are you willing to be scheduled
+          for?&nbsp; <!--webbot bot="Validation" S-Data-Type="Integer"
+          S-Number-Separators="," --><input type="text" name="ExtraShifts" size="2" value="0"></p>
+          <p align="left">Special requests:<br>
+          <textarea rows="8" name="SpecialRequest" cols="60"></textarea></p>
+          <blockquote>
+            <table border="1">
+               <tr>
+                  <td width="100%">
+                     <p align="center"><u>Survey box</u><br>
+                     <small>Please take a moment to fill out the survey questions,
+                     if any.</small></p>
+                     <ul>
+                        <li>No survey questions at this time.</li>
+                     </ul>
+                  </td>
+               </tr>
+            </table>
+          </blockquote>
+        <ul>
+          <li>
+            <p align="left">Availability sheets are due on the 10th day of the
+            proceeding month.</li>
+          <li>
+            <p align="left">Double check your selections before submitting this
+            form.</li>
+          <li>
+            <p align="left">When you click Submit, this form will be converted
+            into an email and sent to the KVRS Schedule Sergeant.</li>
+          <li>
+            <p align="left">If you have feedback about this form, please send it
+            to the <a href="mailto:infotech@kvrs.org">KVRS Information
+            Technology Committee Chair</a>.</li>
+          <li>
+            <p align="left">If you wish to print a copy of the completed form
+            for your records, do so <b>before</b> you click Submit.</li>
+        </ul>
+  <center>
+          <p><input type="submit" value="Submit" name="B1"><input type="reset" value="Reset" name="B2"></p>
+        </form>
+        <p><small><small><em><pre>$Id$</pre></em></small></small></center></td>
+    </tr>
+  </table>
+</body>
+
+</html>
