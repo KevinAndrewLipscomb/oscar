@@ -410,7 +410,9 @@ if ($email_addr == $recipient)
    //
    //          0        1         2         3         4         5         6         7
    //          123456789012345678901234567890123456789012345678901234567890123456789012
-   $notice =  "The OSCAR Availability Report you requested is available at <" . OscarRootUrl() . "/get-report.phtml?digest=$digest>.\n";
+   $notice =  "The OSCAR Availability Report\n";
+   $notice .= "you requested is available at:\n";
+   $notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest>.\n\n";
    }
 else
    {
@@ -428,10 +430,16 @@ else
    $notice .= "   Name:           $name\n";
    $notice .= "   Email address:  $email_addr\n\n";
    $notice .= "Please take one of the following actions:\n\n";
-   $notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this and subsequent OSCAR requests from this user), click here:  " . OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr>\n\n";
-   $notice .= "2. To approve this request WITHOUT registering the user as trusted, click here:  <" . OscarRootUrl() . "/approve.phtml?digest=$digest>\n\n";
+   $notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
+   $notice .= "   and subsequent OSCAR requests from this user),\n";
+   $notice .= "   click here:\n";
+   $notice .= OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n";
+   $notice .= "2. To approve this request WITHOUT registering the\n";
+   $notice .= "   user as trusted, click here:\n";
+   $notice .= OscarRootUrl() . "/approve.phtml?digest=$digest\n\n";
    $notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n";
-   $notice .= "The report is available for review at <" . OscarRootUrl() . "/get-report.phtml?digest=$digest>.\n\n";
+   $notice .= "The report is available for review at:\n";
+   $notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n";
    }
 //
 // Add sig lines.
