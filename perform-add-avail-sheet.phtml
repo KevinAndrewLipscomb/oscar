@@ -163,6 +163,8 @@ if ($be_needing_driver) $be_third = FALSE;
                }
             else
                {
+               if ($be_on_team_30 == "TRUE") $sql .= ", be_on_team_30='TRUE'";
+               if ($be_on_team_5 == "TRUE") $sql .= ", be_on_team_5='TRUE'";
                if ($be_third == "TRUE") $sql .= ", be_third='TRUE'";
                if ($be_nondriver == "TRUE") $sql .= ", be_nondriver='TRUE'";
                if ($be_needing_driver == "TRUE") $sql .= ", be_needing_driver='TRUE'";
