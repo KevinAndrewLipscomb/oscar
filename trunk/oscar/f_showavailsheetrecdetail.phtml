@@ -20,22 +20,19 @@ function ShowAvailSheetRecDetail
    )
    {
    echo "<table cellspacing=5>\n";
-   if ($timestamp)
-      {
-      echo "   <tr><td align=right valign=top><b>Time&nbsp;of&nbsp;submission:</b></td><td><b>";
-      echo substr($timestamp,0,4)
-         .  "-"
-         .  substr($timestamp,4,2)
-         .  "-"
-         .  substr($timestamp,6,2)
-         .  " "
-         .  substr($timestamp,8,2)
-         .  ":"
-         .  substr($timestamp,10,2)
-         .  ":"
-         .  substr($timestamp,12,2);
-      echo "   </b></td></tr>\n";
-      }
+   echo "   <tr><td align=right valign=top><b>Time&nbsp;of&nbsp;submission:</b></td><td><b>";
+   echo substr($timestamp,0,4)
+      .  "-"
+      .  substr($timestamp,4,2)
+      .  "-"
+      .  substr($timestamp,6,2)
+      .  " "
+      .  substr($timestamp,8,2)
+      .  ":"
+      .  substr($timestamp,10,2)
+      .  ":"
+      .  substr($timestamp,12,2);
+   echo "   </b></td></tr>\n";
    echo "   <tr><td align=right valign=top>First&nbsp;name:</td><td><i>" . stripslashes($first_name) . "</i></td></tr>\n";
    echo "   <tr><td align=right valign=top>Last&nbsp;name:</td><td><i>" . stripslashes($last_name) . "</i></td></tr>\n";
    echo "   <tr><td align=right valign=top>Email&nbsp;address:</td><td><i><a href=mailto:\"" . stripslashes($email_addr) . "\">" . stripslashes($email_addr) . "</a></i></td></tr>\n";
