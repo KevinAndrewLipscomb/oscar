@@ -93,9 +93,13 @@ $presentation_clause = 'order by be_on_team_5 desc '
    .  '   , be_nondriver desc '
    .  '   , be_needing_driver desc ';
 //
+// Calculate tomorrow time
+//
+$tomorrow_time = mktime(0,0,0,date('m'),date('d')+1,date('Y'));
+//
 // The request form, under certain conditions, sends a value of 13 for applicable_month_num.  Cast it into the range 1..12.
 //
-$applicable_month_num = date('n');
+$applicable_month_num = date('n',$tomorrow_time);
 $applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
 $days_in_applicable_month = date("t",$applicable_month_time);
 //
@@ -119,8 +123,8 @@ $info_message = "";
       $report .= "<pre>\n";
       $report .= "<b><u>System-wide</u></b> daily availability report generated " . date("l Y-M-d H:i:s T") . "\n\n";
       $alternate_text .= "SYSTEM-WIDE daily availability report generated " . date("l Y-M-d H:i:s T") . "\n\n";
-      $report .= "This report ONLY includes TODAY's shifts.\n";
-      $alternate_text .= "This report ONLY includes TODAY's shifts.\n";
+      $report .= "This report ONLY includes TOMORROW's shifts.\n";
+      $alternate_text .= "This report ONLY includes TOMORROW's shifts.\n";
       if ($info_message)
          {
          $report .= "$info_message\n";
@@ -128,7 +132,7 @@ $info_message = "";
          }
       $report .= "\n";
       $alternate_text .= "\n";
-            $day_index = date('j');
+            $day_index = date('j',$tomorrow_time);
             $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
             $where_clause_2 = " and d$day_index='AVAILABLE' ";
             $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
