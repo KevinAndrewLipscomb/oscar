@@ -1,0 +1,89 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - FAQ</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Frequently Asked Questions</h1>
+        </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td></tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+           {
+           ?>
+           <h2><i>Sorry...</i></h2>
+           <b>
+           <blockquote>
+              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try again later.</p>"; ?>
+           </blockquote>            
+           </b>
+           <?
+           }
+        else
+           {
+           ?>
+           <p>To search for a particular word or phrase, press CTRL-F.</p>
+           <ul>
+              <?
+              $result = mysql_query("select * from " . $mode . "faq")
+                 or die("Query failed with error: " . mysql_error());
+              $num_rows = mysql_num_rows($result);
+              for ($i=1; $i<=$num_rows; $i++)
+                 {
+                 extract(mysql_fetch_array($result));
+                 echo "<li><a href=#$position>$question</a></li><br>\n";
+                 }
+              ?>
+           </ul>
+           <hr>
+           <blockquote>
+              <?
+              if ($num_rows > 0)
+                 {
+                 mysql_data_seek($result,0);
+                 for ($i=1; $i<=$num_rows; $i++)
+                    {
+                    extract(mysql_fetch_array($result));
+                    echo "<a name=\"$position\"></a><b>$question</b></a><blockquote>$answer</blockquote>\n";
+                    }
+                 }
+              ?>
+           </blockquote>
+           <?
+           }
+        ?>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+
