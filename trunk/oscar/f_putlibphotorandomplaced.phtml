@@ -18,7 +18,7 @@ function PutLibPhotoRandomPlaced
    // Create the SQL statement
    //
    $sql = "select div_spec,frame_num from photo_detail where placement like '%$placement%' order by rand()";
-   if ($limit != "") $sql = $sql . " limit '$limit'";
+   if ($limit != "") $sql = $sql . " limit $limit";
    //
    // Execute the statement
    //
