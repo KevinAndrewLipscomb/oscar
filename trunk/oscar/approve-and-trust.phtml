@@ -11,17 +11,23 @@ require_once("f_sendapprovalnotice.phtml");
 //
 ?>
 <html>
-<head><title>Availability Report Request Approval</title></head>
+<head><title>Availability Report Request Approval and Trust Registration</title></head>
 <? BodyOpen(); ?>
 <table align=center width=80%><tr><td>
 <H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
-<H1 ALIGN=CENTER>Availability Report Request Approval</H1>
+<H1 ALIGN=CENTER>Availability Report Request Approval and Trust Registration</H1>
 <hr>
 <?
+//
+// Insert the trusted email address into the trusted_user table.
+//
+mysql_query("insert into trusted_user set email_address='$email_addr'")
+   or die("The trust insertion failed with error:  " . mysql_error());
+//
 if (SendApprovalNotice($email_addr,$digest))
    {
-   PutLibPhotoRandomPlaced("sasquatch",1,"left");
-   echo "<p>The OSCAR system has registered your approval of user $email_addr's request, and has sent the user instructions on how to retrieve the requested report.</p>";
+   PutLibPhotoRandomPlaced("sasquatch",1,"right");
+   echo "<p>The OSCAR system has registered your approval of user $email_addr's request; has sent the user instructions on how to retrieve the requested report; and has registered $email_addr as a trusted user.</p>";
    }
 else
    {
