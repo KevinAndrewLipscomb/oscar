@@ -1027,7 +1027,7 @@ else
    $screen_notice .= "   Name:           $name\n";
    $screen_notice .= "   Email address:  $email_addr\n\n";
    $screen_notice .= "The user gave this reason for the request:\n\n";
-   $screen_notice .= "   " . wordwrap($reason,"\n   ",72) . "\n\n";
+   $screen_notice .= "   " . wordwrap($reason,72,"\n   ") . "\n\n";
    $screen_notice .= "Please take one of the following actions:\n\n\n";
    $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
    $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
