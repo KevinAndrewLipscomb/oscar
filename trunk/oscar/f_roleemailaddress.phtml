@@ -5,7 +5,8 @@
 function RoleEmailAddress
    (
    $role = "",
-   $mode = ""
+   $mode = "",
+   $coord_agency = "EMS"
    )
    {
    $saved_error_level = error_reporting(E_ALL);
@@ -16,7 +17,9 @@ function RoleEmailAddress
    $result = mysql_query
       (
       "select email_addr from oscar." . $mode . "authority "
-      .  "   where role='$role' limit 1"
+      .  "   where role='$role' "
+      .  "      and coord_agency='$coord_agency' "
+      .  "   limit 1"
       )
       or die("RoleEmailAddress query failed with error:  " . mysql_error());
    //

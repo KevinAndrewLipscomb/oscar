@@ -19,13 +19,14 @@ function ShowAvailSheetRecDetail
    $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
    $note,
    $expiration,
-   $be_authority = ""
+   $be_authority = "",
+   $mode = "",
+   $coord_agency = "EMS",
+   $be_needing_driver = "",
+   $be_nondriver = "",
+   $be_third = ""
    )
    {
-   $mode="";
-      //
-      // Set mode to "" for production use, "x_" to debug.
-      //
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    echo "<table cellspacing=5>\n";
@@ -45,18 +46,28 @@ function ShowAvailSheetRecDetail
    echo "   <tr><td align=right valign=top>First&nbsp;name:</td><td><i>" . stripslashes($first_name) . "</i></td></tr>\n";
    echo "   <tr><td align=right valign=top>Last&nbsp;name:</td><td><i>" . stripslashes($last_name) . "</i></td></tr>\n";
    echo "   <tr><td align=right valign=top>Email&nbsp;address:</td><td><i><a href=mailto:\"" . stripslashes($email_addr) . "\">" . stripslashes($email_addr) . "</a></i></td></tr>\n";
-   echo "   <tr><td align=right valign=top>Home&nbsp;squad:</td><td><i>$squad</i></td></tr>\n";
    echo "   <tr><td align=right valign=top>Applicable&nbsp;month:</td><td><i>$month</i></td></tr>\n";
-   echo "   <tr><td align=right valign=top>Zone car ALS:</td><td><i>$be_als</i></td></tr>\n";
-   echo "   <tr><td align=right valign=top>On&nbsp;squad&nbsp;truck&nbsp;team:</td><td><i>$be_on_team_30</i></td></tr>\n";
-   echo "   <tr><td align=right valign=top>On&nbsp;EMS-5&nbsp;team:</td><td><i>$be_on_team_5</i></td></tr>\n";
-   echo "   <tr><td align=right valign=top>TDA:</td><td><i>$be_tda</i></td></tr>\n";
    echo "   <tr><td align=right valign=top>#Extra&nbsp;duties&nbsp;will&nbsp;run:</td><td><i>$num_extras</i></td></tr>\n";
    echo "   <tr><td align=right valign=top>Available&nbsp;days:</td><td><i>" . AvailList($d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31) . "</i></td></tr>\n";
    echo "   <tr><td align=right valign=top>Available&nbsp;nights:</td><td><i>" . AvailList($n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31) . "</i></td></tr>\n";
    if ($be_authority == 1)
       {
       echo "   <tr><td align=right valign=top>Note:</td><td><i>" . stripslashes($note) . "</i></td></tr>\n";
+      }
+   echo "   <tr><td align=right valign=top>Coordinating agency:</td><td><i>$coord_agency</i></td></tr>\n";
+   if ($coord_agency == "EMS")
+      {
+      echo "   <tr><td align=right valign=top>Home&nbsp;squad:</td><td><i>$squad</i></td></tr>\n";
+      echo "   <tr><td align=right valign=top>Zone car ALS:</td><td><i>$be_als</i></td></tr>\n";
+      echo "   <tr><td align=right valign=top>On&nbsp;squad&nbsp;truck&nbsp;team:</td><td><i>$be_on_team_30</i></td></tr>\n";
+      echo "   <tr><td align=right valign=top>On&nbsp;EMS-5&nbsp;team:</td><td><i>$be_on_team_5</i></td></tr>\n";
+      echo "   <tr><td align=right valign=top>TDA:</td><td><i>$be_tda</i></td></tr>\n";
+      }
+   else
+      {
+      echo "   <tr><td align=right valign=top>Ambulance ALS:</td><td><i>$be_needing_driver</i></td></tr>\n";
+      echo "   <tr><td align=right valign=top>Nondriver:</td><td><i>$be_nondriver</i></td></tr>\n";
+      echo "   <tr><td align=right valign=top>Third:</td><td><i>$be_third</i></td></tr>\n";
       }
    echo "   <tr><td align=right valign=top>Record&nbsp;expires:</td><td><i>$expiration</i></td></tr>\n";
    echo "</table>\n";

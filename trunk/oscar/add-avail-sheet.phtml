@@ -2,10 +2,8 @@
 //
 // $Id$
 //
-$mode="";
-   //
-   // Set mode to "" for production use, "x_" to debug.
-   //
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
@@ -86,7 +84,7 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once("f_roleemailaddress.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
 require_once($mode . "f_showavailsheetrecdetail.phtml");
 ?>

@@ -2,10 +2,8 @@
 //
 // $Id$
 //
-$mode="";
-   //
-   // Set to "" for production use, "x_" to debug.
-   //
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
 //
 // Assign incoming arguments to themselves to avoid "undefined variable" warnings later.
 //
@@ -19,10 +17,10 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_password.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_roleemailaddress.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_availlist.phtml");
-require_once("f_showavailsheetrecdetail.phtml");
+require_once($mode . "f_showavailsheetrecdetail.phtml");
 //
 // Give arguments meaningful names.  The obtuse names and base 64 encoding are measly attempts to protect generated URLs to this script
 // from being abused.

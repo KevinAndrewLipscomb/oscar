@@ -2,20 +2,25 @@
 //
 // $Id$
 //
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once("f_roleemailaddress.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
+require_once("f_connectselectdb.phtml");
 //
 $html = "<html>\n"
       . "   <head><title>Request Escalation</title></head>\n"
       . "   " . BodyOpen() . "\n"
       . "      <table align=center width=80%><tr><td>\n"
       . "         <H6 ALIGN=CENTER>KVEO-IT-PROJECT<br>\n"
-      . "         <a href=" . OscarHomePageUrl() . ">OSCAR</a><br>\n"
+      . "         <a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br>\n"
       . "         <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n"
       . "         <H1 ALIGN=CENTER>Request Escalation</H1>\n"
       . "         <hr>\n";
@@ -24,27 +29,41 @@ echo $html;
 //
 // Connect to the database.
 //
-mysql_connect(localhost,kalipso,Password());
-mysql_select_db(oscar);
+if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Sorry...</i></h2>
+   <b>
+   <blockquote>
+      <p>OSCAR's database is temporarily unavailable.&nbsp; Please try your escalation later.</p>
+   </blockquote>            
+   </b>
+   <?
+   }
+else
+{
 //
 // Create the notice.
 //
-$result = mysql_query("select 1 from trusted_user where email_address='$email_addr'")
+$result = mysql_query("select 1 from " . $mode . "trusted_user where email_address='$email_addr'")
    or die("Trust check failed with error:  " . mysql_error());
-if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator")))
+if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator",$mode)))
    {
    //
    // Then someone has registered the requestor as trusted in the time since they first received their claim ticket.
    // Just send an approval notice to the requestor directly and forget actual escalation.
    //
-   $result = SendApprovalNotice($email_addr,$digest);
+   $result = SendApprovalNotice($email_addr,$digest,$mode);
    }
 else
    {
    //
    // Notify the next authority in the chain.
    //
-   $screen_notice_recipient = RoleEmailAddress("escalation-level-" . $level . "-recipient");
+   $screen_notice_recipient = RoleEmailAddress("escalation-level-" . $level . "-recipient",$mode);
    if ($screen_notice_recipient == "NONE")
       {
       $result=0;
@@ -67,19 +86,19 @@ else
       $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
       $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
       $screen_notice .= "   click here:\n";
-      $screen_notice .= OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
+      $screen_notice .= OscarRootUrl() . "/" . $mode . "approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
       $screen_notice .= "2. To approve JUST THIS ONE request without\n";
       $screen_notice .= "   marking the user as trusted, click here:\n";
-      $screen_notice .= OscarRootUrl() . "/approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
+      $screen_notice .= OscarRootUrl() . "/" . $mode . "approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
       $screen_notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n\n";
       $screen_notice .= "The report is available for review at:\n";
-      $screen_notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n\n";
+      $screen_notice .= OscarRootUrl() . "/" . $mode . "get-report.phtml?digest=$digest\n\n\n";
       //
       // Add sig lines.
       //
       $screen_notice .= "-- OSCAR\n";
       $screen_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
-      $screen_notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+      $screen_notice .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
       //
       // Then send a claim ticket to the requestor directly.
       //
@@ -92,7 +111,7 @@ else
       $claim_ticket .= "submitted to $screen_notice_recipient for screening.  Check\n";
       $claim_ticket .= "your email periodically for approval.\n\n";
       //
-      $next_authority = RoleEmailAddress("escalation-level-$next_level-recipient");
+      $next_authority = RoleEmailAddress("escalation-level-$next_level-recipient",$mode);
       if ($next_authority != "NONE")
          {
          $claim_ticket .= "Save this message and discard the previous claim ticket.  This is the\n";
@@ -111,7 +130,7 @@ else
          $claim_ticket .= "   $next_authority\n\n";
          $claim_ticket .= "To escalate your request to the above\n";
          $claim_ticket .= "authority, click here:\n\n";
-         $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=" . $next_level . "&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
+         $claim_ticket .= OscarRootUrl() . "/" . $mode . "escalate.phtml?level=" . $next_level . "&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
          //
          $claim_ticket_subject = "OSCAR claim ticket";
          }
@@ -124,7 +143,7 @@ else
       //
       $claim_ticket .= "-- OSCAR\n";
       $claim_ticket .= "-- Home page: " . OscarHomePageUrl() . "\n";
-      $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+      $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
       //
       // Send the mail.
       //
@@ -134,9 +153,9 @@ else
    if ($result)
       {
       PutLibPhotoRandomPlaced("sasquatch",1,"right");
-      echo "<p>The OSCAR system has successfully escalated your request.&nbsp;  Because the report you requested contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress("escalation-level-$level-recipient") . "\">Escalation Level $level Authority</a>.&nbsp; The authority will forward the report to you once screening is complete.</p>";
+      echo "<p>The OSCAR system has successfully escalated your request.&nbsp;  Because the report you requested contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress("escalation-level-$level-recipient",$mode) . "\">Escalation Level $level Authority</a>.&nbsp; The authority will forward the report to you once screening is complete.</p>";
       echo "<p><b>Check your email periodically for the report.</b></p>";
-      echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+      echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("",$mode) . ">OSCAR System Administrator</a>.</p>";
       }
    else
       {
@@ -151,7 +170,7 @@ else
          <ul>
             <?
             echo "<li><p>Use another method (like email or telephone) to ask the authority for the information you need.</p>";
-            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("") . "?subj=OSCAR-bug-report>OSCAR System Administrator</a> know this error occurred.</p>";
+            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("",$mode) . "?subj=OSCAR-bug-report>OSCAR System Administrator</a> know this error occurred.</p>";
             ?>
          </ul>
       </blockquote>            
@@ -159,6 +178,7 @@ else
       <?
       }
    }
+}
 ?>
 <hr>
 <p><small><small><em><pre>$Id$</pre></em></small></small>

@@ -2,20 +2,28 @@
 //
 // $Id$
 //
-function NumSheets($month_abbrev)
+function NumSheets
+   (
+   $month_abbrev,
+   $mode = "",
+   $coord_agency = ""
+   )
    {
    error_reporting(E_ALL);
    //
-   $mode="";
-      //
-      // Set to "" for production, "x_" to debug.
-      //
    $num_sheets = 0;
-   $result = mysql_query
-      (
-      "select count(*) as num_sheets from oscar." . $mode . "avail_sheet "
-      .  "   where month='$month_abbrev' group by month"
-      )
+   $qry = "select count(*) as num_sheets from oscar." . $mode . "avail_sheet "
+      .  "   where month='$month_abbrev' ";
+   if (!$coord_agency)
+      {
+      $qry .= " group by month";
+      }
+   else
+      {
+      $qry .= "and coord_agency='$coord_agency' "
+      .  " group by month,coord_agency";
+      }
+   $result = mysql_query($qry)
       or die("NumSheets query failed with error:  " . mysql_error());
    if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
    //
