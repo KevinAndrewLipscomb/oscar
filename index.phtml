@@ -133,7 +133,18 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                      ?>
                      <tr>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td align=right valign=top><b><a href=<? echo $mode; ?>form-submit-avails-1.phtml>Submit</a></b></td><td valign=top>an&nbsp;availability&nbsp;sheet.&nbsp;&nbsp <small><i>(BCs,&nbsp;enter&nbsp;TDAs&nbsp;<a href=<? echo $mode; ?>ers-tda-input-form.phtml>here</a>.)</i></small></td>
+                        <td align=right valign=top><b><a href=<? echo $mode; ?>form-submit-avails-1.phtml>Submit</a></b></td>
+                        <td valign=top>
+                           an&nbsp;availability&nbsp;sheet.<br>
+                           <small>
+                              <i>
+                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                                 Surrogates,&nbsp;make&nbsp;submissions&nbsp;<a href=<? echo $mode; ?>form-surrogate-submissions-1.phtml>here</a>.<br>
+                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                                 BCs,&nbsp;enter&nbsp;TDAs&nbsp;<a href=<? echo $mode; ?>ers-tda-input-form.phtml>here</a>.
+                              </i>
+                           </small>
+                        </td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td rowspan=3 valign=top>
                            <p><i><small>Server status: <? echo ServerStatus(); ?></small></i></p>

@@ -100,7 +100,123 @@ $coord_agency = $_coord_agency;
                ?>
                <p><i>For the values you supplied in Part 1, the following additional information is required.&nbsp;
                   Complete the form below and press the "Submit" button to finish the process.</i></p>
-               <form>
+               <form method="POST" action="<? echo $mode; ?>perform-surrogate-submissions.phtml">
+                  <?php
+                  echo "<input type=hidden name=email_addr value=$email_addr>\n";
+                  echo "<input type=hidden name=applicable_month_num value=$applicable_month_num>\n";
+                  echo "<input type=hidden name=coord_agency value=$coord_agency>\n";
+                  ?>
+                  <blockquote>
+                  <table cellpadding=3>
+                     <tr>
+                        <td>
+                           <table width=100%>
+                              <tr>
+                                 <td align=center colspan=2 valign=middle>Member</td>
+                              </tr>
+                              <tr>
+                                 <td align=center valign=middle>Last name</td>
+                                 <td align=center valign=middle>First name</td>
+                              </tr>
+                           </table>
+                        </td>
+                        <td>
+                           <table width=100%>
+                              <tr><td align=center valign=middle>Availabilities</td></tr>
+                              <tr><td align=center valign=middle><small>Use numbers and commas only.  (Example:  1,9,17,25)</small></td></tr>
+                           </table>
+                        </td>
+                     </tr>
+                     <?
+                     //
+                     // Make a bunch of identical rows.
+                     //
+                     for ($i = 1; $i <= 8; $i++)
+                        {
+                        ?>
+                        <tr><td colspan=3><hr></td></tr>
+                        <tr>
+                           <td>
+                              <table>
+                                 <tr>
+                                    <td align=center valign=middle><input type=text name="last_name[<? echo $i; ?>]" size=15 maxlength=32>,</td>
+                                    <td align=center valign=middle><input type=text name="first_name[<? echo $i; ?>]" size=15 maxlength=32></td>
+                                 </tr>
+                                 <tr>
+                                    <td align=center colspan=2 nowrap valign=middle>
+                                       <?php
+                                       if ($coord_agency != 'EMS')
+                                          {
+                                          ?>
+                                          drv:<input type=checkbox name=be_driver[<? echo $i; ?>] value="TRUE">
+                                          &nbsp;&nbsp;&nbsp;
+                                          aic:<input type=checkbox name=be_aic[<? echo $i; ?>] value="TRUE">
+                                          &nbsp;&nbsp;&nbsp;
+                                          ALS:<input type=checkbox name=be_needing_driver[<? echo $i; ?>] value="TRUE">
+                                          <?php
+                                          }
+                                       else
+                                          {
+                                          ?>
+                                          <table width=100%>
+                                             <tr>
+                                                <td align=center valign=middle>
+                                                   <select size="1" name=squad[<? echo $i; ?>]>
+                                                      <option value="">Home squad...</option>
+                                                      <option value="1">1 - Ocean Park</option>
+                                                      <option value="2">2 - Davis Corner</option>
+                                                      <option value="4">4 - Chesapeake Beach</option>
+                                                      <option value="5">5 - Courthouse</option>
+                                                      <option value="6">6 - Creeds</option>
+                                                      <option value="9">9 - Kempsville</option>
+                                                      <option value="13">13 - Blackwater</option>
+                                                      <option value="14">14 - Virginia Beach</option>
+                                                      <option value="15">15 - Knotts Island</option>
+                                                      <option value="16">16 - Plaza</option>
+                                                      <option value="17">17 - Sandbridge</option>
+                                                      <option value="ERS">ERS - VBFD</option>
+                                                   </select>
+                                                </td>
+                                             </tr>
+                                             <tr>
+                                                <td align=center valign=middle>
+                                                   Zone:<input type=checkbox name=be_als[<? echo $i; ?>] value="TRUE">
+                                                   &nbsp;&nbsp;&nbsp;
+                                                   SqdTrk:<input type=checkbox name=be_on_team_30[<? echo $i; ?>] value="TRUE">
+                                                   &nbsp;&nbsp;&nbsp;
+                                                   EMS-5:<input type=checkbox name=be_on_team_5[<? echo $i; ?>] value="TRUE">
+                                                </td>
+                                             </tr>
+                                          </table>
+                                          <?php
+                                          }
+                                       ?>
+                                    </td>
+                                 </tr>
+                              </table>
+                           </td>
+                           <td>
+                              <table>
+                                 <tr>
+                                    <td valign=middle>Days:</td>
+                                    <td align=center valign=middle><input type=text name="day_avails[<? echo $i; ?>]" size=40 maxlength=113></td>
+                                 </tr>
+                                 <tr>
+                                    <td valign=middle>Nights:</td>
+                                    <td align=center valign=middle><input type=text name="night_avails[<? echo $i; ?>]" size=40 maxlength=113></td>
+                                 </tr>
+                                 <tr>
+                                    <td valign=middle>Notes:</td>
+                                    <td align=center valign=middle><textarea rows="2" name=note[<? echo $i; ?>] cols="28"></textarea></td>
+                                 </tr>
+                              </table>
+                           </td>
+                        </tr>
+                        <?
+                        }
+                     ?>
+                  </table>
+                  </blockquote>
                   <small>
                      <ul>
                         <li>Any row without a last name, first name, and at least one shift will not be processed.

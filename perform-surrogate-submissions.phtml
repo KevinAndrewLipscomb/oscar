@@ -2,16 +2,39 @@
 //
 // $Id$
 //
-require_once("f_runmode.phtml");
+error_reporting(E_ALL);
+//
+$foundation_dir = '../foundation';
+require_once("$foundation_dir/f_runmode.phtml");
 $mode = RunMode($PHP_SELF);
-if ($mode) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
-require_once("f_bodyopen.phtml");
+require_once("$foundation_dir/f_bodyopen.phtml");
 require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
+require_once("f_properties.phtml");
+//
+//
+// Accept user-supplied parameters and copy them into local variables.
+//
+import_request_variables('PG','_');
+$email_addr = $_email_addr;
+$applicable_month_num = $_applicable_month_num;
+$coord_agency = $_coord_agency;
+$last_name = $_last_name;
+$first_name = $_first_name;
+if (isset($_be_driver)) $be_driver = $_be_driver;
+if (isset($_be_aic)) $be_aic = $_be_aic;
+if (isset($_be_needing_driver)) $be_needing_driver = $_be_needing_driver;
+if (isset($_squad)) $squad = $_squad;
+if (isset($_be_als)) $be_als = $_be_als;
+if (isset($_be_on_team_30)) $be_on_team_30 = $_be_on_team_30;
+if (isset($_be_on_team_5)) $be_on_team_5 = $_be_on_team_5;
+if (isset($_day_avails)) $day_avails = $_day_avails;
+if (isset($_night_avails)) $night_avails = $_night_avails;
+if (isset($_note)) $note = $_note;
 ?>
 <html>
 <head><title>OSCAR - Confirmation</title></head>
@@ -34,25 +57,11 @@ require_once("f_availlist.phtml");
                ($email_addr != "")
             and
                ($applicable_month_num != "")
+            and
+               ($coord_agency != "")
             )
          // then
             {
-            //
-            // All required values are present.
-            //
-            echo "<p><b>You may want to print this page for your records.</b></p>\n"
-               . "<blockquote>\n"
-               . "<p>Your input has been processed as follows:</p>\n"
-               . "<blockquote><table border=1 cellspacing=0 cellpadding=3>\n"
-               . "<tr bgcolor=#D0D0D0>\n"
-               . "   <td><small>Timestamp</small></td>\n"
-               . "   <td><small>Lastname</small></td>\n"
-               . "   <td><small>Firstname</small></td>\n"
-               . "   <td><small>Month</small></td>\n"
-               . "   <td align=center><small>Days</small></td>\n"
-               . "   <td align=center><small>Nights</small></td>\n"
-               . "   <td><small>POC</small></td>\n"
-               . "</tr>\n";
             //
             // Calculate the expiration date for this availability sheet.  For the expiration date calculation, the 0th day
             // of month+1 resolves to the last day of month.
@@ -60,6 +69,29 @@ require_once("f_availlist.phtml");
             $applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
             $applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
             $expiration_date = date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0));
+            //
+            // All required values are present.
+            //
+            echo "<p><b>You may want to print this page for your records.</b></p>\n"
+               . "<blockquote>\n"
+               . "<p>Your input has been processed as follows:</p>\n"
+               . "<blockquote>\n"
+               . "<table cellpadding=3>\n"
+               . "   <tr><td>Surrogate submitter email address:</td><td><b>$email_addr</b></td></tr>\n"
+               . "   <tr><td>Applicable month:</td><td><b>$applicable_month_abbrev</b></td></tr>\n"
+               . "   <tr><td>Coordinating agency:</td><td><b>$coord_agency</b></td></tr>\n"
+               . "</table>\n"
+               . "&nbsp;\n"
+               . "<table border=1 cellspacing=0 cellpadding=3>\n"
+               . "<tr bgcolor=#D0D0D0>\n"
+               . "   <td><small>Timestamp</small></td>\n"
+               . "   <td><small>Lastname</small></td>\n"
+               . "   <td><small>Firstname</small></td>\n"
+               . "   <td><small>Properties</small></td>\n"
+               . "   <td align=center><small>Days</small></td>\n"
+               . "   <td align=center><small>Nights</small></td>\n"
+               . "   <td><small>Note</small></td>\n"
+               . "</tr>\n";
             //
             // Connect to the database.
             //
@@ -74,7 +106,7 @@ require_once("f_availlist.phtml");
                //
                // Init vars
                //
-               $extracted_first_name = $extracted_last_name = $extracted_email_addr = $month = "";
+               $extracted_first_name = $extracted_last_name = $extracted_note = "";
                $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
                   $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 =
                   $d31 = "";
@@ -82,6 +114,11 @@ require_once("f_availlist.phtml");
                   $n17 = $n18 = $n19 = $n20 = $n21 = $n22 = $n23 = $n24 = $n25 = $n26 = $n27 = $n28 = $n29 = $n30 =
                   $n31 = "";
                $timestamp = "";
+               $extracted_be_on_team_5 = $extracted_be_on_team_30 = $extracted_be_tda = $extracted_be_als =
+                  $extracted_squad = $extracted_coord_agency = $extracted_be_third = $extracted_be_nondriver =
+                  $extracted_be_needing_driver = "";
+               $day_avails_insertion_expression = "";
+               $night_avails_insertion_expression = "";
                //
                if (
                      ($last_name[$i] != "")
@@ -89,44 +126,98 @@ require_once("f_availlist.phtml");
                      ($first_name[$i] != "")
                   and
                      (
-                        (
-                           ($shift_a_num[$i] != "")
-                        and
-                           ($shift_a_day_night[$i] != "")
-                        )
+                        (trim($day_avails[$i]) != "")
                      or
-                        (
-                           ($shift_b_num[$i] != "")
-                        and
-                           ($shift_b_day_night[$i] != "")
-                        )
+                        (trim($night_avails[$i]) != "")
                      )
                   )
                // then
                   {
+                  //
+                  // Perform two more integrity checks.  First, if deleting all good characters in an avails string does not
+                  // completely empty that string, then the string contains a bad character.  Second, when EMS is the coord_agency,
+                  // assure that a home squad is supplied for each entry.
+                  //
+                  $good_characters = "[[:digit:],[:space:]]";
+                  if (
+                        (ereg_replace($good_characters,"",$day_avails[$i]) != "")
+                     or
+                        (ereg_replace($good_characters,"",$night_avails[$i]) != "")
+                     )
+                  // then
+                     {
+                     echo "<tr>\n"
+                        . "   <td><small><b><i>ERROR!<i></b></small></td>\n"
+                        . "   <td><small>$last_name[$i]</small></td>\n"
+                        . "   <td><small>$first_name[$i]</small></td>\n"
+                        . "   <td colspan=4><small><b><i>Typo in Days or Nights field.&nbsp; Use only numbers and commas, and do not "
+                        . "      begin or end line with a comma.&nbsp; Record not processed.</i></b></small></td>\n"
+                        . "</tr>\n";
+                     }
+                  elseif (($coord_agency == "EMS") and ($squad[$i] == ""))
+                     {
+                     echo "<tr>\n"
+                        . "   <td><small><b><i>ERROR!<i></b></small></td>\n"
+                        . "   <td><small>$last_name[$i]</small></td>\n"
+                        . "   <td><small>$first_name[$i]</small></td>\n"
+                        . "   <td colspan=4><small><b><i>No home squad specified.&nbsp; Record not "
+                        . "      processed.</i></b></small></td>\n"
+                        . "</tr>\n";
+                     }
+                  else
+                  {
                   $found_something_to_process = "TRUE";
                   //
-                  if (($shift_a_day_night[$i] != "") and ($shift_a_num[$i] != ""))
+                  // Convert strings of form "1,2, 3" to "d1='AVAILABLE',d2='AVAILABLE',d3='AVAILABLE'".
+                  //
+                  $day_avails[$i] = str_replace(" ","",$day_avails[$i]);
+                  if ($day_avails[$i] != "")
                      {
-                     $field_a = $shift_a_day_night[$i][0] . $shift_a_num[$i];
+                     $day_avails_insertion_expression = "d"
+                        . str_replace(",","='AVAILABLE',d",$day_avails[$i])
+                        . "='AVAILABLE'";
                      }
-                  if (($shift_b_day_night[$i] != "") and ($shift_b_num[$i] != ""))
+                  $night_avails[$i] = str_replace(" ","",$night_avails[$i]);
+                  if ($night_avails[$i] != "")
                      {
-                     $field_b = $shift_b_day_night[$i][0] . $shift_b_num[$i];
+                     $night_avails_insertion_expression = "n"
+                     . str_replace(",","='AVAILABLE',n",$night_avails[$i])
+                     . "='AVAILABLE'";
                      }
-                  
                   //
                   $sql = "insert into " . $mode . "avail_sheet set first_name='" . addslashes(trim($first_name[$i])) . "'"
                      . ", last_name='" . addslashes(trim($last_name[$i])) ."'"
                      . ", email_addr='" . addslashes(trim($email_addr)) . "'"
                      . ", month='" . $applicable_month_abbrev . "'"
-                     . ", squad='ERS'"
-                     . ", be_tda='TRUE'"
-                     . ", be_als='TRUE'";
-                  if ($field_a != "") $sql .= ", $field_a='AVAILABLE'";
-                  if ($field_b != "") $sql .= ", $field_b='AVAILABLE'";
-                  $sql .= ", submitting_node='$REMOTE_ADDR'"
+                     . ", coord_agency='$coord_agency'"
+                     . ", note='" . addslashes(trim($note[$i])) . "'"
+                     . ", submitting_node='$REMOTE_ADDR'"
                      . ", expiration='$expiration_date'";
+                  if ($day_avails_insertion_expression != "") $sql .= ", $day_avails_insertion_expression";
+                  if ($night_avails_insertion_expression != "") $sql .= ", $night_avails_insertion_expression";
+                  //
+                  if ($coord_agency == "EMS")
+                     {
+                     $sql .= ", squad='$squad[$i]'";
+                     if (isset($be_on_team_30[$i]) and ($be_on_team_30[$i] == "TRUE")) $sql .= ", be_on_team_30='TRUE'";
+                     if (isset($be_on_team_5[$i]) and ($be_on_team_5[$i] == "TRUE")) $sql .= ", be_on_team_5='TRUE'";
+                     if (isset($be_als[$i]) and ($be_als[$i] == "TRUE")) $sql .= ", be_als='TRUE'";
+                     }
+                  else
+                     {
+                     //
+                     // Preserve intended logic, which is that be_needing_driver actually indicates be_ALS.  If one is ALS,
+                     // then one is clearly an AIC.
+                     //
+                     if (isset($be_needing_driver[$i])) $be_aic[$i] = "TRUE";
+                     //
+                     if (!isset($be_aic[$i])) $sql .= ", be_third='TRUE'";
+                     if (!isset($be_driver[$i])) $sql .= ", be_nondriver='TRUE'";
+                     if (isset($be_needing_driver[$i]) and ($be_needing_driver[$i] == "TRUE"))
+                        {
+                        $sql .= ", be_needing_driver='TRUE'";
+                        }
+                     }
                   mysql_query($sql)
                      or die
                         (
@@ -150,22 +241,27 @@ require_once("f_availlist.phtml");
                   //
                   // Clear calculated vars for next iteration.
                   //
-                  $field_a = $field_b = "";
-                  //
                   $result = mysql_query
                      (
                      $qry = "select first_name as extracted_first_name"
                      .  "   , last_name as extracted_last_name"
-                     .  "   , email_addr as extracted_email_addr"
-                     .  "   , month"
                      .  "   , d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, d23, d24, d25, d26, d27, d28, d29, d30, d31"
                      .  "   , n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27, n28, n29, n30, n31"
                      .  "   , timestamp"
+                     .  "   , note as extracted_note"
+                     .  "   , be_on_team_5 as extracted_be_on_team_5"
+                     .  "   , be_on_team_30 as extracted_be_on_team_30"
+                     .  "   , be_tda as extracted_be_tda"
+                     .  "   , be_als as extracted_be_als"
+                     .  "   , squad as extracted_squad"
+                     .  "   , coord_agency as extracted_coord_agency"
+                     .  "   , be_third as extracted_be_third"
+                     .  "   , be_nondriver as extracted_be_nondriver"
+                     .  "   , be_needing_driver as extracted_be_needing_driver"
                      .  " from " . $mode . "avail_sheet"
                      .  " where month='$applicable_month_abbrev'"
                      .  "    and last_name='" . addslashes(trim($last_name[$i])) . "'"
                      .  "    and first_name='" . addslashes(trim($first_name[$i])) . "'"
-                     .  "    and be_tda='TRUE'"
                      .  " order by timestamp desc"
                      .  " limit 1"
                      );
@@ -179,8 +275,22 @@ require_once("f_availlist.phtml");
                         . "   <td><small>$timestamp</small></td>\n"
                         . "   <td><small>$extracted_last_name</small></td>\n"
                         . "   <td><small>$extracted_first_name</small></td>\n"
-                        . "   <td><small>$month</small></td>\n"
-                        . "   <td align=center><small>";
+                        . "   <td><small><tt>"
+                        . Properties
+                           (
+                           $extracted_be_on_team_5,
+                           $extracted_be_on_team_30,
+                           $extracted_be_tda,
+                           $extracted_be_als,
+                           $extracted_squad,
+                           $mode,
+                           $extracted_coord_agency,
+                           $extracted_be_third,
+                           $extracted_be_nondriver,
+                           $extracted_be_needing_driver
+                           )
+                        . "   </tt></small></td>\n"
+                        . "   <td><small>";
                      $avail_days_list = AvailList($d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31);
                      if ($avail_days_list)
                         {
@@ -191,7 +301,7 @@ require_once("f_availlist.phtml");
                         echo "&nbsp;";
                         }
                      echo "   </small></td>\n"
-                        . "   <td align=center><small>";
+                        . "   <td><small>";
                      $avail_nights_list = AvailList($n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31);
                      if ($avail_nights_list)
                         {
@@ -202,7 +312,7 @@ require_once("f_availlist.phtml");
                         echo "&nbsp;";
                         }
                      echo "</small></td>\n"
-                        . "   <td><small>$extracted_email_addr</small></td>\n"
+                        . "   <td><small>" . stripslashes($extracted_note) . "&nbsp;</small></td>\n"
                         . "</tr>\n";
                      }
                   else
@@ -210,10 +320,11 @@ require_once("f_availlist.phtml");
                      $be_problem = "TRUE";
                      echo "<tr><td colspan=10 align=center><b>Error: See explanation below.</b></td></tr>\n";
                      }
+                  } // if row doesn't have the EMS-but-no-home-squad problem
                   } // if row is processable
                if (($i == count($last_name)) and (!$found_something_to_process))
                   {
-                  echo "<tr><td colspan=10 align=center><b>Warning: Your submission didn't contain any valid TDA"
+                  echo "<tr><td colspan=10 align=center><b>Warning: Your submission didn't contain any valid"
                      . " records.&nbsp; Click your browser's [<--&nbsp;Back] button to correct the problem.</b></td></tr>\n";
                   }
                } // for row
@@ -250,7 +361,7 @@ require_once("f_availlist.phtml");
             echo "</blockquote>\n"
                . "<table cellspacing=10>\n"
                . "   <tr><td colspan=3><h3>Actions</h3></td></tr>\n"
-               . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=" . $mode . "ers-tda-input-form.phtml?email_addr=$email_addr&applicable_month_num=$applicable_month_num>Continue</a></b></td><td>to submit TDAs.</td></tr>\n"
+               . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=" . $mode . "form-surrogate-submissions-2.phtml?email_addr=$email_addr&applicable_month_num=$applicable_month_num&coord_agency=$coord_agency>Continue</a></b></td><td>to submit availability records.</td></tr>\n"
                . "   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right><b><a href=" . $mode . "index.phtml>Return</a></b></td><td>to the OSCAR home page.</td></tr>\n"
                . "</table>\n";
             }
@@ -267,6 +378,7 @@ require_once("f_availlist.phtml");
                <ul>
                   <li><p>Email address</p>
                   <li><p>Applicable month</p>
+                  <li><p>Coordinating agency</p>
                </ul>
                <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
             </blockquote>            
