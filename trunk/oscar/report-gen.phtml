@@ -72,6 +72,8 @@ if ($report_type == "FULL")
    echo "   |                                          | |\n";
    echo "   |    See special request in Notes section -+ |\n";
    echo "   +--------------------------------------------+\n\n\n";
+   echo "Days\n";
+   echo "----\n\n";
    for ($day_index = 1; $day_index <= 31; $day_index++)
       {
       $day_description = date("jS (l) \D\A\Y\:",mktime(9,0,0,$month_num,$day_index,$year_num));
@@ -102,6 +104,9 @@ if ($report_type == "FULL")
          }
       echo "\n";
       }
+   echo "\n";
+   echo "Nights\n";
+   echo "------\n\n";
    for ($night_index = 1; $night_index <= 31; $night_index++)
       {
       $night_description = date("jS (l) \N\I\G\H\T\:",mktime(21,0,0,$month_num,$night_index,$year_num));
