@@ -2,39 +2,92 @@
 //
 // $Id$
 //
-//$mode="x-";
+$mode="";
    //
-   // Comment out the above for production mode instead of eXperimental mode.
+   // Set mode to "" for production use, "x_" to debug.
+   //
+//
+// Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
+//
+$name = $name;
+$email_addr = $email_addr;
+$applicable_month_num = $applicable_month_num;
+$team_filter = $team_filter;
+$shift_filter = $shift_filter;
+$d1 = $d1;
+$d2 = $d2;
+$d3 = $d3;
+$d4 = $d4;
+$d5 = $d5;
+$d6 = $d6;
+$d7 = $d7;
+$d8 = $d8;
+$d9 = $d9;
+$d10 = $d10;
+$d11 = $d11;
+$d12 = $d12;
+$d13 = $d13;
+$d14 = $d14;
+$d15 = $d15;
+$d16 = $d16;
+$d17 = $d17;
+$d18 = $d18;
+$d19 = $d19;
+$d20 = $d20;
+$d21 = $d21;
+$d22 = $d22;
+$d23 = $d23;
+$d24 = $d24;
+$d25 = $d25;
+$d26 = $d26;
+$d27 = $d27;
+$d28 = $d28;
+$d29 = $d29;
+$d30 = $d30;
+$d31 = $d31;
+$n1 = $n1;
+$n2 = $n2;
+$n3 = $n3;
+$n4 = $n4;
+$n5 = $n5;
+$n6 = $n6;
+$n7 = $n7;
+$n8 = $n8;
+$n9 = $n9;
+$n10 = $n10;
+$n11 = $n11;
+$n12 = $n12;
+$n13 = $n13;
+$n14 = $n14;
+$n15 = $n15;
+$n16 = $n16;
+$n17 = $n17;
+$n18 = $n18;
+$n19 = $n19;
+$n20 = $n20;
+$n21 = $n21;
+$n22 = $n22;
+$n23 = $n23;
+$n24 = $n24;
+$n25 = $n25;
+$n26 = $n26;
+$n27 = $n27;
+$n28 = $n28;
+$n29 = $n29;
+$n30 = $n30;
+$n31 = $n31;
+//
+if ($mode) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-require_once("f_roleemailaddress.phtml");
-require_once("f_sendapprovalnotice.phtml");
-require_once("f_oscarmailheaders.phtml");
+require_once($mode . "f_roleemailaddress.phtml");
+require_once($mode . "f_oscarmailheaders.phtml");
+require_once($mode . "f_sendapprovalnotice.phtml");
 require_once("f_properties.phtml");
-//
-$name = trim($name);
-$email_addr = trim($email_addr);
-//
-// Connect to the database.
-//
-mysql_connect(localhost,kalipso,Password());
-mysql_select_db(oscar);
-//
-// Retrieve timestamp of latest avail_sheet record.  Later, we'll use it to see if database conditions have changed
-// significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
-// generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
-//
-$result = mysql_query("select max(timestamp) as timestamp_of_latest_submission from avail_sheet")
-   or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
-$row = mysql_fetch_object($result);
-//
-// The condition descriptor summarizes the conditions under which the report was requested.  We use the MD5 digest of the
-// condition descriptor as the key for the report in the report cache.
-//
-$condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_latest_submission . "\n";
+require_once("f_beauthority.phtml");
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
@@ -45,6 +98,39 @@ $report .= "<H1 ALIGN=CENTER>Availability Report</H1>\n";
 $report .= "<hr>\n";
 //
 echo $report;
+//
+// Connect to the database.
+//
+mysql_connect("localhost","kalipso",Password());
+mysql_select_db("oscar");
+//
+// Validate parameters.
+//
+if
+   (
+      ($name != "")
+   and
+      ($email_addr != "")
+   and
+      ($applicable_month_num != "")
+   )
+// then
+{
+$name = trim($name);
+$email_addr = trim($email_addr);
+//
+// Retrieve timestamp of latest avail_sheet record.  Later, we'll use it to see if database conditions have changed
+// significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
+// generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
+//
+$result = mysql_query("select max(timestamp) as timestamp_of_latest_submission from " . $mode . "avail_sheet")
+   or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
+$row = mysql_fetch_object($result);
+//
+// The condition descriptor summarizes the conditions under which the report was requested.  We use the MD5 digest of the
+// condition descriptor as the key for the report in the report cache.
+//
+$condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_latest_submission . "\n";
 //
 $presentation_clause = " order by be_on_team_5 desc, be_on_team_30 desc, be_tda desc, squad ";
 //
@@ -60,14 +146,7 @@ $month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
 $month_abbrev = substr($month_word,0,3);
 $where_clause = " month='$month_abbrev' ";
 //
-$be_authority =
-   (
-      ($email_addr == RoleEmailAddress("schedule-coordinator"))
-   or
-      ($email_addr == RoleEmailAddress("escalation-level-1-authority"))
-   or
-      ($email_addr == RoleEmailAddress(""))
-   );
+$be_authority = BeAuthority($email_addr,$mode);
 //
 if ($shift_filter == "all")
    {
@@ -94,7 +173,7 @@ if ($shift_filter == "all")
       or die("The digest calculation failed with this error:  " . mysql_error());
    $row = mysql_fetch_object($result);
    $digest = $row->digest;
-   $result = mysql_query("select report from report_cache where digest = '$digest'")
+   $result = mysql_query("select report from " . $mode . "report_cache where digest = '$digest'")
       or die("The cache check failed with error:  " . mysql_error());
    if (mysql_num_rows($result))
       {
@@ -108,8 +187,8 @@ if ($shift_filter == "all")
       // This is also a good time to purge the database of expired records, as from-scratch requests for full reports don't
       // happen excessively but do happen regularly.
       //
-      mysql_query("delete from avail_sheet where expiration < CURRENT_DATE");
-      mysql_query("delete from report_cache where expiration < CURRENT_DATE");
+      mysql_query("delete from " . $mode . "avail_sheet where expiration < CURRENT_DATE");
+      mysql_query("delete from " . $mode . "report_cache where expiration < CURRENT_DATE");
       //
       $base_sql_statement = "select distinct last_name"
          .  ", first_name"
@@ -118,7 +197,7 @@ if ($shift_filter == "all")
          .  ", be_on_team_5"
          .  ", be_tda"
          .  ", (note != \"\") as be_a_note"
-         .  " from avail_sheet ";
+         .  " from " . $mode . "avail_sheet ";
       switch ($team_filter)
          {
          case "team_5_only":
@@ -133,9 +212,11 @@ if ($shift_filter == "all")
             $where_clause .= " and be_tda = 'TRUE' ";
             $info_message = "This report ONLY includes TDA personnel.";
             break;
+         default:
+            $info_message = "";
          }
       $report .= "<pre>\n";
-      $report .= "Availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "Availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       $report .= "   +-----------------------------------------+\n";
       $report .= "   | Legend:                                 |\n";
       $report .= "   |    -5-30-TDA- Rxx Lastname, Firstname * |\n";
@@ -168,13 +249,14 @@ if ($shift_filter == "all")
             $report .= $day_description . "\n";
             while ($row = mysql_fetch_array($result))
                {
+               $be_a_note = "";
                extract($row);
                $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
                if ($be_authority)
                   {
-                  $report .= "<a href=detail.phtml?a="
+                  $report .= "<a href=" . $mode . "detail.phtml?a="
                      .  base64_encode($last_name)
                      .  "&b="
                      .  base64_encode($first_name)
@@ -215,13 +297,14 @@ if ($shift_filter == "all")
             $report .= $night_description . "\n";
             while ($row = mysql_fetch_array($result))
                {
+               $be_a_note = "";
                extract($row);
                $report .= "   " . Properties($be_on_team_5,$be_on_team_30,$be_tda,$squad) . " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
                if ($be_authority)
                   {
-                  $report .= "<a href=detail.phtml?a="
+                  $report .= "<a href=" . $mode . "detail.phtml?a="
                      .  base64_encode($last_name)
                      .  "&b="
                      .  base64_encode($first_name)
@@ -265,7 +348,7 @@ if ($shift_filter == "all")
             .  "    , be_tda"
             .  "    , note"
             .  "    , count(*) as num_submissions"
-            .  " from avail_sheet "
+            .  " from " . $mode . "avail_sheet "
             .  " where $where_clause "
             .  " group by last_name"
             .  "    , first_name"
@@ -281,7 +364,7 @@ if ($shift_filter == "all")
                extract($row);
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $report .= "<p><a href=detail.phtml?a="
+               $report .= "<p><a href=" . $mode . "detail.phtml?a="
                   .  base64_encode($last_name)
                   .  "&b="
                   .  base64_encode($first_name)
@@ -328,7 +411,7 @@ if ($shift_filter == "all")
       // Store the report in the cache.
       //
       $report = addslashes($report);
-      $result = mysql_query("insert into report_cache set digest='$digest'"
+      $result = mysql_query("insert into " . $mode . "report_cache set digest='$digest'"
          . ", report='$report'"
          . ", expiration='$expiration_date'")
          or die("Report insertion failed with this error:  " . mysql_error());
@@ -382,7 +465,7 @@ else
       or die("The digest calculation failed with this error:  " . mysql_error());
    $row = mysql_fetch_object($result);
    $digest = $row->digest;
-   $result = mysql_query("select report from report_cache where digest = '$digest'")
+   $result = mysql_query("select report from " . $mode . "report_cache where digest = '$digest'")
       or die("The cache check failed with error:  " . mysql_error());
    if (mysql_num_rows($result))
       {
@@ -397,7 +480,7 @@ else
          .  ", be_on_team_30"
          .  ", be_on_team_5"
          .  ", be_tda"
-         .  " from avail_sheet ";
+         .  " from " . $mode . "avail_sheet ";
       switch ($team_filter)
          {
          case "team_5_only":
@@ -412,10 +495,12 @@ else
             $where_clause .= " and be_tda = 'TRUE' ";
             $info_message = "This report ONLY includes TDA personnel.";
             break;
+         default:
+            $info_message = "";
          }
       //
       $report .= "<pre>\n";
-      $report .= "Availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "Availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       $report .= "   +---------------------------------------+\n";
       $report .= "   | Legend:                               |\n";
       $report .= "   |    -5-30-TDA- Rxx Lastname, Firstname |\n";
@@ -450,7 +535,7 @@ else
                   $first_name = stripslashes($first_name);
                   if ($be_authority)
                      {
-                     $report .= "<a href=detail.phtml?a="
+                     $report .= "<a href=" . $mode . "detail.phtml?a="
                         .  base64_encode($last_name)
                         .  "&b="
                         .  base64_encode($first_name)
@@ -495,7 +580,7 @@ else
                   $first_name = stripslashes($first_name);
                   if ($be_authority)
                      {
-                     $report .= "<a href=detail.phtml?a="
+                     $report .= "<a href=" . $mode . "detail.phtml?a="
                         .  base64_encode($last_name)
                         .  "&b="
                         .  base64_encode($first_name)
@@ -536,37 +621,37 @@ else
       // Store the report in the cache.
       //
       $report = addslashes($report);
-      $result = mysql_query("insert into report_cache set digest='$digest', report='$report', expiration='$expiration_date'")
+      $result = mysql_query("insert into " . $mode . "report_cache set digest='$digest', report='$report', expiration='$expiration_date'")
          or die("Report insertion failed with this error:  " . mysql_error());
       }
    }
 //
 // Create the notice.
 //
-$result = mysql_query("select 1 from trusted_user where email_address='$email_addr'")
+$result = mysql_query("select 1 from " . $mode . "trusted_user where email_address='$email_addr'")
    or die("Trust check failed with error:  " . mysql_error());
 if (
       mysql_num_rows($result)
    or
-      ($email_addr == RoleEmailAddress("schedule-coordinator"))
+      ($email_addr == RoleEmailAddress("schedule-coordinator",$mode))
    or
-      ($email_addr == RoleEmailAddress("escalation-level-1-recipient"))
+      ($email_addr == RoleEmailAddress("escalation-level-1-recipient",$mode))
    or
-      ($email_addr == RoleEmailAddress(""))
+      ($email_addr == RoleEmailAddress("",$mode))
    )
 // then
    {
    //
    // Then send an approval notice to the requestor directly.
    //
-   $result = SendApprovalNotice($email_addr,$digest);
+   $result = SendApprovalNotice($email_addr,$digest,$mode);
    }
 else
    {
    //
    // Someone else requested the report.  Notify the schedule coordinator.
    //
-   $screen_notice_recipient = RoleEmailAddress($mode . "schedule-coordinator");
+   $screen_notice_recipient = RoleEmailAddress("schedule-coordinator",$mode);
    $screen_notice_subject = "-> OSCAR request ->";
    //
    // Give the schedule coordinator a chance to approve (weakly or strongly) or disapprove of the request.
@@ -585,19 +670,19 @@ else
    $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
    $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
    $screen_notice .= "   click here:\n";
-   $screen_notice .= OscarRootUrl() . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
+   $screen_notice .= OscarRootUrl() . "/" . $mode . "approve-and-trust.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
    $screen_notice .= "2. To approve JUST THIS ONE request without\n";
    $screen_notice .= "   marking the user as trusted, click here:\n";
-   $screen_notice .= OscarRootUrl() . "/approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
+   $screen_notice .= OscarRootUrl() . "/" . $mode . "approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
    $screen_notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n\n";
    $screen_notice .= "The report is available for review at:\n";
-   $screen_notice .= OscarRootUrl() . "/get-report.phtml?digest=$digest\n\n\n";
+   $screen_notice .= OscarRootUrl() . "/" . $mode . "get-report.phtml?digest=$digest\n\n\n";
    //
    // Add sig lines.
    //
    $screen_notice .= "-- OSCAR\n";
    $screen_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
-   $screen_notice .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+   $screen_notice .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
    //
    // Then send a claim ticket to the requestor directly.
    //
@@ -621,16 +706,16 @@ else
    $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
    $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
    $claim_ticket .= "The next authority in the chain is:\n\n";
-   $claim_ticket .= "   " . RoleEmailAddress($mode . "escalation-level-1-recipient") . "\n\n";
+   $claim_ticket .= "   " . RoleEmailAddress("escalation-level-1-recipient",$mode) . "\n\n";
    $claim_ticket .= "To escalate your request to the above\n";
    $claim_ticket .= "authority, click here:\n\n";
-   $claim_ticket .= OscarRootUrl() . "/escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
+   $claim_ticket .= OscarRootUrl() . "/" . $mode . "escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr\n\n";
    //
    // Add sig lines.
    //
    $claim_ticket .= "-- OSCAR\n";
    $claim_ticket .= "-- Home page: " . OscarHomePageUrl() . "\n";
-   $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("") . "\n";
+   $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
    //
    // Send the mail.
    //
@@ -640,9 +725,9 @@ else
 if ($result)
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"right");
-   echo "<p>The OSCAR system has successfully generated your report.&nbsp;  Because the report contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress($mode . "schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once screening is complete.</p>";
+   echo "<p>The OSCAR system has successfully generated your report.&nbsp;  Because the report contains personal information, a screening notice has been sent to the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator",$mode) . "\">VBDEMS Central Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once screening is complete.</p>";
    echo "<p><b>Check your email periodically for the report.</b></p>";
-   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("",$mode) . ">OSCAR System Administrator</a>.</p>";
    }
 else
    {
@@ -656,13 +741,35 @@ else
       <p>The OSCAR system encountered an internal error while processing your request.  Please do the following:</p>
       <ul>
          <?
-         echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">VBDEMS Central Schedule Coordinator</a> for the information you need.</p>";
-         echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>";
+         echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\"" . RoleEmailAddress("schedule-coordinator",$mode) . "\">VBDEMS Central Schedule Coordinator</a> for the information you need.</p>";
+         echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>";
          ?>
       </ul>
    </blockquote>            
    </b>
    <?
+   }
+}
+else
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Error!</i></h2>
+   <b>
+   <blockquote>
+      <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
+      <ul>
+         <li><p>Name</p>
+         <li><p>Email address</p>
+         <li><p>Applicable month</p>
+      </ul>
+      <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
+   </blockquote>            
+   </b>
+   <?
+   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("",$mode) . ">OSCAR System Administrator</a>.</p>";
    }
 ?>
 <hr>
