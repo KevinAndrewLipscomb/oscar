@@ -80,7 +80,6 @@ require_once("f_showavailsheetrecdetail.phtml");
                   .  RoleEmailAddress("")
                   .  "\">OSCAR System Administrator</a>."
                   );
-            mysql_query("commit") or die("Commit failed with error:  " . mysql_error());
             // mail(RoleEmailAddress("")),"OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
             //
             // For a more meaningful acknowledgement, reinitialize all the dependent variables and restore them by 
@@ -102,16 +101,24 @@ require_once("f_showavailsheetrecdetail.phtml");
                .  " order by timestamp desc"
                .  " limit 1"
                );
-            if (mysql_num_rows($result))
+            if ($num_rows = mysql_num_rows($result))
                {
-               $row = mysql_fetch_row($result)
-                  or die("Attempt to fetch row failed with error:  " . mysql_error());
-               extract($row);
+               //
+               // Reinitialize the independent variables now that the select is done.  This way, anything that gets
+               // displayed is assured to get its value from the extract call below.
+               //
+               $first_name = $last_name = "";
+               //
+               extract($row = mysql_fetch_row($result));
                //
                // The insert and subsequent select must've succeeded.
                //
                echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
                echo "<p>Your availability sheet has been successfully entered into the OSCAR System as follows:</p>";
+               echo "<pre>\n";
+               echo "num_rows = $num_rows\n";
+               echo "row = $row\n";
+               echo "</pre>\n";
                echo "<blockquote>\n";
                ShowAvailSheetRecDetail
                   (
