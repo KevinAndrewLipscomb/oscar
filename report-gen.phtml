@@ -47,7 +47,8 @@ $applicable_month_num = date("n",mktime(12,0,0,$applicable_month_num,1));
 $condition_descriptor .= "month_num=$applicable_month_num\n";
 //
 $month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
-$where_clause = "month='" . substr($month_word,0,3) ."' ";
+$month_abbrev = substr($month_word,0,3);
+$where_clause = "month='$month_abbrev' ";
 //
 if ($report_type == "FULL")
    {
@@ -123,6 +124,8 @@ if ($report_type == "FULL")
                   .  base64_encode($last_name)
                   .  "&b="
                   .  base64_encode($first_name)
+                  .  "&c="
+                  .  base64_encode($month_abbrev)
                   .  ">$last_name, $first_name</a>";
                if ($be_a_note) $report .= " *";
                $report .= "\n";
@@ -162,6 +165,8 @@ if ($report_type == "FULL")
                   .  base64_encode($last_name)
                   .  "&b="
                   .  base64_encode($first_name)
+                  .  "&c="
+                  .  base64_encode($month_abbrev)
                   .  ">$last_name, $first_name</a>";
                if ($be_a_note) $report .= "*";
                $report .= "\n";
@@ -217,6 +222,8 @@ if ($report_type == "FULL")
                .  base64_encode($last_name)
                .  "&b="
                .  base64_encode($first_name)
+               .  "&c="
+               .  base64_encode($month_abbrev)
                .  ">$last_name, $first_name</a>&nbsp; [-";
             if ($be_on_team_5) $report .= "5"; else $report .= "-";
             $report .= "-";
@@ -382,6 +389,8 @@ else
                      .  base64_encode($last_name)
                      .  "&b="
                      .  base64_encode($first_name)
+                     .  "&c="
+                     .  base64_encode($month_abbrev)
                      .  ">$last_name, $first_name</a>"
                      .  "\n";
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
@@ -419,6 +428,8 @@ else
                      .  base64_encode($last_name)
                      .  "&b="
                      .  base64_encode($first_name)
+                     .  "&c="
+                     .  base64_encode($month_abbrev)
                      .  ">$last_name, $first_name</a>"
                      .  "\n";
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = "";
