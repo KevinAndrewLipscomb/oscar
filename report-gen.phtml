@@ -1,0 +1,162 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+?>
+<html>
+<head><title>Report generation</title></head>
+<? BodyOpen(); ?>
+<table align=center width="80%"><tr><td>
+<H6 ALIGN="CENTER">KVEO-IT-PROJECT<br><a href="<? echo OscarHomePageUrl(); ?>">OSCAR</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H1 ALIGN="CENTER">Report generation</H1>
+<hr>
+<?
+mysql_connect(localhost,kalipso,fesface);
+mysql_select_db(oscar);
+//
+$sql_statement = "select cad_num, last_name, first_name, squad, be_on_team_30, be_on_team_5, note from avail_sheet ";
+$presentation_clause = "order by be_on_team_5, be_on_team_30, squad";
+$where_clause = "";
+if ($report_type == "FULL")
+   {
+   $where_clause = "month=$month ";
+   echo "<pre>\n";
+   for ($index = 1; $index <= 31; $index++;)
+      {
+      $where_clause_2 = "and d$index='AVAILABLE' ";
+      $sql_statement = stripslashes($sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+      $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+      if ($num_rows = mysql_num_rows($result))
+         {
+         echo "Day $index:\n";
+         while ($row = mysql_fetch_array($result))
+            {
+            extract($row);
+            echo "   $cad_num-$last_name,$first_name ($squad) ";
+            if ($be_on_team_30) echo "[30]";
+            if ($be_on_team_5) echo "[5]";
+            if ($note != "") echo "*";
+            echo "\n";
+            $div_spec = $frame_num = $caption = $tech_details = "";
+            }
+         }
+      else
+         {
+         echo "Day $index: None\n";
+         }
+      echo "\n";
+      }
+   for ($index = 1; $index <= 31; $index++;)
+      {
+      $where_clause_2 = "and n$index='AVAILABLE' ";
+      $sql_statement = stripslashes($sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
+      $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
+      if ($num_rows = mysql_num_rows($result))
+         {
+         echo "Night $index:\n";
+         while ($row = mysql_fetch_array($result))
+            {
+            extract($row);
+            echo "   $cad_num-$last_name,$first_name ($squad) ";
+            if ($be_on_team_30) echo "/30";
+            if ($be_on_team_5) echo "/5";
+            if ($note != "") echo "/*";
+            echo "\n";
+            $div_spec = $frame_num = $caption = $tech_details = "";
+            }
+         }
+      else
+         {
+         echo "Night $index: None\n";
+         }
+      echo "\n";
+      }
+   echo "</pre>\n";
+   }
+else
+   {
+//   if ($div_spec_criteria != "")
+//      {
+//      $where_clause = $where_clause . "div_spec $div_spec_criteria ";
+//      }
+//   if ($frame_num_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "frame_num $frame_num_criteria ";
+//      }
+//   if ($be_avail_as_huge_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "be_avail_as_huge $be_avail_as_huge_criteria ";
+//      }
+//   if ($caption_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "caption $caption_criteria ";
+//      }
+//   if ($tech_details_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "tech_details $tech_details_criteria ";
+//      }
+//   if ($era_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "era $era_criteria ";
+//      }
+//   if ($copyright_year_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "copyright_year $copyright_year_criteria ";
+//      }
+//   if ($hits_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "hits $hits_criteria ";
+//      }
+//   if ($keywords_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "keywords $keywords_criteria ";
+//      }
+//   if ($placement_criteria != "")
+//      {
+//      if ($where_clause != "")
+//         {
+//         $where_clause = $where_clause . "and ";
+//         }
+//      $where_clause = $where_clause . "placement $placement_criteria ";
+//      }
+//   }
+//
+?>
+</td></tr></table>
+</body>
+</html>
