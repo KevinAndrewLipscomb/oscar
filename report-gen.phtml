@@ -80,7 +80,7 @@ if ($report_type == "FULL")
       or die("The digest calculation failed with this error:  " . mysql_error());
    $row = mysql_fetch_object($result);
    $digest = $row->digest;
-   $result = mysql_query("select report from report_cache where digest = $digest")
+   $result = mysql_query("select report from report_cache where digest = '$digest'")
       or die("The cache check failed with error:  " . mysql_error());
    if (mysql_num_rows($result))
       {
@@ -213,7 +213,7 @@ if ($report_type == "FULL")
       //
       // Store the report in the cache.
       //
-      $result = mysql_query("insert into report_cache set digest=$digest, report=$report, expiration=$expiration_date")
+      $result = mysql_query("insert into report_cache set digest='$digest', report='$report', expiration='$expiration_date'")
          or die("Report insertion failed with this error:  " . mysql_error());
       }
    }
@@ -275,7 +275,7 @@ else
       or die("The digest calculation failed with this error:  " . mysql_error());
    $row = mysql_fetch_object($result);
    $digest = $row->digest;
-   $result = mysql_query("select report from report_cache where digest = $digest")
+   $result = mysql_query("select report from report_cache where digest = '$digest'")
       or die("The cache check failed with error:  " . mysql_error());
    if (mysql_num_rows($result))
       {
@@ -393,7 +393,7 @@ else
       //
       // Store the report in the cache.
       //
-      $result = mysql_query("insert into report_cache set digest=$digest, report=$report, expiration=$expiration_date")
+      $result = mysql_query("insert into report_cache set digest='$digest', report='$report', expiration='$expiration_date'")
          or die("Report insertion failed with this error:  " . mysql_error());
       }
    }
