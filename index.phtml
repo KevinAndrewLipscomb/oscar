@@ -188,18 +188,6 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                   <?
                   if ($connected)
                      {
-                     echo "<b><a href=" . $mode . "modify.phtml>Modify</a></b></td><td valign=top>system settings (OSCAR Authorities only).";
-                     }
-                  else
-                     {
-                     echo "<b>Modify</b></td><td valign=top><b>UNAVAILABLE</b>";
-                     }
-                  ?>
-                  </td></tr>
-                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top>
-                  <?
-                  if ($connected)
-                     {
                      echo "<b><a href=" . $mode . "faq.phtml>FAQ</a></b></td><td valign=top>Answers to frequently asked questions.";
                      }
                   else
@@ -208,9 +196,21 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                      }
                   ?>
                   </td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>training.phtml>Learn</a></b></td><td valign=top>about OSCAR through <b>e-Training</b>.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top>
+                  <?
+                  if ($connected)
+                     {
+                     echo "<b><a href=" . $mode . "modify.phtml>Modify</a></b></td><td valign=top>system settings (OSCAR Authorities only).";
+                     }
+                  else
+                     {
+                     echo "<b>Modify</b></td><td valign=top><b>UNAVAILABLE</b>";
+                     }
+                  ?>
+                  </td></tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>privacy.phtml>Read</a></b></td><td valign=top>the privacy policy.</td></tr>
-                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><font color=D0D0D0>Subscribe</font></b></td><td valign=top>your organization to this service.</td></tr>
-                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>develop.phtml>Become</a></b></td><td valign=top>a <b>kveo-it-project</b> open-source developer.</td></tr>
+                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>develop.phtml>Contribute</a></b></td><td valign=top>to the <b>kveo-it-project</b> as a programmer or content developer.</td></tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top>
                   <?
                   if ($connected)

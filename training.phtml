@@ -1,0 +1,33 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_roleemailaddress.phtml");
+?>
+<html>
+
+<head><title>OSCAR - e-Training</title></head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <h6 align="center">KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+        <h1 align="center">e-Training</h1>
+        <hr>
+        <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+        <p>The following OSCAR training is available online:</p>
+        <ul>
+           <li><p><b><a href=doc/ppt/oscar-for-squad-sched-coords/oscar-for-squad-sched-coords.ppt>OSCAR for Squad Schedule Coordinators</a></b><br><i>Microsoft PowerPoint presentation, 5.21 Mb</i></p></li>
+        </ul>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small></center></td>
+    </tr>
+  </table>
+</body>
+
+</html>
+
