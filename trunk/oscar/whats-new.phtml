@@ -19,6 +19,11 @@ require_once("f_bodyopen.phtml");
            <h1 align="center">What's New</h1>
         <hr>
         <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+        <p><b>2001-11-04:&nbsp; </b>Added the "Server status" indication on the main page.&nbsp; This feature forces a hit
+           on the database, thereby assuring that both PHP and MySQL are up, and provides a keyword ("A-OK") that some
+           site monitoring services will check for.</p>
+        <p><b>2001-11-03:&nbsp; </b>Fixed a bug noticed during a demo that was preventing legitimate OSCAR authorities from
+           gaining access to special request comments.&nbsp; Made authority and role tracking more robust.</p>
         <p><b>2001-11-01:&nbsp; </b>Fixed bug 477171, which had been causing the dates shown on the standard submission 
            confirmation page to be off (earlier) by one day than the dates the user actually submitted.&nbsp; This bug had
            been introduced when TDA handling was added.</p>

@@ -1,0 +1,16 @@
+<?
+//
+// $Id$
+//
+function ServerStatus($mode = "")
+   {
+   error_reporting(E_ALL);
+   //
+   $value = 0;
+   $result = mysql_query("select value from oscar." . $mode . "db_status limit 1")
+      or die("ServerStatus query failed with error:  " . mysql_error());
+   if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+   //
+   return $value;
+   }
+?>
