@@ -11,6 +11,7 @@ require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_connectselectdb.phtml");
 require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
 ?>
 <html>
 
@@ -47,7 +48,7 @@ require_once("f_password.phtml");
         else
            {
            ?>
-           <p>This form allows Master OSCAR Authorities to enable and disable OSCAR features on a squad-by-squad basis.</p>
+           <p>This form allows the Master OSCAR Authority to enable and disable OSCAR features on a squad-by-squad basis.</p>
            <blockquote>
               <table align=center bgcolor=#E8E8E8>
                  <tr>
@@ -61,6 +62,8 @@ require_once("f_password.phtml");
               </table>
            </blockquote>
            <br>
+           <p><b>WARNING:&nbsp; The links on this page send traceable email messages to the Master OSCAR Authority
+              (<? echo RoleEmailAddress("master",$mode); ?>).&nbsp; These links are not intended for general use.</i></p>
            <blockquote>
               <table cellpadding=4>
                  <tr>

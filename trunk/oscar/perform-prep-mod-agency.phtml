@@ -86,9 +86,12 @@ if
    //             0        1         2         3         4         5         6         7
    //             123456789012345678901234567890123456789012345678901234567890123456789012
    $challenge = "";
-   $challenge .= "Someone (possibly you) wants to change a squad's participation status in\n"
-              .  "the OSCAR system.  Specifically, OSCAR received a request to change\n"
-              .  "squad '" . $enumeral . "' to ";
+   $challenge .= "Someone at IP address $REMOTE_ADDR (possibly you) wants to change a\n"
+              .  "squad's participation status in the OSCAR system.  Specifically, OSCAR\n"
+              .  "received a request to change this agency:\n\n"
+              .  "   $enumeral\n\n"
+              .  "to this status:\n\n"
+              .  "   ";
    if ($current_be_active == "TRUE") $challenge .= "NON";
    $challenge .= "PARTICIPANT.\n\n"
               .  "THE CHANGE IS NOT YET COMPLETE.  To\n"
