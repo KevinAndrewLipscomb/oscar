@@ -12,6 +12,7 @@ require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_password.phtml");
+require_once("f_numsheets.phtml");
 //
 // Connect to the database.
 //
@@ -97,11 +98,13 @@ mysql_select_db("oscar");
                <hr>
                <center>
                   <a href=http://www.vabeachems.com>
+                  <b>
                   V<small>&nbsp;A&nbsp;</small>&nbsp;
                   &nbsp;B<small>&nbsp;E&nbsp;A&nbsp;C&nbsp;H</small>&nbsp;
                   &nbsp;D<small>&nbsp;E&nbsp;P&nbsp;T</small>&nbsp;
                   &nbsp;<small>O&nbsp;F</small>&nbsp;
                   &nbsp;E&nbsp;M&nbsp;S
+                  </b>
                   </a>
                </center>
                <hr>
@@ -111,7 +114,7 @@ mysql_select_db("oscar");
                   </tr>
                   <tr>
                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                     <td align=right><b><a href=als-avail-sub-form.phtml>Submit</a></b></td><td>an availability sheet.&nbsp;&nbsp;&nbsp;<small><i>(BCs,&nbsp;enter&nbsp;TDAs&nbsp;<a href=ers-tda-input-form.phtml>here</a>.)</i></small></td>
+                     <td align=right><b><a href=als-avail-sub-form.phtml>Submit</a></b></td><td>an&nbsp;availability&nbsp;sheet.&nbsp;&nbsp <small><i>(BCs,&nbsp;enter&nbsp;TDAs&nbsp;<a href=ers-tda-input-form.phtml>here</a>.)</i></small></td>
                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                      <td rowspan=3 valign=top>
                         <table border=1 cellspacing=0 cellpadding=1>
@@ -124,7 +127,7 @@ mysql_select_db("oscar");
                            $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
                            $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
                            ?>
-                           <tr bgcolor=#D0D0D0><td colspan=3><small><i>Sheets on file&nbsp; <small><font color=#888888>(more stats)</font></i></small></td></tr>
+                           <tr bgcolor=#D0D0D0><td colspan=3 align=center><small><i>Sheets&nbsp;on&nbsp;file&nbsp; <small><font color=#888888>(more&nbsp;stats)</font></i></small></td></tr>
                            <tr bgcolor=#E8E8E8>
                               <td align=center><small><i><? echo $current_month_abbrev; ?></i></small></td>
                               <td align=center><small><i><? echo $next_month_abbrev; ?></i></small></td>
@@ -132,23 +135,9 @@ mysql_select_db("oscar");
                            </tr>
                            <tr>
                               <?
-                              $num_sheets = 0;
-                              $result = mysql_query("select count(*) as num_sheets from oscar." . $mode . "avail_sheet where month='$current_month_abbrev' group by month")
-                                 or die("Select count for current month failed with error:  " . mysql_error());
-                              if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
-                              echo "<td align=center><small><i>$num_sheets</i></small></td>\n";
-                              //
-                              $num_sheets = 0;
-                              $result = mysql_query("select count(*) as num_sheets from oscar." . $mode . "avail_sheet where month='$next_month_abbrev' group by month")
-                                 or die("Select count for next month failed with error:  " . mysql_error());
-                              if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
-                              echo "<td align=center><small><i>$num_sheets</i></small></td>\n";
-                              //
-                              $num_sheets = 0;
-                              $result = mysql_query("select count(*) as num_sheets from oscar." . $mode . "avail_sheet where month='$after_next_month_abbrev' group by month")
-                                 or die("Select count for month after next failed with error:  " . mysql_error());
-                              if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
-                              echo "<td align=center><small><i>$num_sheets</i></small></td>\n";
+                              echo "<td align=center><small><i>" . NumSheets($current_month_abbrev) . "</i></small></td>\n";
+                              echo "<td align=center><small><i>" . NumSheets($next_month_abbrev) . "</i></small></td>\n";
+                              echo "<td align=center><small><i>" . NumSheets($after_next_month_abbrev) . "</i></small></td>\n";
                               ?>
                            </tr>
                         </table>
