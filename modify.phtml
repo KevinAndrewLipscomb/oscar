@@ -1,0 +1,59 @@
+<?
+//
+// $Id$
+//
+error_reporting(E_ALL);
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+?>
+<html>
+
+<head><title>OSCAR - Modify settings</title></head>
+
+<? BodyOpen(); ?>
+<table width="80%" align="center">
+   <tr>
+      <td>
+         <table>
+            <tr>
+               <td>
+                  <h6 align="center">
+                     KVEO-IT-PROJECT<br>
+                     <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a>
+                  </h6>
+                  <h1 align="center">Modify settings</h1>
+               </td>
+               <td><? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?></td>
+            </tr>
+         </table>
+         <hr>
+         The setting modification capability is provided for the benefit of OSCAR Authorities only.
+         <blockquote>
+            <table align=center bgcolor=#E8E8E8>
+               <tr>
+                  <td align=center valign=middle>
+                     <small><i>To guard against misuse, the OSCAR system authenticates each modification request by
+                        sending a "challenge message" to the registered email address of the appropriate authority.&nbsp;
+                        Modifications only take effect once OSCAR receives a proper response to the challenge.</i></small>
+                  </td>
+               </tr>
+            </table>
+         </blockquote>
+         Modifiable settings:
+         <table cellspacing=10>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>form-set-agency.phtml>Squad participation</b></a></td><td valign=top>Specify which squads use OSCAR (Master OSCAR Authorities only).</td>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><font color=D0D0D0>Roles</font></b></td><td valign=top>Specify schedule coordinators, escalation authorities, eGroup managers, etc.</td>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><font color=D0D0D0>Trusted users</font></b></td><td valign=top>Specify which users may directly receive compiled availability reports.</td>
+         </table>
+         <hr>
+         <p><small><small><em><pre>$Id$</pre></em></small></small>
+      </td>
+   </tr>
+</table>
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Set squad participation</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+           <h1 align="center">Set Squad Participation</h1>
+        </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+           <? PutLibPhotoRandomPlaced("sasquatch",1); ?>
+        </td></tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+           {
+           ?>
+           <h2><i>Sorry...</i></h2>
+           <b>
+           <blockquote>
+              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try again later.</p>"; ?>
+           </blockquote>            
+           </b>
+           <?
+           }
+        else
+           {
+           ?>
+           <p>This form allows Master OSCAR Authorities to enable and disable OSCAR features on a squad-by-squad basis.</p>
+           <blockquote>
+              <table align=center bgcolor=#E8E8E8>
+                 <tr>
+                    <td align=center valign=middle>
+                       <small><i>To guard against misuse, the OSCAR system authenticates each modification request by
+                          sending a "challenge message" to the registered email address of the appropriate authority.&nbsp;
+                          Modifications only take effect once OSCAR receives a proper response to the
+                          challenge.</i></small>
+                    </td>
+                 </tr>
+              </table>
+           </blockquote>
+           <br>
+           <blockquote>
+              <table cellpadding=4>
+                 <tr>
+                    <td><b>Agency</b></td>
+                    <td align=center><b>OSCAR status</b></td>
+                    <td>&nbsp;</td>
+                 </tr>
+                 <?
+                 $result = mysql_query("select * from " . $mode . "agency")
+                    or die("Query failed with error: " . mysql_error());
+                 $num_rows = mysql_num_rows($result);
+                 for ($i=1; $i<=$num_rows; $i++)
+                    {
+                    extract(mysql_fetch_array($result));
+                    echo "<tr>\n"
+                       . "<td>$description</td>\n"
+                       . "<td align=right>";
+                    if ($be_active == "FALSE") echo "NON";
+                    echo "PARTICIPANT</td>\n"
+                       . "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=" . $mode . "perform-prep-mod-agency.phtml?enumeral=$enumeral&current_be_active=$be_active>Toggle</a></td>\n"
+                       . "</tr>\n";
+                    }
+                 ?>
+              </table>
+           </blockquote>
+           <?
+           }
+        ?>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+
