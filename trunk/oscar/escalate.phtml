@@ -74,7 +74,7 @@ else
    // Notify the next authority in the chain.
    //
    $screen_notice_recipient = RoleEmailAddress("escalation-level-" . $level . "-recipient",$mode,$coord_agency);
-   if ($screen_notice_recipient == "NONE")
+   if ($screen_notice_recipient == "")
       {
       $result=0;
       }
@@ -122,7 +122,7 @@ else
       $claim_ticket .= "your email periodically for approval.\n\n";
       //
       $next_authority = RoleEmailAddress("escalation-level-$next_level-recipient",$mode,$coord_agency);
-      if ($next_authority != "NONE")
+      if ($next_authority != "")
          {
          $claim_ticket .= "Save this message and discard the previous claim ticket.  This is the\n";
          $claim_ticket .= "NEW CLAIM TICKET for your report.\n\n";
