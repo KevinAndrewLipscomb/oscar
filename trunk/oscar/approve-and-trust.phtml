@@ -26,8 +26,7 @@ mysql_select_db(oscar);
 //
 // Insert the trusted email address into the trusted_user table.
 //
-mysql_query("insert into trusted_user set email_address='$email_addr'")
-   or die("The trust insertion failed with error:  " . mysql_error());
+mysql_query("insert into trusted_user set email_address='$email_addr'");
 //
 if (SendApprovalNotice($email_addr,$digest))
    {
