@@ -11,6 +11,7 @@ function WriteCalendarSubform
 //
    {
    $num_days_in_applicable_month = date("t",mktime(12,0,0,$applicable_month_num,1));
+   $format_string = "jS (D)";
    ?>
    <table>
      <tr>
@@ -25,17 +26,8 @@ function WriteCalendarSubform
            for ($i=1; $i<=$num_days_in_applicable_month; $i++)
               {
               echo "<li><input type=checkbox name=d$i value=\"AVAILABLE\">"
-                 . date("jS (D)",mktime(12,0,0,1,$i))
+                 . date($format_string,mktime(12,0,0,$applicable_month_num,$i))
                  . "</li>\n";
-                 //
-                 // The call to mktime() gets us the day number (j) and the ordinal value (S) for time:
-                 //
-                 //    currentyear-01-$i 12:00:00
-                 //
-                 // This works for us because no matter what the actual month of interest is, because January of any year has all
-                 // 31 days and all 31 proper ordinal values, and those are the only elements we're really interested in.  The
-                 // choice of noon is arbitrary.
-                 //
               }
            ?>
          </ul>
@@ -47,17 +39,8 @@ function WriteCalendarSubform
            for ($i=1; $i<=$num_days_in_applicable_month; $i++)
               {
               echo "<li><input type=checkbox name=n$i value=\"AVAILABLE\">"
-                 . date("jS (D)",mktime(12,0,0,1,$i))
+                 . date($format_string,mktime(12,0,0,$applicable_month_num,$i))
                  . "</li>\n";
-                 //
-                 // The call to mktime() gets us the day number (j) and the ordinal value (S) for time:
-                 //
-                 //    currentyear-01-$i 12:00:00
-                 //
-                 // This works for us because no matter what the actual month of interest is, because January of any year has all
-                 // 31 days and all 31 proper ordinal values, and those are the only elements we're really interested in.  The
-                 // choice of noon is arbitrary.
-                 //
               }
            ?>
          </ul>
