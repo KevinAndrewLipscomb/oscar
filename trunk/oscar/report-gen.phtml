@@ -172,9 +172,11 @@ else
       {
       case "team_5_only":
          $where_clause .= "and be_on_team_5 = 'TRUE' ";
+         $info_message = "As requested, this report ONLY includes EMS-5 team members.";
          break;
       case "team_30_only":
          $where_clause .= "and be_on_team_30 = 'TRUE' ";
+         $info_message = "As requested, this report ONLY includes SQUAD TRUCK team members.";
          break;
       }
    //
@@ -200,6 +202,7 @@ else
    echo "   |     |                                    |\n";
    echo "   |     +- EMS-5 team member                 |\n";
    echo "   +------------------------------------------+\n\n\n";
+   if ($info_message) echo "$info_message\n\n";
    for ($day_index = 1; $day_index <= 31; $day_index++)
       {
       if ($d[$day_index])
