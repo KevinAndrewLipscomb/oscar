@@ -50,11 +50,13 @@ echo "</h4>\n";
 if ($num_rows)
    {
    echo "<blockquote>\n";
+   $record_index = 0;
    while ($row = mysql_fetch_array($result))
       {
+      $record_index++;
       extract($row);
-      echo "<table>\n";
-      echo "   <tr><td><b>Time of submission:</td><td>";
+      echo "<table cellspacing=5>\n";
+      echo "   <tr><td align=right><b>Time of submission:</td><td>";
       echo substr($timestamp,0,4)
          .  "-"
          .  substr($timestamp,4,2)
@@ -67,15 +69,15 @@ if ($num_rows)
          .  ":"
          .  substr($timestamp,12,2);
       echo "   </b></td></tr>\n";
-      echo "   <tr><td>First name:</td><td>" . stripslashes($first_name) . "</td></tr>\n";
-      echo "   <tr><td>Last name:</td><td>" . stripslashes($last_name) . "</td></tr>\n";
-      echo "   <tr><td>Email address:</td><td><a href=mailto:\"" . stripslashes($email_addr) . "\">" . stripslashes($email_addr) . "</a></td></tr>\n";
-      echo "   <tr><td>Home squad:</td><td>$squad</td></tr>\n";
-      echo "   <tr><td>Applicable month:</td><td>$month</td></tr>\n";
-      echo "   <tr><td>On EMS-5 team:</td><td>$be_on_team_5</td></tr>\n";
-      echo "   <tr><td>On squad truck team:</td><td>$be_on_team_30</td></tr>\n";
-      echo "   <tr><td># extra duties will run:</td><td>$num_extras</td></tr>\n";
-      echo "   <tr><td>Available days:</td><td>";
+      echo "   <tr><td align=right>First name:</td><td>" . stripslashes($first_name) . "</td></tr>\n";
+      echo "   <tr><td align=right>Last name:</td><td>" . stripslashes($last_name) . "</td></tr>\n";
+      echo "   <tr><td align=right>Email address:</td><td><a href=mailto:\"" . stripslashes($email_addr) . "\">" . stripslashes($email_addr) . "</a></td></tr>\n";
+      echo "   <tr><td align=right>Home squad:</td><td>$squad</td></tr>\n";
+      echo "   <tr><td align=right>Applicable month:</td><td>$month</td></tr>\n";
+      echo "   <tr><td align=right>On EMS-5 team:</td><td>$be_on_team_5</td></tr>\n";
+      echo "   <tr><td align=right>On squad truck team:</td><td>$be_on_team_30</td></tr>\n";
+      echo "   <tr><td align=right>#Extra duties will run:</td><td>$num_extras</td></tr>\n";
+      echo "   <tr><td align=right>Available days:</td><td>";
       $d = array(1 => $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31);
       for ($i=1; $i<=31; $i++)
          {
@@ -83,7 +85,7 @@ if ($num_rows)
          }
       echo substr($avail_days_string,0,-2);
       echo "</td></tr>\n";
-      echo "   <tr><td>Available nights:</td><td>";
+      echo "   <tr><td align=right>Available nights:</td><td>";
       $n = array(1 => $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31);
       for ($i=1; $i<=31; $i++)
          {
@@ -91,10 +93,10 @@ if ($num_rows)
          }
       echo substr($avail_nights_string,0,-2);
       echo "</td></tr>\n";
-      echo "   <tr><td>Note:</td><td>" . stripslashes($note) . "</td></tr>\n";
-      echo "   <tr><td>Record expires:</td><td>$expiration</td></tr>\n";
+      echo "   <tr><td align=right>Note:</td><td>" . stripslashes($note) . "</td></tr>\n";
+      echo "   <tr><td align=right>Record expires:</td><td>$expiration</td></tr>\n";
       echo "</table>\n";
-      if ($i < $num_rows)
+      if ($record_index < $num_rows)
          {
          echo "<br><hr><br>\n";
          }
