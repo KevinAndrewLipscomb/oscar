@@ -42,7 +42,7 @@ $presentation_clause = "order by be_on_team_5 desc, be_on_team_30 desc, squad";
 //
 // The request form, under certain conditions, sends a value of 13 for applicable_month_num.  Cast it into the range 1..12.
 //
-$applicable_month_num = date("n",mktime(12,0,0,$applicable_month_num,1);
+$applicable_month_num = date("n",mktime(12,0,0,$applicable_month_num,1));
 //
 $condition_descriptor .= "month_num=$applicable_month_num\n";
 //
