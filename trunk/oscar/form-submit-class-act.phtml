@@ -1,0 +1,119 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Class Act Award Nomination Form</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table align=center><tr><td>
+           <h6 align="center">
+              KVEO-IT-PROJECT<br>
+              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a>
+           </h6>
+           <table cellpadding=10>
+              <tr>
+                 <td><img src=static-image/trophy-icon.gif></td>
+                 <td valign=middle><center><big><big><big><b>Class Act Award Nomination Form</b></big></big></big></center></td>
+                 <td><img src=static-image/trophy-icon.gif></td>
+              </tr>
+           </table>
+        </td></tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+           {
+           ?>
+           <h2><i>Sorry...</i></h2>
+           <b>
+           <blockquote>
+              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try again later.</p>"; ?>
+           </blockquote>            
+           </b>
+           <?
+           }
+        else
+        {
+        ?>
+        <blockquote>
+           <table cellpadding=10>
+              <tr>
+                 <td align=right valign=top><b>Purpose</b></td>
+                 <td>To provide a way for members of the Emergency Response System to credit their peers for actions
+                    deserving of recognition</td>
+              </tr>
+              <tr>
+                 <td align=right valign=top><b>Criteria</b></td>
+                 <td>ERS member(s) who have gone the "extra mile" in conjunction with fulfilling their commitment to the
+                    volunteer rescue service</td>
+              </tr>
+              <tr>
+                 <td align=right valign=top><b>Eligibility</b></td>
+                 <td>Any member of the Emergency Response System</td>
+              </tr>
+           </table>
+        </blockquote>
+        <hr>
+        <form action=<?php echo $mode; ?>perform-send-class-act.phtml method=post>
+           <table>
+              <tr>
+                 <td align=right valign=top>Station:</td>
+                 <td><input type=text name=station size=15></td>
+              </tr>
+              <tr>
+                 <td align=right valign=top>Person(s) nominated:</td>
+                 <td><textarea name=nominees rows=3 cols=40></textarea></td>
+              </tr>
+              <tr>
+                 <td align=right valign=top>Description of situation, event, or initiative:</td>
+                 <td><textarea name=description rows=15 cols=60></textarea></td>
+              </tr>
+              <tr>
+                 <td align=right valign=top>Your name:</td>
+                 <td><input type=text name=submitter size=40></td>
+              </tr>
+              <tr>
+                 <td align=right valign=top>Your daytime phone number:</td>
+                 <td><input type=text name=phonenum size=15></td>
+              </tr>
+              <tr>
+                 <td align=right valign=top>Your email address:</td>
+                 <td><input type=text name=emailaddr size=40></td>
+              </tr>
+              <tr>
+                 <td align=center colspan=2>
+                    <input type=submit value="Submit">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type=reset>
+                 </td>
+              </tr>
+           </table>
+        </form>
+        <?
+        }
+        ?>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small>
+       </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+

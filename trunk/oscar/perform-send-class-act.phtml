@@ -1,0 +1,152 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+// Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
+//
+$station = $station;
+$nominees = $nominees;
+$description = $description;
+$submitter = $submitter;
+$phone_num = $phonenum;
+$emailaddr = $emailaddr;
+//
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+
+//
+$html = "<html>\n";
+$html .= "<head><title>Class Act Award Nomination Processing</title></head>\n";
+$html .= "<body bgcolor=#FFFFFF>\n";
+$html .= "<table align=center width=80%><tr><td>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H1 ALIGN=CENTER>Class Act Award Nomination Processing</H1>\n";
+$html .= "<hr>\n";
+//
+echo $html;
+//
+// Validate parameters.
+//
+if
+   (
+      ($nominees != "")
+   and
+      ($description != "")
+   )
+// then
+   {
+   //
+   // All required values are present.  Generate the email message.
+   // Connect to the database.
+   //
+   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+      {
+      ?>
+      <h2><i>Sorry...</i></h2>
+      <b>
+      <blockquote>
+         <? echo "<p>OSCAR's database has gone offline.&nbsp; Please try your retraction operation later.</p>"; ?>
+      </blockquote>            
+      </b>
+      <?
+      }
+   else
+      {
+      //
+      //           0        1         2         3         4         5         6         7
+      //           123456789012345678901234567890123456789012345678901234567890123456789012
+      $message = "";
+      $message .= "Please accept the following Class Act Nomination, received via OSCAR:\n\n"
+               .  "   STATION:\n"
+               .  "      " . wordwrap(stripslashes(trim($station)),66,"\n      ") . "\n"
+               .  "   NOMINEE(S):\n"
+               .  "      " . wordwrap(stripslashes(trim($nominees)),66,"\n      ") . "\n"
+               .  "   DESCRIPTION:\n"
+               .  "      " . wordwrap(stripslashes(trim($description)),66,"\n      ") . "\n"
+               .  "   SUBMITTER'S NAME:\n"
+               .  "      " . wordwrap(stripslashes(trim($submitter)),66,"\n      ") . "\n"
+               .  "   SUBMITTER'S DAYTIME PHONE NUMBER:\n"
+               .  "      " . wordwrap(stripslashes(trim($phonenum)),66,"\n      ") . "\n"
+               .  "   SUBMITTER'S EMAIL ADDRESS:\n"
+               .  "      " . wordwrap(stripslashes(trim($emailaddr)),66,"\n      ") . "\n\n";
+      //
+      // Add sig lines.
+      //
+      $message .= "-- OSCAR\n"
+               .  "-- Home page: " . OscarHomePageUrl() . "\n"
+               .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+      //
+      // Send the mail.
+      //
+      $recipient = RoleEmailAddress('class-act-coord',$mode);
+      $result = mail($recipient, "Class Act Nomination (via OSCAR)", $message, OscarMailHeaders());
+      //
+      if ($result)
+         {
+         PutLibPhotoRandomPlaced("sasquatch",1,"right");
+         echo "<p><b>Thanks!</b></p>";
+         echo "<p>OSCAR has sent your nomination to <b>$recipient</b>.</p>";
+         }
+      else
+         {
+         //
+         // Fill the page out with a warning and instructions.
+         //
+         ?>
+         <h2><i>Error!</i></h2>
+         <b>
+         <blockquote>
+            <p>OSCAR encountered an internal error while processing your request.  Please do the following:</p>
+            <ul>
+               <?
+               echo "<li><p>Use another method (like email or telephone) to submit your nomination to the <a href=mailto:\""
+                  .  RoleEmailAddress("class-act-coord",$mode)
+                  .  "\">Class Act Coordinator</a>.</p>";
+               echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System "
+                  .  "Administrator</a> know this error occurred.</p>";
+               ?>
+            </ul>
+         </blockquote>            
+         </b>
+         <?
+         }
+      }
+   }
+else
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Error!</i></h2>
+   <b>
+   <blockquote>
+      <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
+      <ul>
+         <li><p>Person(s) nominated</p>
+         <li><p>Description</p>
+      </ul>
+      <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
+   </blockquote>            
+   </b>
+   <?
+   }
+?>
+<br clear=both>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>
