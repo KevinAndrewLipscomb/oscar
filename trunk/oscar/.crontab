@@ -2,7 +2,6 @@
 # $Id$
 #
 MAILTO=kevin.lipscomb@kvrs.org
-
 30 13 * * * wget http://www.oscarsystem.com/daily-avail-report.phtml
 55 01 23 * * wget http://www.oscarsystem.com/trends.phtml
 30 06 * * 1 wget http://www.oscarsystem.com/emsi/lms/weekly-applications-report.phtml
