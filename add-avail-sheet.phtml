@@ -80,6 +80,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                   .  RoleEmailAddress("")
                   .  "\">OSCAR System Administrator</a>."
                   );
+            mysql_query("commit") or die("Commit failed with error:  " . mysql_error());
             // mail(RoleEmailAddress("")),"OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
             //
             // For a more meaningful acknowledgement, reinitialize all the dependent variables and restore them by 
