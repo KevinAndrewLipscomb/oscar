@@ -232,7 +232,7 @@ else
    $condition_descriptor .= "type=FILTERED\n";
    $condition_descriptor .= "team_filter=$team_filter\n";
    $condition_descriptor .= "days=";
-   for (i=1; i<=31; i++)
+   for ($i=1; $i<=31; $i++)
       {
       if ($d[$i])
          {
@@ -246,7 +246,7 @@ else
       }
    $condition_descriptor .= "\n";
    $condition_descriptor .= "nights=";
-   for (i=1; i<=31; i++)
+   for ($i=1; $i<=31; $i++)
       {
       if ($n[$i])
          {
