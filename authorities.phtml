@@ -1,0 +1,54 @@
+<?
+//
+// $Id$
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_roleemailaddress.phtml");
+?>
+<html>
+
+<head><title>OSCAR - Authorities</title></head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+           <h6 align="center">
+              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+           <h1 align="center">Authorities</h1>
+        <hr>
+        <? PutLibPhotoRandomPlaced("sasquatch",1,"right"); ?>
+        <p>Only OSCAR system authorities have the ability to read the special request notes that users can submit with 
+           their availabilities.&nbsp;  These authorities are:<p>
+        <ul>
+           <?
+           echo "<li><p>the OSCAR System Administrator (<a href=mailto:\""
+              .  RoleEmailAddress("")
+              .  "\">"
+              .  RoleEmailAddress("")
+              .  ")</p></li>\n";
+           echo "<li><p>the Schedule Coordinator (<a href=mailto:\""
+              .  RoleEmailAddress("schedule-coordinator")
+              .  "\">"
+              .  RoleEmailAddress("schedule-coordinator")
+              .  ")</p></li>\n";
+           echo "<li><p>the Escalation Level 1 Authority (<a href=mailto:\""
+              .  RoleEmailAddress("escalation-level-1-authority")
+              .  "\">"
+              .  RoleEmailAddress("escalation-level-1-authority")
+              .  ")</p></li>\n";
+           ?>
+        </ul>
+        <p>Special request notes are not revealed to any other OSCAR system users.</p>
+        <p>If you have questions or concerns about the technical aspects of this process, feel free to contact the
+           <a href=mailto:"<? RoleEmailAddress(""); ?>">OSCAR System Administrator</a>.</p>
+        <hr>
+        <p><small><small><em><pre>$Id$</pre></em></small></small></center></td>
+    </tr>
+  </table>
+</body>
+
+</html>
+

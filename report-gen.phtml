@@ -56,6 +56,22 @@ $where_clause = "month='$month_abbrev' ";
 if ($report_type == "FULL")
    {
    //
+   // Determine if the requestor is an OSCAR system authority (ie, privileged to see special request notes & warnings).
+   //
+   if ($be_authority =
+         ($email_addr == RoleEmailAddress("schedule-coordinator"))
+      or
+         ($email_addr == RoleEmailAddress("escalation-level-1-authority"))
+      )
+   //then
+      {
+      $condition_descriptor .= "authority=TRUE\n";
+      }
+   else
+      {
+      $condition_descriptor .= "authority=FALSE\n";
+      }
+   //
    // Full report
    //
    // Maybe the required report has already been run under these same conditions, and cached in the database.  If so, just
@@ -187,76 +203,79 @@ if ($report_type == "FULL")
          $report .= "\n";
          }
       $report .= "</pre>\n";
-      //
-      // Generate notes and warnings.
-      //
-      $report .= "<h3><u>Notes and Warnings</u></h3>\n";
-      mysql_query
-         (
-         "create temporary table note_and_submission_count"
-         .  " select last_name"
-         .  "    , first_name"
-         .  "    , squad"
-         .  "    , be_on_team_30"
-         .  "    , be_on_team_5"
-         .  "    , note"
-         .  "    , count(*) as num_submissions"
-         .  " from avail_sheet"
-         .  " where month=\"" . substr($month_word,0,3) . "\""
-         .  " group by last_name"
-         .  "    , first_name"
-         )
-         or die("Create...select note_and_submission_count failed with error:  " . mysql_error());
-      //
-      // The above statement copies some records that have no note and only one submission, so a clean up is required...
-      //
-      mysql_query
-         (
-         "delete from note_and_submission_count"
-         .  " where note = \"\""
-         .  "    and num_submissions = 1"
-         )
-         or die("Delete from note_and_submission_count failed with error:  " . mysql_error());
-      //
-      $result = mysql_query("select * from note_and_submission_count order by last_name, first_name")
-         or die("Select from note_and_submission_count failed with error:  " . mysql_error());
-      if ($num_rows = mysql_num_rows($result))
+      if ($be_authority)
          {
-         while ($row = mysql_fetch_array($result))
+         //
+         // Generate notes and warnings.
+         //
+         $report .= "<h3><u>Notes and Warnings</u></h3>\n";
+         mysql_query
+            (
+            "create temporary table note_and_submission_count"
+            .  " select last_name"
+            .  "    , first_name"
+            .  "    , squad"
+            .  "    , be_on_team_30"
+            .  "    , be_on_team_5"
+            .  "    , note"
+            .  "    , count(*) as num_submissions"
+            .  " from avail_sheet"
+            .  " where month=\"" . substr($month_word,0,3) . "\""
+            .  " group by last_name"
+            .  "    , first_name"
+            )
+            or die("Create...select note_and_submission_count failed with error:  " . mysql_error());
+         //
+         // The above statement copies some records that have no note and only one submission, so a clean up is required...
+         //
+         mysql_query
+            (
+            "delete from note_and_submission_count"
+            .  " where note = \"\""
+            .  "    and num_submissions = 1"
+            )
+            or die("Delete from note_and_submission_count failed with error:  " . mysql_error());
+         //
+         $result = mysql_query("select * from note_and_submission_count order by last_name, first_name")
+            or die("Select from note_and_submission_count failed with error:  " . mysql_error());
+         if ($num_rows = mysql_num_rows($result))
             {
-            extract($row);
-            $last_name = stripslashes($last_name);
-            $first_name = stripslashes($first_name);
-            $report .= "<a href=detail.phtml?a="
-               .  base64_encode($last_name)
-               .  "&b="
-               .  base64_encode($first_name)
-               .  "&c="
-               .  base64_encode($month_abbrev)
-               .  ">$last_name, $first_name</a>&nbsp; [-";
-            if ($be_on_team_5) $report .= "5"; else $report .= "-";
-            $report .= "-";
-            if ($be_on_team_30) $report .= "30"; else $report .= "--";
-            $report .= "- ";
-            if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
-            $report .= "$squad]\n";
-            $report .= "<blockquote>\n";
-            if ($num_submissions > 1)
+            while ($row = mysql_fetch_array($result))
                {
-               $report .= "   <p><b>*** WARNING: SUBMISSION COUNT = $num_submissions, VERIFICATION RECOMMENDED ***</b></p>\n";
+               extract($row);
+               $last_name = stripslashes($last_name);
+               $first_name = stripslashes($first_name);
+               $report .= "<a href=detail.phtml?a="
+                  .  base64_encode($last_name)
+                  .  "&b="
+                  .  base64_encode($first_name)
+                  .  "&c="
+                  .  base64_encode($month_abbrev)
+                  .  ">$last_name, $first_name</a>&nbsp; [-";
+               if ($be_on_team_5) $report .= "5"; else $report .= "-";
+               $report .= "-";
+               if ($be_on_team_30) $report .= "30"; else $report .= "--";
+               $report .= "- ";
+               if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
+               $report .= "$squad]\n";
+               $report .= "<blockquote>\n";
+               if ($num_submissions > 1)
+                  {
+                  $report .= "   <p><b>*** WARNING: SUBMISSION COUNT = $num_submissions, VERIFICATION RECOMMENDED ***</b></p>\n";
+                  }
+               $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
+               $report .= "</blockquote>\n<br>\n";
+               $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = $num_submissions = "";
                }
-            $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
-            $report .= "</blockquote>\n<br>\n";
-            $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = $num_submissions = "";
             }
+         else
+            {
+            $report .= "None\n";
+            }
+         //
+         mysql_query("drop table note_and_submission_count")
+            or die("Drop of note_and_submission_count failed with error:  " . mysql_error());
          }
-      else
-         {
-         $report .= "None\n";
-         }
-      //
-      mysql_query("drop table note_and_submission_count")
-         or die("Drop of note_and_submission_count failed with error:  " . mysql_error());
       //
       $report .= "<pre>--- END ---</pre><br>\n";
       $report .= "<small><i><pre>\$Id$</pre></i></small>\n";
