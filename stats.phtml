@@ -10,6 +10,7 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_numsheets.phtml");
+require_once("f_numdistinctusers.phtml");
 require_once("f_connectselectdb.phtml");
 ?>
 <html>
@@ -36,20 +37,18 @@ require_once("f_connectselectdb.phtml");
          <?
          if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
             {
+            //
+            // Calculate month numbers and abbreviations.
+            //
+            $after_next_month_num = ($next_month_num = ($current_month_num = date("n")) + 1) + 1;
+            $current_month_abbrev = date("M");
+            $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
+            $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
             ?>
             <br>
             <b>Sheets on file</b>
             <blockquote>
-               <table border=1 cellpadding=3>
-                  <?
-                  //
-                  // Calculate month numbers and abbreviations.
-                  //
-                  $after_next_month_num = ($next_month_num = ($current_month_num = date("n")) + 1) + 1;
-                  $current_month_abbrev = date("M");
-                  $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
-                  $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
-                  ?>
+               <table border=1 cellspacing=0 cellpadding=4>
                   <tr bgcolor=#E8E8E8>
                      <td align=center>&nbsp;<? echo $current_month_abbrev; ?>&nbsp;</td>
                      <td align=center>&nbsp;<? echo $next_month_abbrev; ?>&nbsp;</td>
@@ -57,12 +56,78 @@ require_once("f_connectselectdb.phtml");
                   </tr>
                   <tr>
                      <?
-                     echo "<td align=center>" . NumSheets($current_month_abbrev) . "</td>\n";
-                     echo "<td align=center>" . NumSheets($next_month_abbrev) . "</td>\n";
-                     echo "<td align=center>" . NumSheets($after_next_month_abbrev) . "</td>\n";
+                     echo "<td align=center>" . ($current_num_sheets = NumSheets($current_month_abbrev,$mode)) . "</td>\n";
+                     echo "<td align=center>" . ($next_num_sheets = NumSheets($next_month_abbrev,$mode)) . "</td>\n";
+                     echo "<td align=center>" . ($after_num_sheets = NumSheets($after_next_month_abbrev,$mode)) . "</td>\n";
                      ?>
                   </tr>
                </table>
+            </blockquote>
+            <br>
+            <b>Distinct users</b>
+            <blockquote>
+               <table border=1 cellspacing=0 cellpadding=4>
+                  <tr bgcolor=#E8E8E8>
+                     <td align=center>&nbsp;<? echo $current_month_abbrev; ?>&nbsp;</td>
+                     <td align=center>&nbsp;<? echo $next_month_abbrev; ?>&nbsp;</td>
+                     <td align=center>&nbsp;<? echo $after_next_month_abbrev; ?>&nbsp;</td>
+                     <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                     <?
+                     echo "<td align=center>" . ($current_num_users = NumDistinctUsers($current_month_abbrev,$mode)) . "</td>\n";
+                     echo "<td align=center>" . ($next_num_users = NumDistinctUsers($next_month_abbrev,$mode)) . "</td>\n";
+                     echo "<td align=center>" . ($after_num_users = NumDistinctUsers($after_next_month_abbrev,$mode)) . "</td>\n";
+                     echo "<td>Absolute</td>\n";
+                     ?>
+                  </tr>
+                  <tr>
+                     <?
+                     echo "<td align=center>";
+                     if ($current_num_sheets)
+                        {
+                        printf("%d",(100*$current_num_users/$current_num_sheets));
+                        echo "%";
+                        }
+                     else
+                        {
+                        echo "NA";
+                        }
+                     echo "</td>\n";
+                     //
+                     echo "<td align=center>";
+                     if ($next_num_sheets)
+                        {
+                        printf("%d",(100*$next_num_users/$next_num_sheets));
+                        echo "%";
+                        }
+                     else
+                        {
+                        echo "NA";
+                        }
+                     echo "</td>\n";
+                     //
+                     echo "<td align=center>";
+                     if ($after_num_sheets)
+                        {
+                        printf("%d",100*($after_num_users/$after_num_sheets));
+                        echo "%";
+                        }
+                     else
+                        {
+                        echo "NA";
+                        }
+                     echo "</td>\n";
+                     //
+                     echo "<td>Relative to sheets on file</td>\n";
+                     ?>
+                  </tr>
+               </table>
+               <br>
+               This table shows the approximate number of people who are using OSCAR to enter their own
+               availability sheets.&nbsp; It is derived by counting the number of distinct email addresses submitted on
+               availability sheets.&nbsp; The remaining availability sheets are entered by schedule coordination staff,
+               battalion chiefs, etc.
             </blockquote>
             <br>
             <b>Number of shifts made available per person</b> (for all non-TDA sheets on file)
@@ -241,4 +306,3 @@ require_once("f_connectselectdb.phtml");
 </body>
 
 </html>
-
