@@ -2,41 +2,27 @@
 //
 // $Id$
 //
-// Note:
-//    To expand a role into multiple email addresses, separate the addresses
-//    with a comma ONLY -- no spaces.
-//
-function RoleEmailAddress($role)
+function RoleEmailAddress
+   (
+   $role = "",
+   $mode = ""
+   )
    {
-   switch ($role)
-      {
-      //
-      // Roles for use by production code
-      //
-      case "schedule-coordinator":
-         return "ebrazle@vbgov.com";
-         break;
-      case "escalation-level-1-recipient":
-         return "wkiley@vbgov.com";
-         break;
-      case "escalation-level-2-recipient":
-         return "NONE";
-         break;
-      //
-      // Roles for use by experimental code
-      //
-      case "x-schedule-coordinator":
-         return "infotech@kvrs.org";
-         break;
-      case "x-escalation-level-1-recipient":
-         return "president@kvrs.org";
-         break;
-      case "x-escalation-level-2-recipient":
-         return "NONE";
-         break;
-      default:
-         return "kevin.lipscomb@kvrs.org";
-         break;
-      }
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $email_addr = "";
+   if ($role == "") $role = "sysadmin";
+   //
+   $result = mysql_query
+      (
+      "select email_addr from oscar." . $mode . "authority "
+      .  "   where role='$role' limit 1"
+      )
+      or die("RoleEmailAddress query failed with error:  " . mysql_error());
+   //
+   if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+   //
+   error_reporting($saved_error_level);
+   return $email_addr;
    }
 ?>

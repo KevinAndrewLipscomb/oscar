@@ -1,0 +1,27 @@
+<?
+//
+// $Id$
+//
+function BeAuthority
+   (
+   $email_addr,
+   $mode = ""
+   )
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $found_email_addr = "";
+   //
+   $result = mysql_query
+      (
+      "select email_addr as found_email_addr from " . $mode . "authority "
+      .  "   where email_addr='$email_addr'"
+      )
+      or die("BeAuthority query failed with error:  " . mysql_error());
+   //
+   extract(mysql_fetch_array($result));
+   //
+   error_reporting($saved_error_level);
+   return ($found_email_addr != "");
+   }
+?>

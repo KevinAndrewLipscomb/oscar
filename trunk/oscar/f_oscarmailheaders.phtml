@@ -2,11 +2,19 @@
 //
 // $Id$
 //
-require_once("f_roleemailaddress.phtml");
-//
 function OscarMailHeaders()
    {
-   return "From: OSCAR <" . RoleEmailAddress("") . ">\r\n"
-      . "Reply-to: OSCAR <" . RoleEmailAddress("") . ">\r\n";
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $mode="";
+      //
+      // Set to "" for production use, "x_" to debug.
+      //
+   //
+   $header_string = "From: OSCAR <" . RoleEmailAddress("",$mode) . ">\r\n"
+      . "Reply-to: OSCAR <" . RoleEmailAddress("",$mode) . ">\r\n";
+   //
+   error_reporting($saved_error_level);
+   return $header_string;
    }
 ?>

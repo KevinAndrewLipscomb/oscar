@@ -2,6 +2,17 @@
 //
 // $Id$
 //
+$mode="";
+   //
+   // Set to "" for production use, "x_" to debug.
+   //
+//
+// Assign incoming argument to itself to avoid "uninitialized variable" error later.
+//
+$digest = $digest;
+//
+if ($mode) error_reporting(E_ALL);
+//
 require_once("f_password.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
@@ -9,10 +20,10 @@ require_once("f_roleemailaddress.phtml");
 //
 // Connect to the database.
 //
-mysql_connect(localhost,kalipso,Password());
-mysql_select_db(oscar);
+mysql_connect("localhost","kalipso",Password());
+mysql_select_db("oscar");
 //
-$result = mysql_query("select report from report_cache where digest = '$digest'")
+$result = mysql_query("select report from " . $mode . "report_cache where digest = '$digest'")
    or die("The query failed with error:  " . mysql_error());
 if (mysql_num_rows($result))
    {
