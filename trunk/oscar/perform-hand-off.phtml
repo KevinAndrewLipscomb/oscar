@@ -12,8 +12,10 @@ require_once("f_password.phtml");
 require_once("f_connectselectdb.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
+require_once("f_plaintextofnote.phtml");
 require_once("f_sshowavailsheetrecdetail.phtml");
 require_once("f_oscarmailheaders.phtml");
+require_once("f_formattednoteappendage.phtml");
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
@@ -24,7 +26,7 @@ if ($mode) error_reporting(E_ALL);
 unset($HTTP_POST_VARS['month_abbrev']);
    //
    // The above unconventional "unset" operation is appropriate for this routine because the remainder of this routine
-   // treats HTTP_POST_VARS as an array of unknown key-value pairs.  By "unsetting" the one and only *known* key-value pair
+   // treats HTTP_POST_VARS as an array of unknown key-value pairs.  By "unsetting" the only *known* key-value pair
    // -- $month_abbrev -- we avoid having to scan past it later.
    //
 ?>
@@ -96,8 +98,6 @@ else
 //
 
 //
-$caution = " . . . . . [OSCAR-CAUTION::EMT-VS-ST-STATUS-UNKNOWN-ON-RECORDS-RELAYED-FROM-EMS]";
-//
 // Setup temp tables
 //
 //    INTERMEDIATE_AVAIL_SHEET table
@@ -147,16 +147,29 @@ while ($row = mysql_fetch_array($result))
 //
 $ignore_mask = "";
 //
-foreach ($HTTP_POST_VARS as $encoded_avail_spec => $dummy_value)
+foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
    {
    //
    // "Explode" (break apart) the $encoded_avail_spec into its constituent parts.
    //
-   list($encoded_last_name,$encoded_first_name,$target_shift_spec) = explode("-",$encoded_avail_spec);
+   list($encoded_last_name,$encoded_first_name,$parameter) = explode("-",$encoded_avail_spec);
    //
-   // Make sure that this entry has not been disqualified by a previous entry who target_shift_spec was "NONE".
+   // Make sure that this entry is worth processing.
    //
-   if ("$encoded_last_name-$encoded_first_name" != $ignore_mask)
+   if (
+         (
+            ("$encoded_last_name-$encoded_first_name" != $ignore_mask)
+         and
+            ($value)
+         )
+      or
+         (
+            ("$encoded_last_name-$encoded_first_name" == $ignore_mask)
+         and
+            ($parameter == "COMMENT")
+         )
+      )
+   // then
       {
       //
       // Decode the encoded parts.
@@ -198,7 +211,8 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $dummy_value)
                .  "    be_needing_driver='$be_als', "
                .  "    coord_agency='Rescue$squad' ";
             //
-            if ($target_shift_spec == "NONE")
+            $note_appendage_ems_comment = "";
+            if ($parameter == "NONE")
                {
                //
                // The member's availabilities should be relayed to his or her squad unaltered.  Also, no further entries in
@@ -206,22 +220,58 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $dummy_value)
                //
                $ignore_mask = "$encoded_last_name-$encoded_first_name";
                }
+            elseif ($parameter == "COMMENT")
+               {
+               if (!strstr($note,"msg(COMMENT)"))
+                  {
+                  $note_appendage_ems_comment = FormattedNoteAppendage
+                     (
+                     $mode,
+                     "INFO",  // condition
+                     "COMMENT",  // mnemonic
+                     $value,
+                     strtoupper(RoleEmailAddress("schedule-coordinator",$mode,"EMS"))
+                     );
+                  }
+               }
             else
                {
                //
-               // The target_shift_spec denotes the actual field in the record that should be blanked out.
+               // The parameter denotes the actual field in the record that should be blanked out.
                //
-               $sql .= ", $target_shift_spec='' ";
+               $sql .= ", $parameter='' ";
                }
             //
-            if (($be_als == 'FALSE') and (!strstr($note,$caution)))
+            $note_appendage_relay = "";
+            if (!strstr($note,"msg(RELAY)"))
+               {
+               $note_appendage_relay = FormattedNoteAppendage
+                  (
+                  $mode,
+                  "INFO",  // condition
+                  "RELAY",  // mnemonic
+                  "Relayed from EMS"
+                  );
+               }
+            $note_appendage_emtorst = "";
+            if (($be_als == 'FALSE') and (!strstr($note,"msg(EMTORST)")))
                {
                //
                // A member (such as a Shock-Trauma Tech) who is NOT ALS for EMS (zone car) purposes might be ALS for squad 
                // (ambulance) purposes.  OSCAR currently has no way of knowing if the member is an ST or not, so a caution 
                // note is in order.
                //
-               $sql .= ", note='" . addslashes($note) . "  $caution' ";
+               $note_appendage_emtorst = FormattedNoteAppendage
+                  (
+                  $mode,
+                  "WARNING",  // condition
+                  "EMTORST",  // mnemonic
+                  "Unable to advise whether this person is an EMT or an ST."
+                  );
+               }
+            if ($note_appendage = ($note_appendage_relay . $note_appendage_ems_comment . $note_appendage_emtorst))
+               {
+               $sql .= ", note='" . addslashes($note) . $note_appendage . "'";
                }
             $sql .= " where last_name='$target_last_name' "
                .  "    and first_name='$target_first_name' ";
@@ -229,6 +279,7 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $dummy_value)
             }
          }
       }
+   $value = "";
    }
 //
 $relay_select_clause = "select * from intermediate_avail_sheet where coord_agency != 'EMS'";
@@ -311,7 +362,7 @@ $result = mysql_query
 while ($row = mysql_fetch_array($result))
    {
    extract($row);
-   if (!key_exists($coord_agency,$census)) $census[$coord_agency] = 0;
+   if (!array_key_exists($coord_agency,$census)) $census[$coord_agency] = 0;
    if (($num_relayed_sheets = ($num_sheets - $census[$coord_agency])) > 0)
       {
       //

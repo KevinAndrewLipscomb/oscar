@@ -23,6 +23,7 @@ require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
 require_once("f_connectselectdb.phtml");
+require_once("f_formattednoteappendage.phtml");
 //
 ?>
 <html>
@@ -86,7 +87,15 @@ if ($num_rows_affected = mysql_affected_rows())
       .  "    , month = '$applicable_month_abbrev'"
       .  "    , be_third = 'TRUE'"
       .  "    , be_nondriver = 'TRUE'"
-      .  "    , note='</i><b>*** WARNING: User (@$REMOTE_ADDR) retracted all availabilities on " . date("l Y-M-d H:i:s T") . ".</b><i>'"
+      .  "    , note='"
+      .  FormattedNoteAppendage
+         (
+         $mode,
+         "WARNING",
+         "RETRACT",
+         "User at IP $REMOTE_ADDR retracted all availabilities."
+         )
+      .  "'"
       .  "    , expiration='" . date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0)) . "'"
       )
       or die("Finalization query failed with error:  " . mysql_error());
