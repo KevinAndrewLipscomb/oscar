@@ -153,9 +153,9 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                               </tr>
                               <tr>
                                  <?
-                                 echo "<td align=center><small><i>" . NumSheets($current_month_abbrev) . "</i></small></td>\n";
-                                 echo "<td align=center><small><i>" . NumSheets($next_month_abbrev) . "</i></small></td>\n";
-                                 echo "<td align=center><small><i>" . NumSheets($after_next_month_abbrev) . "</i></small></td>\n";
+                                 echo "<td align=center><small><i>" . NumSheets($current_month_abbrev,$mode) . "</i></small></td>\n";
+                                 echo "<td align=center><small><i>" . NumSheets($next_month_abbrev,$mode) . "</i></small></td>\n";
+                                 echo "<td align=center><small><i>" . NumSheets($after_next_month_abbrev,$mode) . "</i></small></td>\n";
                                  ?>
                               </tr>
                            </table>

@@ -92,6 +92,7 @@ require_once("f_availlist.phtml");
 require_once("f_squadofcoordagency.phtml");
 require_once("f_harvestedlist.phtml");
 require_once("f_harvestemailaddresses.phtml");
+require_once("f_beemsschedcoord.phtml");
 //
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
@@ -165,6 +166,7 @@ $month_abbrev = substr($month_word,0,3);
 $where_clause = " month='$month_abbrev' and coord_agency='$coord_agency' ";
 //
 $be_authority = BeAuthority($email_addr,$mode,$coord_agency);
+$be_relayable = (BeEmsSchedCoord($email_addr,$mode) and ($coord_agency == "EMS"));
 //
 if ($shift_filter == "all")
    {
@@ -174,6 +176,15 @@ if ($shift_filter == "all")
    if ($be_authority)
       {
       $condition_descriptor .= "authority=TRUE\n";
+      //
+      if ($be_relayable)
+         {
+         $condition_descriptor .= "relayable=TRUE\n";
+         }
+      else
+         {
+         $condition_descriptor .= "relayable=FALSE\n";
+         }
       }
    else
       {
@@ -440,9 +451,17 @@ if ($shift_filter == "all")
       if ($be_authority)
          {
          //
-         // Generate notes and warnings.
+         // GENERATE NOTES AND WARNINGS.
          //
-         $report .= "<h3><u>Submission Summaries</u></h3>\n";
+         $report .= "<table width=100%><tr><td><h3><u>Submission Summaries</u></h3></td>";
+         if ($be_relayable)
+            {
+            $report .= "<td align=right><small><a href=" . $mode . "relay-all-details.phtml>What is "
+               . "<b>Relay all</b>?</a></small></td>\n"
+               . "<form action=" . $mode . "perform-hand-off.phtml method=post>\n"
+               . "<input type=hidden name=month_abbrev value=$month_abbrev>\n";
+            }
+         $report .= "</tr></table>\n";
          mysql_query
             (
             "create temporary table aggregated "
@@ -465,7 +484,8 @@ if ($shift_filter == "all")
                .  ", be_on_team_30"
                .  ", be_on_team_5"
                .  ", be_tda"
-               .  ", be_als";
+               .  ", be_als"
+               .  ", aggregated.timestamp";
             }
          else
             {
@@ -488,7 +508,7 @@ if ($shift_filter == "all")
             while ($row = mysql_fetch_array($result))
                {
                $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third = 
-                  $be_nondriver = $be_needing_driver = $note = $num_submissions = "";
+                  $be_nondriver = $be_needing_driver = $note = $num_submissions = $timestamp = "";
                $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = $d8 = $d9 = $d10 = $d11 = $d12 = $d13 = $d14 = $d15 = $d16 =
                    $d17 = $d18 = $d19 = $d20 = $d21 = $d22 = $d23 = $d24 = $d25 = $d26 = $d27 = $d28 = $d29 = $d30 =
                    $d31 = "";
@@ -498,10 +518,18 @@ if ($shift_filter == "all")
                extract($row);
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $report .= "<p><a href=" . $mode . "detail.phtml?a="
-                  .  base64_encode($last_name)
+               //
+               $encoded_last_name = base64_encode($last_name);
+               $encoded_first_name = base64_encode($first_name);
+               //
+               if ($be_relayable)
+                  {
+                  $encoded_sheet_key = $encoded_last_name . "-" . $encoded_first_name;
+                  }
+               $report .= "<table width=100%><tr><td><a href=" . $mode . "detail.phtml?a="
+                  .  $encoded_last_name
                   .  "&b="
-                  .  base64_encode($first_name)
+                  .  $encoded_first_name
                   .  "&c="
                   .  base64_encode($month_abbrev)
                   .  "&d="
@@ -522,30 +550,66 @@ if ($shift_filter == "all")
                         $be_nondriver,
                         $be_needing_driver
                         )
-                  .  "]</p>";
-               $report .= "<blockquote>\n";
+                  .  "]</td>";
+               if ($be_relayable)
+                  {
+                  $report .= "<td align=right><input type=checkbox name=$encoded_sheet_key-NONE value=1>"
+                     .  "<small>Relay all</small></td>";
+                  }
+               $report .= "</tr></table>\n"
+                  .  "<blockquote>\n";
                if ($num_submissions > 1)
                   {
                   $report .= "   <p><b>*** WARNING: SUBMISSION COUNT = $num_submissions, VERIFICATION RECOMMENDED</b></p>\n";
                   }
-               $report .= "<table>\n"
-                  . "   <tr><td valign=top>Days:</td><td>"
-                  . AvailList
-                       (
-                       $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
-                       "",
-                       "use_spaces"
-                       )
-                  . "</td></tr>\n"
-                  . "   <tr><td valign=top>Nights:</td><td>"
-                  . AvailList
-                       (
-                       $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
-                       "",
-                       "use_spaces"
-                       )
-                  . "</td></tr>\n"
-                  . "</table>\n";
+               $report .= "<table>\n";
+               $report .= "<tr><td valign=top>Days:</td><td valign=top>";
+               if ($be_relayable)
+                  {
+                  $report .= AvailList
+                    (
+                    $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
+                    "",
+                    "use_spaces",
+                    $mode,
+                    $encoded_sheet_key . "-d"
+                    );
+                  }
+               else
+                  {
+                  $report .= AvailList
+                    (
+                    $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
+                    "",
+                    "use_spaces",
+                    $mode
+                    );
+                  }
+               $report .= "</td></tr>\n"
+                  . "   <tr><td valign=top>Nights:</td><td valign=top>";
+               if ($be_relayable)
+                  {
+                  $report .= AvailList
+                    (
+                    $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
+                    "",
+                    "use_spaces",
+                    $mode,
+                    $encoded_sheet_key . "-n"
+                    );
+                  }
+               else
+                  {
+                  $report .= AvailList
+                    (
+                    $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
+                    "",
+                    "use_spaces",
+                    $mode
+                    );
+                  }
+               $report .= "</td></tr>\n";
+               $report .= "</table>\n";
                if ($note != "")
                   {
                   $report .= "   <p><i>" . stripslashes($note) . "</i></p>\n";
@@ -563,6 +627,23 @@ if ($shift_filter == "all")
          }
       //
       $report .= "<pre>--- END ---</pre><br>\n";
+      //
+      if ($be_relayable)
+         {
+         $report .= "<table width=100%><tr><td><b>EMS Schedule Coordinator:</b></td>"
+            .  "<td align=right><small><a href=" . $mode . "relay-all-details.phtml>What is <b>Relay all</b>?</a></small>"
+            .  "</td></tr></table>\n"
+            .  "<ul>\n"
+            .  "   <li><p>Use the above checkboxes to indicate availabilities you have allocated for the centralized "
+            .  "      schedule.</p></li>\n"
+            .  "   <li><p>Press \"Relay unused\" below to pass unallocated availabilities to squad schedule coordinators, or "
+            .  "      \"Reset\" to abort your allocations and start again.</p></li>\n"
+            .  "   <li><p>If you do not indicate how to treat a member, none of that member's availabilities will be "
+            .  "      relayed at this time (but you may relay them later if you wish).</p></li>\n"
+            .  "</ul>\n"
+            .  "<input type=submit value=\"Relay unused\"><input type=reset>\n"
+            .  "</form>\n";
+         }
       $report .= "<small><i><pre>\$Id$</pre></i></small>\n";
       $report .= "</td></tr></table>\n";
       $report .= "</body>\n";
