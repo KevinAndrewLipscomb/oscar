@@ -6,7 +6,7 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
-// require_once("f_roleemailaddress");
+require_once("f_roleemailaddress");
 //
 $msg = "<html>\n";
 $msg .= "<head><title>Report generation</title></head>\n";
@@ -275,10 +275,11 @@ $msg .= "</td></tr></table>\n";
 $msg .= "</body>\n";
 $msg .= "</html>\n";
 //
-echo $msg;
-// $recipient = RoleEmailAddress("schedule-coordinator");
-// $subject = "OSCAR report";
-// $headers = "Reply-to: $name <$email_addr>\r\n";
-// $headers .= "Content-type: text/html\r\n";
-// mail($recipient, $subject, $msg, $headers);
+//echo $msg;
+//$recipient = RoleEmailAddress("schedule-coordinator");
+$recipient = RoleEmailAddress();
+$subject = "OSCAR report";
+$headers = "Reply-to: $name <$email_addr>\r\n";
+$headers .= "Content-type: text/html\r\n";
+mail($recipient, $subject, $msg, $headers);
 ?>
