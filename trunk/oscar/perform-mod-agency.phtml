@@ -1,0 +1,130 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_connectselectdb.phtml");
+//
+?>
+<html>
+<head><title>Modify Squad Participant Status</title></head>
+<? BodyOpen(); ?>
+<table align=center width=80%><tr><td>
+<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H1 ALIGN=CENTER>Modify Squad Participant Status</H1>
+<hr>
+<?
+if ($token != "")
+   {
+   //
+   // Connect to the database.
+   //
+   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+      {
+      //
+      // Get the parameters associated with the token.
+      //
+      $result = mysql_query
+         (
+         "select enumeral, new_be_active from " . $mode . "pend_mod_agency where token='$token' "
+         )
+         or die("Query failed with error: " . mysql_error());
+      if (mysql_num_rows($result))
+         {
+         extract(mysql_fetch_array($result));
+         //
+         // Perform the specified update.
+         //
+         mysql_query
+            (
+            "update " . $mode . "agency "
+            .  "set be_active='$new_be_active' "
+            .  "where enumeral='$enumeral' "
+            )
+            or die("Update failed with error: " . mysql_error());
+         mysql_query
+            (
+            "delete from " . $mode . "pend_mod_agency where token='$token' "
+            )
+            or die("Clean-up failed with error: " . mysql_error());
+         //
+         PutLibPhotoRandomPlaced("sasquatch",1,"right");
+         echo "<p>The status of agency '$enumeral' has been changed to ";
+         if ($new_be_active == "FALSE") echo "NON";
+         echo "PARTICIPANT.</p>\n"
+            . "Related destinations:\n"
+            . "<ul>\n"
+            . "   <li><a href=" . $mode . "form-set-agency.phtml>Toggle Squad Participation page</a></li>\n"
+            . "   <li><a href=" . $mode . "modify.phtml>Modify other OSCAR settings</a></li>\n"
+            . "   <li><a href=" . $mode . "index.phtml>Main OSCAR page</a></li>\n"
+            . "</ul>\n";
+         }
+      else
+         {
+         //
+         // Fill the page out with a warning and instructions.
+         //
+         ?>
+         <h2><i>Error!</i></h2>
+         <b>
+         <blockquote>
+            <p>Specified token not found.&nbsp; Consider:</p>
+            <ul>
+               <li>Make sure the URL in your browser's address field exactly matches the URL
+                  in your challenge email message.</li>
+               <li>Maybe you have already completed this modification.</li>
+            </ul>
+            <p>If the above hints don't help, contact the <a href=mailto:"<? echo RoleEmailAddress("",$mode); ?>">OSCAR
+               System Administrator</a>.</p>
+         </blockquote>            
+         </b>
+         <?
+         }
+      }
+   else
+      {
+      //
+      // Fill the page out with a warning and instructions.
+      //
+      ?>
+      <h2><i>Sorry...</i></h2>
+      <b>
+      <blockquote>
+         <p>OSCAR's database is temporarily unavailable.&nbsp; Please try your modification operation later.</p>
+      </blockquote>            
+      </b>
+      <?
+      }
+   }
+else
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Error!</i></h2>
+   <b>
+   <blockquote>
+      <p>Invalid arguments.</p>
+   </blockquote>            
+   </b>
+   <?
+   }
+?>
+<br clear=both>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>

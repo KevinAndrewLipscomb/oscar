@@ -1,0 +1,166 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+// Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
+//
+$enumeral = $enumeral;
+$current_be_active = $current_be_active;
+//
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_connectselectdb.phtml");
+//
+$html = "<html>\n";
+$html .= "<head><title>Toggle Squad Participation</title></head>\n";
+$html .= "<body bgcolor=#FFFFFF>\n";
+$html .= "<table align=center width=80%><tr><td>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H1 ALIGN=CENTER>Toggle Squad Participation</H1>\n";
+$html .= "<hr>\n";
+//
+echo $html;
+//
+// Validate parameters.
+//
+if 
+   (
+      ($enumeral != "")
+   and
+      ($current_be_active != "")
+   )
+// then
+   {
+   //
+   // All required values are present.
+   // Connect to the database.
+   //
+   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+      {
+      ?>
+      <h2><i>Sorry...</i></h2>
+      <b>
+      <blockquote>
+         <? echo "<p>OSCAR's database has gone offline.&nbsp; Please try your toggle operation later.</p>"; ?>
+      </blockquote>            
+      </b>
+      <?
+      }
+   else
+   {
+   //
+   // Generatea random token and enter a record in the pend_mod_agency table.
+   //
+   if ($current_be_active == "TRUE")
+      {
+      $new_be_active = "FALSE";
+      }
+   else
+      {
+      $new_be_active = "TRUE";
+      }
+   srand((double)microtime()*1000000); 
+   $raw_token =  rand() . " $enumeral $new_be_active";
+   $result = mysql_query("select md5(\"$raw_token\") as token")
+      or die("Token generation failed with error: " . mysql_error());
+   extract(mysql_fetch_array($result));
+   mysql_query
+      (
+      "insert into " . $mode . "pend_mod_agency set token='$token' "
+      .  ", enumeral='$enumeral' "
+      .  ", new_be_active='$new_be_active' "
+      )
+      or die("Insert failed with error: " . mysql_error());
+   //
+   // Generate the challenge message.
+   //
+   //             0        1         2         3         4         5         6         7
+   //             123456789012345678901234567890123456789012345678901234567890123456789012
+   $challenge = "";
+   $challenge .= "Someone (possibly you) wants to change a squad's participation status in\n"
+              .  "the OSCAR system.  Specifically, OSCAR received a request to change\n"
+              .  "squad '" . $enumeral . "' to ";
+   if ($current_be_active == "TRUE") $challenge .= "NON";
+   $challenge .= "PARTICIPANT.\n\n"
+              .  "THE CHANGE IS NOT YET COMPLETE.  To\n"
+              .  "complete the process, click here:\n"
+              .  OscarRootUrl()
+              .  "/" . $mode . "perform-mod-agency.phtml?token=$token\n\n"
+              .  "To ABORT the change, DO NOTHING.\n\n";
+   //
+   // Add sig lines.
+   //
+   $challenge .= "-- OSCAR\n"
+              .  "-- Home page: " . OscarHomePageUrl() . "\n"
+              .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+   //
+   // Send the mail.
+   //
+   $email_addr = RoleEmailAddress("master",$mode);
+   $result = mail($email_addr, "OSCAR Modification Challenge", $challenge, OscarMailHeaders());
+   //
+   if ($result)
+      {
+      PutLibPhotoRandomPlaced("sasquatch",1,"right");
+      echo "<p>The OSCAR system has sent a challenge message to <b>$email_addr</b>.</p>";
+      echo "<p><b>Check your email periodically for the challenge message, which contains instructions for completing the "
+         . "modification process.</b></p>"
+         . "Related destinations:\n"
+         . "<ul>\n"
+         . "   <li><a href=" . $mode . "form-set-agency.phtml>Toggle Squad Participation page</a></li>\n"
+         . "   <li><a href=" . $mode . "modify.phtml>Modify other OSCAR settings</a></li>\n"
+         . "   <li><a href=" . $mode . "index.phtml>Main OSCAR page</a></li>\n"
+         . "</ul>\n";
+      echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
+         .  RoleEmailAddress("",$mode)
+         .  "\">OSCAR System Administrator</a>.</p>";
+      }
+   else
+      {
+      //
+      // Fill the page out with a warning and instructions.
+      //
+      ?>
+      <h2><i>Error!</i></h2>
+      <b>
+      <blockquote>
+         <p>The OSCAR system encountered an internal error while processing your request.&nbsp; Contact the
+            <a href=mailto:"<? echo RoleEmailAddress("",$mode); ?>">OSCAR System Administrator</a>.</p>
+      </blockquote>            
+      </b>
+      <?
+      }
+   }
+   }
+else
+   {
+   //
+   // Fill the page out with a warning and instructions.
+   //
+   ?>
+   <h2><i>Error!</i></h2>
+   <b>
+   <blockquote>
+      <p>Invalid parameters</p>
+   </blockquote>            
+   </b>
+   <?
+   }
+?>
+<br clear=both>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>
