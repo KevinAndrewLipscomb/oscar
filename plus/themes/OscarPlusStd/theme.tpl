@@ -20,7 +20,7 @@
 <body>
 
 <a href=".">
-<img src="{THEME_DIRECTORY}images/poweredby.jpg" alt="Fallout" border="0" />
+<img src="{THEME_DIRECTORY}images/logo.jpg" alt="OscarPlus sponsor logo" border="0" />
 </a>
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%" summary="Layout table">
