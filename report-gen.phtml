@@ -300,21 +300,18 @@ else
       //
       $report .= "<pre>\n";
       $report .= "Filtered availability report for $month_word generated " . date("l Y-M-d H:i:s T") . "\n\n";
-      $report .= "   +------------------------------------------+\n";
-      $report .= "   | Legend:                                  |\n";
-      $report .= "   |    -5-30- Rxx 8xxxxx Lastname, Firstname |\n";
-      $report .= "   |     ^  ^   ^    ^                        |\n";
-      $report .= "   |     |  |   |    |                        |\n";
-      $report .= "   |     |  |   |    +- Officer code          |\n";
-      $report .= "   |     |  |   |       (also 7xxxxx)         |\n";
-      $report .= "   |     |  |   |                             |\n";
-      $report .= "   |     |  |   +- Home rescue squad          |\n";
-      $report .= "   |     |  |      (ERS for VBFD)             |\n";
-      $report .= "   |     |  |                                 |\n";
-      $report .= "   |     |  +- Squad truck team member        |\n";
-      $report .= "   |     |                                    |\n";
-      $report .= "   |     +- EMS-5 team member                 |\n";
-      $report .= "   +------------------------------------------+\n\n\n";
+      $report .= "   +-----------------------------------+\n";
+      $report .= "   | Legend:                           |\n";
+      $report .= "   |    -5-30- Rxx Lastname, Firstname |\n";
+      $report .= "   |     ^  ^   ^                      |\n";
+      $report .= "   |     |  |   |                      |\n";
+      $report .= "   |     |  |   +- Home rescue squad   |\n";
+      $report .= "   |     |  |      (ERS for VBFD)      |\n";
+      $report .= "   |     |  |                          |\n";
+      $report .= "   |     |  +- Squad truck team member |\n";
+      $report .= "   |     |                             |\n";
+      $report .= "   |     +- EMS-5 team member          |\n";
+      $report .= "   +-----------------------------------+\n\n\n";
       if ($info_message) $report .= "$info_message\n\n";
       for ($day_index = 1; $day_index <= 31; $day_index++)
          {
@@ -352,7 +349,7 @@ else
          {
          if ($n[$night_index])
             {
-            $night_description = date("jS \\n\i\g\h\t (l):",mktime(9,0,0,$month_num,$night_index,$year_num));
+            $night_description = date("jS \\n\i\g\h\\t (l):",mktime(9,0,0,$month_num,$night_index,$year_num));
             $where_clause_2 = "and n$night_index='AVAILABLE' ";
             $sql_statement = stripslashes($base_sql_statement . "where " . $where_clause . $where_clause_2 . $presentation_clause);
             $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
