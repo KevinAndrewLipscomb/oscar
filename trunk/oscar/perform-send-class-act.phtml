@@ -67,18 +67,31 @@ if
       //           123456789012345678901234567890123456789012345678901234567890123456789012
       $message = "";
       $message .= "Please accept the following Class Act Nomination, received via OSCAR:\n\n"
-               .  "   STATION:\n"
-               .  "      " . wordwrap(stripslashes(trim($station)),66,"\n      ") . "\n"
-               .  "   NOMINEE(S):\n"
-               .  "      " . wordwrap(stripslashes(trim($nominees)),66,"\n      ") . "\n"
-               .  "   DESCRIPTION:\n"
-               .  "      " . wordwrap(stripslashes(trim($description)),66,"\n      ") . "\n"
-               .  "   SUBMITTER'S NAME:\n"
-               .  "      " . wordwrap(stripslashes(trim($submitter)),66,"\n      ") . "\n"
-               .  "   SUBMITTER'S DAYTIME PHONE NUMBER:\n"
-               .  "      " . wordwrap(stripslashes(trim($phonenum)),66,"\n      ") . "\n"
-               .  "   SUBMITTER'S EMAIL ADDRESS:\n"
-               .  "      " . wordwrap(stripslashes(trim($emailaddr)),66,"\n      ") . "\n\n";
+               .  "   STATION:\n\n"
+               .  "      " . wordwrap(stripslashes(trim($station)),66,"\n      ") . "\n\n"
+               .  "   NOMINEE(S):\n\n"
+               .  "      " . wordwrap(stripslashes(trim($nominees)),66,"\n      ") . "\n\n"
+               .  "   DESCRIPTION:\n\n"
+               .  "      " . wordwrap(stripslashes(trim($description)),66,"\n      ") . "\n\n"
+               .  "   SUBMITTER'S NAME:\n\n"
+               .  "      " . wordwrap(stripslashes(trim($submitter)),66,"\n      ") . "\n\n"
+               .  "   SUBMITTER'S DAYTIME PHONE NUMBER:\n\n"
+               .  "      " . wordwrap(stripslashes(trim($phonenum)),66,"\n      ") . "\n\n"
+               .  "   SUBMITTER'S EMAIL ADDRESS:\n\n"
+               .  "      " . wordwrap(stripslashes(trim($emailaddr)),66,"\n      ") . "\n\n\n"
+               .  "Follow up tasks:\n\n"
+               .  "   Certificate issued:\n"
+               .  "      [ ]Yes  [ ]No\n"
+               .  "   Copy to:\n"
+               .  "      [ ]Personnel file\n"
+               .  "      [ ]Squad Commander\n"
+               .  "   Personnel database entry:\n"
+               .  "      [ ]Yes  [ ]No\n"
+               .  "   Congrat letter sent:\n"
+               .  "      [ ]Yes  [ ]No\n"
+               .  "   Gift issued:\n"
+               .  "      [ ]Yes  [ ]No\n"
+               .  "   Comments:\n\n\n\n\n";
       //
       // Add sig lines.
       //
