@@ -32,7 +32,12 @@ mysql_query("insert into trusted_user set email_address='$email_addr'")
 if (SendApprovalNotice($email_addr,$digest))
    {
    PutLibPhotoRandomPlaced("sasquatch",1,"right");
-   echo "<p>The OSCAR system has registered your approval of user $email_addr's request; has sent the user instructions on how to retrieve the requested report; and has registered $email_addr as a trusted user.</p>";
+   echo "<p>The OSCAR system has performed the following:</p>\n"
+      . "<ul>\n"
+      . "   <li><p>Registered your approval of user $email_addr's request;</p></li>\n"
+      . "   <li><p>Sent the user instructions on how to retrieve the requested report;</p></li>\n"
+      . "   <li><p>Registered $email_addr as a trusted user.</p></li>\n"
+      . "</ul>\n";
    }
 else
    {
