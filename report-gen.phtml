@@ -108,7 +108,7 @@ if ($report_type == "FULL")
          echo "- ";
          if ($squad != "ERS") $squad = sprintf("R%02s",$squad);
          echo "$squad $cad_num]\n";
-         echo "<blockquote><i>" . stripslashes($note) . "</i></blockquote><p></p>";
+         echo "<blockquote><i>" . stripslashes($note) . "</i></blockquote>\n<br>";
          $cad_num = $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $note = "";
          }
       }
