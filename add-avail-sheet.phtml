@@ -18,7 +18,6 @@ require_once("f_bodyopen.phtml");
             <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
          <H1 ALIGN="CENTER">Availability sheet submission</H1>
          <hr>
-         <p>
          <?
          PutLibPhotoRandomPlaced("sasquatch",1,"left");
          //
@@ -34,8 +33,9 @@ require_once("f_bodyopen.phtml");
          mysql_query($sql) or die("Sorry, the database operation failed with this error:  " . mysql_error() . "\n\nPlease notify the OSCAR System Administrator.");
          mail("infotech@kvrs.org","OSCAR insert op",stripslashes("The \'OSCAR - add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"));
          ?>
-         <b>Thanks!</b></p>
-         <p>Your availability sheet has been forwarded to the VBDEMS Central Schedule Coordinator.</p>
+         <p><b>Thanks!</b></p>
+         <p>Your availability sheet has been successfully entered into the OSCAR System.</p>
+         <p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:infotech@kvrs.org>OSCAR System Administrator</a>.</p>
       </td>
    </tr>
 </table>
