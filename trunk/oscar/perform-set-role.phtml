@@ -1,0 +1,111 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+// Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
+//
+$a = $a;
+$b = $b;
+$c = $c;
+//
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_password.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_oscarmailheaders.phtml");
+require_once("f_connectselectdb.phtml");
+//
+?>
+<html>
+<head><title>Role Modification Confirmation</title></head>
+<? BodyOpen(); ?>
+<table align=center width=80%><tr><td>
+<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H1 ALIGN=CENTER>Role Modification Confirmation</H1>
+<hr>
+<?
+//
+// Decode the arguments.
+//
+$agency = base64_decode($a);
+$role = base64_decode($b);
+$new_email_addr = base64_decode($c);
+//
+// Connect to the database.
+//
+if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   {
+   ?>
+   <h2><i>Sorry...</i></h2>
+   <b>
+   <blockquote>
+      <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your retraction operation later.</p>"; ?>
+   </blockquote>            
+   </b>
+   <?
+   }
+else
+   {
+   //
+   // Determine whether or not the specified role is defined.
+   //
+   $result = mysql_query("select 1 from " . $mode . "authority where coord_agency='$agency' and role='$role' ")
+      or die("Role existence check failed with error: " . mysql_error());
+   if (mysql_num_rows($result))
+      {
+      //
+      // This role is already defined.  Update it.
+      //
+      mysql_query
+         (
+         "update " . $mode . "authority "
+         .  "set email_addr='$new_email_addr' "
+         .  "where coord_agency = '$agency' "
+         .  "   and role = '$role' "
+         )
+         or die("Update failed with error:  " . mysql_error());
+      }
+   else
+      {
+      //
+      // The role is undefined.  Insert a new record.
+      //
+      if ($role == "egroup-manager")
+         {
+         $has_clearance = "FALSE";
+         }
+      else
+         {
+         $has_clearance = "TRUE";
+         }
+      mysql_query
+         (
+         "insert into " . $mode . "authority "
+         .  " set coord_agency = '$agency' "
+         .  "    , role = '$role' "
+         .  "    , email_addr = '$new_email_addr' "
+         .  "    , has_clearance = '$has_clearance' "
+         )
+         or die("Insert failed with error:  " . mysql_error());
+      }
+   //
+   PutLibPhotoRandomPlaced("sasquatch",1,"right");
+   echo "<p>OSCAR has accepted the new role setting.</p>\n";
+   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
+      . RoleEmailAddress("",$mode)
+      . "\">OSCAR System Administrator</a>.</p>";
+   }
+?>
+<hr>
+<p><small><small><em><pre>$Id$</pre></em></small></small>
+</td>
+</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<?
+//
+// $Id$
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_connectselectdb.phtml");
+require_once("f_password.phtml");
+require_once("f_writecalendarsubform.phtml");
+require_once("f_writecalendarbody.phtml");
+?>
+<html>
+
+<head>
+<title>OSCAR - Set Role (Part 2)</title>
+</head>
+
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+        <table><tr>
+           <td><? PutLibPhotoRandomPlaced("sasquatch",1); ?></td>
+           <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+           <td>
+              <h6 align="center">
+                 KVEO-IT-PROJECT<br>
+                 <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+                 <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+              <h1 align="center">Set Role (Part 2)</h1>
+           </td>
+        </tr></table>
+        <hr>
+        <?
+        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+        {
+        //
+        // Validate parameters.
+        //
+        if
+           (
+              ($agency != "")
+           and
+              ($role != "")
+           )
+        // then
+        {
+        //
+        // Show what was collected in Part 1.
+        //
+        echo "<br>\n"
+           . "<table>\n"
+           . "   <tr><td>Agency:</td><td><b>$agency</b></td></tr>\n"
+           . "   <tr><td>Role:</td><td><b>$role</b></td></tr>\n"
+           . "</table>\n"
+           . "<br>\n";
+        ?>
+        The current value of the specified role is:
+        <?
+        $result = mysql_query
+           (
+           "select email_addr from " . $mode . "authority "
+           .  "where coord_agency='$agency' "
+           .  "   and role='$role' "
+           )
+           or die("Current value query failed with error: " . mysql_error());
+        //
+        echo "<blockquote>\n";
+        if ($num_rows = mysql_num_rows($result))
+           {
+           extract(mysql_fetch_array($result));
+           echo "   <b>$email_addr</b>\n";
+           }
+        else
+           {
+           echo "   <b>UNDEFINED</b>\n";
+           $email_addr = "UNDEFINED";
+           }
+        //
+        echo "</blockquote>\n";
+        //
+        // Get the new value
+        //
+        ?>
+        <form action=<? echo $mode; ?>perform-set-role-challenge.phtml method=post>
+           <?
+           echo "<input type=hidden name=agency value=\"$agency\">\n"
+              . "<input type=hidden name=role value=\"$role\">\n"
+              . "<input type=hidden name=current_email_addr value=\"$email_addr\">\n";
+           ?>
+           What email address would you like to assign to this role?
+           <blockquote>
+              <input type=text name=proposed_email_addr size=40 maxlength=64>
+           </blockquote>
+           Which OSCAR Authority will be approving this change?
+           <blockquote>
+              <?
+              //
+              // Generate a drop-down selection list showing existing authorities in the affected agency as well as EMS
+              // authorities.
+              //
+              $result = mysql_query
+                 (
+                 "select coord_agency as approving_agency "
+                 .  "   , role as approving_role "
+                 .  "   , email_addr as approving_email_addr "
+                 .  "from " . $mode . "authority "
+                 .  "where "
+                 .  "      ( "
+                 .  "         coord_agency='$agency' "
+                 .  "      or "
+                 .  "         coord_agency='EMS' "
+                 .  "      ) "
+                 .  "   and "
+                 .  "      has_clearance='TRUE' "
+                 .  "   and "
+                 .  "      role != 'sysadmin' "
+                 .  "   and "
+                 .  "      role != 'failsafe-recipient' "
+                 )
+                 or die("Eligible authorities query failed with error: " . mysql_error());
+              //
+              echo "<select name=approving_email_addr>\n";
+              if (mysql_num_rows($result) > 1)
+                 {
+                 echo "<option value=\"\">Select</option>\n";
+                 }
+              //
+              while($row = mysql_fetch_array($result))
+                 {
+                 $approving_agency = $approving_role = $approving_email_addr = "";
+                 extract($row);
+                 echo "<option value=\"$approving_email_addr\">"
+                    . "$approving_email_addr ($approving_agency $approving_role)"
+                    . "</option>\n";
+                 }
+              //
+              echo "</select>\n";
+              ?>
+           </blockquote>
+           <p><b>WARNING:&nbsp; This form sends a traceable email message to the specified OSCAR Authority.&nbsp; It is not
+              intended for general use.</b></p>
+           <input type="submit" value="Submit"><input type=reset>
+           <?
+           //
+           // What about the 'has_clearance' value for 'Other' roles?
+           //
+           ?>
+        </form>
+        <?
+        }
+        else
+           {
+           //
+           // Fill the page out with a warning and instructions.
+           //
+           ?>
+           <h2><i>Error!</i></h2>
+           <b>
+           <blockquote>
+              <p>You did not supply one or more of the required parameters.&nbsp; You must supply values for these fields:</p>
+              <ul>
+                 <li><p>Agency</p>
+                 <li><p>Role</p>
+              </ul>
+              <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
+           </blockquote>            
+           </b>
+           <?
+           echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+           }
+        }
+        else
+           {
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <? echo "<p>OSCAR's database has gone offline.&nbsp; Please retry the submission process later.</p>"; ?>
+            </blockquote>            
+            </b>
+            <?
+           }
+        ?>
+        <p><small><small><em><pre>$Id$</pre></em></small></small></td>
+    </tr>
+  </table>
+</body>
+
+</html>
+
