@@ -10,6 +10,9 @@ require_once("f_roleemailaddress.phtml");
 require_once("f_sendapprovalnotice.phtml");
 require_once("f_oscarmailheaders.phtml");
 //
+$name = trim($name);
+$email_addr = trim($email_addr);
+//
 // Connect to the database.
 //
 mysql_connect(localhost,kalipso,Password());
