@@ -161,6 +161,8 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                                  ?>
                               </tr>
                            </table>
+                           <br>
+                           <a href=<?php echo $mode; ?>training.phtml><img align=middle border src=doc/mortarboard.gif>&nbsp;<b>OSCAR U.</b></a>
                         </td>
                      </tr>
                      <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>form-request-report-1.phtml>Request</a></b></td><td valign=top>a compiled availability report.</td></tr>
@@ -196,7 +198,6 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                      }
                   ?>
                   </td></tr>
-                  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top><b><a href=<? echo $mode; ?>training.phtml>Learn</a></b></td><td valign=top>about OSCAR through <b>e-Training</b>.</td></tr>
                   <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right valign=top>
                   <?
                   if ($connected)
@@ -215,7 +216,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                   <?
                   if ($connected)
                      {
-                     echo "<b><a href=mailto:\"" . RoleEmailAddress("") . "\">";
+                     echo "<b><a href=mailto:" . RoleEmailAddress("") . ">";
                      }
                   else
                      {
