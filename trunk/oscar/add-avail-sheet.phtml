@@ -101,7 +101,7 @@ require_once("f_showavailsheetrecdetail.phtml");
                .  " order by timestamp desc"
                .  " limit 1"
                );
-            if (mysql_num_rows($result)
+            if (mysql_num_rows($result))
                {
                $row = mysql_fetch_row($result);
                extract($row);
