@@ -38,18 +38,35 @@ mysql_query
    .  " set d1=NULL, d2=NULL, d3=NULL, d4=NULL, d5=NULL, d6=NULL, d7=NULL, d8=NULL, d9=NULL, d10=NULL, d11=NULL, d12=NULL, d13=NULL, d14=NULL, d15=NULL, d16=NULL, d17=NULL, d18=NULL, d19=NULL, d20=NULL, d21=NULL, d22=NULL, d23=NULL, d24=NULL, d25=NULL, d26=NULL, d27=NULL, d28=NULL, d29=NULL, d30=NULL, d31=NULL"
    .  "    , n1=NULL, n2=NULL, n3=NULL, n4=NULL, n5=NULL, n6=NULL, n7=NULL, n8=NULL, n9=NULL, n10=NULL, n11=NULL, n12=NULL, n13=NULL, n14=NULL, n15=NULL, n16=NULL, n17=NULL, n18=NULL, n19=NULL, n20=NULL, n21=NULL, n22=NULL, n23=NULL, n24=NULL, n25=NULL, n26=NULL, n27=NULL, n28=NULL, n29=NULL, n30=NULL, n31=NULL"
    .  "    , num_extras=NULL"
-   .  "    , note='All availabilities retracted by user at IP address $REMOTE_ADDR.'"
+   .  "    , note='%OSCAR: User at IP address $REMOTE_ADDR retracted all availabilities on " . date("l Y-M-d H:i:s T") . ".'"
    .  " where last_name = \"" . addslashes(addslashes($last_name)) . "\""
    .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
    .  "    and month = '$applicable_month_abbrev'"
    )
    or die("Deletion failed with error:  " . mysql_error());
+$num_rows_affected = mysql_affected_rows();
 //
 PutLibPhotoRandomPlaced("sasquatch",1,"right");
-echo "<p>The OSCAR system has retracted "
-   . mysql_affected_rows()
-   . " record(s) from its database.</p>\n"
-   . "<p><b>Don't forget to <a href="
+echo "<p>The OSCAR system has retracted $num_rows_affected record";
+if ($num_rows_affected != 1) echo "s";
+echo " from its database.</p>\n";
+if ($num_rows_affected == 0)
+   {
+   echo "<i>\n"
+      . "A <u>ZERO</u> result can be caused by:\n"
+      . "   <ul>\n"
+      . "      <li>an attempt to retract records from months gone by;</li>\n"
+      . "      <li>an OSCAR bug.</li>\n"
+      . "   </ul>\n"
+      . "If you suspect a bug, please report the problem to the following people:\n"
+      . "   <ul>\n"
+      . "      <li><a href=mailto:\"" . RoleEmailAddress("schedule-coordinator") . "\">the Schedule Coordinator</a></li>\n"
+      . "      <li><a href=mailto:\"" . RoleEmailAddress("") . "\">the OSCAR System Administrator</a></li>\n"
+      . "   </ul>\n"
+      . "</i>\n"
+      . "<br>\n";
+   }
+echo "<p><b>Don't forget to <a href="
    . OscarRootUrl()
    . "/als-avail-sub-form.phtml>submit an accurate availability sheet</a> by the deadline.</b></p>\n"
    . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
