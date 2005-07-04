@@ -20,12 +20,12 @@ function Properties
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    $s = "-";
+   if ($be_on_team_5 == "TRUE") $s .= "6"; else $s .= "-";
+   $s .= "-";
+   if ($be_on_team_30 == "TRUE") $s .= "30"; else $s .= "--";
+   $s .= "-";
    if ($coord_agency == "EMS")
       {
-      if ($be_on_team_5 == "TRUE") $s .= "5"; else $s .= "-";
-      $s .= "-";
-      if ($be_on_team_30 == "TRUE") $s .= "30"; else $s .= "--";
-      $s .= "-";
       if ($be_tda == "TRUE") $s .= "TDA"; else $s .= "---";
       $s .= "-";
       if ($be_als == "TRUE") $s .= "Z"; else $s .= "-";
@@ -36,15 +36,10 @@ function Properties
       }
    else // coord_agency is not EMS
       {
-      if ($be_combined_agency_format == "TRUE") $s .= "-----------";
       //
       // Build patient care indicator: {---|aic|ALS}
       //
-      if ($be_on_team_5 == "TRUE") $s .= "5"; else $s .= "-";
-            $s .= "-";
-      if ($be_on_team_30 == "TRUE") $s .= "30"; else $s .= "--";
-            $s .= "-";
-            
+      if ($be_combined_agency_format == "TRUE") $s .= "-----";
       if ($be_third == "TRUE")
          {
          $s .="---";
