@@ -7,7 +7,9 @@ function NumSheets
    $month_abbrev,
    $mode = "",
    $coord_agency = "",
-   $be_tda_inclusive = ""
+   $be_tda_inclusive = 0,
+   $be_ers_inclusive = 0,
+   $be_supsvcs_inclusive = 0
    )
    {
    $saved_error_level = error_reporting(E_ALL);
@@ -15,7 +17,9 @@ function NumSheets
    $num_submitters = 0;
    $qry = "select count(distinct last_name, first_name) as num_submitters from oscar." . $mode . "avail_sheet "
       .  "   where month='$month_abbrev' ";
-   if ($be_tda_inclusive != "") $qry .= "and be_tda != 'TRUE' ";
+   if (!$be_tda_inclusive) $qry .= "and be_tda != 'TRUE' ";
+   if (!$be_ers_inclusive) $qry .= "and coord_agency != 'EMS' ";
+   if (!$be_supsvcs_inclusive) $qry .= "and coord_agency != 'SupSvcs' ";
    if (!$coord_agency)
       {
       $qry .= " group by month";

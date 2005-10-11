@@ -56,9 +56,9 @@ require_once("f_connectselectdb.phtml");
                   </tr>
                   <tr>
                      <?
-                     echo "<td align=center>" . ($current_num_sheets = NumSheets($current_month_abbrev,$mode)) . "</td>\n";
-                     echo "<td align=center>" . ($next_num_sheets = NumSheets($next_month_abbrev,$mode)) . "</td>\n";
-                     echo "<td align=center>" . ($after_num_sheets = NumSheets($after_next_month_abbrev,$mode)) . "</td>\n";
+                     echo "<td align=center>" . ($current_num_sheets = NumSheets($current_month_abbrev,$mode,"",1,1,1)) . "</td>\n";
+                     echo "<td align=center>" . ($next_num_sheets = NumSheets($next_month_abbrev,$mode,"",1,1,1)) . "</td>\n";
+                     echo "<td align=center>" . ($after_num_sheets = NumSheets($after_next_month_abbrev,$mode,"",1,1,1)) . "</td>\n";
                      ?>
                   </tr>
                </table>
@@ -127,10 +127,10 @@ require_once("f_connectselectdb.phtml");
                This table shows the approximate number of people who are using OSCAR to enter their own
                availability sheets.&nbsp; It is derived by counting the number of distinct email addresses submitted on
                availability sheets.&nbsp; The remaining availability sheets are entered by schedule coordination staff,
-               battalion chiefs, etc.
+               etc.
             </blockquote>
             <br>
-            <b>Number of shifts made available per person</b> (for all non-TDA sheets on file)
+            <b>Number of shifts made available per person</b> (for all non-TDA/ERS/SupSvcs sheets on file)
             <blockquote>
                <table cellpadding=1>
                   <?
@@ -144,6 +144,8 @@ require_once("f_connectselectdb.phtml");
                      .  "    , max(timestamp) as timestamp "
                      .  " from " . $mode . "avail_sheet "
                      .  " where be_tda != 'TRUE' "
+                     .  "    and coord_agency != 'EMS' "
+                     .  "    and coord_agency != 'SupSvcs' "
                      .  " group by month "
                      .  "    , last_name "
                      .  "    , first_name "
@@ -244,7 +246,7 @@ require_once("f_connectselectdb.phtml");
                   // Most available personnel
                   //
                   echo "<tr><td colspan=2>\n"
-                     . "   <br>Most available personnel:\n"
+                     . "   <br>Most available volunteer ambulance personnel:\n"
                      . "   <ol>\n";
                   $result = mysql_query("select * from shift_avail_count limit 5")
                      or die("Select 2 failed with error: " . mysql_error());
