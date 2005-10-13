@@ -246,7 +246,7 @@ require_once("f_connectselectdb.phtml");
                   // Most available personnel
                   //
                   echo "<tr><td colspan=2>\n"
-                     . "   <br>Most available <a href="meaning-of-vorp.phtml">VORPs</a>:\n"
+                     . "   <br>Most available <a href=meaning-of-vorp.phtml>VORPs</a>:\n"
                      . "   <ol>\n";
                   $result = mysql_query("select * from shift_avail_count limit 5")
                      or die("Select 2 failed with error: " . mysql_error());
