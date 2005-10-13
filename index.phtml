@@ -156,7 +156,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                               $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
                               $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
                               ?>
-                              <tr bgcolor=#D0D0D0><td colspan=3 align=center><small><i>Submissions from volunteers<small><a href=<? echo $mode; ?>stats.phtml>(more&nbsp;stats)</a></i></small></td></tr>
+                              <tr bgcolor=#D0D0D0><td colspan=3 align=center><small><i>Submissions from <a href="meaning-of-vorp.phtml">VORPs</a><small><a href=<? echo $mode; ?>stats.phtml>(more&nbsp;stats)</a></i></small></td></tr>
                               <tr bgcolor=#E8E8E8>
                                  <td align=center><small><i><? echo $current_month_abbrev; ?></i></small></td>
                                  <td align=center><small><i><? echo $next_month_abbrev; ?></i></small></td>

@@ -46,7 +46,7 @@ require_once("f_connectselectdb.phtml");
             $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
             ?>
             <br>
-            <b>Sheets on file</b>
+            <b>Sheets on file</b> (all inclusive)
             <blockquote>
                <table border=1 cellspacing=0 cellpadding=4>
                   <tr bgcolor=#E8E8E8>
@@ -64,7 +64,7 @@ require_once("f_connectselectdb.phtml");
                </table>
             </blockquote>
             <br>
-            <b>Distinct users</b>
+            <b>Distinct users</b> (all inclusive))
             <blockquote>
                <table border=1 cellspacing=0 cellpadding=4>
                   <tr bgcolor=#E8E8E8>
@@ -130,7 +130,7 @@ require_once("f_connectselectdb.phtml");
                etc.
             </blockquote>
             <br>
-            <b>Number of shifts made available per person</b> (for all non-TDA/ERS/SupSvcs sheets on file)
+            <b>Number of shifts made available per person</b> (for all <a href="meaning-of-vorp.phtml">VORP</a> sheets on file)
             <blockquote>
                <table cellpadding=1>
                   <?
@@ -246,7 +246,7 @@ require_once("f_connectselectdb.phtml");
                   // Most available personnel
                   //
                   echo "<tr><td colspan=2>\n"
-                     . "   <br>Most available volunteer ambulance personnel:\n"
+                     . "   <br>Most available <a href="meaning-of-vorp.phtml">VORPs</a>:\n"
                      . "   <ol>\n";
                   $result = mysql_query("select * from shift_avail_count limit 5")
                      or die("Select 2 failed with error: " . mysql_error());
