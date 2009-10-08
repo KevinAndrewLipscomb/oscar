@@ -15,6 +15,7 @@ require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
 require_once("f_properties.phtml");
+require_once("f_connectselectdb.phtml");
 //
 //
 // Accept user-supplied parameters and copy them into local variables.
@@ -95,8 +96,7 @@ if (isset($_note)) $note = $_note;
             //
             // Connect to the database.
             //
-            mysql_connect("localhost","kalipso",Password());
-            mysql_select_db("oscar");
+            ConnectSelectDb("localhost","kalipso",Password(),"oscar");
             //
             $found_something_to_process = "";
             $be_problem = "";
@@ -353,7 +353,7 @@ if (isset($_note)) $note = $_note;
                }
             else
                {
-               PutLibPhotoRandomPlaced("sasquatch",1,"right");
+               PutLibPhotoRandomPlaced("eye-candy",1,"right");
                echo "<p><b>Thanks!</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the "
                   . "<a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>\n";

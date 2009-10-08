@@ -15,11 +15,11 @@ require_once("f_password.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
+require_once("f_connectselectdb.phtml");
 //
 // Connect to the database.
 //
-mysql_connect("localhost","kalipso",Password());
-mysql_select_db("oscar");
+ConnectSelectDb("localhost","kalipso",Password(),"oscar");
 //
 $result = mysql_query("select report from " . $mode . "report_cache where digest = '$digest'")
    or die("The query failed with error:  " . mysql_error());

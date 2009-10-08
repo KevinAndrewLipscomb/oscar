@@ -14,6 +14,7 @@ $squad = $squad;
 $applicable_month_num = $applicable_month_num;
 $be_on_team_30 = $be_on_team_30;
 $be_on_team_5 = $be_on_team_5;
+$be_on_team_air = $be_on_team_air;
 $be_als = $be_als;
 $coord_agency = $coord_agency;
 $be_third = !$be_aic;  //Same logic, different user interface
@@ -159,12 +160,14 @@ if ($be_needing_driver) $be_third = FALSE;
                $sql .= ", squad='$squad'";
                if ($be_on_team_30 == "TRUE") $sql .= ", be_on_team_30='TRUE'";
                if ($be_on_team_5 == "TRUE") $sql .= ", be_on_team_5='TRUE'";
+               if ($be_on_team_air == "TRUE") $sql .= ", be_on_team_air='TRUE'";
                if ($be_als == "TRUE") $sql .= ", be_als='TRUE'";
                }
             else
                {
                if ($be_on_team_30 == "TRUE") $sql .= ", be_on_team_30='TRUE'";
                if ($be_on_team_5 == "TRUE") $sql .= ", be_on_team_5='TRUE'";
+               if ($be_on_team_air == "TRUE") $sql .= ", be_on_team_air='TRUE'";
                if ($be_third == "TRUE") $sql .= ", be_third='TRUE'";
                if ($be_nondriver == "TRUE") $sql .= ", be_nondriver='TRUE'";
                if ($be_needing_driver == "TRUE") $sql .= ", be_needing_driver='TRUE'";
@@ -275,6 +278,7 @@ if ($be_needing_driver) $be_third = FALSE;
                   $month,
                   $be_on_team_5,
                   $be_on_team_30,
+                  $be_on_team_air,
                   $be_tda,
                   $be_als,
                   $num_extras,

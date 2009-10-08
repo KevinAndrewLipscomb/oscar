@@ -12,6 +12,7 @@ require_once("f_bodyopen.phtml");
 require_once("f_password.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
+require_once("f_connectselectdb.phtml");
 ?>
 <html>
 <head><title>OSCAR - Confirmation</title></head>
@@ -63,8 +64,7 @@ require_once("f_availlist.phtml");
             //
             // Connect to the database.
             //
-            mysql_connect("localhost","kalipso",Password());
-            mysql_select_db("oscar");
+            ConnectSelectDb("localhost","kalipso",Password(),"oscar");
             //
             $found_something_to_process = "";
             $be_problem = "";
@@ -242,7 +242,7 @@ require_once("f_availlist.phtml");
                }
             else
                {
-               PutLibPhotoRandomPlaced("sasquatch",1,"right");
+               PutLibPhotoRandomPlaced("eye-candy",1,"right");
                echo "<p><b>Thanks!</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the "
                   . "<a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>\n";
