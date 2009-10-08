@@ -6,6 +6,7 @@ function Properties
    (
    $be_on_team_5,
    $be_on_team_30,
+   $be_on_team_air,
    $be_tda,
    $be_als,
    $squad,
@@ -20,7 +21,9 @@ function Properties
    if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    $s = "-";
-   if ($be_on_team_5 == "TRUE") $s .= "6"; else $s .= "-";
+   if ($be_on_team_air == "TRUE") $s .= "H"; else $s .= "-";
+   $s .= "-";
+   if ($be_on_team_5 == "TRUE") $s .= "7"; else $s .= "-";
    $s .= "-";
    if ($be_on_team_30 == "TRUE") $s .= "30"; else $s .= "--";
    $s .= "-";

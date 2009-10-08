@@ -180,7 +180,8 @@ switch ($coord_agency)
    {
    case '%':
       $be_combined_agency_format = 'TRUE';
-      $presentation_clause = 'order by be_on_team_5 desc '
+      $presentation_clause = 'order by be_on_team_air desc '
+         .  '   , be_on_team_5 desc '
          .  '   , be_on_team_30 desc '
          .  '   , be_als desc '
          .  '   , coord_agency asc '
@@ -189,7 +190,7 @@ switch ($coord_agency)
          .  '   , be_needing_driver desc ';
       break;
    case 'EMS':
-      $presentation_clause = " order by be_on_team_5 desc, be_on_team_30 desc, be_tda desc, squad ";
+      $presentation_clause = " order by be_on_team_air desc, be_on_team_5 desc, be_on_team_30 desc, be_tda desc, squad ";
       break;
    default:
       $presentation_clause = " order by be_third asc, be_nondriver desc, be_needing_driver desc ";
@@ -291,6 +292,7 @@ if ($shift_filter == "all")
             $base_sql_statement .= ", squad"
                .  ", be_on_team_30"
                .  ", be_on_team_5"
+               .  ", be_on_team_air"
                .  ", be_tda"
                .  ", be_als";
             if ($coord_agency != '%') break;
@@ -314,6 +316,10 @@ if ($shift_filter == "all")
          case "team_30_only":
             $where_clause .= " and be_on_team_30 = 'TRUE' ";
             $info_message = "This report ONLY includes SQUAD TRUCK team members.";
+            break;
+         case "team_air_only":
+            $where_clause .= " and be_on_team_air = 'TRUE' ";
+            $info_message = "This report ONLY includes AIR AMBULANCE team members.";
             break;
          case "tda_only":
             $where_clause .= " and be_tda = 'TRUE' ";
@@ -359,20 +365,22 @@ if ($shift_filter == "all")
       //
       if ($coord_agency == "EMS")
          {
-         $report .= "   +-------------------------------------------+\n";
-         $report .= "   | Legend:                                   |\n";
-         $report .= "   |    -5-30-TDA-Z- Rxx Lastname, Firstname * |\n";
-         $report .= "   |     ^  ^     ^   ^                      ^ |\n";
-         $report .= "   |     |  |     |   |                      | |\n";
-         $report .= "   |     |  |     |   +- Home rescue squad   | |\n";
-         $report .= "   |     |  |     |      (ERS for VBFD)      | |\n";
-         $report .= "   |     |  |     |                          | |\n";
-         $report .= "   |     |  |     +- Zone Car ALS            | |\n";
-         $report .= "   |     |  |                                | |\n";
-         $report .= "   |     |  +- Squad truck team member       | |\n";
-         $report .= "   |     |                                   | |\n";
-         $report .= "   |     +- EMS-5 team member                | |\n";
-         $report .= "   |                                         | |\n";
+         $report .= "   +---------------------------------------------+\n";
+         $report .= "   | Legend:                                     |\n";
+         $report .= "   |    -H-7-30-TDA-Z- Rxx Lastname, Firstname * |\n";
+         $report .= "   |     ^ ^  ^     ^   ^                      ^ |\n";
+         $report .= "   |     | |  |     |   |                      | |\n";
+         $report .= "   |     | |  |     |   +- Home rescue squad   | |\n";
+         $report .= "   |     | |  |     |      (ERS for VBFD)      | |\n";
+         $report .= "   |     | |  |     |                          | |\n";
+         $report .= "   |     | |  |     +- Zone Car ALS            | |\n";
+         $report .= "   |     | |  |                                | |\n";
+         $report .= "   |     | |  +- Squad truck team member       | |\n";
+         $report .= "   |     | |                                   | |\n";
+         $report .= "   |     | +- EMS-7 team member                | |\n";
+         $report .= "   |     |                                     | |\n";
+         $report .= "   |     +- Air Ambulance team member          | |\n";
+         $report .= "   |                                           | |\n";
          $report .= "   |                    See special request -+ |\n"; 
          $report .= "   |                    in Note section        |\n";
          $report .= "   +-------------------------------------------+\n\n\n";
@@ -425,6 +433,7 @@ if ($shift_filter == "all")
                         (
                         $be_on_team_5,
                         $be_on_team_30,
+                        $be_on_team_air,
                         $be_tda,
                         $be_als,
                         $squad,
@@ -499,6 +508,7 @@ if ($shift_filter == "all")
                         (
                         $be_on_team_5,
                         $be_on_team_30,
+                        $be_on_team_air,
                         $be_tda,
                         $be_als,
                         $squad,
@@ -602,6 +612,7 @@ if ($shift_filter == "all")
                $query .= ", squad"
                   .  ", be_on_team_30"
                   .  ", be_on_team_5"
+                  .  ", be_on_team_air"
                   .  ", be_tda"
                   .  ", be_als"
                   .  ", aggregated.timestamp";
@@ -665,6 +676,7 @@ if ($shift_filter == "all")
                            (
                            $be_on_team_5,
                            $be_on_team_30,
+                           $be_on_team_air,
                            $be_tda,
                            $be_als,
                            $squad,
@@ -868,6 +880,7 @@ else
             $base_sql_statement .= ", squad"
                .  ", be_on_team_30"
                .  ", be_on_team_5"
+               .  ", be_on_team_air"
                .  ", be_tda"
                .  ", be_als";
             if ($coord_agency != '%') break;
@@ -890,6 +903,10 @@ else
          case "team_30_only":
             $where_clause .= " and be_on_team_30 = 'TRUE' ";
             $info_message = "This report ONLY includes SQUAD TRUCK team members.";
+            break;
+         case "team_air_only":
+            $where_clause .= " and be_on_team_air = 'TRUE' ";
+            $info_message = "This report ONLY includes AIR AMBULANCE team members.";
             break;
          case "tda_only":
             $where_clause .= " and be_tda = 'TRUE' ";
@@ -924,20 +941,22 @@ else
       $report .= "</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       if ($coord_agency == "EMS")
          {
-         $report .= "   +-----------------------------------------+\n";
-         $report .= "   | Legend:                                 |\n";
-         $report .= "   |    -5-30-TDA-Z- Rxx Lastname, Firstname |\n";
-         $report .= "   |     ^  ^     ^   ^                      |\n";
-         $report .= "   |     |  |     |   |                      |\n";
-         $report .= "   |     |  |     |   +- Home rescue squad   |\n";
-         $report .= "   |     |  |     |      (ERS for VBFD)      |\n";
-         $report .= "   |     |  |     |                          |\n";
-         $report .= "   |     |  |     +- Zone Car ALS            |\n";
-         $report .= "   |     |  |                                |\n";
-         $report .= "   |     |  +- Squad truck team member       |\n";
-         $report .= "   |     |                                   |\n";
-         $report .= "   |     +- EMS-5 team member                |\n";
-         $report .= "   +-----------------------------------------+\n\n\n";
+         $report .= "   +-------------------------------------------+\n";
+         $report .= "   | Legend:                                   |\n";
+         $report .= "   |    -H-7-30-TDA-Z- Rxx Lastname, Firstname |\n";
+         $report .= "   |     ^ ^  ^     ^   ^                      |\n";
+         $report .= "   |     | |  |     |   |                      |\n";
+         $report .= "   |     | |  |     |   +- Home rescue squad   |\n";
+         $report .= "   |     | |  |     |      (ERS for VBFD)      |\n";
+         $report .= "   |     | |  |     |                          |\n";
+         $report .= "   |     | |  |     +- Zone Car ALS            |\n";
+         $report .= "   |     | |  |                                |\n";
+         $report .= "   |     | |  +- Squad truck team member       |\n";
+         $report .= "   |     | |                                   |\n";
+         $report .= "   |     | +- EMS-7 team member                |\n";
+         $report .= "   |     |                                     |\n";
+         $report .= "   |     +- Air Ambulance team member          |\n";
+         $report .= "   +-------------------------------------------+\n\n\n";
          }
       elseif ($coord_agency != '%')
          {
@@ -982,6 +1001,7 @@ else
                            (
                            $be_on_team_5,
                            $be_on_team_30,
+                           $be_on_team_air,
                            $be_tda,
                            $be_als,
                            $squad,
@@ -1046,6 +1066,7 @@ else
                            (
                            $be_on_team_5,
                            $be_on_team_30,
+                           $be_on_team_air,
                            $be_tda,
                            $be_als,
                            $squad,
@@ -1204,7 +1225,7 @@ else
    }
 if ($result)
    {
-   PutLibPhotoRandomPlaced("sasquatch",1,"right");
+   PutLibPhotoRandomPlaced("eye-candy",1,"right");
    if ($direct_approval)
       {
       if ($relay == "TRUE")
