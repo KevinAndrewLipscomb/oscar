@@ -63,7 +63,7 @@ if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordi
    // Just send an approval notice to the requestor directly and forget actual escalation.
    //
    $result = SendApprovalNotice($email_addr,$digest,$mode);
-   PutLibPhotoRandomPlaced("eye-candy",1,"right");
+   PutLibPhotoRandomPlaced("oscarsystem",1,"right");
    echo "<p>An OSCAR authority from $coord_agency has registered you as a trusted user.&nbsp; </p>";
    echo "<p><b>Check your email for a message titled, <u>Your OSCAR report</u>.</b></p>";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("",$mode) . ">OSCAR System Administrator</a>.</p>";
@@ -162,7 +162,7 @@ else
       }
    if ($result)
       {
-      PutLibPhotoRandomPlaced("eye-candy",1,"right");
+      PutLibPhotoRandomPlaced("oscarsystem",1,"right");
       echo "<p>The OSCAR system has successfully escalated your request.&nbsp;  Because the report you requested contains "
          . "personal information, a screening notice has been sent to the <a href=mailto:\""
          . RoleEmailAddress("escalation-level-$level-recipient",$mode,$coord_agency)
