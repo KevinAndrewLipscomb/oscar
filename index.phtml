@@ -15,6 +15,7 @@ require_once("f_password.phtml");
 require_once("f_numsheets.phtml");
 require_once("f_serverstatus.phtml");
 require_once("f_connectselectdb.phtml");
+require_once("f_refertooscartrack.pthml");
 //
 $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE");
 ?>
@@ -36,7 +37,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                      <?
                      if ($connected)
                         {
-                        PutLibPhotoRandomPlaced("eye-candy",1);
+                        PutLibPhotoRandomPlaced("oscarsystem",1);
                         }
                      else
                         {
@@ -145,6 +146,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                         </td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td rowspan=3 valign=top>
+                           ReferToOscarTrack();
                            <p><i><small>Server status: <? echo ServerStatus(); ?></small></i></p>
                            <table border=1 cellspacing=0 cellpadding=1>
                               <?
@@ -156,7 +158,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                               $next_month_abbrev = date("M",mktime(12,0,0,$next_month_num,1));
                               $after_next_month_abbrev = date("M",mktime(12,0,0,$after_next_month_num,1));
                               ?>
-                              <tr bgcolor=#D0D0D0><td colspan=3 align=center><small><i>Submissions from <a href="meaning-of-vorp.phtml">VORPs</a><small><a href=<? echo $mode; ?>stats.phtml>(more&nbsp;stats)</a></i></small></td></tr>
+                              <tr bgcolor=#D0D0D0><td colspan=3 align=center><small><i>Submissions from <a href="meaning-of-vorp.phtml">VORPs</a><small>&nbsp;<a href=<? echo $mode; ?>stats.phtml>(more&nbsp;stats)</a></i></small></td></tr>
                               <tr bgcolor=#E8E8E8>
                                  <td align=center><small><i><? echo $current_month_abbrev; ?></i></small></td>
                                  <td align=center><small><i><? echo $next_month_abbrev; ?></i></small></td>
@@ -189,6 +191,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td valign=top>
                            <p><i><small>Server&nbsp;status:<br><b>DB OFFLINE</b></small></i></p>
+                           ReferToOscarTrack();
                         </td>
                      </tr>
                      <?
