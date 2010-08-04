@@ -146,7 +146,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                         </td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td rowspan=3 valign=top>
-                           ReferToOscarTrack();
+                           <?php ReferToOscarTrack(); ?>
                            <p><i><small>Server status: <? echo ServerStatus(); ?></small></i></p>
                            <table border=1 cellspacing=0 cellpadding=1>
                               <?
@@ -191,7 +191,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td valign=top>
                            <p><i><small>Server&nbsp;status:<br><b>DB OFFLINE</b></small></i></p>
-                           ReferToOscarTrack();
+                           <?php ReferToOscarTrack(); ?>
                         </td>
                      </tr>
                      <?
