@@ -87,6 +87,7 @@ $row = mysql_fetch_object($result);
 //
 $presentation_clause = 'order by be_on_team_5 desc '
    .  '   , be_on_team_30 desc '
+   .  '   , be_on_team_air desc '
    .  '   , be_als desc '
    .  '   , coord_agency asc '
    .  '   , be_third asc '
@@ -117,6 +118,7 @@ $base_sql_statement = "select distinct last_name"
    .  ", be_needing_driver"
    .  ", be_nondriver"
    .  ", be_third"
+   .  ", be_on_team_air"
    .  " from " . $mode . "avail_sheet ";
 $info_message = "";
       //
@@ -151,6 +153,7 @@ $info_message = "";
                            (
                            $be_on_team_5,
                            $be_on_team_30,
+                           $be_on_team_air,
                            $be_tda,
                            $be_als,
                            $squad,
@@ -167,6 +170,7 @@ $info_message = "";
                            (
                            $be_on_team_5,
                            $be_on_team_30,
+                           $be_on_team_air,
                            $be_tda,
                            $be_als,
                            $squad,
@@ -223,6 +227,7 @@ $info_message = "";
                            (
                            $be_on_team_5,
                            $be_on_team_30,
+                           $be_on_team_air,
                            $be_tda,
                            $be_als,
                            $squad,
@@ -239,6 +244,7 @@ $info_message = "";
                            (
                            $be_on_team_5,
                            $be_on_team_30,
+                           $be_on_team_air,
                            $be_tda,
                            $be_als,
                            $squad,
