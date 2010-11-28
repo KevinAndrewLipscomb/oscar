@@ -9,10 +9,9 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
-require_once("f_connectselectdb.phtml");
 //
 ?>
 <html>
@@ -28,32 +27,32 @@ if ($token != "")
    //
    // Connect to the database.
    //
-   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
       {
       //
       // Get the parameters associated with the token.
       //
-      $result = mysql_query
+      $result = $db_link->query
          (
          "select enumeral, new_be_active from " . $mode . "pend_mod_agency where token='$token' "
          )
-         or die("Query failed with error: " . mysql_error());
-      if (mysql_num_rows($result))
+         or die("Query failed with error: " . mysqli_error($db_link));
+      if (mysqli_num_rows($result))
          {
-         extract(mysql_fetch_array($result));
+         extract(mysqli_fetch_array($result));
          //
          // Perform the specified update.
          //
          $sql = "update " . $mode . "agency "
             .  "set be_active='$new_be_active' "
             .  "where enumeral='$enumeral' ";
-         mysql_query($sql) or die("Update failed with error: " . mysql_error());
+         $db_link->query($sql) or die("Update failed with error: " . mysqli_error($db_link));
          //
          // This single change can have major ramifications for hundreds of individuals.  Notify sysadmin.
          //
          @mail
             (
-            RoleEmailAddress("",$mode),
+            RoleEmailAddress($db_link,"",$mode),
             "OSCAR Participant Change",
             stripslashes
                (
@@ -66,11 +65,11 @@ if ($token != "")
          //
          // Clean up the pending operation record.
          //
-         mysql_query
+         $db_link->query
             (
             "delete from " . $mode . "pend_mod_agency where token='$token' "
             )
-            or die("Clean-up failed with error: " . mysql_error());
+            or die("Clean-up failed with error: " . mysqli_error($db_link));
          //
          PutLibPhotoRandomPlaced("oscarsystem",1,"right");
          echo "<p>The status of agency '$enumeral' has been changed to ";
@@ -98,7 +97,7 @@ if ($token != "")
                   in your challenge email message.</li>
                <li>Maybe you have already completed this modification.</li>
             </ul>
-            <p>If the above hints don't help, contact the <a href=mailto:"<? echo RoleEmailAddress("",$mode); ?>">OSCAR
+            <p>If the above hints don't help, contact the <a href=mailto:"<? echo RoleEmailAddress($db_link,"",$mode); ?>">OSCAR
                System Administrator</a>.</p>
          </blockquote>            
          </b>

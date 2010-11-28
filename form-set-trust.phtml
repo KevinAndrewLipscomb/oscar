@@ -9,8 +9,7 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_agencyselectionlist.phtml");
 ?>
 <html>
@@ -34,7 +33,7 @@ require_once("f_agencyselectionlist.phtml");
         </td></tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
            {
            ?>
            <h2><i>Sorry...</i></h2>
@@ -83,7 +82,7 @@ require_once("f_agencyselectionlist.phtml");
                        <b>WARNING:&nbsp; This form sends a traceable email message to the appropriate schedule
                        coordinator.&nbsp; It is not intended for general use.</b>
                        <form action=<? echo $mode; ?>perform-prep-mod-trust.phtml method=post>
-                          Which agency?&nbsp; <? AgencySelectionList($mode); ?> <input type="submit" value="Submit">
+                          Which agency?&nbsp; <? AgencySelectionList($db_link,$mode); ?> <input type="submit" value="Submit">
                        </form>
                     </blockquote>
                     <p>A user who is not in the Trusted User table will only receive a compiled availability report once

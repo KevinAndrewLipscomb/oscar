@@ -1,0 +1,2 @@
+AddHandler custom-php .php .pcgi .phtml .inc .phtml~ .php~ .inc~ .html~
+Action custom-php /cgi-sys/php5

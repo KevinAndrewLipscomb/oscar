@@ -2,7 +2,7 @@
 //
 // $Id$
 //
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublishedkalipso.phtml");
 //
 function PutLibPhotoRandomPlaced
    (
@@ -14,8 +14,7 @@ function PutLibPhotoRandomPlaced
    //
    // Connect to the database.
    //
-   $conn = mysql_connect("localhost","kalipso",Password());
-   mysql_select_db("kalipso");
+   $conn = ConnectSelectDbInstanceUNPUBLISHEDkalipso($db_link);
    //
    // Create the SQL statement
    //
@@ -24,11 +23,11 @@ function PutLibPhotoRandomPlaced
    //
    // Execute the statement
    //
-   $result_set = mysql_query($sql) or die(mysql_error());
+   $result_set = $db_link->query($sql) or die(mysqli_error($db_link));
    //
    // Check how many rows were returned
    //
-   $rows = mysql_num_rows($result_set);
+   $rows = mysqli_num_rows($result_set);
    if ((!$result_set) || ($rows == 0))
       {
       echo "<br><b>Could not find any such photographs.</b><br>";
@@ -36,7 +35,7 @@ function PutLibPhotoRandomPlaced
    else
       {
       //
-      while ($field_array = mysql_fetch_array($result_set))
+      while ($field_array = mysqli_fetch_array($result_set))
          {
          extract($field_array);
             //

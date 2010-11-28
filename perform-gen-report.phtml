@@ -83,13 +83,12 @@ $foundation_dir = "../foundation";
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
 require_once("f_properties.phtml");
 require_once("f_beauthority.phtml");
-require_once("f_connectselectdb.phtml");
 require_once("f_availlist.phtml");
 require_once("f_squadofcoordagency.phtml");
 require_once("f_harvestedlist.phtml");
@@ -112,7 +111,7 @@ echo $report;
 //
 // Connect to the database.
 //
-if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
 {
 //
 // Validate parameters.
@@ -154,10 +153,10 @@ $email_addr = trim($email_addr);
 $sql = "select max(timestamp) as timestamp_of_latest_submission "
    .  " from " . $mode . "avail_sheet "
    .  " where coord_agency like '$coord_agency' ";
-$result = mysql_query($sql)
-   or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
+$result = $db_link->query($sql)
+   or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysqli_error($db_link));
 //
-$row = mysql_fetch_object($result);
+$row = mysqli_fetch_object($result);
 //
 $condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_latest_submission . "\n";
 //
@@ -168,9 +167,9 @@ $condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_l
 $sql = "select max(timestamp) as timestamp_of_latest_relay "
    .  " from " . $mode . "relay_journal "
    .  " where coord_agency like '$coord_agency' ";
-$result = mysql_query($sql)
-   or die("The attempt to select the latest timestamp from the relay journal failed with this error:  " . mysql_error());
-$row = mysql_fetch_object($result);
+$result = $db_link->query($sql)
+   or die("The attempt to select the latest timestamp from the relay journal failed with this error:  " . mysqli_error($db_link));
+$row = mysqli_fetch_object($result);
 //
 $condition_descriptor .= "timestamp_of_latest_relay=" . $row->timestamp_of_latest_relay . "\n";
 //
@@ -208,9 +207,9 @@ $month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
 $month_abbrev = substr($month_word,0,3);
 $where_clause = " month='$month_abbrev' and coord_agency like '$coord_agency' ";
 //
-$be_authority_for_any_agency = BeAuthority($email_addr,$mode,'%');
-$be_authority_for_this_agency = BeAuthority($email_addr,$mode,$coord_agency);
-$be_ems_sched_coord = BeEmsSchedCoord($email_addr,$mode);
+$be_authority_for_any_agency = BeAuthority($db_link,$email_addr,$mode,'%');
+$be_authority_for_this_agency = BeAuthority($db_link,$email_addr,$mode,$coord_agency);
+$be_ems_sched_coord = BeEmsSchedCoord($db_link,$email_addr,$mode);
 $be_relayable = ($be_ems_sched_coord and ($coord_agency == "EMS"));
 //
 if ($shift_filter == "all")
@@ -228,7 +227,7 @@ if ($shift_filter == "all")
          }
       else
          {
-         $condition_descriptor .= "authority-of=" . CoordAgencyOfClearedEmailAddr($email_addr,$mode) . "\n";
+         $condition_descriptor .= "authority-of=" . CoordAgencyOfClearedEmailAddr($db_link,$email_addr,$mode) . "\n";
          $condition_descriptor .= "full-authority=FALSE\n";
          }
       //
@@ -254,15 +253,15 @@ if ($shift_filter == "all")
    $condition_descriptor .= "shift_filter=all\n";
    $condition_descriptor .= "team_filter=$team_filter\n";
    $condition_descriptor .= "coord_agency=$coord_agency\n";
-   $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
-      or die("The digest calculation failed with this error:  " . mysql_error());
-   $row = mysql_fetch_object($result);
+   $result = $db_link->query("select md5(\"$condition_descriptor\") as digest")
+      or die("The digest calculation failed with this error:  " . mysqli_error($db_link));
+   $row = mysqli_fetch_object($result);
    $digest = $row->digest;
-   $result = mysql_query("select report from " . $mode . "report_cache where digest = '$digest'")
-      or die("The cache check failed with error:  " . mysql_error());
-   if (mysql_num_rows($result))
+   $result = $db_link->query("select report from " . $mode . "report_cache where digest = '$digest'")
+      or die("The cache check failed with error:  " . mysqli_error($db_link));
+   if (mysqli_num_rows($result))
       {
-      $row = mysql_fetch_object($result);
+      $row = mysqli_fetch_object($result);
       $report = $row->report;
       }
    else
@@ -276,9 +275,9 @@ if ($shift_filter == "all")
          // from-scratch requests from the EMS schedule coordinator for full reports don't happen excessively but do happen
          // regularly.
          //
-         HarvestEmailAddresses($mode);
-         mysql_query("delete from " . $mode . "avail_sheet where expiration < CURRENT_DATE");
-         mysql_query("delete from " . $mode . "report_cache where expiration < CURRENT_DATE");
+         HarvestEmailAddresses($db_link,$mode);
+         $db_link->query("delete from " . $mode . "avail_sheet where expiration < CURRENT_DATE");
+         $db_link->query("delete from " . $mode . "report_cache where expiration < CURRENT_DATE");
          }
       //
       $base_sql_statement = "select distinct last_name"
@@ -418,11 +417,11 @@ if ($shift_filter == "all")
          $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
          $where_clause_2 = " and d$day_index='AVAILABLE' ";
          $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
-         $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-         if ($num_rows = mysql_num_rows($result))
+         $result = $db_link->query($sql_statement) or die("Query failed with error:  " . mysqli_error($db_link));
+         if ($num_rows = mysqli_num_rows($result))
             {
             $report .= $day_description . "\n";
-            while ($row = mysql_fetch_array($result))
+            while ($row = mysqli_fetch_array($result))
                {
                if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
                $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
@@ -431,6 +430,7 @@ if ($shift_filter == "all")
                $report .= "   "
                   .  Properties
                         (
+                        $db_link,
                         $be_on_team_5,
                         $be_on_team_30,
                         $be_on_team_air,
@@ -447,7 +447,7 @@ if ($shift_filter == "all")
                   .  " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
                   $highlighted_squad = 'Rescue' . $squad;
@@ -493,11 +493,11 @@ if ($shift_filter == "all")
          $night_description = date("jS \\n\i\g\h\\t (l):",mktime(21,0,0,$applicable_month_num,$night_index));
          $where_clause_2 = " and n$night_index='AVAILABLE' ";
          $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
-         $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-         if ($num_rows = mysql_num_rows($result))
+         $result = $db_link->query($sql_statement) or die("Query failed with error:  " . mysqli_error($db_link));
+         if ($num_rows = mysqli_num_rows($result))
             {
             $report .= $night_description . "\n";
-            while ($row = mysql_fetch_array($result))
+            while ($row = mysqli_fetch_array($result))
                {
                if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
                $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $squad = $be_third = $be_nondriver =
@@ -506,6 +506,7 @@ if ($shift_filter == "all")
                $report .= "   "
                   .  Properties
                         (
+                        $db_link,
                         $be_on_team_5,
                         $be_on_team_30,
                         $be_on_team_air,
@@ -522,7 +523,7 @@ if ($shift_filter == "all")
                   .  " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
                   $report .= "<a href=" . $mode . "detail.phtml?a="
@@ -587,7 +588,7 @@ if ($shift_filter == "all")
                . "<input type=hidden name=month_abbrev value=$month_abbrev>\n";
             $report .= $relay_instructions;
             }
-         mysql_query
+         $db_link->query
             (
             "create temporary table aggregated "
             .  " select last_name "
@@ -599,7 +600,7 @@ if ($shift_filter == "all")
             .  " group by last_name "
             .  "    , first_name "
             )
-            or die("Create/select aggregated failed with error:  " . mysql_error());
+            or die("Create/select aggregated failed with error:  " . mysqli_error($db_link));
          //
          $query = "select aggregated.last_name "
             .  "    , aggregated.first_name ";
@@ -631,11 +632,11 @@ if ($shift_filter == "all")
             .  "    using (last_name, first_name, timestamp)"
             .  " where $where_clause "
             .  " order by last_name, first_name ";
-         $result = mysql_query($query)
-            or die("Select from join failed with error:  " . mysql_error());
-         if ($num_rows = mysql_num_rows($result))
+         $result = $db_link->query($query)
+            or die("Select from join failed with error:  " . mysqli_error($db_link));
+         if ($num_rows = mysqli_num_rows($result))
             {
-            while ($row = mysql_fetch_array($result))
+            while ($row = mysqli_fetch_array($result))
                {
                if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
                $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third = 
@@ -648,7 +649,7 @@ if ($shift_filter == "all")
                   $n31 = "";
                extract($row);
                //
-               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
                   $last_name = stripslashes($last_name);
@@ -674,6 +675,7 @@ if ($shift_filter == "all")
                      .  ">$last_name, $first_name</a>&nbsp; ["
                      .  Properties
                            (
+                           $db_link,
                            $be_on_team_5,
                            $be_on_team_30,
                            $be_on_team_air,
@@ -777,8 +779,8 @@ if ($shift_filter == "all")
             $report .= "None\n";
             }
          //
-         mysql_query("drop table aggregated")
-            or die("Drop of aggregated failed with error:  " . mysql_error());
+         $db_link->query("drop table aggregated")
+            or die("Drop of aggregated failed with error:  " . mysqli_error($db_link));
          }
       //
       $report .= "<pre><a name=End>--- END ---</a></pre><br>\n";
@@ -804,10 +806,10 @@ if ($shift_filter == "all")
       // Store the report in the cache.
       //
       $report = addslashes($report);
-      $result = mysql_query("insert into " . $mode . "report_cache set digest='$digest'"
+      $result = $db_link->query("insert into " . $mode . "report_cache set digest='$digest'"
          . ", report='$report'"
          . ", expiration='$expiration_date'")
-         or die("Report insertion failed with this error:  " . mysql_error());
+         or die("Report insertion failed with this error:  " . mysqli_error($db_link));
       }
    }
 else
@@ -856,15 +858,15 @@ else
          }
       }
    $condition_descriptor .= "\n";
-   $result = mysql_query("select md5(\"$condition_descriptor\") as digest")
-      or die("The digest calculation failed with this error:  " . mysql_error());
-   $row = mysql_fetch_object($result);
+   $result = $db_link->query("select md5(\"$condition_descriptor\") as digest")
+      or die("The digest calculation failed with this error:  " . mysqli_error($db_link));
+   $row = mysqli_fetch_object($result);
    $digest = $row->digest;
-   $result = mysql_query("select report from " . $mode . "report_cache where digest = '$digest'")
-      or die("The cache check failed with error:  " . mysql_error());
-   if (mysql_num_rows($result))
+   $result = $db_link->query("select report from " . $mode . "report_cache where digest = '$digest'")
+      or die("The cache check failed with error:  " . mysqli_error($db_link));
+   if (mysqli_num_rows($result))
       {
-      $row = mysql_fetch_object($result);
+      $row = mysqli_fetch_object($result);
       $report = $row->report;
       }
    else
@@ -986,11 +988,11 @@ else
             $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
             $where_clause_2 = " and d$day_index='AVAILABLE' ";
             $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
-            $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-            if ($num_rows = mysql_num_rows($result))
+            $result = $db_link->query($sql_statement) or die("Query failed with error:  " . mysqli_error($db_link));
+            if ($num_rows = mysqli_num_rows($result))
                {
                $report .= $day_description . "\n";
-               while ($row = mysql_fetch_array($result))
+               while ($row = mysqli_fetch_array($result))
                   {
                   if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
@@ -999,6 +1001,7 @@ else
                   $report .= "   "
                      .  Properties
                            (
+                           $db_link,
                            $be_on_team_5,
                            $be_on_team_30,
                            $be_on_team_air,
@@ -1051,11 +1054,11 @@ else
             $night_description = date("jS \\n\i\g\h\\t (l):",mktime(9,0,0,$applicable_month_num,$night_index));
             $where_clause_2 = " and n$night_index='AVAILABLE' ";
             $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
-            $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-            if ($num_rows = mysql_num_rows($result))
+            $result = $db_link->query($sql_statement) or die("Query failed with error:  " . mysqli_error($db_link));
+            if ($num_rows = mysqli_num_rows($result))
                {
                $report .= $night_description . "\n";
-               while ($row = mysql_fetch_array($result))
+               while ($row = mysqli_fetch_array($result))
                   {
                   if ($be_combined_agency_format == 'TRUE') $coord_agency = '';
                   $last_name = $first_name = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als = $be_third =
@@ -1064,6 +1067,7 @@ else
                   $report .= "   "
                      .  Properties
                            (
+                           $db_link,
                            $be_on_team_5,
                            $be_on_team_30,
                            $be_on_team_air,
@@ -1127,34 +1131,34 @@ else
       // Store the report in the cache.
       //
       $report = addslashes($report);
-      $result = mysql_query("insert into " . $mode . "report_cache set digest='$digest', report='$report', expiration='$expiration_date'")
-         or die("Report insertion failed with this error:  " . mysql_error());
+      $result = $db_link->query("insert into " . $mode . "report_cache set digest='$digest', report='$report', expiration='$expiration_date'")
+         or die("Report insertion failed with this error:  " . mysqli_error($db_link));
       }
    }
 //
 // Create the notice.
 //
-$result = mysql_query
+$result = $db_link->query
    (
    "select 1 "
    .  " from " . $mode . "trusted_user "
    .  " where email_address='$email_addr' "
    .  "    and coord_agency like '$coord_agency' "
    )
-   or die("Trust check failed with error:  " . mysql_error());
-if ($direct_approval = (mysql_num_rows($result) or $be_authority_for_any_agency))
+   or die("Trust check failed with error:  " . mysqli_error($db_link));
+if ($direct_approval = (mysqli_num_rows($result) or $be_authority_for_any_agency))
    {
    //
    // Then send an approval notice to the requestor directly.
    //
-   $result = SendApprovalNotice($email_addr,$digest,$mode);
+   $result = SendApprovalNotice($db_link,$email_addr,$digest,$mode);
    }
 else
    {
    //
    // Someone else requested the report.  Notify the schedule coordinator.
    //
-   $screen_notice_recipient = RoleEmailAddress("schedule-coordinator",$mode,$coord_agency);
+   $screen_notice_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency);
    $screen_notice_subject = "-> OSCAR request ->";
    //
    // Give the schedule coordinator a chance to approve (weakly or strongly) or disapprove of the request.
@@ -1183,7 +1187,7 @@ else
    //
    $screen_notice .= "-- OSCAR\n";
    $screen_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
-   $screen_notice .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+   $screen_notice .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Then send a claim ticket to the requestor directly.
    //
@@ -1207,7 +1211,7 @@ else
    $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
    $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
    $claim_ticket .= "The next authority in the chain is:\n\n";
-   $claim_ticket .= "   " . RoleEmailAddress("escalation-level-1-recipient",$mode,$coord_agency) . "\n\n";
+   $claim_ticket .= "   " . RoleEmailAddress($db_link,"escalation-level-1-recipient",$mode,$coord_agency) . "\n\n";
    $claim_ticket .= "To escalate your request to the above\n";
    $claim_ticket .= "authority, click here:\n\n";
    $claim_ticket .= OscarRootUrl() . "/" . $mode . "escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr&coord_agency=$coord_agency\n\n";
@@ -1216,12 +1220,12 @@ else
    //
    $claim_ticket .= "-- OSCAR\n";
    $claim_ticket .= "-- Home page: " . OscarHomePageUrl() . "\n";
-   $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+   $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
    //
-   $result = mail($screen_notice_recipient, $screen_notice_subject, $screen_notice, OscarMailHeaders())
-      and mail($claim_ticket_recipient, $claim_ticket_subject, $claim_ticket, OscarMailHeaders());
+   $result = mail($screen_notice_recipient, $screen_notice_subject, $screen_notice, OscarMailHeaders($db_link))
+      and mail($claim_ticket_recipient, $claim_ticket_subject, $claim_ticket, OscarMailHeaders($db_link));
    }
 if ($result)
    {
@@ -1260,13 +1264,13 @@ if ($result)
       echo "<p><b>Success!</b></p>\n"
          . "<blockquote>OSCAR has successfully generated your report.&nbsp;  Because the report contains personal "
          . "information, a screening notice has been sent to the <a href=mailto:\""
-         . RoleEmailAddress("schedule-coordinator",$mode,$coord_agency)
+         . RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency)
          . "\">$coord_agency Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once "
          . "screening is complete.</blockquote>";
       echo "<p><b>Check your email periodically for the report.</b></p>";
       }
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-      . RoleEmailAddress("",$mode)
+      . RoleEmailAddress($db_link,"",$mode)
       . "\">OSCAR System Administrator</a>.</p>";
    //
    if ($mode != "")
@@ -1293,10 +1297,10 @@ else
       <ul>
          <?
          echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\""
-            . RoleEmailAddress("schedule-coordinator",$mode,$coord_agency)
+            . RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency)
             . "\">$coord_agency Schedule Coordinator</a> for the information you need.</p>";
          echo "<li><p>Let the <a href=mailto:\""
-            . RoleEmailAddress("",$mode)
+            . RoleEmailAddress($db_link,"",$mode)
             . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>";
          ?>
       </ul>
@@ -1326,7 +1330,7 @@ else
    </b>
    <?
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-      . RoleEmailAddress("",$mode)
+      . RoleEmailAddress($db_link,"",$mode)
       . "\">OSCAR System Administrator</a>.</p>";
    }
 }

@@ -9,8 +9,7 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 ?>
 <html>
@@ -34,7 +33,7 @@ require_once("f_roleemailaddress.phtml");
         </td></tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
            {
            ?>
            <h2><i>Sorry...</i></h2>
@@ -51,12 +50,12 @@ require_once("f_roleemailaddress.phtml");
            <p>To search for a particular word or phrase, press CTRL-F.</p>
            <ul>
               <?
-              $result = mysql_query("select * from " . $mode . "faq")
-                 or die("Query failed with error: " . mysql_error());
-              $num_rows = mysql_num_rows($result);
+              $result = $db_link->query("select * from " . $mode . "faq")
+                 or die("Query failed with error: " . mysqli_error($db_link));
+              $num_rows = mysqli_num_rows($result);
               for ($i=1; $i<=$num_rows; $i++)
                  {
-                 extract(mysql_fetch_array($result));
+                 extract(mysqli_fetch_array($result));
                  echo "<li><a href=#$position>$question</a></li><br>\n";
                  }
               ?>
@@ -66,10 +65,10 @@ require_once("f_roleemailaddress.phtml");
               <?
               if ($num_rows > 0)
                  {
-                 mysql_data_seek($result,0);
+                 mysqli_data_seek($result,0);
                  for ($i=1; $i<=$num_rows; $i++)
                     {
-                    extract(mysql_fetch_array($result));
+                    extract(mysqli_fetch_array($result));
                     echo "<a name=\"$position\"></a><b>$question</b></a><blockquote>$answer</blockquote>\n";
                     }
                  }

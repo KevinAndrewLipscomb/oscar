@@ -8,6 +8,7 @@ $foundation_dir = '../foundation';
 require_once("$foundation_dir/f_runmode.phtml");
 $mode = RunMode($PHP_SELF);
 //
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("$foundation_dir/f_bodyopen.phtml");
@@ -36,7 +37,7 @@ require_once("f_agencyselectionlist.phtml");
          </td></tr></table>
          <hr>
          <?php
-         if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+         if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
             {
             ?>
             <h2><i>Sorry...</i></h2>
@@ -70,7 +71,7 @@ require_once("f_agencyselectionlist.phtml");
                   </tr>
                   <tr>
                      <td>Send availabilities to:</td>
-                     <td><?php AgencySelectionList($mode); ?></td>
+                     <td><?php AgencySelectionList($db_link,$mode); ?></td>
                   </tr>
                </table>
                <p><input type="submit" value="Continue..."><input type="reset" value="Reset"></p>

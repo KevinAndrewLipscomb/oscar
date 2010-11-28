@@ -11,13 +11,12 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_numsheets.phtml");
 require_once("f_serverstatus.phtml");
-require_once("f_connectselectdb.phtml");
 require_once("f_refertooscartrack.phtml");
 //
-$connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE");
+$connected = (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE");
 ?>
 <html>
 
@@ -147,7 +146,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td rowspan=3 valign=top>
                            <?php ReferToOscarTrack(); ?>
-                           <p><i><small>Server status: <? echo ServerStatus(); ?></small></i></p>
+                           <p><i><small>Server status: <? echo ServerStatus($db_link); ?></small></i></p>
                            <table border=1 cellspacing=0 cellpadding=1>
                               <?
                               //
@@ -166,9 +165,9 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                               </tr>
                               <tr>
                                  <?
-                                 echo "<td align=center><small><i>" . NumSheets($current_month_abbrev,$mode) . "</i></small></td>\n";
-                                 echo "<td align=center><small><i>" . NumSheets($next_month_abbrev,$mode) . "</i></small></td>\n";
-                                 echo "<td align=center><small><i>" . NumSheets($after_next_month_abbrev,$mode) . "</i></small></td>\n";
+                                 echo "<td align=center><small><i>" . NumSheets($db_link,$current_month_abbrev,$mode) . "</i></small></td>\n";
+                                 echo "<td align=center><small><i>" . NumSheets($db_link,$next_month_abbrev,$mode) . "</i></small></td>\n";
+                                 echo "<td align=center><small><i>" . NumSheets($db_link,$after_next_month_abbrev,$mode) . "</i></small></td>\n";
                                  ?>
                               </tr>
                            </table>
@@ -229,7 +228,7 @@ $connected = (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE
                   <?
                   if ($connected)
                      {
-                     echo "<b><a href=mailto:" . RoleEmailAddress("") . ">";
+                     echo "<b><a href=mailto:" . RoleEmailAddress($db_link,"") . ">";
                      }
                   else
                      {

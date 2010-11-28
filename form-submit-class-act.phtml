@@ -8,8 +8,7 @@ if ($mode) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 ?>
 <html>
 
@@ -37,7 +36,7 @@ require_once("f_password.phtml");
         </td></tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
            {
            ?>
            <h2><i>Sorry...</i></h2>

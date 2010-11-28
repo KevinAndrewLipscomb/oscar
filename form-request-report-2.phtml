@@ -14,8 +14,7 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_writecalendarsubform.phtml");
 require_once("f_writecalendarbody.phtml");
@@ -42,7 +41,7 @@ require_once("f_beauthority.phtml");
         </td></tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
            {
            //
            // Validate parameters.
@@ -60,7 +59,7 @@ require_once("f_beauthority.phtml");
            // then
               {
               //
-              $valid_all_agencies_request = (($cross_agency != '') and BeAuthority($email_addr,$mode,'EMS'));
+              $valid_all_agencies_request = (($cross_agency != '') and BeAuthority($db_link,$email_addr,$mode,'EMS'));
               //
               if (($coord_agency == '') and !$valid_all_agencies_request)
                  {
@@ -81,7 +80,7 @@ require_once("f_beauthority.phtml");
                  </blockquote>            
                  </b>
                  <?
-                 echo "<p>For tech support, contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+                 echo "<p>For tech support, contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
                  }
               else
                  {
@@ -194,7 +193,7 @@ require_once("f_beauthority.phtml");
               </blockquote>            
               </b>
               <?
-              echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+              echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
               }
            }
         else

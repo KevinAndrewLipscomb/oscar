@@ -64,19 +64,7 @@ function sShowAvailSheetRecDetail
          .  "      $be_third\n";
       }
    $s .= "   Time of submission:\n";
-   $s .= "      "
-      .  substr($timestamp,0,4)
-      .  "-"
-      .  substr($timestamp,4,2)
-      .  "-"
-      .  substr($timestamp,6,2)
-      .  " "
-      .  substr($timestamp,8,2)
-      .  ":"
-      .  substr($timestamp,10,2)
-      .  ":"
-      .  substr($timestamp,12,2)
-      .  "\n";
+   $s .= "      $timestamp\n";
    $s .= "   Record expires:\n"
       .  "      $expiration\n";
    $s .= "   AVAILABLE DAYS:\n"

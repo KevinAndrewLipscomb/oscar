@@ -9,11 +9,10 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
-require_once($mode . "f_roleemailaddress.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
+require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
-require_once("f_connectselectdb.phtml");
 //
 ?>
 <html>
@@ -24,9 +23,9 @@ require_once("f_connectselectdb.phtml");
 <H1 ALIGN=CENTER>Request Approval</H1>
 <hr>
 <?
-if (ConnectSelectDb("localhost","kalipso",Password(),"oscar"))
+if (ConnectSelectDbInstanceUNPUBLISHED($db_link))
    {
-   if (SendApprovalNotice($email_addr,$digest,$mode))
+   if (SendApprovalNotice($db_link,$email_addr,$digest,$mode))
       {
       PutLibPhotoRandomPlaced("oscarsystem",1,"right");
       echo "<p>The OSCAR system has performed the following:</p>\n"
@@ -43,7 +42,7 @@ if (ConnectSelectDb("localhost","kalipso",Password(),"oscar"))
       <h2><i>Error!</i></h2>
       <b>
       <blockquote>
-         <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress("") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
+         <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress($db_link,"") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
       </blockquote>            
       </b>
       <?

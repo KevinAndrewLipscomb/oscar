@@ -15,10 +15,9 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
-require_once("f_connectselectdb.phtml");
 //
 $html = "<html>\n";
 $html .= "<head><title>Toggle Squad Participation</title></head>\n";
@@ -44,7 +43,7 @@ if
    // All required values are present.
    // Connect to the database.
    //
-   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
       {
       ?>
       <h2><i>Sorry...</i></h2>
@@ -70,16 +69,16 @@ if
       }
    srand((double)microtime()*1000000); 
    $raw_token =  rand() . " $enumeral $new_be_active";
-   $result = mysql_query("select md5(\"$raw_token\") as token")
-      or die("Token generation failed with error: " . mysql_error());
-   extract(mysql_fetch_array($result));
-   mysql_query
+   $result = $db_link->query("select md5(\"$raw_token\") as token")
+      or die("Token generation failed with error: " . mysqli_error($db_link));
+   extract(mysqli_fetch_array($result));
+   $db_link->query
       (
       "insert into " . $mode . "pend_mod_agency set token='$token' "
       .  ", enumeral='$enumeral' "
       .  ", new_be_active='$new_be_active' "
       )
-      or die("Insert failed with error: " . mysql_error());
+      or die("Insert failed with error: " . mysqli_error($db_link));
    //
    // Generate the challenge message.
    //
@@ -104,12 +103,12 @@ if
    //
    $challenge .= "-- OSCAR\n"
               .  "-- Home page: " . OscarHomePageUrl() . "\n"
-              .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
    //
-   $email_addr = RoleEmailAddress("master",$mode);
-   $result = mail($email_addr, "OSCAR Modification Challenge", $challenge, OscarMailHeaders());
+   $email_addr = RoleEmailAddress($db_link,"master",$mode);
+   $result = mail($email_addr, "OSCAR Modification Challenge", $challenge, OscarMailHeaders($db_link));
    //
    if ($result)
       {
@@ -124,7 +123,7 @@ if
          . "   <li><a href=" . $mode . "index.phtml>Main OSCAR page</a></li>\n"
          . "</ul>\n";
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress("",$mode)
+         .  RoleEmailAddress($db_link,"",$mode)
          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
@@ -137,7 +136,7 @@ if
       <b>
       <blockquote>
          <p>The OSCAR system encountered an internal error while processing your request.&nbsp; Contact the
-            <a href=mailto:"<? echo RoleEmailAddress("",$mode); ?>">OSCAR System Administrator</a>.</p>
+            <a href=mailto:"<? echo RoleEmailAddress($db_link,"",$mode); ?>">OSCAR System Administrator</a>.</p>
       </blockquote>            
       </b>
       <?

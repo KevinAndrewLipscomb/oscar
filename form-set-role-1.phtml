@@ -9,8 +9,7 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_agencyselectionlist.phtml");
 ?>
 <html>
@@ -34,7 +33,7 @@ require_once("f_agencyselectionlist.phtml");
         </td></tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
            {
            ?>
            <h2><i>Sorry...</i></h2>
@@ -66,15 +65,15 @@ require_once("f_agencyselectionlist.phtml");
               Select the Agency-Role combination that you want to change:
               <blockquote>
                  <?
-                 $result = mysql_query("select enumeral from " . $mode . "agency ")
-                    or die("Agency query failed with error: " . mysql_error());
+                 $result = $db_link->query("select enumeral from " . $mode . "agency ")
+                    or die("Agency query failed with error: " . mysqli_error($db_link));
                  echo "<select name=agency>\n";
-                 if (mysql_num_rows($result) > 1)
+                 if (mysqli_num_rows($result) > 1)
                     {
                     echo "<option value=\"\">Select</option>\n";
                     }
                  //
-                 while($row = mysql_fetch_array($result))
+                 while($row = mysqli_fetch_array($result))
                     {
                     $enumeral = "";
                     extract($row);

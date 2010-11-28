@@ -2,6 +2,7 @@
 //
 // $Id$
 //
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -31,18 +32,19 @@ require_once("f_roleemailaddress.phtml");
               lists.</p>
            <p>We will notify you ahead of time if we change any of the above.</p>
            <p>You (or someone technically qualified) can verify these claims by browsing the
-              production source code at <<a href=http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/kveo-it-project/oscar/>http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/kveo-it-project/oscar/</a>>.</p>
+              production source code at <<a href=http://kveo-it-project.svn.sourceforge.net/viewvc/kveo-it-project/>http://kveo-it-project.svn.sourceforge.net/viewvc/kveo-it-project/</a>>.</p>
         </blockquote>
         <h3>The long version</h3>
         <blockquote>
            <p>The OSCAR system web service is designed, maintained, and managed by:
            <blockquote>
               Kalips'o Infogistics, LLC<br>
-              322-B Hailman Street Front<br>
-              Pittsburgh, PA 15206-4310<br>
-              +1-757-270-9994<br>
+              4325 Hudgins Drive<br>
+              Virginia Beach, VA 23455-6512<br>
+              +1-757-642-8668<br>
               <?
-              $email_address = RoleEmailAddress("");
+              ConnectSelectDbInstanceUNPUBLISHED($db_link);
+              $email_address = RoleEmailAddress($db_link,"");
               echo "<a href=mailto:$email_address>$email_address</a>"
               ?>
            </blockquote>
@@ -73,15 +75,15 @@ require_once("f_roleemailaddress.phtml");
               which maintains its own privacy policy at 
               <a href=http://www.phpwebhosting.com/priv.html>http://www.phpwebhosting.com/priv.html</a>.</p>
            <p>You (or someone technically qualified) can verify these claims by browsing the
-              production source code at <<a href=http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/kveo-it-project/oscar/>http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/kveo-it-project/oscar/</a>>.</p>
+              production source code at <<a href=http://kveo-it-project.svn.sourceforge.net/viewvc/kveo-it-project/>http://kveo-it-project.svn.sourceforge.net/viewvc/kveo-it-project/</a>>.</p>
            <p>If you feel that this site is not following its stated information policy, you may contact us at the 
               aforementioned postal address, email addresses, or phone number, or you may contact the service sponsor as
               follows:</p>
               <blockquote>
               Virginia Beach Department of EMS<br>
-              1917 Arctic Avenue<br>
-              Virginia Beach, VA 23451<br>
-              +1-757-437-4850<br>
+              477-130 Viking Drive<br>
+              Virginia Beach, VA 23452<br>
+              +1-757-385-1999<br>
               <a href=mailto:ems@vbgov.com>ems@vbgov.com</a><br>
               <a href=http://www.vabeachems.com>www.VaBeachEMS.com</a>
               </blockquote>

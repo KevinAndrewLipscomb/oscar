@@ -11,11 +11,10 @@ $foundation_dir = "../foundation";
 $pear_dir = "../pear";
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_beauthority.phtml");
-require_once("f_connectselectdb.phtml");
 require_once("f_squadofcoordagency.phtml");
 require_once("f_beemsschedcoord.phtml");
 require_once("f_htmlofnote.phtml");
@@ -41,7 +40,7 @@ echo $html;
 //
 // Connect to the database.
 //
-if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
    {
    //
    // Fill the page out with a warning and instructions.
@@ -62,29 +61,29 @@ else
    //
    //    Wipe any records for current month so they can be properly refreshed.
    //
-   mysql_query
+   $db_link->query
       (
       $qry = "delete from " . $mode . "trend_data "
       .  " where year=" . date('Y')
       .  "    and month='$current_month_abbrev' "
       )
-      or die("Query [$qry] failed with error:  " . mysql_error());
+      or die("Query [$qry] failed with error:  " . mysqli_error($db_link));
    //
    //    Get list of active agencies.
    //
-   $result = mysql_query("select enumeral as agency from " . $mode . "agency where be_active='TRUE' ")
-      or die("Retrieval of active agency list failed with error:  " . mysql_error());
+   $result = $db_link->query("select enumeral as agency from " . $mode . "agency where be_active='TRUE' ")
+      or die("Retrieval of active agency list failed with error:  " . mysqli_error($db_link));
    //
    //    Loop through agencies collecting current data.
    //
-   while ($row = mysql_fetch_array($result))
+   while ($row = mysqli_fetch_array($result))
       {
       extract($row);  // Sets $agency
       //
       // Get current submission and flexibility numbers.
       //
-      $agency_vs_sheets_array['current'][$agency] = NumSheets($current_month_abbrev,$mode,$agency,'TDA_EXCLUSIVE');
-      $agency_vs_avails_array['current'][$agency] = NumAvails($current_month_abbrev,$agency,$mode);
+      $agency_vs_sheets_array['current'][$agency] = NumSheets($db_link,$current_month_abbrev,$mode,$agency,'TDA_EXCLUSIVE');
+      $agency_vs_avails_array['current'][$agency] = NumAvails($db_link,$current_month_abbrev,$agency,$mode);
       //
       //    Insert current data into trend table.
       //
@@ -94,8 +93,8 @@ else
          . "   , agency='$agency' "
          . "   , num_submissions=" . $agency_vs_sheets_array['current'][$agency]
          . "   , num_avails=" . $agency_vs_avails_array['current'][$agency];
-      mysql_query($qry)
-         or die("Query [$qry] failed with error: " . mysql_error());
+      $db_link->query($qry)
+         or die("Query [$qry] failed with error: " . mysqli_error($db_link));
       }
    //
    // Get historical submission and flexibility numbers.
@@ -104,7 +103,7 @@ else
    foreach ($months_distant as $month_distant)
       {
       $distant_time = mktime(12,0,0,(date('m')-$month_distant),15,date('Y'));
-      $result = mysql_query
+      $result = $db_link->query
          (
          $qry = "select agency "
             . "   , num_submissions "
@@ -113,9 +112,9 @@ else
             . " where year='" . date('Y',$distant_time) . "' "
             . "    and month='" . date('M',$distant_time) . "' "
          )
-         or die("Query [$qry] failed with error: " . mysql_error());
+         or die("Query [$qry] failed with error: " . mysqli_error($db_link));
       //
-      while ($row = mysql_fetch_array($result))
+      while ($row = mysqli_fetch_array($result))
          {
          extract($row);  // Sets $agency, $num_submissions, $num_avails
          //
@@ -185,12 +184,12 @@ else
       }
    $report .= "-- OSCAR\n"
       .  "-- Home page: " . OscarHomePageUrl() . "\n"
-      .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+      .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the report.
    //
    $email_addr_list = "";
-   $result = mysql_query
+   $result = $db_link->query
       (
       $qry = "select email_addr from " . $mode . "authority "
       .  "where role='' "
@@ -198,8 +197,8 @@ else
       .  "   or role like 'escalation%' "
       .  "   or role='recruitment-retention-officer' "
       )
-      or die("Query [$qry] failed with error: " . mysql_error());
-   while ($row = mysql_fetch_array($result))
+      or die("Query [$qry] failed with error: " . mysqli_error($db_link));
+   while ($row = mysqli_fetch_array($result))
       {
       extract($row);  // Sets $email_addr
       $email_addr_list .= "$email_addr,";
@@ -207,7 +206,7 @@ else
    $email_addr_list = substr($email_addr_list,0,-1);
    //
    $subject_string = 'Trends';
-   $result = mail($email_addr_list,$subject_string,$report,OscarMailHeaders());
+   $result = mail($email_addr_list,$subject_string,$report,OscarMailHeaders($db_link));
    //
    if ($result)
       {

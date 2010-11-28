@@ -13,7 +13,7 @@ function HarvestedList
    //
    $s = "";
    //
-   while ($entry_row = mysql_fetch_array($resource))
+   while ($entry_row = mysqli_fetch_array($resource))
       {
       $last_name = $first_name = $email_addr = "";
       extract($entry_row);

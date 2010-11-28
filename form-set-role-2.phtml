@@ -10,8 +10,7 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_writecalendarsubform.phtml");
 require_once("f_writecalendarbody.phtml");
 ?>
@@ -38,7 +37,7 @@ require_once("f_writecalendarbody.phtml");
         </tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
         {
         //
         // Validate parameters.
@@ -63,18 +62,18 @@ require_once("f_writecalendarbody.phtml");
         ?>
         The current value of the specified role is:
         <?
-        $result = mysql_query
+        $result = $db_link->query
            (
            "select email_addr from " . $mode . "authority "
            .  "where coord_agency='$agency' "
            .  "   and role='$role' "
            )
-           or die("Current value query failed with error: " . mysql_error());
+           or die("Current value query failed with error: " . mysqli_error($db_link));
         //
         echo "<blockquote>\n";
-        if ($num_rows = mysql_num_rows($result))
+        if ($num_rows = mysqli_num_rows($result))
            {
-           extract(mysql_fetch_array($result));
+           extract(mysqli_fetch_array($result));
            echo "   <b>$email_addr</b>\n";
            }
         else
@@ -105,7 +104,7 @@ require_once("f_writecalendarbody.phtml");
               // Generate a drop-down selection list showing existing authorities in the affected agency as well as EMS
               // authorities.
               //
-              $result = mysql_query
+              $result = $db_link->query
                  (
                  "select coord_agency as approving_agency "
                  .  "   , role as approving_role "
@@ -124,15 +123,15 @@ require_once("f_writecalendarbody.phtml");
                  .  "   and "
                  .  "      role != 'failsafe-recipient' "
                  )
-                 or die("Eligible authorities query failed with error: " . mysql_error());
+                 or die("Eligible authorities query failed with error: " . mysqli_error($db_link));
               //
               echo "<select name=approving_email_addr>\n";
-              if (mysql_num_rows($result) > 1)
+              if (mysqli_num_rows($result) > 1)
                  {
                  echo "<option value=\"\">Select</option>\n";
                  }
               //
-              while($row = mysql_fetch_array($result))
+              while($row = mysqli_fetch_array($result))
                  {
                  $approving_agency = $approving_role = $approving_email_addr = "";
                  extract($row);
@@ -173,7 +172,7 @@ require_once("f_writecalendarbody.phtml");
            </blockquote>            
            </b>
            <?
-           echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+           echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
            }
         }
         else

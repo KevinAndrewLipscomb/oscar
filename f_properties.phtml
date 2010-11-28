@@ -4,6 +4,7 @@
 //
 function Properties
    (
+   $db_link,
    $be_on_team_5,
    $be_on_team_30,
    $be_on_team_air,
@@ -73,7 +74,7 @@ function Properties
       $s .= "- ";
       if ($be_combined_agency_format == "TRUE")
          {
-         $s .= sprintf("%3s",SquadOfCoordAgency($coord_agency,$mode));
+         $s .= sprintf("%3s",SquadOfCoordAgency($db_link,$coord_agency,$mode));
          }
       }
    //

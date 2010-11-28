@@ -11,21 +11,20 @@ $digest = $digest;
 //
 if ($mode) error_reporting(E_ALL);
 //
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_connectselectdb.phtml");
 //
 // Connect to the database.
 //
-ConnectSelectDb("localhost","kalipso",Password(),"oscar");
+ConnectSelectDbInstanceUNPUBLISHED($db_link);
 //
-$result = mysql_query("select report from " . $mode . "report_cache where digest = '$digest'")
-   or die("The query failed with error:  " . mysql_error());
-if (mysql_num_rows($result))
+$result = $db_link->query("select report from " . $mode . "report_cache where digest = '$digest'")
+   or die("The query failed with error:  " . mysqli_error($db_link));
+if (mysqli_num_rows($result))
    {
-   $row = mysql_fetch_object($result);
+   $row = mysqli_fetch_object($result);
    echo $row->report;
    }
 else
@@ -47,7 +46,7 @@ else
                   <blockquote>
                      <p>The OSCAR system could not locate the requested report.&nbsp; It has probably expired.</p>
                      <?
-                     echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+                     echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
                      ?>
                   </blockquote>            
                   <br clear=both>

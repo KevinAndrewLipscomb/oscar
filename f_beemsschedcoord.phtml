@@ -4,6 +4,7 @@
 //
 function BeEmsSchedCoord
    (
+   $db_link,
    $email_addr,
    $mode = ""   )
    {
@@ -11,7 +12,7 @@ function BeEmsSchedCoord
    //
    $found_email_addr = "";
    //
-   $result = mysql_query
+   $result = $db_link->query
       (
       "select 1 from " . $mode . "authority "
       .  "   where email_addr='$email_addr' "
@@ -19,9 +20,9 @@ function BeEmsSchedCoord
       .  "      and coord_agency='EMS' "
       .  "      and has_clearance='TRUE' "
       )
-      or die("BeEmsSchedCoord query failed with error:  " . mysql_error());
+      or die("BeEmsSchedCoord query failed with error:  " . mysqli_error($db_link));
    //
    error_reporting($saved_error_level);
-   return (mysql_num_rows($result));
+   return (mysqli_num_rows($result));
    }
 ?>
