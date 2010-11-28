@@ -8,6 +8,7 @@ $foundation_dir = '../foundation';
 require_once("$foundation_dir/f_runmode.phtml");
 $mode = RunMode($PHP_SELF);
 //
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("$foundation_dir/f_bodyopen.phtml");
@@ -44,7 +45,7 @@ $coord_agency = $_coord_agency;
          </td></tr></table>
          <hr>
          <?php
-         if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+         if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
             {
             ?>
             <h2><i>Sorry...</i></h2>
@@ -81,7 +82,7 @@ $coord_agency = $_coord_agency;
                </b>
                <?php
                echo "<p>If you have feedback about the technical aspects of this process, please contact the "
-                  . "<a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+                  . "<a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
                }
             else
                {

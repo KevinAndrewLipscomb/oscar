@@ -88,12 +88,11 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
 require_once("f_htmlofnote.phtml");
 require_once("f_showavailsheetrecdetail.phtml");
-require_once("f_connectselectdb.phtml");
 //
 // Preserve intended logic, which is that be_needing_driver actually indicates be_ALS.  If one is ALS, then one is clearly
 // not a third.
@@ -134,11 +133,11 @@ if ($be_needing_driver) $be_third = FALSE;
             </blockquote>            
             </b>
             <?
-            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
             }
          else
          {
-         if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+         if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
             {
             //
             // Calculate the expiration date for this availability sheet.  For the expiration date calculation, the 0th day
@@ -178,13 +177,13 @@ if ($be_needing_driver) $be_third = FALSE;
                . ", note='" . addslashes(trim($note)) . "'"
                . ", submitting_node='$REMOTE_ADDR'"
                . ", expiration='$expiration_date'";
-            mysql_query($sql)
+            $db_link->query($sql)
                or die
                   (
                   "Sorry, the database operation failed with this error:  <i>"
-                  .  mysql_error()
+                  .  mysqli_error($db_link)
                   .  "</i>\n\nPlease notify the <a href=mailto:\""
-                  .  RoleEmailAddress("")
+                  .  RoleEmailAddress($db_link,"")
                   .  "\">OSCAR System Administrator</a>."
                   );
             //
@@ -193,7 +192,7 @@ if ($be_needing_driver) $be_third = FALSE;
             //
             @mail
                (
-               RoleEmailAddress("failsafe-recipient",$mode),
+               RoleEmailAddress($db_link,"failsafe-recipient",$mode),
                "OSCAR insert op",
                stripslashes
                   (
@@ -219,7 +218,7 @@ if ($be_needing_driver) $be_third = FALSE;
                // as an argument (above), which it is not in this case.
                //
             //
-            $result = mysql_query
+            $result = $db_link->query
                (
                $qry = "select * from " . $mode . "avail_sheet"
                .  " where month='$applicable_month_abbrev'"
@@ -228,7 +227,7 @@ if ($be_needing_driver) $be_third = FALSE;
                .  " order by timestamp desc"
                .  " limit 1"
                );
-            if ($num_rows = mysql_num_rows($result))
+            if ($num_rows = mysqli_num_rows($result))
                {
                //
                // Reinitialize the independent variables now that the select is done.  This way, anything that gets
@@ -236,7 +235,7 @@ if ($be_needing_driver) $be_third = FALSE;
                //
                $first_name = $last_name = "";
                //
-               extract($row = mysql_fetch_array($result));
+               extract($row = mysqli_fetch_array($result));
                //
                // The insert and subsequent select must've succeeded.
                //
@@ -295,7 +294,7 @@ if ($be_needing_driver) $be_third = FALSE;
                   );
                echo "</blockquote>\n";
                echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
-               echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+               echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
                }
             else
                {
@@ -314,7 +313,7 @@ if ($be_needing_driver) $be_third = FALSE;
                      <li>OSCAR may have a bug.
                   </ul>
                   <p>Please try submitting your information again later, or contact the <a href=mailto:\"<? echo 
-                     RoleEmailAddress(""); ?>\">OSCAR System Administrator</a>.</p>
+                     RoleEmailAddress($db_link,""); ?>\">OSCAR System Administrator</a>.</p>
                </blockquote>            
                </b>
                <?
@@ -333,7 +332,7 @@ if ($be_needing_driver) $be_third = FALSE;
             </blockquote>            
             </b>
             <?
-            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
             }
          }
          ?>

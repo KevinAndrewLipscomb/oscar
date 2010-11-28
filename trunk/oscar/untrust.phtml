@@ -10,10 +10,9 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
-require_once("f_connectselectdb.phtml");
 //
 ?>
 <html>
@@ -38,20 +37,20 @@ if
    //
    // Connect to the database.
    //
-   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
       {
       $email_address = base64_decode($a);
       $squad = base64_decode($b);
       //
       // Perform the specified update.
       //
-      mysql_query
+      $db_link->query
          (
          "delete from " . $mode . "trusted_user "
          .  "where email_address='$email_address' "
          .  "   and coord_agency='$squad' "
          )
-         or die("Deletion failed with error: " . mysql_error());
+         or die("Deletion failed with error: " . mysqli_error($db_link));
       //
       PutLibPhotoRandomPlaced("oscarsystem",1,"right");
       echo "<p><b>$email_address</b> is no longer trusted by agency <b>$squad</b>.</p>";

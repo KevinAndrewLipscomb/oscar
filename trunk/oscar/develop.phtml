@@ -2,6 +2,7 @@
 //
 // $Id$
 //
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
@@ -11,7 +12,10 @@ require_once("f_roleemailaddress.phtml");
 
 <head><title>OSCAR - How to contribute to the KVEO-IT-PROJECT</title></head>
 
-<? BodyOpen(); ?>
+<?
+ConnectSelectDbInstanceUNPUBLISHED($db_link);
+BodyOpen();
+?>
 <table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
    <tr>
       <td>
@@ -20,7 +24,7 @@ require_once("f_roleemailaddress.phtml");
            <h1 align="center">How to contribute to the KVEO-IT-PROJECT</h1>
         <hr>
         <? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?>
-        <p>The OSCAR system is one of the modules in an <a href=http://www.osdn.com/history>open-source</a> project called 
+        <p>The OSCAR system is one of the modules in an <a href=http://www.opensource.org>open-source</a> project called 
            the Kempsville Volunteer Emergency Organization Information Technology Project (KVEO-IT-PROJECT), the purpose
            of which is...</p>
            <blockquote><i>To develop Information Technology resources for Volunteer Emergency Organizations.&nbsp; Domains include
@@ -30,10 +34,8 @@ require_once("f_roleemailaddress.phtml");
            <dl>
               <dt><a href=http://www.kvrs.org>www.KVRS.org</a></dt>
               <dd>Official web site of the Kempsville Volunteer Rescue Squad, Virginia Beach, Virginia</dd>
-              <dt><br><a href=http://kal.webhop.net/downloads/index.htm#VaEmsCeTracker>va-ems-ce</a></dt>
-              <dd>Virginia EMS Continuing Education Tracker for Palm/HandyShopper</dd>
-              <dt><br><a href=http://kal.webhop.net/downloads/index.htm#ServiceRendered>ServiceRendered</a></dt>
-              <dd>Palm OS application to allow EMS personnel to collect case summary information</dd>
+              <dt><br><a href=http://frompaper2web.com/OscarTRACK>OscarTRACK</a></dt>
+              <dd>Next-generation personnel, vehicle, and fund drive data tracking tool for volunteer rescue squads</dd>
            </dl>
         </blockquote>
         <p>The project, at its heart, is an effort by volunteer developers to create tools for volunteer emergency
@@ -48,12 +50,10 @@ require_once("f_roleemailaddress.phtml");
            <a href=http://sf.net/tracker/?atid=101099&group_id=1099&func=browse>bugs</a>.</p>
         <p>At a minimum, anyone interested in contributing to the project should procede as follows:</p>
         <ol>
-           <li><p>Know <a href=http://www.cvshome.org>what CVS is and basically how to use it.</a></p>
+           <li><p>Know <a href=http://www.subversion.tigris.org>what Subversion is and basically how to use it.</a></p>
            <li><p>Visit <a href=http://sourceforge.net>SourceForge</a> and sign up as a New User.</p></li>
-           <li><p><a href=mailto:<? echo RoleEmailAddress(""); ?>>Email me</a>, tell me how you'd like to contribute, and give me
+           <li><p><a href=mailto:<? echo RoleEmailAddress($db_link,""); ?>>Email me</a>, tell me how you'd like to contribute, and give me
               your SourceForge username.</p></li>
-           <li><p>Visit <a href=http://sfsetup.sf.net>sfsetup.sourceforge.net</a>.&nbsp; Read the tutorial, then download 
-              and run the SFSetup application.</p>
         </ol>
         <hr>
         <p><small><small><em><pre>$Id$</pre></em></small></small></center></td>

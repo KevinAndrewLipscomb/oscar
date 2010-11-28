@@ -4,6 +4,7 @@
 //
 function CoordAgencyOfClearedEmailAddr
    (
+   $db_link,
    $email_addr,
    $mode = ""
    )
@@ -12,15 +13,15 @@ function CoordAgencyOfClearedEmailAddr
    //
    $coord_agency = "";
    //
-   $result = mysql_query
+   $result = $db_link->query
       (
       "select coord_agency from " . $mode . "authority "
       .  "   where email_addr='$email_addr'"
       .  "      and has_clearance='TRUE' "
       )
-      or die("CoordAgencyOfClearedEmailAddr query failed with error:  " . mysql_error());
+      or die("CoordAgencyOfClearedEmailAddr query failed with error:  " . mysqli_error($db_link));
    //
-   if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+   if (mysqli_num_rows($result)) extract(mysqli_fetch_array($result));
    //
    error_reporting($saved_error_level);
    return $coord_agency;

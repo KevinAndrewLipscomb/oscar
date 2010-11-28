@@ -18,10 +18,9 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
-require_once("f_connectselectdb.phtml");
 //
 $html = "<html>\n";
 $html .= "<head><title>Set Role Approval</title></head>\n";
@@ -53,7 +52,7 @@ if
    // All required values are present.
    // Connect to the database.
    //
-   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
       {
       ?>
       <h2><i>Sorry...</i></h2>
@@ -97,11 +96,11 @@ if
    //
    $challenge .= "-- OSCAR\n"
               .  "-- Home page: " . OscarHomePageUrl() . "\n"
-              .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
    //
-   $result = mail($approving_email_addr, "OSCAR Role Change Challenge", $challenge, OscarMailHeaders());
+   $result = mail($approving_email_addr, "OSCAR Role Change Challenge", $challenge, OscarMailHeaders($db_link));
    //
    if ($result)
       {
@@ -114,7 +113,7 @@ if
          . "   <li><a href=" . $mode . "index.phtml>Main OSCAR page</a></li>\n"
          . "</ul>\n";
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress("",$mode)
+         .  RoleEmailAddress($db_link,"",$mode)
          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
@@ -127,7 +126,7 @@ if
       <b>
       <blockquote>
          <p>The OSCAR system encountered an internal error while processing your request.&nbsp; Contact the
-            <a href=mailto:"<? echo RoleEmailAddress("",$mode); ?>">OSCAR System Administrator</a>.</p>
+            <a href=mailto:"<? echo RoleEmailAddress($db_link,"",$mode); ?>">OSCAR System Administrator</a>.</p>
       </blockquote>            
       </b>
       <?

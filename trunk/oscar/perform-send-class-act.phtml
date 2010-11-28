@@ -21,8 +21,7 @@ require_once("f_bodyopen.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 
 //
 $html = "<html>\n";
@@ -49,7 +48,7 @@ if
    // All required values are present.  Generate the email message.
    // Connect to the database.
    //
-   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
       {
       ?>
       <h2><i>Sorry...</i></h2>
@@ -97,11 +96,11 @@ if
       //
       $message .= "-- OSCAR\n"
                .  "-- Home page: " . OscarHomePageUrl() . "\n"
-               .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+               .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
       //
       // Send the mail.
       //
-      $recipient = RoleEmailAddress('class-act-coord',$mode);
+      $recipient = RoleEmailAddress($db_link,'class-act-coord',$mode);
       $from_reply_to_value = stripslashes(trim($submitter)) . '<' . stripslashes(trim($emailaddr)) . '>';
       $header_block = "From: $from_reply_to_value\r\n"
          . "Reply-to: $from_reply_to_value\r\n";
@@ -126,9 +125,9 @@ if
             <ul>
                <?
                echo "<li><p>Use another method (like email or telephone) to submit your nomination to the <a href=mailto:\""
-                  .  RoleEmailAddress("class-act-coord",$mode)
+                  .  RoleEmailAddress($db_link,"class-act-coord",$mode)
                   .  "\">Class Act Coordinator</a>.</p>";
-               echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System "
+               echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System "
                   .  "Administrator</a> know this error occurred.</p>";
                ?>
             </ul>

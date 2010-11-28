@@ -2,7 +2,7 @@
 //
 // $Id$
 //
-function OscarMailHeaders()
+function OscarMailHeaders($db_link)
    {
    $saved_error_level = error_reporting(E_ALL);
    //
@@ -11,8 +11,8 @@ function OscarMailHeaders()
       // Set to "" for production use, "x_" to debug.
       //
    //
-   $header_string = "From: OSCAR <" . RoleEmailAddress("",$mode) . ">\r\n"
-      . "Reply-to: OSCAR <" . RoleEmailAddress("",$mode) . ">\r\n";
+   $header_string = "From: OSCAR <" . RoleEmailAddress($db_link,"",$mode) . ">\r\n"
+      . "Reply-to: OSCAR <" . RoleEmailAddress($db_link,"",$mode) . ">\r\n";
    //
    error_reporting($saved_error_level);
    return $header_string;

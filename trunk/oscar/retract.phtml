@@ -18,11 +18,10 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
-require_once("f_connectselectdb.phtml");
 require_once("f_formattednoteappendage.phtml");
 //
 ?>
@@ -50,7 +49,7 @@ $applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
 //
 // Connect to the database.
 //
-if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
    {
    ?>
    <h2><i>Sorry...</i></h2>
@@ -66,7 +65,7 @@ else
 //
 // Delete the appropriate records from the avail_sheet table.
 //
-mysql_query
+$db_link->query
    (
    "delete from " . $mode . "avail_sheet "
    .  " where month = '$applicable_month_abbrev' "
@@ -74,10 +73,10 @@ mysql_query
    .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\" "
    .  "    and coord_agency = '$coord_agency' "
    )
-   or die("Delete failed with error:  " . mysql_error());
-if ($num_rows_affected = mysql_affected_rows())
+   or die("Delete failed with error:  " . mysqli_error($db_link));
+if ($num_rows_affected = mysqli_affected_rows($db_link))
    {
-   mysql_query
+   $db_link->query
       (
       "insert into " . $mode . "avail_sheet "
       .  " set last_name = \"" . addslashes(addslashes($last_name)) . "\""
@@ -98,7 +97,7 @@ if ($num_rows_affected = mysql_affected_rows())
       .  "'"
       .  "    , expiration='" . date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0)) . "'"
       )
-      or die("Finalization query failed with error:  " . mysql_error());
+      or die("Finalization query failed with error:  " . mysqli_error($db_link));
    }
 //
 PutLibPhotoRandomPlaced("oscarsystem",1,"right");
@@ -116,8 +115,8 @@ if ($num_rows_affected == 0)
       . "   </ul>\n"
       . "If you suspect a bug, please report the problem to the following people:\n"
       . "   <ul>\n"
-      . "      <li><a href=mailto:\"" . RoleEmailAddress("schedule-coordinator",$mode,$coord_agency) . "\">the $coord_agency Schedule Coordinator</a></li>\n"
-      . "      <li><a href=mailto:\"" . RoleEmailAddress("",$mode) . "\">the OSCAR System Administrator</a></li>\n"
+      . "      <li><a href=mailto:\"" . RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency) . "\">the $coord_agency Schedule Coordinator</a></li>\n"
+      . "      <li><a href=mailto:\"" . RoleEmailAddress($db_link,"",$mode) . "\">the OSCAR System Administrator</a></li>\n"
       . "   </ul>\n"
       . "</i>\n";
    }
@@ -125,7 +124,7 @@ echo "<p><b>Don't forget to <a href="
    . OscarRootUrl()
    . "/" . $mode . "form-submit-avails-1.phtml>submit an accurate availability sheet</a> to agency \"$coord_agency\" by the deadline.</b></p>\n"
    . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-   . RoleEmailAddress("",$mode)
+   . RoleEmailAddress($db_link,"",$mode)
    . "\">OSCAR System Administrator</a>.</p>";
 }
 ?>

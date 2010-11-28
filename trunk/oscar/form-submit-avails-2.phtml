@@ -10,8 +10,7 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_writecalendarsubform.phtml");
 require_once("f_writecalendarbody.phtml");
 ?>
@@ -38,7 +37,7 @@ require_once("f_writecalendarbody.phtml");
         </tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
         {
         
         //
@@ -155,7 +154,7 @@ require_once("f_writecalendarbody.phtml");
           <li>
             <p align=left>Double check your selections before submitting this form.</li>
           <?
-          echo "<li><p align=left>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress("",$mode) . ">OSCAR System Administrator</a>.</li>";
+          echo "<li><p align=left>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</li>";
           ?>
         </ul>
           <p><input type="submit" value="Submit"><input type=reset></p>
@@ -183,7 +182,7 @@ require_once("f_writecalendarbody.phtml");
            </blockquote>            
            </b>
            <?
-           echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>";
+           echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
            }
         }
         else

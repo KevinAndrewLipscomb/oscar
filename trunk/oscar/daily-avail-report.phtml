@@ -12,13 +12,12 @@ $pear_dir = "../pear";
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
 require_once("f_properties.phtml");
 require_once("f_beauthority.phtml");
-require_once("f_connectselectdb.phtml");
 require_once("f_availlist.phtml");
 require_once("f_squadofcoordagency.phtml");
 require_once("f_harvestedlist.phtml");
@@ -45,7 +44,7 @@ echo $report;
 //
 // Connect to the database.
 //
-if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
    {
    //
    // Fill the page out with a warning and instructions.
@@ -63,27 +62,27 @@ $be_combined_agency_format = 'TRUE';
 // significantly since a report with these parameters was last run.  If we determine that a user has asked this routine to
 // generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
 //
-$result = mysql_query
+$result = $db_link->query
    (
    "select max(timestamp) as timestamp_of_latest_submission "
    .  " from " . $mode . "avail_sheet "
    .  " where month='" . date('M') . "' "
    )
-   or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysql_error());
-$row = mysql_fetch_object($result);
+   or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysqli_error($db_link));
+$row = mysqli_fetch_object($result);
 //
 // Retrieve timestamp of latest relay_journal record for this agency.  If records have been relayed, but no relayed record
 // has a submission time later than the latest non-relayed submission, then knowing the timestamp_of_latest_submission
 // (above) is not sufficient.
 //
-$result = mysql_query
+$result = $db_link->query
    (
    "select max(timestamp) as timestamp_of_latest_relay "
    .  " from " . $mode . "relay_journal "
    .  " where month='" . date('M') . "' "
    )
-   or die("The attempt to select the latest timestamp from the relay journal failed with this error:  " . mysql_error());
-$row = mysql_fetch_object($result);
+   or die("The attempt to select the latest timestamp from the relay journal failed with this error:  " . mysqli_error($db_link));
+$row = mysqli_fetch_object($result);
 //
 $presentation_clause = 'order by be_on_team_5 desc '
    .  '   , be_on_team_30 desc '
@@ -138,12 +137,12 @@ $info_message = "";
             $day_description = date("jS \d\a\y (l):",mktime(9,0,0,$applicable_month_num,$day_index));
             $where_clause_2 = " and d$day_index='AVAILABLE' ";
             $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
-            $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-            if ($num_rows = mysql_num_rows($result))
+            $result = $db_link->query($sql_statement) or die("Query failed with error:  " . mysqli_error($db_link));
+            if ($num_rows = mysqli_num_rows($result))
                {
                $report .= $day_description . "\n";
                $alternate_text .= $day_description . "\n";
-               while ($row = mysql_fetch_array($result))
+               while ($row = mysqli_fetch_array($result))
                   {
                   $last_name = $first_name = $coord_agency = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als =
                      $be_third = $be_nondriver = $be_needing_driver = "";
@@ -151,6 +150,7 @@ $info_message = "";
                   $report .= "   "
                      .  Properties
                            (
+                           $db_link,
                            $be_on_team_5,
                            $be_on_team_30,
                            $be_on_team_air,
@@ -168,6 +168,7 @@ $info_message = "";
                   $alternate_text .="   "
                      .  Properties
                            (
+                           $db_link,
                            $be_on_team_5,
                            $be_on_team_30,
                            $be_on_team_air,
@@ -212,12 +213,12 @@ $info_message = "";
             $night_description = date("jS \\n\i\g\h\\t (l):",mktime(9,0,0,$applicable_month_num,$night_index));
             $where_clause_2 = " and n$night_index='AVAILABLE' ";
             $sql_statement = stripslashes($base_sql_statement . " where " . $where_clause . $where_clause_2 . $presentation_clause);
-            $result = mysql_query($sql_statement) or die("Query failed with error:  " . mysql_error());
-            if ($num_rows = mysql_num_rows($result))
+            $result = $db_link->query($sql_statement) or die("Query failed with error:  " . mysqli_error($db_link));
+            if ($num_rows = mysqli_num_rows($result))
                {
                $report .= $night_description . "\n";
                $alternate_text .= $night_description . "\n";
-               while ($row = mysql_fetch_array($result))
+               while ($row = mysqli_fetch_array($result))
                   {
                   $last_name = $first_name = $coord_agency = $squad = $be_on_team_30 = $be_on_team_5 = $be_tda = $be_als =
                      $be_third = $be_nondriver = $be_needing_driver = "";
@@ -225,6 +226,7 @@ $info_message = "";
                   $report .= "   "
                      .  Properties
                            (
+                           $db_link,
                            $be_on_team_5,
                            $be_on_team_30,
                            $be_on_team_air,
@@ -242,6 +244,7 @@ $info_message = "";
                   $alternate_text .= "   "
                      .  Properties
                            (
+                           $db_link,
                            $be_on_team_5,
                            $be_on_team_30,
                            $be_on_team_air,
@@ -321,17 +324,17 @@ $alternate_text .= "A full-featured version of this report is also available for
                 .  "the OSCAR Sysadmin at the address shown below.\n\n"
                 .  "-- OSCAR\n"
                 .  "-- Home page: " . OscarHomePageUrl() . "\n"
-                .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+                .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
 //
 // Send the report.
 //
 $email_addr_for_html_msg = '';
 $email_addr_for_plain_msg = '';
-$result = mysql_query('select * from ' . $mode . 'daily_report_recipient')
-   or die('Retrieval of daily report recipient records failed with error: ' . mysql_error());
-if (mysql_num_rows($result))
+$result = $db_link->query('select * from ' . $mode . 'daily_report_recipient')
+   or die('Retrieval of daily report recipient records failed with error: ' . mysqli_error($db_link));
+if (mysqli_num_rows($result))
    {
-   while ($row = mysql_fetch_array($result))
+   while ($row = mysqli_fetch_array($result))
       {
       extract($row);  // Sets $email_address and $format
       //
@@ -351,10 +354,10 @@ if (mysql_num_rows($result))
 $subject_string = 'Daily Availability Report';
 $headers = array
    (
-   'To' => RoleEmailAddress('master',$mode),
+   'To' => RoleEmailAddress($db_link,'master',$mode),
    'Bcc' => $email_addr_for_html_msg,
-   'From' => 'OSCAR <' . RoleEmailAddress("",$mode) . '>',
-   'Reply-to' => 'OSCAR <' . RoleEmailAddress("",$mode) . '>',
+   'From' => 'OSCAR <' . RoleEmailAddress($db_link,"",$mode) . '>',
+   'Reply-to' => 'OSCAR <' . RoleEmailAddress($db_link,"",$mode) . '>',
    'Subject' => $subject_string
    );
 //
@@ -366,7 +369,7 @@ $headers = $mail_mime_obj->headers($headers);
 $mail_message_obj =& Mail::factory('sendmail');
 $result_for_html_msg = $mail_message_obj->send($email_addr_for_html_msg, $headers, $mime_message_body);
 //
-$result_for_plain_msg = mail($email_addr_for_plain_msg,$subject_string,$alternate_text,OscarMailHeaders());
+$result_for_plain_msg = mail($email_addr_for_plain_msg,$subject_string,$alternate_text,OscarMailHeaders($db_link));
 //
 if ($result_for_html_msg and $result_for_plain_msg)
    {

@@ -9,11 +9,10 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
-require_once("f_connectselectdb.phtml");
 //
 ?>
 <html>
@@ -36,20 +35,20 @@ if (
    //
    // Connect to the database.
    //
-   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
       {
       //
       // Insert the trusted email address into the trusted_user table.
       //
-      mysql_query
+      $db_link->query
          (
          "insert into " . $mode . "trusted_user "
          .  "set email_address='$email_addr'"
          .  ", coord_agency='$coord_agency'"
          )
-         or die("Trust assertion failed with error: " . mysql_error());
+         or die("Trust assertion failed with error: " . mysqli_error($db_link));
       //
-      if (SendApprovalNotice($email_addr,$digest,$mode))
+      if (SendApprovalNotice($db_link,$email_addr,$digest,$mode))
          {
          PutLibPhotoRandomPlaced("oscarsystem",1,"right");
          echo "<p>The OSCAR system has performed the following:</p>\n"
@@ -67,7 +66,7 @@ if (
          <h2><i>Error!</i></h2>
          <b>
          <blockquote>
-            <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress("",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
+            <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
          </blockquote>            
          </b>
          <?

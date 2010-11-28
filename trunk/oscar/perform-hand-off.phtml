@@ -8,8 +8,7 @@ $mode = RunMode($PHP_SELF);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
-require_once("f_password.phtml");
-require_once("f_connectselectdb.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
 require_once("f_plaintextofnote.phtml");
@@ -53,7 +52,7 @@ unset($HTTP_POST_VARS['month_abbrev']);
 //
 // Connect to the database.
 //
-if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
    {
    ?>
    <h2><i>Sorry...</i></h2>
@@ -107,17 +106,17 @@ else
 //       structure of the temp table is an exact match for the structure of the master table throughout the lifetime of the
 //       OSCAR project.
 //
-mysql_query
+$db_link->query
    (
    "create temporary table intermediate_avail_sheet "
    .  " select * from " . $mode . "avail_sheet "
    .  "    where month='$month_abbrev' and coord_agency='EMS' "
    )
-   or die("Creation of temp table intermediate_avail_sheet failed with error: " . mysql_error());
+   or die("Creation of temp table intermediate_avail_sheet failed with error: " . mysqli_error($db_link));
 //
 //    MISSING_RELAY_TARGET table
 //
-mysql_query
+$db_link->query
    (
    "create temporary table missing_relay_target "
    .  " ( "
@@ -126,18 +125,18 @@ mysql_query
    .  " PRIMARY KEY (last_name,first_name) "
    .  " ) "
    )
-   or die("Creation of temp table missing_relay_target failed with error: " . mysql_error());
+   or die("Creation of temp table missing_relay_target failed with error: " . mysqli_error($db_link));
 //
 // Initialize $census
 //
-$result = mysql_query
+$result = $db_link->query
    (
    "select coord_agency, count(*) as num_sheets from " . $mode . "avail_sheet "
    .  "    where coord_agency != 'EMS' "
    .  "    group by coord_agency "
    )
-   or die("Census initialization failed with error: " . mysql_error());
-while ($row = mysql_fetch_array($result))
+   or die("Census initialization failed with error: " . mysqli_error($db_link));
+while ($row = mysqli_fetch_array($result))
    {
    extract($row);
    $census[$coord_agency] = $num_sheets;
@@ -185,27 +184,27 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
          .  "    and first_name='$target_first_name' "
          .  " order by timestamp desc limit 1 ";  // to assure that we get the latest one, same as the sched coord saw
       //
-      $result = mysql_query($sql) or die("Retrieval of an intermediate_avail_sheet failed with error: " & mysql_error());
+      $result = $db_link->query($sql) or die("Retrieval of an intermediate_avail_sheet failed with error: " & mysqli_error($db_link));
       //
-      if (!mysql_num_rows($result))
+      if (!mysqli_num_rows($result))
          {
          //
          // No avail_sheet matched what EMS was working with.  Store key info for use in a later warning.
          //
-         mysql_query
+         $db_link->query
             (
             "insert ignore into missing_relay_target "
             .  " set last_name='$target_last_name', "
             .  "    first_name='$target_first_name' "
             )
-            or die("Insert into table missing_relay_target failed with error: " . mysql_error());
+            or die("Insert into table missing_relay_target failed with error: " . mysqli_error($db_link));
          }
       else
          {
          //
          // One or more matching records found.
          //
-         extract(mysql_fetch_array($result));
+         extract(mysqli_fetch_array($result));
          if ($squad != "ERS")  // Don't relay any ERS records.
             {
             $sql = "update intermediate_avail_sheet "
@@ -232,7 +231,7 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                      "INFO",  // condition
                      "COMMENT",  // mnemonic
                      $value,
-                     strtoupper(RoleEmailAddress("schedule-coordinator",$mode,"EMS"))
+                     strtoupper(RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS"))
                      );
                   }
                }
@@ -277,7 +276,7 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                }
             $sql .= " where last_name='$target_last_name' "
                .  "    and first_name='$target_first_name' ";
-            mysql_query($sql) or die("Intermediate relay update failed with error: " . mysql_error());
+            $db_link->query($sql) or die("Intermediate relay update failed with error: " . mysqli_error($db_link));
             }
          }
       }
@@ -290,10 +289,10 @@ $relay_select_clause = "select * from intermediate_avail_sheet where coord_agenc
    // intermediate_avail_sheet was created, we only put records whose coord_agency = 'EMS'.
    //
 //
-mysql_query("insert into " . $mode . "avail_sheet " . $relay_select_clause)
-   or die("Relay insertion failed with error: " . mysql_error());
+$db_link->query("insert into " . $mode . "avail_sheet " . $relay_select_clause)
+   or die("Relay insertion failed with error: " . mysqli_error($db_link));
 //
-$num_rows_affected = mysql_affected_rows();
+$num_rows_affected = mysqli_affected_rows($db_link);
 //
 // Display indications of successful relays.
 //
@@ -310,10 +309,10 @@ echo "<p>Your relay operation has been processed as follows:</p>\n"
    . "   <td><small>Squad</small></td>\n"
    . "</tr>\n";
 //
-$result = mysql_query($relay_select_clause)
-   or die("Simple retrieval using relay_select_clause failed with error: " . mysql_error());
+$result = $db_link->query($relay_select_clause)
+   or die("Simple retrieval using relay_select_clause failed with error: " . mysqli_error($db_link));
 $n = 1;
-while ($row = mysql_fetch_array($result))
+while ($row = mysqli_fetch_array($result))
    {
    extract($row);
    echo "<tr>\n"
@@ -357,14 +356,14 @@ echo "<li><p><b>Notifications:</b>&nbsp; Email notifications have been sent to s
 //
 //    First, determine which squads actually received relayed sheets.
 //
-$result = mysql_query
+$result = $db_link->query
    (
    "select coord_agency, count(*) as num_sheets from " . $mode . "avail_sheet "
    .  " where coord_agency != 'EMS' "
    .  " group by coord_agency "
    )
-   or die("Determination of num_sheets per agency failed with error: " . mysql_error());
-while ($row = mysql_fetch_array($result))
+   or die("Determination of num_sheets per agency failed with error: " . mysqli_error($db_link));
+while ($row = mysqli_fetch_array($result))
    {
    extract($row);
    if (!array_key_exists($coord_agency,$census)) $census[$coord_agency] = 0;
@@ -374,15 +373,15 @@ while ($row = mysql_fetch_array($result))
       // Insert a record into the relay journal.  Although not mentioned in the below insert statement, each of the relay
       // journal's records also has a timestamp, which is implicitly set to now-time during the insert.
       //
-      mysql_query
+      $db_link->query
          (
          "insert into " . $mode . "relay_journal "
          .  " set month='$month_abbrev' "
          .  "    , coord_agency='$coord_agency' "
          )
-         or die("Insertion of relay journal record for agency $coord_agency failed with error: " . mysql_error());
+         or die("Insertion of relay journal record for agency $coord_agency failed with error: " . mysqli_error($db_link));
       //
-      if (!mysql_affected_rows())
+      if (!mysqli_affected_rows($db_link))
          {
          echo "<p><b>" . HtmlOfNote
             (
@@ -402,20 +401,20 @@ while ($row = mysql_fetch_array($result))
       //
       // Determine whether or not the agency is an OSCAR participant.
       //
-      $participation_test_result = mysql_query
+      $participation_test_result = $db_link->query
          ("select 1 from " . $mode . "agency where enumeral='$coord_agency' and be_active='TRUE'")
-         or die("OSCAR participant check failed for $coord_agency with error: " . mysql_error());
-      if (mysql_num_rows($participation_test_result))
+         or die("OSCAR participant check failed for $coord_agency with error: " . mysqli_error($db_link));
+      if (mysqli_num_rows($participation_test_result))
          {
          //
          // Agency IS an OSCAR participant.  Send a notice directly to the squad schedule coordinator.
          //
-         $relay_notice_recipient = RoleEmailAddress("schedule-coordinator",$mode,$coord_agency);
+         $relay_notice_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency);
          $relay_notice_subject = "Relay notice from EMS";
          $relay_headers = "From: EMS Schedule Coordinator <"
-            . RoleEmailAddress("schedule-coordinator",$mode,"EMS")
+            . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS")
             . ">\r\n"
-            . "Reply-to: EMS Schedule Coordinator <" . RoleEmailAddress("schedule-coordinator",$mode,"EMS") . ">\r\n";
+            . "Reply-to: EMS Schedule Coordinator <" . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") . ">\r\n";
          //               0        1         2         3         4         5         6         7
          //               123456789012345678901234567890123456789012345678901234567890123456789012
          $relay_notice = "Dear $coord_agency Schedule Coordinator,\n\n"
@@ -435,13 +434,13 @@ while ($row = mysql_fetch_array($result))
          // Add sig lines.
          //
          $relay_notice .= "-- EMS Schedule Coordinator (via OSCAR)\n";
-         $relay_notice .= "-- " . RoleEmailAddress("schedule-coordinator",$mode,"EMS") . "\n";
+         $relay_notice .= "-- " . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") . "\n";
          //
          mail($relay_notice_recipient, $relay_notice_subject, $relay_notice, $relay_headers);
          //
-         if (($relay_page_recipient = RoleEmailAddress("schedule-coordinator-pager",$mode,$coord_agency)) != '')
+         if (($relay_page_recipient = RoleEmailAddress($db_link,"schedule-coordinator-pager",$mode,$coord_agency)) != '')
             {
-            $relay_page_headers = "From: " . RoleEmailAddress("schedule-coordinator",$mode,"EMS") . "\r\n";
+            $relay_page_headers = "From: " . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") . "\r\n";
             $relay_page_notice = "Check email for OSCAR RELAY notice";
             mail($relay_page_recipient,'',$relay_page_notice,'');
             $be_alerted = 'YES';
@@ -464,7 +463,7 @@ while ($row = mysql_fetch_array($result))
          // Agency is NOT an OSCAR participant.  Send a message to the EMS schedule coordinator that he can forward as 
          // appropriate.
          //
-         $relay_report_recipient = RoleEmailAddress("schedule-coordinator",$mode,"EMS");
+         $relay_report_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS");
          $relay_report_subject = "OSCAR availability relay for $coord_agency";
          //               0        1         2         3         4         5         6         7
          //               123456789012345678901234567890123456789012345678901234567890123456789012
@@ -472,12 +471,12 @@ while ($row = mysql_fetch_array($result))
                        . "EMS -> $coord_agency RELAY REPORT\n"
                        . "---------------------------------\n";
          //
-         $report_query_result = mysql_query
+         $report_query_result = $db_link->query
             (
             "select * from intermediate_avail_sheet where coord_agency = '$coord_agency' order by last_name, first_name"
             )
-            or die("Indirect report query failed with error:  " . mysql_error());
-         $num_rows = mysql_num_rows($report_query_result);
+            or die("Indirect report query failed with error:  " . mysqli_error($db_link));
+         $num_rows = mysqli_num_rows($report_query_result);
          $relay_report .= "Found $num_rows ";
          if ($num_rows == 1)
             {
@@ -490,7 +489,7 @@ while ($row = mysql_fetch_array($result))
          if ($num_rows)
             {
             $record_index = 0;
-            while ($row = mysql_fetch_array($report_query_result))
+            while ($row = mysqli_fetch_array($report_query_result))
                {
                $record_index++;
                $timestamp = $month = $be_on_team_5 = $be_on_team_30 = $be_tda = $be_als = $be_third = $be_nondriver = 
@@ -536,7 +535,7 @@ while ($row = mysql_fetch_array($result))
          //
          $relay_report .= "\n\n-- End of OSCAR report ---\n";
          //
-         mail($relay_report_recipient, $relay_report_subject, $relay_report, OscarMailHeaders());
+         mail($relay_report_recipient, $relay_report_subject, $relay_report, OscarMailHeaders($db_link));
          //
          echo "<tr>\n"
             . "   <td><small>$coord_agency</small></td>\n"
@@ -551,10 +550,10 @@ echo "</table><p>&nbsp;</p></li>\n";
 //
 // Report missing relay targets.
 //
-$result = mysql_query("select * from missing_relay_target")
-   or die("Query of table missing_relay_target failed with error: " . mysql_error());
+$result = $db_link->query("select * from missing_relay_target")
+   or die("Query of table missing_relay_target failed with error: " . mysqli_error($db_link));
 //
-if (mysql_num_rows($result))
+if (mysqli_num_rows($result))
    {
    echo "<li><p><b>Relay failures:</b>  Data from the following availability sheets could not be relayed because the "
       . "sheets could no longer be found in OSCAR.&nbsp; These sheets may have been retracted by their submitters:</p>\n"
@@ -563,7 +562,7 @@ if (mysql_num_rows($result))
       . "   <td><small>Last name</small></td>\n"
       . "   <td><small>First name</small></td>\n"
       . "</tr>\n";
-   while ($row = mysql_fetch_array($result))
+   while ($row = mysqli_fetch_array($result))
       {
       extract($row);
       echo "<tr>\n"
@@ -579,14 +578,14 @@ echo "</ol>\n";
 //
 // Drop temp tables.
 //
-mysql_query("drop table missing_relay_target")
-   or die("Drop of table missing_relay_target failed with error:  " . mysql_error());
-mysql_query("drop table intermediate_avail_sheet")
-   or die("Drop of table intermediate_avail_sheet failed with error:  " . mysql_error());
+$db_link->query("drop table missing_relay_target")
+   or die("Drop of table missing_relay_target failed with error:  " . mysqli_error($db_link));
+$db_link->query("drop table intermediate_avail_sheet")
+   or die("Drop of table intermediate_avail_sheet failed with error:  " . mysqli_error($db_link));
 //
 echo "</blockquote>\n";
 echo "<br><p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-   . RoleEmailAddress("",$mode) . "\">OSCAR System Administrator</a>.</p>";
+   . RoleEmailAddress($db_link,"",$mode) . "\">OSCAR System Administrator</a>.</p>";
 }
 ?>
          <hr>

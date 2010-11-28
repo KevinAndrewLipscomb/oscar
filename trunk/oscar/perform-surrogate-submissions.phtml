@@ -11,11 +11,10 @@ $mode = RunMode($PHP_SELF);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("$foundation_dir/f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
 require_once("f_properties.phtml");
-require_once("f_connectselectdb.phtml");
 //
 //
 // Accept user-supplied parameters and copy them into local variables.
@@ -96,7 +95,7 @@ if (isset($_note)) $note = $_note;
             //
             // Connect to the database.
             //
-            ConnectSelectDb("localhost","kalipso",Password(),"oscar");
+            ConnectSelectDbInstanceUNPUBLISHED($db_link);
             //
             $found_something_to_process = "";
             $be_problem = "";
@@ -218,18 +217,18 @@ if (isset($_note)) $note = $_note;
                         $sql .= ", be_needing_driver='TRUE'";
                         }
                      }
-                  mysql_query($sql)
+                  $db_link->query($sql)
                      or die
                         (
                         "Sorry, the database operation failed with this error:  <i>"
-                        .  mysql_error()
+                        .  mysqli_error($db_link)
                         .  "</i>\n\nPlease notify the <a href=mailto:\""
-                        .  RoleEmailAddress("")
+                        .  RoleEmailAddress($db_link,"")
                         .  "\">OSCAR System Administrator</a>."
                         );
                   @mail
                      (
-                     RoleEmailAddress("failsafe-recipient",$mode),
+                     RoleEmailAddress($db_link,"failsafe-recipient",$mode),
                      "OSCAR insert op",
                      stripslashes
                         (
@@ -241,7 +240,7 @@ if (isset($_note)) $note = $_note;
                   //
                   // Clear calculated vars for next iteration.
                   //
-                  $result = mysql_query
+                  $result = $db_link->query
                      (
                      $qry = "select first_name as extracted_first_name"
                      .  "   , last_name as extracted_last_name"
@@ -251,6 +250,7 @@ if (isset($_note)) $note = $_note;
                      .  "   , note as extracted_note"
                      .  "   , be_on_team_5 as extracted_be_on_team_5"
                      .  "   , be_on_team_30 as extracted_be_on_team_30"
+                     .  "   , be_on_team_air as extracted_be_on_team_air"
                      .  "   , be_tda as extracted_be_tda"
                      .  "   , be_als as extracted_be_als"
                      .  "   , squad as extracted_squad"
@@ -265,12 +265,12 @@ if (isset($_note)) $note = $_note;
                      .  " order by timestamp desc"
                      .  " limit 1"
                      );
-                  if ($num_rows = mysql_num_rows($result))
+                  if ($num_rows = mysqli_num_rows($result))
                      {
                      //
                      // The insert and subsequent select must've succeeded.  Display what came back.
                      //
-                     extract($row = mysql_fetch_array($result));
+                     extract($row = mysqli_fetch_array($result));
                      echo "<tr>\n"
                         . "   <td><small>$timestamp</small></td>\n"
                         . "   <td><small>$extracted_last_name</small></td>\n"
@@ -278,8 +278,10 @@ if (isset($_note)) $note = $_note;
                         . "   <td><small><tt>"
                         . Properties
                            (
+                           $db_link,
                            $extracted_be_on_team_5,
                            $extracted_be_on_team_30,
+                           $extracted_be_on_team_air,
                            $extracted_be_tda,
                            $extracted_be_als,
                            $extracted_squad,
@@ -346,7 +348,7 @@ if (isset($_note)) $note = $_note;
                      <li>The OSCAR system's query or program logic may be faulty.
                   </ul>
                   <p>Please try submitting your information again later, or contact the <a href=mailto:\"<? echo 
-                     RoleEmailAddress(""); ?>\">OSCAR System Administrator</a>.</p>
+                     RoleEmailAddress($db_link,""); ?>\">OSCAR System Administrator</a>.</p>
                </blockquote>            
                </b>
                <?
@@ -356,7 +358,7 @@ if (isset($_note)) $note = $_note;
                PutLibPhotoRandomPlaced("oscarsystem",1,"right");
                echo "<p><b>Thanks!</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the "
-                  . "<a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>\n";
+                  . "<a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>\n";
                }
             echo "</blockquote>\n"
                . "<table cellspacing=10>\n"
@@ -384,7 +386,7 @@ if (isset($_note)) $note = $_note;
             </blockquote>            
             </b>
             <?
-            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\"" . RoleEmailAddress("") . "\">OSCAR System Administrator</a>.</p>";
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\"" . RoleEmailAddress($db_link,"") . "\">OSCAR System Administrator</a>.</p>";
             }
          ?>
          <br clear=both>

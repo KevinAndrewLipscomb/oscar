@@ -4,6 +4,7 @@
 //
 function NumDistinctUsers
    (
+   $db_link,
    $month_abbrev,
    $mode = "",
    $coord_agency = ""
@@ -12,15 +13,15 @@ function NumDistinctUsers
    $saved_error_level = error_reporting(E_ALL);
    //
    $num_distinct_users = 0;
-   $qry = "select distinct email_addr from oscar." . $mode . "avail_sheet "
+   $qry = "select distinct email_addr from " . $mode . "avail_sheet "
       .  "   where month='$month_abbrev' ";
    if ($coord_agency)
       {
       $qry .= "and coord_agency='$coord_agency' ";
       }
-   $result = mysql_query($qry)
-      or die("NumSheets query failed with error:  " . mysql_error());
-   $num_distinct_users = mysql_num_rows($result);
+   $result = $db_link->query($qry)
+      or die("NumDistinctUsers query failed with error:  " . mysqli_error($db_link));
+   $num_distinct_users = mysqli_num_rows($result);
    //
    error_reporting($saved_error_level);
    return $num_distinct_users;

@@ -4,6 +4,7 @@
 //
 function NumSheets
    (
+   $db_link,
    $month_abbrev,
    $mode = "",
    $coord_agency = "",
@@ -15,7 +16,7 @@ function NumSheets
    $saved_error_level = error_reporting(E_ALL);
    //
    $num_submitters = 0;
-   $qry = "select count(distinct last_name, first_name) as num_submitters from oscar." . $mode . "avail_sheet "
+   $qry = "select count(distinct last_name, first_name) as num_submitters from " . $mode . "avail_sheet "
       .  "   where month='$month_abbrev' ";
    if (!$be_tda_inclusive) $qry .= "and be_tda != 'TRUE' ";
    if (!$be_ers_inclusive) $qry .= "and coord_agency != 'EMS' ";
@@ -29,9 +30,9 @@ function NumSheets
       $qry .= "and coord_agency='$coord_agency' "
       .  " group by month, coord_agency";
       }
-   $result = mysql_query($qry)
-      or die("NumSheets query failed with error:  " . mysql_error());
-   if (mysql_num_rows($result)) extract(mysql_fetch_array($result));
+   $result = $db_link->query($qry)
+      or die("NumSheets query failed with error:  " . mysqli_error($db_link));
+   if (mysqli_num_rows($result)) extract(mysqli_fetch_array($result));
    //
    error_reporting($saved_error_level);
    return $num_submitters;

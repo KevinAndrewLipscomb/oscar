@@ -14,10 +14,9 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
-require_once("f_connectselectdb.phtml");
 require_once("f_squadofcoordagency.phtml");
 //
 $html = "<html>\n";
@@ -38,7 +37,7 @@ if ($coord_agency != "")
    // All required values are present.
    // Connect to the database.
    //
-   if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
       {
       ?>
       <h2><i>Sorry...</i></h2>
@@ -51,16 +50,16 @@ if ($coord_agency != "")
       }
    else
    {
-   $squad = SquadOfCoordAgency($coord_agency);
+   $squad = SquadOfCoordAgency($db_link,$coord_agency);
    //
    // Retrieve the list of trusted users for the specified agency.
    //
-   $result = mysql_query("select email_address from " . $mode . "trusted_user where coord_agency='$squad'")
-      or die("Query failed with error: " . mysql_error());
+   $result = $db_link->query("select email_address from " . $mode . "trusted_user where coord_agency='$squad'")
+      or die("Query failed with error: " . mysqli_error($db_link));
    //
    // Generate the appropriate email message.
    //
-   if ($num_rows = mysql_num_rows($result))
+   if ($num_rows = mysqli_num_rows($result))
       {
       //             0        1         2         3         4         5         6         7
       //             123456789012345678901234567890123456789012345678901234567890123456789012
@@ -71,7 +70,7 @@ if ($coord_agency != "")
                  .  "compiled availability report once OSCAR has attained your approval to\n"
                  .  "forward the report to the user.\n\n"
                  .  "To leave the table alone, DO NOTHING.\n\n";
-      while ($row = mysql_fetch_array($result))
+      while ($row = mysqli_fetch_array($result))
          {
          extract($row);
          $challenge .= "To remove $email_address, click here:\n"
@@ -97,12 +96,12 @@ if ($coord_agency != "")
    //
    $challenge .= "-- OSCAR\n"
               .  "-- Home page: " . OscarHomePageUrl() . "\n"
-              .  "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
    //
-   $sched_coord_email_addr = RoleEmailAddress("schedule-coordinator",$mode,$coord_agency);
-   $result = mail($sched_coord_email_addr, "OSCAR Modification Challenge", $challenge, OscarMailHeaders());
+   $sched_coord_email_addr = RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency);
+   $result = mail($sched_coord_email_addr, "OSCAR Modification Challenge", $challenge, OscarMailHeaders($db_link));
    //
    if ($result)
       {
@@ -111,7 +110,7 @@ if ($coord_agency != "")
          . "<p><b>Check your email periodically for the challenge message, which contains instructions for completing the "
          . "trust removal process.</b></p>\n"
          . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress("",$mode)
+         .  RoleEmailAddress($db_link,"",$mode)
          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
@@ -124,7 +123,7 @@ if ($coord_agency != "")
       <b>
       <blockquote>
          <p>The OSCAR system encountered an internal error while processing your request.&nbsp; Contact the
-            <a href=mailto:"<? echo RoleEmailAddress("",$mode); ?>">OSCAR System Administrator</a>.</p>
+            <a href=mailto:"<? echo RoleEmailAddress($db_link,"",$mode); ?>">OSCAR System Administrator</a>.</p>
       </blockquote>            
       </b>
       <?

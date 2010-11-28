@@ -10,8 +10,7 @@ require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_agencyselectionlist.phtml");
 ?>
 <html>
@@ -35,7 +34,7 @@ require_once("f_agencyselectionlist.phtml");
         </td></tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
            {
            ?>
            <p><i>Submission is a simple two-step process.&nbsp; To 
@@ -69,7 +68,7 @@ require_once("f_agencyselectionlist.phtml");
                </tr>
                <tr>
                   <td>Send availabilities to:</td>
-                  <td><? AgencySelectionList($mode); ?></td><td valign=middle><small>If you get scheduled by both EMS and your squad,
+                  <td><? AgencySelectionList($db_link,$mode); ?></td><td valign=middle><small>If you get scheduled by both EMS and your squad,
                      send <b>only</b> to EMS.&nbsp; EMS will relay leftover availabilities to your squad.</small></td>
                </tr>
              </table>

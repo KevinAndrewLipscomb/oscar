@@ -16,10 +16,9 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
-require_once("f_connectselectdb.phtml");
 //
 ?>
 <html>
@@ -39,7 +38,7 @@ $new_email_addr = base64_decode($c);
 //
 // Connect to the database.
 //
-if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
    {
    ?>
    <h2><i>Sorry...</i></h2>
@@ -55,21 +54,21 @@ else
    //
    // Determine whether or not the specified role is defined.
    //
-   $result = mysql_query("select 1 from " . $mode . "authority where coord_agency='$agency' and role='$role' ")
-      or die("Role existence check failed with error: " . mysql_error());
-   if (mysql_num_rows($result))
+   $result = $db_link->query("select 1 from " . $mode . "authority where coord_agency='$agency' and role='$role' ")
+      or die("Role existence check failed with error: " . mysqli_error($db_link));
+   if (mysqli_num_rows($result))
       {
       //
       // This role is already defined.  Update it.
       //
-      mysql_query
+      $db_link->query
          (
          "update " . $mode . "authority "
          .  "set email_addr='$new_email_addr' "
          .  "where coord_agency = '$agency' "
          .  "   and role = '$role' "
          )
-         or die("Update failed with error:  " . mysql_error());
+         or die("Update failed with error:  " . mysqli_error($db_link));
       }
    else
       {
@@ -84,7 +83,7 @@ else
          {
          $has_clearance = "TRUE";
          }
-      mysql_query
+      $db_link->query
          (
          "insert into " . $mode . "authority "
          .  " set coord_agency = '$agency' "
@@ -92,13 +91,13 @@ else
          .  "    , email_addr = '$new_email_addr' "
          .  "    , has_clearance = '$has_clearance' "
          )
-         or die("Insert failed with error:  " . mysql_error());
+         or die("Insert failed with error:  " . mysqli_error($db_link));
       }
    //
    PutLibPhotoRandomPlaced("oscarsystem",1,"right");
    echo "<p>OSCAR has accepted the new role setting.</p>\n";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-      . RoleEmailAddress("",$mode)
+      . RoleEmailAddress($db_link,"",$mode)
       . "\">OSCAR System Administrator</a>.</p>";
    }
 ?>

@@ -4,6 +4,7 @@
 //
 function SendApprovalNotice
    (
+   $db_link,
    $email_addr,
    $digest,
    $mode = ""
@@ -22,10 +23,10 @@ function SendApprovalNotice
    //
    $approval_notice .= "-- OSCAR\n";
    $approval_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
-   $approval_notice .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+   $approval_notice .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
    //
-   return mail($approval_notice_recipient, $approval_notice_subject, $approval_notice, OscarMailHeaders());
+   return mail($approval_notice_recipient, $approval_notice_subject, $approval_notice, OscarMailHeaders($db_link));
    }
 ?>

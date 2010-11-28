@@ -9,8 +9,7 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdb.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_agencyselectionlist.phtml");
 ?>
 <html>
@@ -34,7 +33,7 @@ require_once("f_agencyselectionlist.phtml");
         </td></tr></table>
         <hr>
         <?
-        if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") == "TRUE")
+        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
         {
         ?>
         <blockquote>
@@ -76,7 +75,7 @@ require_once("f_agencyselectionlist.phtml");
               </tr>
               <tr>
                  <td>Get availabilities from:</td>
-                 <td><? AgencySelectionList($mode); ?></td>
+                 <td><? AgencySelectionList($db_link,$mode); ?></td>
                  <td><input type=checkbox name=cross_agency value=TRUE><small>All agencies (<b>EMS Authorities only</b>)</small></td>
               </tr>
            </table>

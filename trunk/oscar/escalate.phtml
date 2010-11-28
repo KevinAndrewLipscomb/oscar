@@ -9,11 +9,10 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
-require_once("f_connectselectdb.phtml");
 //
 $html = "<html>\n"
       . "   <head><title>Request Escalation</title></head>\n"
@@ -29,7 +28,7 @@ echo $html;
 //
 // Connect to the database.
 //
-if (ConnectSelectDb("localhost","kalipso",Password(),"oscar") != "TRUE")
+if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
    {
    //
    // Fill the page out with a warning and instructions.
@@ -48,32 +47,32 @@ else
 //
 // Create the notice.
 //
-$result = mysql_query
+$result = $db_link->query
    (
    "select 1 from " . $mode . "trusted_user "
    .  " where email_address='$email_addr' "
    .  "    and coord_agency='$coord_agency' "
    )
-   or die("Trust check failed with error:  " . mysql_error());
+   or die("Trust check failed with error:  " . mysqli_error($db_link));
 //
-if (mysql_num_rows($result) or ($email_addr == RoleEmailAddress("schedule-coordinator",$mode,$coord_agency)))
+if (mysqli_num_rows($result) or ($email_addr == RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency)))
    {
    //
    // Then someone has registered the requestor as trusted in the time since they first received their claim ticket.
    // Just send an approval notice to the requestor directly and forget actual escalation.
    //
-   $result = SendApprovalNotice($email_addr,$digest,$mode);
+   $result = SendApprovalNotice($db_link,$email_addr,$digest,$mode);
    PutLibPhotoRandomPlaced("oscarsystem",1,"right");
    echo "<p>An OSCAR authority from $coord_agency has registered you as a trusted user.&nbsp; </p>";
    echo "<p><b>Check your email for a message titled, <u>Your OSCAR report</u>.</b></p>";
-   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("",$mode) . ">OSCAR System Administrator</a>.</p>";
+   echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</p>";
    }
 else
    {
    //
    // Notify the next authority in the chain.
    //
-   $screen_notice_recipient = RoleEmailAddress("escalation-level-" . $level . "-recipient",$mode,$coord_agency);
+   $screen_notice_recipient = RoleEmailAddress($db_link,"escalation-level-" . $level . "-recipient",$mode,$coord_agency);
    if ($screen_notice_recipient == "")
       {
       $result=0;
@@ -108,7 +107,7 @@ else
       //
       $screen_notice .= "-- OSCAR\n";
       $screen_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
-      $screen_notice .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+      $screen_notice .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
       //
       // Then send a claim ticket to the requestor directly.
       //
@@ -121,7 +120,7 @@ else
       $claim_ticket .= "submitted to $screen_notice_recipient for screening.  Check\n";
       $claim_ticket .= "your email periodically for approval.\n\n";
       //
-      $next_authority = RoleEmailAddress("escalation-level-$next_level-recipient",$mode,$coord_agency);
+      $next_authority = RoleEmailAddress($db_link,"escalation-level-$next_level-recipient",$mode,$coord_agency);
       if ($next_authority != "")
          {
          $claim_ticket .= "Save this message and discard the previous claim ticket.  This is the\n";
@@ -153,23 +152,23 @@ else
       //
       $claim_ticket .= "-- OSCAR\n";
       $claim_ticket .= "-- Home page: " . OscarHomePageUrl() . "\n";
-      $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+      $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
       //
       // Send the mail.
       //
-      $result = mail($screen_notice_recipient, $screen_notice_subject, $screen_notice, OscarMailHeaders())
-         and mail($claim_ticket_recipient, $claim_ticket_subject, $claim_ticket, OscarMailHeaders());
+      $result = mail($screen_notice_recipient, $screen_notice_subject, $screen_notice, OscarMailHeaders($db_link))
+         and mail($claim_ticket_recipient, $claim_ticket_subject, $claim_ticket, OscarMailHeaders($db_link));
       }
    if ($result)
       {
       PutLibPhotoRandomPlaced("oscarsystem",1,"right");
       echo "<p>The OSCAR system has successfully escalated your request.&nbsp;  Because the report you requested contains "
          . "personal information, a screening notice has been sent to the <a href=mailto:\""
-         . RoleEmailAddress("escalation-level-$level-recipient",$mode,$coord_agency)
+         . RoleEmailAddress($db_link,"escalation-level-$level-recipient",$mode,$coord_agency)
          . "\">$coord_agency Escalation Level $level Authority</a>.&nbsp; The authority will forward the report to you "
          . "once screening is complete.</p>";
       echo "<p><b>Check your email periodically for the report.</b></p>";
-      echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress("",$mode) . ">OSCAR System Administrator</a>.</p>";
+      echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</p>";
       }
    else
       {
@@ -184,7 +183,7 @@ else
          <ul>
             <?
             echo "<li><p>Use another method (like email or telephone) to ask the authority for the information you need.</p>";
-            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress("",$mode) . "?subj=OSCAR-bug-report>OSCAR System Administrator</a> know this error occurred.</p>";
+            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . "?subj=OSCAR-bug-report>OSCAR System Administrator</a> know this error occurred.</p>";
             ?>
          </ul>
       </blockquote>            

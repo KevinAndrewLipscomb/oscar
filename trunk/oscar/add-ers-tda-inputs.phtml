@@ -9,10 +9,9 @@ if ($mode) error_reporting(E_ALL);
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_password.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
-require_once("f_connectselectdb.phtml");
 ?>
 <html>
 <head><title>OSCAR - Confirmation</title></head>
@@ -64,7 +63,7 @@ require_once("f_connectselectdb.phtml");
             //
             // Connect to the database.
             //
-            ConnectSelectDb("localhost","kalipso",Password(),"oscar");
+            ConnectSelectDbInstanceUNPUBLISHED($db_link);
             //
             $found_something_to_process = "";
             $be_problem = "";
@@ -127,18 +126,18 @@ require_once("f_connectselectdb.phtml");
                   if ($field_b != "") $sql .= ", $field_b='AVAILABLE'";
                   $sql .= ", submitting_node='$REMOTE_ADDR'"
                      . ", expiration='$expiration_date'";
-                  mysql_query($sql)
+                  $db_link->query($sql)
                      or die
                         (
                         "Sorry, the database operation failed with this error:  <i>"
-                        .  mysql_error()
+                        .  mysqli_error($db_link)
                         .  "</i>\n\nPlease notify the <a href=mailto:\""
-                        .  RoleEmailAddress("")
+                        .  RoleEmailAddress($db_link,"")
                         .  "\">OSCAR System Administrator</a>."
                         );
                   @mail
                      (
-                     RoleEmailAddress("failsafe-recipient",$mode),
+                     RoleEmailAddress($db_link,"failsafe-recipient",$mode),
                      "OSCAR insert op",
                      stripslashes
                         (
@@ -152,7 +151,7 @@ require_once("f_connectselectdb.phtml");
                   //
                   $field_a = $field_b = "";
                   //
-                  $result = mysql_query
+                  $result = $db_link->query
                      (
                      $qry = "select first_name as extracted_first_name"
                      .  "   , last_name as extracted_last_name"
@@ -169,12 +168,12 @@ require_once("f_connectselectdb.phtml");
                      .  " order by timestamp desc"
                      .  " limit 1"
                      );
-                  if ($num_rows = mysql_num_rows($result))
+                  if ($num_rows = mysqli_num_rows($result))
                      {
                      //
                      // The insert and subsequent select must've succeeded.  Display what came back.
                      //
-                     extract($row = mysql_fetch_array($result));
+                     extract($row = mysqli_fetch_array($result));
                      echo "<tr>\n"
                         . "   <td><small>$timestamp</small></td>\n"
                         . "   <td><small>$extracted_last_name</small></td>\n"
@@ -235,7 +234,7 @@ require_once("f_connectselectdb.phtml");
                      <li>The OSCAR system's query or program logic may be faulty.
                   </ul>
                   <p>Please try submitting your information again later, or contact the <a href=mailto:\"<? echo 
-                     RoleEmailAddress(""); ?>\">OSCAR System Administrator</a>.</p>
+                     RoleEmailAddress($db_link,""); ?>\">OSCAR System Administrator</a>.</p>
                </blockquote>            
                </b>
                <?
@@ -245,7 +244,7 @@ require_once("f_connectselectdb.phtml");
                PutLibPhotoRandomPlaced("oscarsystem",1,"right");
                echo "<p><b>Thanks!</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the "
-                  . "<a href=mailto:" . RoleEmailAddress("") . ">OSCAR System Administrator</a>.</p>\n";
+                  . "<a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>\n";
                }
             echo "</blockquote>\n"
                . "<table cellspacing=10>\n"
@@ -272,7 +271,7 @@ require_once("f_connectselectdb.phtml");
             </blockquote>            
             </b>
             <?
-            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\"" . RoleEmailAddress("") . "\">OSCAR System Administrator</a>.</p>";
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\"" . RoleEmailAddress($db_link,"") . "\">OSCAR System Administrator</a>.</p>";
             }
          ?>
          <br clear=both>

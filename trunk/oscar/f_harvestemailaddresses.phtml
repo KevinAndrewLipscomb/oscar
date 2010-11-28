@@ -2,44 +2,48 @@
 //
 // $Id$
 //
-function HarvestEmailAddresses($mode = "")
+function HarvestEmailAddresses
+   (
+   $db_link,
+   $mode = ""
+   )
    {
    $saved_error_level = error_reporting(E_ALL);
    //
-   $result = mysql_query
+   $result = $db_link->query
       (
       "select count(*) as count "
       .  " from " . $mode . "avail_sheet "
       .  " where expiration < CURRENT_DATE "
       )
-      or die("Query 1 failed with error: " . mysql_error());
-   $row = mysql_fetch_array($result);
+      or die("Query 1 failed with error: " . mysqli_error($db_link));
+   $row = mysqli_fetch_array($result);
    $count = 0;
    extract($row);
    if ($count)
       {
-      $agency_result = mysql_query("select distinct coord_agency from authority where role='egroup-manager'")
-         or die("Query 2 failed with error: " . mysql_error());
-      if (mysql_num_rows($agency_result))
+      $agency_result = $db_link->query("select distinct coord_agency from authority where role='egroup-manager'")
+         or die("Query 2 failed with error: " . mysqli_error($db_link));
+      if (mysqli_num_rows($agency_result))
          {
-         while ($agency_row = mysql_fetch_array($agency_result))
+         while ($agency_row = mysqli_fetch_array($agency_result))
             {
             $coord_agency = "";
             extract($agency_row);
             $harvest_message_subject = "OSCAR email address harvest for $coord_agency";
             //
-            $harvest_message_recipient = RoleEmailAddress("egroup-manager",$mode,$coord_agency);
+            $harvest_message_recipient = RoleEmailAddress($db_link,"egroup-manager",$mode,$coord_agency);
             $query = "select distinct last_name, first_name, email_addr "
                .  " from " . $mode . "avail_sheet "
                .  " where expiration < CURRENT_DATE "
                .  "    and email_addr not like '%vbgov.com' ";
             if ($coord_agency != "EMS")
                {
-               $query .= " and coord_agency='$coord_agency' or squad='" . SquadOfCoordAgency($coord_agency,$mode) . "' ";
+               $query .= " and coord_agency='$coord_agency' or squad='" . SquadOfCoordAgency($db_link,$coord_agency,$mode) . "' ";
                }
             $query .= " order by last_name, first_name, email_addr ";
-            $entry_result = mysql_query($query) or die("Query 3 failed with error: " . mysql_error());
-            if ($num_rows = mysql_num_rows($entry_result))
+            $entry_result = $db_link->query($query) or die("Query 3 failed with error: " . mysqli_error($db_link));
+            if ($num_rows = mysqli_num_rows($entry_result))
                {
                //                  0        1         2         3         4         5         6         7
                //                  123456789012345678901234567890123456789012345678901234567890123456789012
@@ -55,11 +59,11 @@ function HarvestEmailAddresses($mode = "")
                $harvest_message .= "\n";
                $harvest_message .= "-- OSCAR\n";
                $harvest_message .= "-- Home page: " . OscarHomePageUrl() . "\n";
-               $harvest_message .= "-- Sysadmin: " . RoleEmailAddress("",$mode) . "\n";
+               $harvest_message .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
                //
                // Send the mail.
                //
-               mail($harvest_message_recipient, $harvest_message_subject, $harvest_message, OscarMailHeaders());
+               mail($harvest_message_recipient, $harvest_message_subject, $harvest_message, OscarMailHeaders($db_link));
                }
             }
          }
