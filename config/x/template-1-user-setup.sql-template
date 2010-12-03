@@ -1,0 +1,19 @@
+grant select
+ , insert
+ , update
+ , delete
+ , create
+ , drop
+ , create temporary tables
+  on oscar_x.*
+  to 'ki-oscar-x'@'localhost' identified by '~ki-oscar-x-password~'
+;
+grant select
+ , insert
+ , update
+ , delete
+ , create
+ , drop
+ , create temporary tables
+  on oscar_x.*
+  to 'ki-oscar-x'@'70.84.138.98' identified by '~ki-oscar-x-password~'
