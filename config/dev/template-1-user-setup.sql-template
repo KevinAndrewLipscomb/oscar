@@ -1,0 +1,27 @@
+grant select
+ , insert
+ , update
+ , delete
+ , create
+ , drop
+ , create temporary tables
+  on oscar_d.*
+  to 'ki-oscar-d'@'localhost' identified by '~ki-oscar-d-password~'
+;
+grant select
+  on kalipso_d.*
+  to 'ki-oscark-d'@'localhost' identified by '~ki-oscark-d-password~'
+;
+grant select
+ , insert
+ , update
+ , delete
+ , create
+ , drop
+ , create temporary tables
+  on oscar_d.*
+  to 'ki-oscar-d'@'70.84.138.98' identified by '~ki-oscar-d-password~'
+;
+grant select
+  on kalipso_d.*
+  to 'ki-oscark-d'@'70.84.138.98' identified by '~ki-oscark-d-password~'
