@@ -9,6 +9,10 @@ grant select
   to 'ki-oscar'@'localhost' identified by '~ki-oscar-password~'
 ;
 grant select
+  on kalipso.*
+  to 'ki-oscark'@'localhost' identified by '~ki-oscark-password~'
+;
+grant select
  , insert
  , update
  , delete
@@ -17,3 +21,7 @@ grant select
  , create temporary tables
   on oscar.*
   to 'ki-oscar'@'70.84.138.98' identified by '~ki-oscar-password~'
+;
+grant select
+  on kalipso.*
+  to 'ki-oscark'@'70.84.138.98' identified by '~ki-oscark-password~'
