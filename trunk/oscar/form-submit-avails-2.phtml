@@ -17,7 +17,7 @@ require_once("f_writecalendarbody.phtml");
 <html>
 
 <head>
-<title>OSCAR - Availability Submission (Part 2)</title>
+<title>OSCAR - Availability Submission</title>
 </head>
 
 <? BodyOpen(); ?>
@@ -32,7 +32,7 @@ require_once("f_writecalendarbody.phtml");
                  KVEO-IT-PROJECT<br>
                  <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
                  <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
-              <h1 align="center">Availability Submission (Part 2)</h1>
+              <h1 align="center">Availability Submission</h1>
            </td>
         </tr></table>
         <hr>
@@ -54,6 +54,18 @@ require_once("f_writecalendarbody.phtml");
               ($applicable_month_num != "")
            and
               ($coord_agency != "")
+           and
+              ($odnmid != "")
+           and
+              ($squad != "")
+           and
+              ($be_als != "")
+           and
+              ($be_driver != "")
+           and
+              ($be_aic != "")
+           and
+              ($be_needing_driver != "")
            )
         // then
         {
@@ -64,15 +76,15 @@ require_once("f_writecalendarbody.phtml");
            . "<table>\n"
            . "   <tr><td>Name:</td><td><b>$first_name $last_name</b></td></tr>\n"
            . "   <tr><td>Email address:</td><td><b>$email_addr</b></td></tr>\n"
-           . "   <tr><td>Applicable month:</td><td><b>"
-           . date("F",mktime(12,0,0,$applicable_month_num,1))
-           . "</b></td></tr>\n"
+           . "   <tr><td>Applicable month:</td><td><b>" . date("F",mktime(12,0,0,$applicable_month_num,1)) . "</b></td></tr>\n"
            . "   <tr><td>Coordinating agency:&nbsp;&nbsp;</td><td><b>$coord_agency</b></td></tr>\n"
+           . "   <tr><td>Home squad:&nbsp;&nbsp;</td><td><b>$squad</b></td></tr>\n"
+           . "   <tr><td>Driver:&nbsp;&nbsp;</td><td><b>$be_driver</b></td></tr>\n"
+           . "   <tr><td>AIC:&nbsp;&nbsp;</td><td><b>$be_aic</b></td></tr>\n"
+           . "   <tr><td>ALS:&nbsp;&nbsp;</td><td><b>$be_als</b></td></tr>\n"
            . "</table>\n"
            . "<br>\n";
         ?>
-        <p><i>For the values you supplied in Part 1, the following additional information is required.&nbsp; Complete the
-           form below and press the "Submit" button to finish the process.</i></p>
         <form method="POST" action="<? echo $mode; ?>perform-add-avail-sheet.phtml">
           <?
           echo "<input type=hidden name=first_name value=\"$first_name\">\n"
@@ -80,30 +92,18 @@ require_once("f_writecalendarbody.phtml");
              . "<input type=hidden name=email_addr value=\"$email_addr\">\n"
              . "<input type=hidden name=applicable_month_num value=$applicable_month_num>\n"
              . "<input type=hidden name=coord_agency value=$coord_agency>\n"
-             . "<input type=hidden name=odnmid value=\"$odnmid\">\n";
+             . "<input type=hidden name=odnmid value=\"$odnmid\">\n"
+             . "<input type=hidden name=squad value=\"$squad\">\n"
+             . "<input type=hidden name=be_als value=\"$be_als\">\n"
+             . "<input type=hidden name=be_driver value=\"$be_driver\">\n"
+             . "<input type=hidden name=be_aic value=\"$be_aic\">\n"
+             . "<input type=hidden name=be_needing_driver value=\"$be_needing_driver\">\n";
           //
           if ($coord_agency == "EMS")
              {
              ?>
-             Home squad:
-             <select size="1" name=squad>
-                <option value="">Select</option>
-                <option value="1">1 - Ocean Park</option>
-                <option value="2">2 - Davis Corner</option>
-                <option value="4">4 - Chesapeake Beach</option>
-                <option value="5">5 - Courthouse</option>
-                <option value="6">6 - Creeds</option>
-                <option value="9">9 - Kempsville</option>
-                <option value="13">13 - Blackwater</option>
-                <option value="14">14 - Virginia Beach</option>
-                <option value="16">16 - Plaza</option>
-                <option value="17">17 - Sandbridge</option>
-                <option value="ERS">ERS - VBDEMS/VBFD</option>
-             </select>
-             <br>
              <p>Check all that apply as of today's date:</p>
              <ul>
-                <li><input type=checkbox name=be_als value="TRUE" checked>I am a Zone Car ALS provider.</li>
                 <li><input type=checkbox name=be_on_team_30 value="TRUE">I am on the Squad Truck Team.</li>
                 <li><input type=checkbox name=be_on_team_5 value="TRUE">I am a Volunteer Duty Field Supervisor.</li>
                 <li><input type=checkbox name=be_on_team_air value="TRUE">I am on the Air Ambulance Team.</li>
@@ -114,26 +114,12 @@ require_once("f_writecalendarbody.phtml");
              {
              echo "<p>Check all that apply as of today's date:</p>\n";
              //
-             $warning_expiration_time = mktime(0,0,0,3,20,2004);
-             if (time() < $warning_expiration_time)
-                {
-                echo "<blockquote>\n";
-                echo "<p><b><i>WARNING:&nbsp; This section has changed.  Read each item carefully!</i></b></p>\n";
-                }
              ?>
              <ul>
-                <li><input type=checkbox name=be_bls_intern value="TRUE">I am a trainee or a yellow-carded student.</li>
-                <li><input type=checkbox name=be_driver value="TRUE">I am a released driver.</li>
-                <li><input type=checkbox name=be_aic value="TRUE">I am an AIC.</li>
-                <li><input type=checkbox name=be_needing_driver value="TRUE">I am an ALS provider (includes ST).</li>
                 <li><input type=checkbox name=be_on_team_30 value="TRUE">I am on the Squad Truck Team.</li>
                 <li><input type=checkbox name=be_on_team_5 value="TRUE">I am a Volunteer Duty Field Supervisor.</li>
              </ul>
              <?
-             if (time() < $warning_expiration_time)
-                {
-                echo "</blockquote>\n";
-                }
              }
           WriteCalendarSubform
              (
@@ -149,7 +135,7 @@ require_once("f_writecalendarbody.phtml");
           <textarea rows="8" name=note cols="60"></textarea></p>
         <ul>
           <li>
-            <p align=left>Availability sheets are due on the 10th day of the proceeding month.</li>
+            <p align=left>Availability sheets are due on the 10th day of the preceding month.</li>
           <li>
             <p align=left>Abusive or fraudulent submissions are traceable and are cause for disciplinary action.</li>
           <li>
@@ -178,6 +164,11 @@ require_once("f_writecalendarbody.phtml");
                  <li><p>Email address</p>
                  <li><p>Applicable month</p>
                  <li><p>Recieving agency</p>
+                 <li><p>Home squad</p>
+                 <li><p>ALS</p>
+                 <li><p>Driver</p>
+                 <li><p>AIC</p>
+                 <li><p>Need driver</p>
               </ul>
               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problems.</p>
            </blockquote>            
