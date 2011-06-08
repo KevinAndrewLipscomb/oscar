@@ -1,0 +1,41 @@
+<?
+//
+// $Id: f_showavailsheetrecdetail.phtml 2953 2009-10-22 15:01:51Z KevinAnLipscomb $
+//
+function SetAvailComment
+   (
+   $db_link,
+   $mode,
+   $applicable_month_abbrev,
+   $last_name,
+   $first_name,
+   $timestamp,
+   $coord_agency,
+   $shift_designator,
+   $nominal_day_of_month,
+   $comment
+   )
+   {
+   if ($mode) $saved_error_level = error_reporting(E_ALL);
+   //
+   $sql = "replace " . $mode . "avail_comment set month = '$applicable_month_abbrev'"
+   . " , last_name = '" . addslashes(trim($last_name)) ."'"
+   . " , first_name = '" . addslashes(trim($first_name)) . "'"
+   . " , timestamp = '$timestamp'"
+   . " , coord_agency = '$coord_agency'"
+   . " , shift_designator = '$shift_designator'"
+   . " , nominal_day_of_month = '$nominal_day_of_month'"
+   . " , comment = '$comment'";
+   $db_link->query($sql)
+     or die
+       (
+       "Sorry, the database operation failed with this error:  <i>"
+       .  mysqli_error($db_link)
+       .  "</i>\n\nPlease notify the <a href=mailto:\""
+       .  RoleEmailAddress($db_link,"")
+       .  "\">OSCAR System Administrator</a>."
+       );
+   //
+   if ($mode) error_reporting($saved_error_level);
+   }
+?>
