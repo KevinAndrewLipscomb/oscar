@@ -138,6 +138,38 @@ if ($be_needing_driver) $be_third = FALSE;
          {
          if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
             {
+            //
+            // Validate parameters.
+            //
+            if
+               (
+                  ($first_name != "")
+               and
+                  ($last_name != "")
+               and
+                  ($email_addr != "")
+               and
+                  ($applicable_month_num != "")
+               and
+                  ($coord_agency != "")
+               and
+                  ($odnmid != "")
+               and
+                  ($squad != "")
+               and
+                  ($be_als != "")
+               and
+                  ($be_driver != "")
+               and
+                  ($be_aic != "")
+               and
+                  ($be_needing_driver != "")
+               )
+            // then
+            {
+            ?>
+            <form method="POST" action="<? echo $mode; ?>perform-add-avail-sheet.phtml">
+            <?
             echo "<input type=hidden name=first_name value=\"$first_name\">\n"
             . "<input type=hidden name=last_name value=\"$last_name\">\n"
             . "<input type=hidden name=email_addr value=\"$email_addr\">\n"
@@ -249,7 +281,7 @@ if ($be_needing_driver) $be_third = FALSE;
             <table border="0" cellpadding="10" cellspacing="0">
               <tr>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                <td>
+                <td valign="top">
                   <pre>
 <?
             if ( $d1 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 1)) . "/01  DAY : <input type=text name=d01_comment size=9 />\n";
@@ -358,6 +390,7 @@ if ($be_needing_driver) $be_third = FALSE;
             <p><input type="submit" value="Submit"><input type=reset></p>
           </form>
           <?
+            }
           }
          else
             {
