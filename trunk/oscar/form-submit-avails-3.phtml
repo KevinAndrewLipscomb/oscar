@@ -1,0 +1,383 @@
+<?
+//
+// $Id: perform-add-avail-sheet.phtml 3472 2011-01-20 15:58:17Z KevinAnLipscomb $
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+// Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
+//
+$first_name = $first_name;
+$last_name = $last_name;
+$email_addr = $email_addr;
+$squad = $squad;
+$applicable_month_num = $applicable_month_num;
+$be_on_team_30 = $be_on_team_30;
+$be_on_team_5 = $be_on_team_5;
+$be_on_team_air = $be_on_team_air;
+$be_als = $be_als;
+$coord_agency = $coord_agency;
+$be_third = !$be_aic;  //Same logic, different user interface
+$be_nondriver = !$be_driver;  //Same logic, different user interface
+$be_needing_driver = $be_needing_driver;
+$d1 = $d1;
+$d2 = $d2;
+$d3 = $d3;
+$d4 = $d4;
+$d5 = $d5;
+$d6 = $d6;
+$d7 = $d7;
+$d8 = $d8;
+$d9 = $d9;
+$d10 = $d10;
+$d11 = $d11;
+$d12 = $d12;
+$d13 = $d13;
+$d14 = $d14;
+$d15 = $d15;
+$d16 = $d16;
+$d17 = $d17;
+$d18 = $d18;
+$d19 = $d19;
+$d20 = $d20;
+$d21 = $d21;
+$d22 = $d22;
+$d23 = $d23;
+$d24 = $d24;
+$d25 = $d25;
+$d26 = $d26;
+$d27 = $d27;
+$d28 = $d28;
+$d29 = $d29;
+$d30 = $d30;
+$d31 = $d31;
+$n1 = $n1;
+$n2 = $n2;
+$n3 = $n3;
+$n4 = $n4;
+$n5 = $n5;
+$n6 = $n6;
+$n7 = $n7;
+$n8 = $n8;
+$n9 = $n9;
+$n10 = $n10;
+$n11 = $n11;
+$n12 = $n12;
+$n13 = $n13;
+$n14 = $n14;
+$n15 = $n15;
+$n16 = $n16;
+$n17 = $n17;
+$n18 = $n18;
+$n19 = $n19;
+$n20 = $n20;
+$n21 = $n21;
+$n22 = $n22;
+$n23 = $n23;
+$n24 = $n24;
+$n25 = $n25;
+$n26 = $n26;
+$n27 = $n27;
+$n28 = $n28;
+$n29 = $n29;
+$n30 = $n30;
+$n31 = $n31;
+$odnmid = $odnmid;
+//
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_htmlofnote.phtml");
+//
+// Preserve intended logic, which is that be_needing_driver actually indicates be_ALS.  If one is ALS, then one is clearly
+// not a third.
+//
+if ($be_needing_driver) $be_third = FALSE;
+//
+?>
+<html>
+<head><title>OSCAR - Availability submission</title></head>
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+         <h6 align="center">
+         KVEO-IT-PROJECT<br>
+         <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+         <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+         <H1 ALIGN="CENTER">Availability submission</H1>
+         <hr>
+         <?
+         //
+         // Validate parameters.
+         //
+         if (($coord_agency == "EMS") and ($squad == ""))
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Error!</i></h2>
+            <b>
+            <blockquote>
+               <p>You did not supply a required parameter.&nbsp; You must supply a value for this field:</p>
+               <ul>
+                  <li><p>Home squad</p>
+               </ul>
+               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problem.</p>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
+            }
+         else
+         {
+         if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
+            {
+            echo "<input type=hidden name=first_name value=\"$first_name\">\n"
+            . "<input type=hidden name=last_name value=\"$last_name\">\n"
+            . "<input type=hidden name=email_addr value=\"$email_addr\">\n"
+            . "<input type=hidden name=applicable_month_num value=$applicable_month_num>\n"
+            . "<input type=hidden name=coord_agency value=$coord_agency>\n"
+            . "<input type=hidden name=odnmid value=\"$odnmid\">\n"
+            . "<input type=hidden name=squad value=\"$squad\">\n"
+            . "<input type=hidden name=be_als value=\"$be_als\">\n"
+            . "<input type=hidden name=be_driver value=\"$be_driver\">\n"
+            . "<input type=hidden name=be_aic value=\"$be_aic\">\n"
+            . "<input type=hidden name=be_needing_driver value=\"$be_needing_driver\">\n"
+            . "<input type=hidden name=be_on_team_30 value=\"$be_on_team_30\">\n"
+            . "<input type=hidden name=be_on_team_5 value=\"$be_on_team_5\">\n"
+            . "<input type=hidden name=be_on_team_air value=\"$be_on_team_air\">\n"
+            . "<input type=hidden name=d1 value=\"$d1\">\n"
+            . "<input type=hidden name=d2 value=\"$d2\">\n"
+            . "<input type=hidden name=d3 value=\"$d3\">\n"
+            . "<input type=hidden name=d4 value=\"$d4\">\n"
+            . "<input type=hidden name=d5 value=\"$d5\">\n"
+            . "<input type=hidden name=d6 value=\"$d6\">\n"
+            . "<input type=hidden name=d7 value=\"$d7\">\n"
+            . "<input type=hidden name=d8 value=\"$d8\">\n"
+            . "<input type=hidden name=d9 value=\"$d9\">\n"
+            . "<input type=hidden name=d10 value=\"$d10\">\n"
+            . "<input type=hidden name=d11 value=\"$d11\">\n"
+            . "<input type=hidden name=d12 value=\"$d12\">\n"
+            . "<input type=hidden name=d13 value=\"$d13\">\n"
+            . "<input type=hidden name=d14 value=\"$d14\">\n"
+            . "<input type=hidden name=d15 value=\"$d15\">\n"
+            . "<input type=hidden name=d16 value=\"$d16\">\n"
+            . "<input type=hidden name=d17 value=\"$d17\">\n"
+            . "<input type=hidden name=d18 value=\"$d18\">\n"
+            . "<input type=hidden name=d19 value=\"$d19\">\n"
+            . "<input type=hidden name=d20 value=\"$d20\">\n"
+            . "<input type=hidden name=d21 value=\"$d21\">\n"
+            . "<input type=hidden name=d22 value=\"$d22\">\n"
+            . "<input type=hidden name=d23 value=\"$d23\">\n"
+            . "<input type=hidden name=d24 value=\"$d24\">\n"
+            . "<input type=hidden name=d25 value=\"$d25\">\n"
+            . "<input type=hidden name=d26 value=\"$d26\">\n"
+            . "<input type=hidden name=d27 value=\"$d27\">\n"
+            . "<input type=hidden name=d28 value=\"$d28\">\n"
+            . "<input type=hidden name=d29 value=\"$d29\">\n"
+            . "<input type=hidden name=d30 value=\"$d30\">\n"
+            . "<input type=hidden name=d31 value=\"$d31\">\n"
+            . "<input type=hidden name=n1 value=\"$n1\">\n"
+            . "<input type=hidden name=n2 value=\"$n2\">\n"
+            . "<input type=hidden name=n3 value=\"$n3\">\n"
+            . "<input type=hidden name=n4 value=\"$n4\">\n"
+            . "<input type=hidden name=n5 value=\"$n5\">\n"
+            . "<input type=hidden name=n6 value=\"$n6\">\n"
+            . "<input type=hidden name=n7 value=\"$n7\">\n"
+            . "<input type=hidden name=n8 value=\"$n8\">\n"
+            . "<input type=hidden name=n9 value=\"$n9\">\n"
+            . "<input type=hidden name=n10 value=\"$n10\">\n"
+            . "<input type=hidden name=n11 value=\"$n11\">\n"
+            . "<input type=hidden name=n12 value=\"$n12\">\n"
+            . "<input type=hidden name=n13 value=\"$n13\">\n"
+            . "<input type=hidden name=n14 value=\"$n14\">\n"
+            . "<input type=hidden name=n15 value=\"$n15\">\n"
+            . "<input type=hidden name=n16 value=\"$n16\">\n"
+            . "<input type=hidden name=n17 value=\"$n17\">\n"
+            . "<input type=hidden name=n18 value=\"$n18\">\n"
+            . "<input type=hidden name=n19 value=\"$n19\">\n"
+            . "<input type=hidden name=n20 value=\"$n20\">\n"
+            . "<input type=hidden name=n21 value=\"$n21\">\n"
+            . "<input type=hidden name=n22 value=\"$n22\">\n"
+            . "<input type=hidden name=n23 value=\"$n23\">\n"
+            . "<input type=hidden name=n24 value=\"$n24\">\n"
+            . "<input type=hidden name=n25 value=\"$n25\">\n"
+            . "<input type=hidden name=n26 value=\"$n26\">\n"
+            . "<input type=hidden name=n27 value=\"$n27\">\n"
+            . "<input type=hidden name=n28 value=\"$n28\">\n"
+            . "<input type=hidden name=n29 value=\"$n29\">\n"
+            . "<input type=hidden name=n30 value=\"$n30\">\n"
+            . "<input type=hidden name=n31 value=\"$n31\">\n"
+            . "<input type=hidden name=num_extras value=\"$num_extras\">\n";
+            //
+            ?>
+            <table border="0" cellpadding="3" cellspacing="0">
+              <tr>
+                <td>Standard</td>
+                <td align="center">DAY</td>
+                <td>shifts run from</td>
+                <td align="center">06:00</td>
+                <td>to</td>
+                <td align="center">18:00.</td>
+                <td rowspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td rowspan="2"><b>PLEASE MAKE YOURSELF AVAILABLE FOR FULL STANDARD SHIFTS IF AT ALL POSSIBLE.</b></td>
+              </tr>
+              <tr>
+                <td>Standard</td>
+                <td align="center">NIGHT</td>
+                <td>shifts run from</td>
+                <td align="center">18:00</td>
+                <td>to</td>
+                <td align="center">06:00.</td>
+              </tr>
+            </table>
+            <br/>
+            <small>
+              Otherwise, please <b>collaborate</b> with fellow members as follows.&nbsp; These arrangements best serve your Squad, the Department, and the community, but are not enforced on this form:
+              <ul>
+                <li>Submit availabilities that <b>equal</b> full standard shifts (ie, you take the first 6 hours, your friend takes the next 6);</li>
+                <li>Submit <b>matching partial-shift availabilities during high-demand hours</b> (ie, you and your friend run a non-standard "power shift" together).</li>
+              </ul>
+            </small>
+            <p><b>IF you must</b> specify any partial shift availabilities, enter them here:</p>
+            <table border="0" cellpadding="10" cellspacing="0">
+              <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>
+                  <pre>
+<?
+            if ( $d1 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 1)) . "/01  DAY : <input type=text name=d01_comment size=9 />\n";
+            if ( $d2 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 2)) . "/02  DAY : <input type=text name=d02_comment size=9 />\n";
+            if ( $d3 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 3)) . "/03  DAY : <input type=text name=d03_comment size=9 />\n";
+            if ( $d4 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 4)) . "/04  DAY : <input type=text name=d04_comment size=9 />\n";
+            if ( $d5 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 5)) . "/05  DAY : <input type=text name=d05_comment size=9 />\n";
+            if ( $d6 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 6)) . "/06  DAY : <input type=text name=d06_comment size=9 />\n";
+            if ( $d7 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 7)) . "/07  DAY : <input type=text name=d07_comment size=9 />\n";
+            if ( $d8 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 8)) . "/08  DAY : <input type=text name=d08_comment size=9 />\n";
+            if ( $d9 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 9)) . "/09  DAY : <input type=text name=d09_comment size=9 />\n";
+            if ($d10 != "") echo date('D',mktime(12,0,0,$applicable_month_num,10)) . "/10  DAY : <input type=text name=d10_comment size=9 />\n";
+            if ($d11 != "") echo date('D',mktime(12,0,0,$applicable_month_num,11)) . "/11  DAY : <input type=text name=d11_comment size=9 />\n";
+            if ($d12 != "") echo date('D',mktime(12,0,0,$applicable_month_num,12)) . "/12  DAY : <input type=text name=d12_comment size=9 />\n";
+            if ($d13 != "") echo date('D',mktime(12,0,0,$applicable_month_num,13)) . "/13  DAY : <input type=text name=d13_comment size=9 />\n";
+            if ($d14 != "") echo date('D',mktime(12,0,0,$applicable_month_num,14)) . "/14  DAY : <input type=text name=d14_comment size=9 />\n";
+            if ($d15 != "") echo date('D',mktime(12,0,0,$applicable_month_num,15)) . "/15  DAY : <input type=text name=d15_comment size=9 />\n";
+            if ($d16 != "") echo date('D',mktime(12,0,0,$applicable_month_num,16)) . "/16  DAY : <input type=text name=d16_comment size=9 />\n";
+            if ($d17 != "") echo date('D',mktime(12,0,0,$applicable_month_num,17)) . "/17  DAY : <input type=text name=d17_comment size=9 />\n";
+            if ($d18 != "") echo date('D',mktime(12,0,0,$applicable_month_num,18)) . "/18  DAY : <input type=text name=d18_comment size=9 />\n";
+            if ($d19 != "") echo date('D',mktime(12,0,0,$applicable_month_num,19)) . "/19  DAY : <input type=text name=d19_comment size=9 />\n";
+            if ($d20 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/20  DAY : <input type=text name=d20_comment size=9 />\n";
+            if ($d21 != "") echo date('D',mktime(12,0,0,$applicable_month_num,21)) . "/21  DAY : <input type=text name=d21_comment size=9 />\n";
+            if ($d22 != "") echo date('D',mktime(12,0,0,$applicable_month_num,22)) . "/22  DAY : <input type=text name=d22_comment size=9 />\n";
+            if ($d23 != "") echo date('D',mktime(12,0,0,$applicable_month_num,23)) . "/23  DAY : <input type=text name=d23_comment size=9 />\n";
+            if ($d24 != "") echo date('D',mktime(12,0,0,$applicable_month_num,24)) . "/24  DAY : <input type=text name=d24_comment size=9 />\n";
+            if ($d25 != "") echo date('D',mktime(12,0,0,$applicable_month_num,25)) . "/25  DAY : <input type=text name=d25_comment size=9 />\n";
+            if ($d26 != "") echo date('D',mktime(12,0,0,$applicable_month_num,26)) . "/26  DAY : <input type=text name=d26_comment size=9 />\n";
+            if ($d27 != "") echo date('D',mktime(12,0,0,$applicable_month_num,27)) . "/27  DAY : <input type=text name=d27_comment size=9 />\n";
+            if ($d28 != "") echo date('D',mktime(12,0,0,$applicable_month_num,28)) . "/28  DAY : <input type=text name=d28_comment size=9 />\n";
+            if ($d29 != "") echo date('D',mktime(12,0,0,$applicable_month_num,29)) . "/29  DAY : <input type=text name=d29_comment size=9 />\n";
+            if ($d30 != "") echo date('D',mktime(12,0,0,$applicable_month_num,30)) . "/30  DAY : <input type=text name=d30_comment size=9 />\n";
+            if ($d31 != "") echo date('D',mktime(12,0,0,$applicable_month_num,31)) . "/31  DAY : <input type=text name=d31_comment size=9 />\n";
+            if ( $n1 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 1)) . "/01 NIGHT: <input type=text name=n01_comment size=9 />\n";
+            if ( $n2 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 2)) . "/02 NIGHT: <input type=text name=n02_comment size=9 />\n";
+            if ( $n3 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 3)) . "/03 NIGHT: <input type=text name=n03_comment size=9 />\n";
+            if ( $n4 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 4)) . "/04 NIGHT: <input type=text name=n04_comment size=9 />\n";
+            if ( $n5 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 5)) . "/05 NIGHT: <input type=text name=n05_comment size=9 />\n";
+            if ( $n6 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 6)) . "/06 NIGHT: <input type=text name=n06_comment size=9 />\n";
+            if ( $n7 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 7)) . "/07 NIGHT: <input type=text name=n07_comment size=9 />\n";
+            if ( $n8 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 8)) . "/08 NIGHT: <input type=text name=n08_comment size=9 />\n";
+            if ( $n9 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 9)) . "/09 NIGHT: <input type=text name=n09_comment size=9 />\n";
+            if ($n10 != "") echo date('D',mktime(12,0,0,$applicable_month_num,10)) . "/10 NIGHT: <input type=text name=n10_comment size=9 />\n";
+            if ($n11 != "") echo date('D',mktime(12,0,0,$applicable_month_num,11)) . "/11 NIGHT: <input type=text name=n11_comment size=9 />\n";
+            if ($n12 != "") echo date('D',mktime(12,0,0,$applicable_month_num,12)) . "/12 NIGHT: <input type=text name=n12_comment size=9 />\n";
+            if ($n13 != "") echo date('D',mktime(12,0,0,$applicable_month_num,13)) . "/13 NIGHT: <input type=text name=n13_comment size=9 />\n";
+            if ($n14 != "") echo date('D',mktime(12,0,0,$applicable_month_num,14)) . "/14 NIGHT: <input type=text name=n14_comment size=9 />\n";
+            if ($n15 != "") echo date('D',mktime(12,0,0,$applicable_month_num,15)) . "/15 NIGHT: <input type=text name=n15_comment size=9 />\n";
+            if ($n16 != "") echo date('D',mktime(12,0,0,$applicable_month_num,16)) . "/16 NIGHT: <input type=text name=n16_comment size=9 />\n";
+            if ($n17 != "") echo date('D',mktime(12,0,0,$applicable_month_num,17)) . "/17 NIGHT: <input type=text name=n17_comment size=9 />\n";
+            if ($n18 != "") echo date('D',mktime(12,0,0,$applicable_month_num,18)) . "/18 NIGHT: <input type=text name=n18_comment size=9 />\n";
+            if ($n19 != "") echo date('D',mktime(12,0,0,$applicable_month_num,19)) . "/19 NIGHT: <input type=text name=n19_comment size=9 />\n";
+            if ($n20 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/20 NIGHT: <input type=text name=n20_comment size=9 />\n";
+            if ($n21 != "") echo date('D',mktime(12,0,0,$applicable_month_num,21)) . "/21 NIGHT: <input type=text name=n21_comment size=9 />\n";
+            if ($n22 != "") echo date('D',mktime(12,0,0,$applicable_month_num,22)) . "/22 NIGHT: <input type=text name=n22_comment size=9 />\n";
+            if ($n23 != "") echo date('D',mktime(12,0,0,$applicable_month_num,23)) . "/23 NIGHT: <input type=text name=n23_comment size=9 />\n";
+            if ($n24 != "") echo date('D',mktime(12,0,0,$applicable_month_num,24)) . "/24 NIGHT: <input type=text name=n24_comment size=9 />\n";
+            if ($n25 != "") echo date('D',mktime(12,0,0,$applicable_month_num,25)) . "/25 NIGHT: <input type=text name=n25_comment size=9 />\n";
+            if ($n26 != "") echo date('D',mktime(12,0,0,$applicable_month_num,26)) . "/26 NIGHT: <input type=text name=n26_comment size=9 />\n";
+            if ($n27 != "") echo date('D',mktime(12,0,0,$applicable_month_num,27)) . "/27 NIGHT: <input type=text name=n27_comment size=9 />\n";
+            if ($n28 != "") echo date('D',mktime(12,0,0,$applicable_month_num,28)) . "/28 NIGHT: <input type=text name=n28_comment size=9 />\n";
+            if ($n29 != "") echo date('D',mktime(12,0,0,$applicable_month_num,29)) . "/29 NIGHT: <input type=text name=n29_comment size=9 />\n";
+            if ($n30 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/30 NIGHT: <input type=text name=n30_comment size=9 />\n";
+            if ($n31 != "") echo date('D',mktime(12,0,0,$applicable_month_num,31)) . "/31 NIGHT: <input type=text name=n31_comment size=9 />\n";
+?>
+                  </pre>
+                </td>
+                <td valign="top">
+                  <table border="1" bordercolor="silver" cellpadding="10" cellspacing="0">
+                    <tr>
+                      <td align="center">
+                        FORMAT:
+                        <br/>
+                        <big><b>HHmm-HHmm</b></big>
+                        <br/>
+                        <small>
+                          24-hour clock
+                          <br/>
+                          No colons
+                        </small>
+                        <br/>
+                        <br/>
+                        <small>EXAMPLES:</small>
+                        <br/>
+                        <input type=text name=d01_comment size=9 disabled value="0600-1200"/>
+                        <br/>
+                        <input type=text name=d01_comment size=9 disabled value="1000-1630"/>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <b>You are not required to fill out any of the above fields.&nbsp; Most members will leave the above fields blank to indicate they are available for full standard shifts.</b>
+            <br/><br/>
+            Other special requests (will only be visible to <a href=authorities.phtml>OSCAR authorities</a>):<br/>
+            <textarea rows="8" name=note cols="60"></textarea></p>
+            <ul>
+              <li>Availability sheets are due on the 10th day of the preceding month.</li>
+              <li>Abusive or fraudulent submissions are traceable and are cause for disciplinary action.</li>
+              <li>Double check your selections before submitting this form.</li>
+              <?
+              echo "<li>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</li>";
+              ?>
+            </ul>
+            <p><input type="submit" value="Submit"><input type=reset></p>
+          </form>
+          <?
+          }
+         else
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please retry your submission later.</p>"; ?>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
+            }
+         }
+         ?>
+      </td>
+   </tr>
+</table>
+</body>
+</html>
