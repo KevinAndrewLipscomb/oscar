@@ -95,6 +95,7 @@ require_once("f_availlist.phtml");
 require_once("f_htmlofnote.phtml");
 require_once("f_setavailcomment.phtml");
 require_once("f_showavailsheetrecdetail.phtml");
+require_once("f_showavailcomments.phtml");
 //
 // Preserve intended logic, which is that be_needing_driver actually indicates be_ALS.  If one is ALS, then one is clearly
 // not a third.
@@ -361,6 +362,11 @@ if ($be_needing_driver) $be_third = FALSE;
                if ($n29_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",29,$n29_comment);
                if ($n30_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",30,$n30_comment);
                if ($n31_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",31,$n31_comment);
+               //
+               echo "<p>Also, the following specific shift availability comments have been recorded:</p>\n";
+               echo "<blockquote>\n";
+               ShowAvailComments($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,$applicable_month_num);
+               echo "</blockquote>\n";
                //
                echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";

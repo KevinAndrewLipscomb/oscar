@@ -36,6 +36,11 @@ function SetAvailComment
        .  "\">OSCAR System Administrator</a>."
        );
    //
+   // As a failsafe in case the database becomes unavailable at any critical time after the insertion, send the
+   // data to the sysadmin via email.
+   //
+   @mail(RoleEmailAddress($db_link,"failsafe-recipient",$mode),"OSCAR insert op",stripslashes($sql));
+   //
    if ($mode) error_reporting($saved_error_level);
    }
 ?>
