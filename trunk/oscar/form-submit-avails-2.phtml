@@ -85,7 +85,7 @@ require_once("f_writecalendarbody.phtml");
            . "</table>\n"
            . "<br>\n";
         ?>
-        <form method="POST" action="<? echo $mode; ?>perform-add-avail-sheet.phtml">
+        <form method="POST" action="<? echo $mode; ?>form-submit-avails-3.phtml">
           <?
           echo "<input type=hidden name=first_name value=\"$first_name\">\n"
              . "<input type=hidden name=last_name value=\"$last_name\">\n"
@@ -124,27 +124,12 @@ require_once("f_writecalendarbody.phtml");
           WriteCalendarSubform
              (
              $applicable_month_num,
-             "Check all shifts for which you are available for at least one type of duty:",
+             "Check all shifts for which you are available for at least one type of duty.&nbsp; You will have an opportunity on the next page to specify particular hours and to make other special requests:",
              $mode
              );
           ?>
-        <p align="left">How many <b>EXTRA</b> shifts are you willing to be scheduled
-          for?&nbsp; <input type="text" name=num_extras size="2" value="0"></p>
-          <p align=left>Special requests (will only be visible to <a href=authorities.phtml>OSCAR authorities</a>):<br>
-             (If you can only run parts of any shifts you marked available, enter the details here.)<br>
-          <textarea rows="8" name=note cols="60"></textarea></p>
-        <ul>
-          <li>
-            <p align=left>Availability sheets are due on the 10th day of the preceding month.</li>
-          <li>
-            <p align=left>Abusive or fraudulent submissions are traceable and are cause for disciplinary action.</li>
-          <li>
-            <p align=left>Double check your selections before submitting this form.</li>
-          <?
-          echo "<li><p align=left>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</li>";
-          ?>
-        </ul>
-          <p><input type="submit" value="Submit"><input type=reset></p>
+          <p align="left">How many <b>EXTRA</b> shifts are you willing to be scheduled for?&nbsp; <input type="text" name=num_extras size="2" value="0"></p>
+          <p><input type="submit" value="Continue"><input type=reset></p>
         </form>
         <?
         }
