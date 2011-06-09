@@ -164,6 +164,8 @@ if ($be_needing_driver) $be_third = FALSE;
                   ($be_aic != "")
                and
                   ($be_needing_driver != "")
+               and
+                  ($be_cross_agency_submission != "")
                )
             // then
             {
@@ -284,78 +286,79 @@ if ($be_needing_driver) $be_third = FALSE;
                 <td valign="top">
                   <pre>
 <?
-            if ( $d1 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 1)) . "/01  DAY : <input type=text name=d01_comment size=9 />\n";
-            if ( $d2 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 2)) . "/02  DAY : <input type=text name=d02_comment size=9 />\n";
-            if ( $d3 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 3)) . "/03  DAY : <input type=text name=d03_comment size=9 />\n";
-            if ( $d4 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 4)) . "/04  DAY : <input type=text name=d04_comment size=9 />\n";
-            if ( $d5 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 5)) . "/05  DAY : <input type=text name=d05_comment size=9 />\n";
-            if ( $d6 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 6)) . "/06  DAY : <input type=text name=d06_comment size=9 />\n";
-            if ( $d7 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 7)) . "/07  DAY : <input type=text name=d07_comment size=9 />\n";
-            if ( $d8 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 8)) . "/08  DAY : <input type=text name=d08_comment size=9 />\n";
-            if ( $d9 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 9)) . "/09  DAY : <input type=text name=d09_comment size=9 />\n";
-            if ($d10 != "") echo date('D',mktime(12,0,0,$applicable_month_num,10)) . "/10  DAY : <input type=text name=d10_comment size=9 />\n";
-            if ($d11 != "") echo date('D',mktime(12,0,0,$applicable_month_num,11)) . "/11  DAY : <input type=text name=d11_comment size=9 />\n";
-            if ($d12 != "") echo date('D',mktime(12,0,0,$applicable_month_num,12)) . "/12  DAY : <input type=text name=d12_comment size=9 />\n";
-            if ($d13 != "") echo date('D',mktime(12,0,0,$applicable_month_num,13)) . "/13  DAY : <input type=text name=d13_comment size=9 />\n";
-            if ($d14 != "") echo date('D',mktime(12,0,0,$applicable_month_num,14)) . "/14  DAY : <input type=text name=d14_comment size=9 />\n";
-            if ($d15 != "") echo date('D',mktime(12,0,0,$applicable_month_num,15)) . "/15  DAY : <input type=text name=d15_comment size=9 />\n";
-            if ($d16 != "") echo date('D',mktime(12,0,0,$applicable_month_num,16)) . "/16  DAY : <input type=text name=d16_comment size=9 />\n";
-            if ($d17 != "") echo date('D',mktime(12,0,0,$applicable_month_num,17)) . "/17  DAY : <input type=text name=d17_comment size=9 />\n";
-            if ($d18 != "") echo date('D',mktime(12,0,0,$applicable_month_num,18)) . "/18  DAY : <input type=text name=d18_comment size=9 />\n";
-            if ($d19 != "") echo date('D',mktime(12,0,0,$applicable_month_num,19)) . "/19  DAY : <input type=text name=d19_comment size=9 />\n";
-            if ($d20 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/20  DAY : <input type=text name=d20_comment size=9 />\n";
-            if ($d21 != "") echo date('D',mktime(12,0,0,$applicable_month_num,21)) . "/21  DAY : <input type=text name=d21_comment size=9 />\n";
-            if ($d22 != "") echo date('D',mktime(12,0,0,$applicable_month_num,22)) . "/22  DAY : <input type=text name=d22_comment size=9 />\n";
-            if ($d23 != "") echo date('D',mktime(12,0,0,$applicable_month_num,23)) . "/23  DAY : <input type=text name=d23_comment size=9 />\n";
-            if ($d24 != "") echo date('D',mktime(12,0,0,$applicable_month_num,24)) . "/24  DAY : <input type=text name=d24_comment size=9 />\n";
-            if ($d25 != "") echo date('D',mktime(12,0,0,$applicable_month_num,25)) . "/25  DAY : <input type=text name=d25_comment size=9 />\n";
-            if ($d26 != "") echo date('D',mktime(12,0,0,$applicable_month_num,26)) . "/26  DAY : <input type=text name=d26_comment size=9 />\n";
-            if ($d27 != "") echo date('D',mktime(12,0,0,$applicable_month_num,27)) . "/27  DAY : <input type=text name=d27_comment size=9 />\n";
-            if ($d28 != "") echo date('D',mktime(12,0,0,$applicable_month_num,28)) . "/28  DAY : <input type=text name=d28_comment size=9 />\n";
-            if ($d29 != "") echo date('D',mktime(12,0,0,$applicable_month_num,29)) . "/29  DAY : <input type=text name=d29_comment size=9 />\n";
-            if ($d30 != "") echo date('D',mktime(12,0,0,$applicable_month_num,30)) . "/30  DAY : <input type=text name=d30_comment size=9 />\n";
-            if ($d31 != "") echo date('D',mktime(12,0,0,$applicable_month_num,31)) . "/31  DAY : <input type=text name=d31_comment size=9 />\n";
-            if ( $n1 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 1)) . "/01 NIGHT: <input type=text name=n01_comment size=9 />\n";
-            if ( $n2 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 2)) . "/02 NIGHT: <input type=text name=n02_comment size=9 />\n";
-            if ( $n3 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 3)) . "/03 NIGHT: <input type=text name=n03_comment size=9 />\n";
-            if ( $n4 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 4)) . "/04 NIGHT: <input type=text name=n04_comment size=9 />\n";
-            if ( $n5 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 5)) . "/05 NIGHT: <input type=text name=n05_comment size=9 />\n";
-            if ( $n6 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 6)) . "/06 NIGHT: <input type=text name=n06_comment size=9 />\n";
-            if ( $n7 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 7)) . "/07 NIGHT: <input type=text name=n07_comment size=9 />\n";
-            if ( $n8 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 8)) . "/08 NIGHT: <input type=text name=n08_comment size=9 />\n";
-            if ( $n9 != "") echo date('D',mktime(12,0,0,$applicable_month_num, 9)) . "/09 NIGHT: <input type=text name=n09_comment size=9 />\n";
-            if ($n10 != "") echo date('D',mktime(12,0,0,$applicable_month_num,10)) . "/10 NIGHT: <input type=text name=n10_comment size=9 />\n";
-            if ($n11 != "") echo date('D',mktime(12,0,0,$applicable_month_num,11)) . "/11 NIGHT: <input type=text name=n11_comment size=9 />\n";
-            if ($n12 != "") echo date('D',mktime(12,0,0,$applicable_month_num,12)) . "/12 NIGHT: <input type=text name=n12_comment size=9 />\n";
-            if ($n13 != "") echo date('D',mktime(12,0,0,$applicable_month_num,13)) . "/13 NIGHT: <input type=text name=n13_comment size=9 />\n";
-            if ($n14 != "") echo date('D',mktime(12,0,0,$applicable_month_num,14)) . "/14 NIGHT: <input type=text name=n14_comment size=9 />\n";
-            if ($n15 != "") echo date('D',mktime(12,0,0,$applicable_month_num,15)) . "/15 NIGHT: <input type=text name=n15_comment size=9 />\n";
-            if ($n16 != "") echo date('D',mktime(12,0,0,$applicable_month_num,16)) . "/16 NIGHT: <input type=text name=n16_comment size=9 />\n";
-            if ($n17 != "") echo date('D',mktime(12,0,0,$applicable_month_num,17)) . "/17 NIGHT: <input type=text name=n17_comment size=9 />\n";
-            if ($n18 != "") echo date('D',mktime(12,0,0,$applicable_month_num,18)) . "/18 NIGHT: <input type=text name=n18_comment size=9 />\n";
-            if ($n19 != "") echo date('D',mktime(12,0,0,$applicable_month_num,19)) . "/19 NIGHT: <input type=text name=n19_comment size=9 />\n";
-            if ($n20 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/20 NIGHT: <input type=text name=n20_comment size=9 />\n";
-            if ($n21 != "") echo date('D',mktime(12,0,0,$applicable_month_num,21)) . "/21 NIGHT: <input type=text name=n21_comment size=9 />\n";
-            if ($n22 != "") echo date('D',mktime(12,0,0,$applicable_month_num,22)) . "/22 NIGHT: <input type=text name=n22_comment size=9 />\n";
-            if ($n23 != "") echo date('D',mktime(12,0,0,$applicable_month_num,23)) . "/23 NIGHT: <input type=text name=n23_comment size=9 />\n";
-            if ($n24 != "") echo date('D',mktime(12,0,0,$applicable_month_num,24)) . "/24 NIGHT: <input type=text name=n24_comment size=9 />\n";
-            if ($n25 != "") echo date('D',mktime(12,0,0,$applicable_month_num,25)) . "/25 NIGHT: <input type=text name=n25_comment size=9 />\n";
-            if ($n26 != "") echo date('D',mktime(12,0,0,$applicable_month_num,26)) . "/26 NIGHT: <input type=text name=n26_comment size=9 />\n";
-            if ($n27 != "") echo date('D',mktime(12,0,0,$applicable_month_num,27)) . "/27 NIGHT: <input type=text name=n27_comment size=9 />\n";
-            if ($n28 != "") echo date('D',mktime(12,0,0,$applicable_month_num,28)) . "/28 NIGHT: <input type=text name=n28_comment size=9 />\n";
-            if ($n29 != "") echo date('D',mktime(12,0,0,$applicable_month_num,29)) . "/29 NIGHT: <input type=text name=n29_comment size=9 />\n";
-            if ($n30 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/30 NIGHT: <input type=text name=n30_comment size=9 />\n";
-            if ($n31 != "") echo date('D',mktime(12,0,0,$applicable_month_num,31)) . "/31 NIGHT: <input type=text name=n31_comment size=9 />\n";
+            $size = ($be_cross_agency_submission == "TRUE" ? 5 : 9);
+            if ($d1 != "") echo date('D',mktime(12,0,0,$applicable_month_num,1)) . "/01  DAY : <input type=text name=d1_comment size=$size maxlength=$size />\n";
+            if ($d2 != "") echo date('D',mktime(12,0,0,$applicable_month_num,2)) . "/02  DAY : <input type=text name=d2_comment size=$size maxlength=$size />\n";
+            if ($d3 != "") echo date('D',mktime(12,0,0,$applicable_month_num,3)) . "/03  DAY : <input type=text name=d3_comment size=$size maxlength=$size />\n";
+            if ($d4 != "") echo date('D',mktime(12,0,0,$applicable_month_num,4)) . "/04  DAY : <input type=text name=d4_comment size=$size maxlength=$size />\n";
+            if ($d5 != "") echo date('D',mktime(12,0,0,$applicable_month_num,5)) . "/05  DAY : <input type=text name=d5_comment size=$size maxlength=$size />\n";
+            if ($d6 != "") echo date('D',mktime(12,0,0,$applicable_month_num,6)) . "/06  DAY : <input type=text name=d6_comment size=$size maxlength=$size />\n";
+            if ($d7 != "") echo date('D',mktime(12,0,0,$applicable_month_num,7)) . "/07  DAY : <input type=text name=d7_comment size=$size maxlength=$size />\n";
+            if ($d8 != "") echo date('D',mktime(12,0,0,$applicable_month_num,8)) . "/08  DAY : <input type=text name=d8_comment size=$size maxlength=$size />\n";
+            if ($d9 != "") echo date('D',mktime(12,0,0,$applicable_month_num,9)) . "/09  DAY : <input type=text name=d9_comment size=$size maxlength=$size />\n";
+            if ($d10 != "") echo date('D',mktime(12,0,0,$applicable_month_num,10)) . "/10  DAY : <input type=text name=d10_comment size=$size maxlength=$size />\n";
+            if ($d11 != "") echo date('D',mktime(12,0,0,$applicable_month_num,11)) . "/11  DAY : <input type=text name=d11_comment size=$size maxlength=$size />\n";
+            if ($d12 != "") echo date('D',mktime(12,0,0,$applicable_month_num,12)) . "/12  DAY : <input type=text name=d12_comment size=$size maxlength=$size />\n";
+            if ($d13 != "") echo date('D',mktime(12,0,0,$applicable_month_num,13)) . "/13  DAY : <input type=text name=d13_comment size=$size maxlength=$size />\n";
+            if ($d14 != "") echo date('D',mktime(12,0,0,$applicable_month_num,14)) . "/14  DAY : <input type=text name=d14_comment size=$size maxlength=$size />\n";
+            if ($d15 != "") echo date('D',mktime(12,0,0,$applicable_month_num,15)) . "/15  DAY : <input type=text name=d15_comment size=$size maxlength=$size />\n";
+            if ($d16 != "") echo date('D',mktime(12,0,0,$applicable_month_num,16)) . "/16  DAY : <input type=text name=d16_comment size=$size maxlength=$size />\n";
+            if ($d17 != "") echo date('D',mktime(12,0,0,$applicable_month_num,17)) . "/17  DAY : <input type=text name=d17_comment size=$size maxlength=$size />\n";
+            if ($d18 != "") echo date('D',mktime(12,0,0,$applicable_month_num,18)) . "/18  DAY : <input type=text name=d18_comment size=$size maxlength=$size />\n";
+            if ($d19 != "") echo date('D',mktime(12,0,0,$applicable_month_num,19)) . "/19  DAY : <input type=text name=d19_comment size=$size maxlength=$size />\n";
+            if ($d20 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/20  DAY : <input type=text name=d20_comment size=$size maxlength=$size />\n";
+            if ($d21 != "") echo date('D',mktime(12,0,0,$applicable_month_num,21)) . "/21  DAY : <input type=text name=d21_comment size=$size maxlength=$size />\n";
+            if ($d22 != "") echo date('D',mktime(12,0,0,$applicable_month_num,22)) . "/22  DAY : <input type=text name=d22_comment size=$size maxlength=$size />\n";
+            if ($d23 != "") echo date('D',mktime(12,0,0,$applicable_month_num,23)) . "/23  DAY : <input type=text name=d23_comment size=$size maxlength=$size />\n";
+            if ($d24 != "") echo date('D',mktime(12,0,0,$applicable_month_num,24)) . "/24  DAY : <input type=text name=d24_comment size=$size maxlength=$size />\n";
+            if ($d25 != "") echo date('D',mktime(12,0,0,$applicable_month_num,25)) . "/25  DAY : <input type=text name=d25_comment size=$size maxlength=$size />\n";
+            if ($d26 != "") echo date('D',mktime(12,0,0,$applicable_month_num,26)) . "/26  DAY : <input type=text name=d26_comment size=$size maxlength=$size />\n";
+            if ($d27 != "") echo date('D',mktime(12,0,0,$applicable_month_num,27)) . "/27  DAY : <input type=text name=d27_comment size=$size maxlength=$size />\n";
+            if ($d28 != "") echo date('D',mktime(12,0,0,$applicable_month_num,28)) . "/28  DAY : <input type=text name=d28_comment size=$size maxlength=$size />\n";
+            if ($d29 != "") echo date('D',mktime(12,0,0,$applicable_month_num,29)) . "/29  DAY : <input type=text name=d29_comment size=$size maxlength=$size />\n";
+            if ($d30 != "") echo date('D',mktime(12,0,0,$applicable_month_num,30)) . "/30  DAY : <input type=text name=d30_comment size=$size maxlength=$size />\n";
+            if ($d31 != "") echo date('D',mktime(12,0,0,$applicable_month_num,31)) . "/31  DAY : <input type=text name=d31_comment size=$size maxlength=$size />\n";
+            if ($n1 != "") echo date('D',mktime(12,0,0,$applicable_month_num,1)) . "/01 NIGHT: <input type=text name=n1_comment size=$size maxlength=$size />\n";
+            if ($n2 != "") echo date('D',mktime(12,0,0,$applicable_month_num,2)) . "/02 NIGHT: <input type=text name=n2_comment size=$size maxlength=$size />\n";
+            if ($n3 != "") echo date('D',mktime(12,0,0,$applicable_month_num,3)) . "/03 NIGHT: <input type=text name=n3_comment size=$size maxlength=$size />\n";
+            if ($n4 != "") echo date('D',mktime(12,0,0,$applicable_month_num,4)) . "/04 NIGHT: <input type=text name=n4_comment size=$size maxlength=$size />\n";
+            if ($n5 != "") echo date('D',mktime(12,0,0,$applicable_month_num,5)) . "/05 NIGHT: <input type=text name=n5_comment size=$size maxlength=$size />\n";
+            if ($n6 != "") echo date('D',mktime(12,0,0,$applicable_month_num,6)) . "/06 NIGHT: <input type=text name=n6_comment size=$size maxlength=$size />\n";
+            if ($n7 != "") echo date('D',mktime(12,0,0,$applicable_month_num,7)) . "/07 NIGHT: <input type=text name=n7_comment size=$size maxlength=$size />\n";
+            if ($n8 != "") echo date('D',mktime(12,0,0,$applicable_month_num,8)) . "/08 NIGHT: <input type=text name=n8_comment size=$size maxlength=$size />\n";
+            if ($n9 != "") echo date('D',mktime(12,0,0,$applicable_month_num,9)) . "/09 NIGHT: <input type=text name=n9_comment size=$size maxlength=$size />\n";
+            if ($n10 != "") echo date('D',mktime(12,0,0,$applicable_month_num,10)) . "/10 NIGHT: <input type=text name=n10_comment size=$size maxlength=$size />\n";
+            if ($n11 != "") echo date('D',mktime(12,0,0,$applicable_month_num,11)) . "/11 NIGHT: <input type=text name=n11_comment size=$size maxlength=$size />\n";
+            if ($n12 != "") echo date('D',mktime(12,0,0,$applicable_month_num,12)) . "/12 NIGHT: <input type=text name=n12_comment size=$size maxlength=$size />\n";
+            if ($n13 != "") echo date('D',mktime(12,0,0,$applicable_month_num,13)) . "/13 NIGHT: <input type=text name=n13_comment size=$size maxlength=$size />\n";
+            if ($n14 != "") echo date('D',mktime(12,0,0,$applicable_month_num,14)) . "/14 NIGHT: <input type=text name=n14_comment size=$size maxlength=$size />\n";
+            if ($n15 != "") echo date('D',mktime(12,0,0,$applicable_month_num,15)) . "/15 NIGHT: <input type=text name=n15_comment size=$size maxlength=$size />\n";
+            if ($n16 != "") echo date('D',mktime(12,0,0,$applicable_month_num,16)) . "/16 NIGHT: <input type=text name=n16_comment size=$size maxlength=$size />\n";
+            if ($n17 != "") echo date('D',mktime(12,0,0,$applicable_month_num,17)) . "/17 NIGHT: <input type=text name=n17_comment size=$size maxlength=$size />\n";
+            if ($n18 != "") echo date('D',mktime(12,0,0,$applicable_month_num,18)) . "/18 NIGHT: <input type=text name=n18_comment size=$size maxlength=$size />\n";
+            if ($n19 != "") echo date('D',mktime(12,0,0,$applicable_month_num,19)) . "/19 NIGHT: <input type=text name=n19_comment size=$size maxlength=$size />\n";
+            if ($n20 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/20 NIGHT: <input type=text name=n20_comment size=$size maxlength=$size />\n";
+            if ($n21 != "") echo date('D',mktime(12,0,0,$applicable_month_num,21)) . "/21 NIGHT: <input type=text name=n21_comment size=$size maxlength=$size />\n";
+            if ($n22 != "") echo date('D',mktime(12,0,0,$applicable_month_num,22)) . "/22 NIGHT: <input type=text name=n22_comment size=$size maxlength=$size />\n";
+            if ($n23 != "") echo date('D',mktime(12,0,0,$applicable_month_num,23)) . "/23 NIGHT: <input type=text name=n23_comment size=$size maxlength=$size />\n";
+            if ($n24 != "") echo date('D',mktime(12,0,0,$applicable_month_num,24)) . "/24 NIGHT: <input type=text name=n24_comment size=$size maxlength=$size />\n";
+            if ($n25 != "") echo date('D',mktime(12,0,0,$applicable_month_num,25)) . "/25 NIGHT: <input type=text name=n25_comment size=$size maxlength=$size />\n";
+            if ($n26 != "") echo date('D',mktime(12,0,0,$applicable_month_num,26)) . "/26 NIGHT: <input type=text name=n26_comment size=$size maxlength=$size />\n";
+            if ($n27 != "") echo date('D',mktime(12,0,0,$applicable_month_num,27)) . "/27 NIGHT: <input type=text name=n27_comment size=$size maxlength=$size />\n";
+            if ($n28 != "") echo date('D',mktime(12,0,0,$applicable_month_num,28)) . "/28 NIGHT: <input type=text name=n28_comment size=$size maxlength=$size />\n";
+            if ($n29 != "") echo date('D',mktime(12,0,0,$applicable_month_num,29)) . "/29 NIGHT: <input type=text name=n29_comment size=$size maxlength=$size />\n";
+            if ($n30 != "") echo date('D',mktime(12,0,0,$applicable_month_num,20)) . "/30 NIGHT: <input type=text name=n30_comment size=$size maxlength=$size />\n";
+            if ($n31 != "") echo date('D',mktime(12,0,0,$applicable_month_num,31)) . "/31 NIGHT: <input type=text name=n31_comment size=$size maxlength=$size />\n";
 ?>
                   </pre>
                 </td>
                 <td valign="top">
                   <table border="1" bordercolor="silver" cellpadding="10" cellspacing="0">
                     <tr>
-                      <td align="center">
-                        FORMAT:
+                      <td align="center" bgcolor="<? echo ($be_cross_agency_submission == "TRUE" ? "yellow" : "gainsboro"); ?>">
+                        <? echo ($be_cross_agency_submission == "TRUE" ? "CONDENSED<sup>*</sup>" : "STANDARD"); ?> FORMAT:
                         <br/>
-                        <big><b>HHmm-HHmm</b></big>
+                        <big><b><? echo ($be_cross_agency_submission == "TRUE" ? "HH-HH" : "HHmm-HHmm"); ?></b></big>
                         <br/>
                         <small>
                           24-hour clock
@@ -366,15 +369,22 @@ if ($be_needing_driver) $be_third = FALSE;
                         <br/>
                         <small>EXAMPLES:</small>
                         <br/>
-                        <input type=text name=d01_comment size=9 disabled value="0600-1200"/>
+                        <? echo "<input type=text size=$size disabled value=" . ($be_cross_agency_submission == "TRUE" ? "06-12" : "0600-1200") . " />\n"; ?>
                         <br/>
-                        <input type=text name=d01_comment size=9 disabled value="1000-1630"/>
+                        <? echo "<input type=text size=$size disabled value=" . ($be_cross_agency_submission == "TRUE" ? "10-16" : "1000-1630") . " />\n"; ?>
                       </td>
                     </tr>
                   </table>
                 </td>
               </tr>
             </table>
+            <?
+            if ($be_cross_agency_submission == "TRUE")
+               {
+               echo "<small><sup>*</sup>The condensed format is required when you submit availabilities to an agency other than your home agency.</small>\n";
+               echo "<br/><br/>\n";
+               }
+            ?>
             <b>You are not required to fill out any of the above fields.&nbsp; Most members will leave the above fields blank to indicate they are available for full standard shifts.</b>
             <br/><br/>
             Other special requests (will only be visible to <a href=authorities.phtml>OSCAR authorities</a>):<br/>

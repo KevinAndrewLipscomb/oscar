@@ -66,6 +66,8 @@ require_once("f_writecalendarbody.phtml");
               ($be_aic != "")
            and
               ($be_needing_driver != "")
+           and
+              ($be_cross_agency_submission != "")
            )
         // then
         {
@@ -77,11 +79,12 @@ require_once("f_writecalendarbody.phtml");
            . "   <tr><td>Name:</td><td><b>$first_name $last_name</b></td></tr>\n"
            . "   <tr><td>Email address:</td><td><b>$email_addr</b></td></tr>\n"
            . "   <tr><td>Applicable month:</td><td><b>" . date("F",mktime(12,0,0,$applicable_month_num,1)) . "</b></td></tr>\n"
-           . "   <tr><td>Coordinating agency:&nbsp;&nbsp;</td><td><b>$coord_agency</b></td></tr>\n"
-           . "   <tr><td>Home squad:&nbsp;&nbsp;</td><td><b>$squad</b></td></tr>\n"
-           . "   <tr><td>Driver:&nbsp;&nbsp;</td><td><b>$be_driver</b></td></tr>\n"
-           . "   <tr><td>AIC:&nbsp;&nbsp;</td><td><b>$be_aic</b></td></tr>\n"
-           . "   <tr><td>ALS:&nbsp;&nbsp;</td><td><b>$be_als</b></td></tr>\n"
+           . "   <tr><td>Coordinating agency:</td><td><b>$coord_agency</b></td></tr>\n"
+           . "   <tr><td>Home squad:</td><td><b>$squad</b></td></tr>\n"
+           . "   <tr><td>Driver:</td><td><b>$be_driver</b></td></tr>\n"
+           . "   <tr><td>AIC:</td><td><b>$be_aic</b></td></tr>\n"
+           . "   <tr><td>ALS:</td><td><b>$be_als</b></td></tr>\n"
+           . "   <tr><td>Be cross-agency submission:</td><td><b>$be_cross_agency_submission</b></td></tr>\n"
            . "</table>\n"
            . "<br>\n";
         ?>
@@ -97,7 +100,8 @@ require_once("f_writecalendarbody.phtml");
              . "<input type=hidden name=be_als value=\"$be_als\">\n"
              . "<input type=hidden name=be_driver value=\"$be_driver\">\n"
              . "<input type=hidden name=be_aic value=\"$be_aic\">\n"
-             . "<input type=hidden name=be_needing_driver value=\"$be_needing_driver\">\n";
+             . "<input type=hidden name=be_needing_driver value=\"$be_needing_driver\">\n"
+             . "<input type=hidden name=be_cross_agency_submission value=\"$be_cross_agency_submission\">\n";
           //
           if ($coord_agency == "EMS")
              {
