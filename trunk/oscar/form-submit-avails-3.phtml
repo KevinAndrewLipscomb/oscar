@@ -17,8 +17,6 @@ $be_on_team_5 = $be_on_team_5;
 $be_on_team_air = $be_on_team_air;
 $be_als = $be_als;
 $coord_agency = $coord_agency;
-$be_third = !$be_aic;  //Same logic, different user interface
-$be_nondriver = !$be_driver;  //Same logic, different user interface
 $be_needing_driver = $be_needing_driver;
 $d1 = $d1;
 $d2 = $d2;
@@ -93,11 +91,6 @@ require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_htmlofnote.phtml");
 //
-// Preserve intended logic, which is that be_needing_driver actually indicates be_ALS.  If one is ALS, then one is clearly
-// not a third.
-//
-if ($be_needing_driver) $be_third = FALSE;
-//
 ?>
 <html>
 <head><title>OSCAR - Availability submission</title></head>
@@ -156,16 +149,6 @@ if ($be_needing_driver) $be_third = FALSE;
                   ($odnmid != "")
                and
                   ($squad != "")
-               and
-                  ($be_als != "")
-               and
-                  ($be_driver != "")
-               and
-                  ($be_aic != "")
-               and
-                  ($be_needing_driver != "")
-               and
-                  ($be_cross_agency_submission != "")
                )
             // then
             {
