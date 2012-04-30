@@ -368,6 +368,19 @@ if ($be_needing_driver) $be_third = FALSE;
                ShowAvailComments($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,$applicable_month_num);
                echo "</blockquote>\n";
                //
+               foreach ($_REQUEST as $key => $value)
+                 {
+                 if (strpos($key,"special_event_shift_id_"))
+                   {
+                   $result = $db_link->query("insert ignore special_event_avail set special_event_shift_id = '$value', odnmid = '$odnmid'")
+                     or die("Query failed with error: " . mysqli_error($db_link)));
+                   }
+                 }
+               echo "<p>And, the following special event shift availabilities have been recorded:</p>\n";
+               echo "<blockquote>\n";
+               ShowSpecialEventShiftAvails($db_link,$applicable_month_abbrev,$odnmid);
+               echo "</blockquote>\n";
+               //
                echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
                }
