@@ -1,0 +1,357 @@
+<?
+//
+// $Id: perform-add-avail-sheet.phtml 3472 2011-01-20 15:58:17Z KevinAnLipscomb $
+//
+require_once("f_runmode.phtml");
+$mode = RunMode($PHP_SELF);
+//
+// Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
+//
+$first_name = $first_name;
+$last_name = $last_name;
+$email_addr = $email_addr;
+$squad = $squad;
+$applicable_month_num = $applicable_month_num;
+$be_on_team_30 = $be_on_team_30;
+$be_on_team_5 = $be_on_team_5;
+$be_on_team_air = $be_on_team_air;
+$be_als = $be_als;
+$coord_agency = $coord_agency;
+$be_needing_driver = $be_needing_driver;
+$d1 = $d1;
+$d2 = $d2;
+$d3 = $d3;
+$d4 = $d4;
+$d5 = $d5;
+$d6 = $d6;
+$d7 = $d7;
+$d8 = $d8;
+$d9 = $d9;
+$d10 = $d10;
+$d11 = $d11;
+$d12 = $d12;
+$d13 = $d13;
+$d14 = $d14;
+$d15 = $d15;
+$d16 = $d16;
+$d17 = $d17;
+$d18 = $d18;
+$d19 = $d19;
+$d20 = $d20;
+$d21 = $d21;
+$d22 = $d22;
+$d23 = $d23;
+$d24 = $d24;
+$d25 = $d25;
+$d26 = $d26;
+$d27 = $d27;
+$d28 = $d28;
+$d29 = $d29;
+$d30 = $d30;
+$d31 = $d31;
+$n1 = $n1;
+$n2 = $n2;
+$n3 = $n3;
+$n4 = $n4;
+$n5 = $n5;
+$n6 = $n6;
+$n7 = $n7;
+$n8 = $n8;
+$n9 = $n9;
+$n10 = $n10;
+$n11 = $n11;
+$n12 = $n12;
+$n13 = $n13;
+$n14 = $n14;
+$n15 = $n15;
+$n16 = $n16;
+$n17 = $n17;
+$n18 = $n18;
+$n19 = $n19;
+$n20 = $n20;
+$n21 = $n21;
+$n22 = $n22;
+$n23 = $n23;
+$n24 = $n24;
+$n25 = $n25;
+$n26 = $n26;
+$n27 = $n27;
+$n28 = $n28;
+$n29 = $n29;
+$n30 = $n30;
+$n31 = $n31;
+$odnmid = $odnmid;
+//
+if ($mode) error_reporting(E_ALL);
+//
+require_once("f_oscarhomepageurl.phtml");
+require_once("f_putlibphotorandomplaced.phtml");
+require_once("f_bodyopen.phtml");
+require_once("f_connectselectdbinstanceunpublished.phtml");
+require_once("f_roleemailaddress.phtml");
+require_once("f_htmlofnote.phtml");
+//
+?>
+<html>
+<head><title>OSCAR - Availability submission</title></head>
+<? BodyOpen(); ?>
+<table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
+   <tr>
+      <td>
+         <h6 align="center">
+         KVEO-IT-PROJECT<br>
+         <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+         <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
+         <H1 ALIGN="CENTER">Availability submission</H1>
+         <hr>
+         <?
+         //
+         // Validate parameters.
+         //
+         if (($coord_agency == "EMS") and ($squad == ""))
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Error!</i></h2>
+            <b>
+            <blockquote>
+               <p>You did not supply a required parameter.&nbsp; You must supply a value for this field:</p>
+               <ul>
+                  <li><p>Home squad</p>
+               </ul>
+               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problem.</p>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
+            }
+         else
+         {
+         if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
+            {
+            //
+            // Validate parameters.
+            //
+            if
+               (
+                  ($first_name != "")
+               and
+                  ($last_name != "")
+               and
+                  ($email_addr != "")
+               and
+                  ($applicable_month_num != "")
+               and
+                  ($coord_agency != "")
+               and
+                  ($odnmid != "")
+               and
+                  ($squad != "")
+               )
+            // then
+            {
+            ?>
+            <form method="POST" action="<? echo $mode; ?>perform-add-avail-sheet.phtml">
+            <?
+            echo "<input type=hidden name=first_name value=\"$first_name\">\n"
+            . "<input type=hidden name=last_name value=\"$last_name\">\n"
+            . "<input type=hidden name=email_addr value=\"$email_addr\">\n"
+            . "<input type=hidden name=applicable_month_num value=$applicable_month_num>\n"
+            . "<input type=hidden name=coord_agency value=$coord_agency>\n"
+            . "<input type=hidden name=odnmid value=\"$odnmid\">\n"
+            . "<input type=hidden name=squad value=\"$squad\">\n"
+            . "<input type=hidden name=be_als value=\"$be_als\">\n"
+            . "<input type=hidden name=be_driver value=\"$be_driver\">\n"
+            . "<input type=hidden name=be_aic value=\"$be_aic\">\n"
+            . "<input type=hidden name=be_needing_driver value=\"$be_needing_driver\">\n"
+            . "<input type=hidden name=be_on_team_30 value=\"$be_on_team_30\">\n"
+            . "<input type=hidden name=be_on_team_5 value=\"$be_on_team_5\">\n"
+            . "<input type=hidden name=be_on_team_air value=\"$be_on_team_air\">\n"
+            . "<input type=hidden name=d1 value=\"$d1\">\n"
+            . "<input type=hidden name=d2 value=\"$d2\">\n"
+            . "<input type=hidden name=d3 value=\"$d3\">\n"
+            . "<input type=hidden name=d4 value=\"$d4\">\n"
+            . "<input type=hidden name=d5 value=\"$d5\">\n"
+            . "<input type=hidden name=d6 value=\"$d6\">\n"
+            . "<input type=hidden name=d7 value=\"$d7\">\n"
+            . "<input type=hidden name=d8 value=\"$d8\">\n"
+            . "<input type=hidden name=d9 value=\"$d9\">\n"
+            . "<input type=hidden name=d10 value=\"$d10\">\n"
+            . "<input type=hidden name=d11 value=\"$d11\">\n"
+            . "<input type=hidden name=d12 value=\"$d12\">\n"
+            . "<input type=hidden name=d13 value=\"$d13\">\n"
+            . "<input type=hidden name=d14 value=\"$d14\">\n"
+            . "<input type=hidden name=d15 value=\"$d15\">\n"
+            . "<input type=hidden name=d16 value=\"$d16\">\n"
+            . "<input type=hidden name=d17 value=\"$d17\">\n"
+            . "<input type=hidden name=d18 value=\"$d18\">\n"
+            . "<input type=hidden name=d19 value=\"$d19\">\n"
+            . "<input type=hidden name=d20 value=\"$d20\">\n"
+            . "<input type=hidden name=d21 value=\"$d21\">\n"
+            . "<input type=hidden name=d22 value=\"$d22\">\n"
+            . "<input type=hidden name=d23 value=\"$d23\">\n"
+            . "<input type=hidden name=d24 value=\"$d24\">\n"
+            . "<input type=hidden name=d25 value=\"$d25\">\n"
+            . "<input type=hidden name=d26 value=\"$d26\">\n"
+            . "<input type=hidden name=d27 value=\"$d27\">\n"
+            . "<input type=hidden name=d28 value=\"$d28\">\n"
+            . "<input type=hidden name=d29 value=\"$d29\">\n"
+            . "<input type=hidden name=d30 value=\"$d30\">\n"
+            . "<input type=hidden name=d31 value=\"$d31\">\n"
+            . "<input type=hidden name=n1 value=\"$n1\">\n"
+            . "<input type=hidden name=n2 value=\"$n2\">\n"
+            . "<input type=hidden name=n3 value=\"$n3\">\n"
+            . "<input type=hidden name=n4 value=\"$n4\">\n"
+            . "<input type=hidden name=n5 value=\"$n5\">\n"
+            . "<input type=hidden name=n6 value=\"$n6\">\n"
+            . "<input type=hidden name=n7 value=\"$n7\">\n"
+            . "<input type=hidden name=n8 value=\"$n8\">\n"
+            . "<input type=hidden name=n9 value=\"$n9\">\n"
+            . "<input type=hidden name=n10 value=\"$n10\">\n"
+            . "<input type=hidden name=n11 value=\"$n11\">\n"
+            . "<input type=hidden name=n12 value=\"$n12\">\n"
+            . "<input type=hidden name=n13 value=\"$n13\">\n"
+            . "<input type=hidden name=n14 value=\"$n14\">\n"
+            . "<input type=hidden name=n15 value=\"$n15\">\n"
+            . "<input type=hidden name=n16 value=\"$n16\">\n"
+            . "<input type=hidden name=n17 value=\"$n17\">\n"
+            . "<input type=hidden name=n18 value=\"$n18\">\n"
+            . "<input type=hidden name=n19 value=\"$n19\">\n"
+            . "<input type=hidden name=n20 value=\"$n20\">\n"
+            . "<input type=hidden name=n21 value=\"$n21\">\n"
+            . "<input type=hidden name=n22 value=\"$n22\">\n"
+            . "<input type=hidden name=n23 value=\"$n23\">\n"
+            . "<input type=hidden name=n24 value=\"$n24\">\n"
+            . "<input type=hidden name=n25 value=\"$n25\">\n"
+            . "<input type=hidden name=n26 value=\"$n26\">\n"
+            . "<input type=hidden name=n27 value=\"$n27\">\n"
+            . "<input type=hidden name=n28 value=\"$n28\">\n"
+            . "<input type=hidden name=n29 value=\"$n29\">\n"
+            . "<input type=hidden name=n30 value=\"$n30\">\n"
+            . "<input type=hidden name=n31 value=\"$n31\">\n"
+            . "<input type=hidden name=num_extras value=\"$num_extras\">\n";
+            if ($d1_comment) echo "<input type=hidden name=d1_comment value=\"$d1_comment\">\n";
+            if ($d2_comment) echo "<input type=hidden name=d2_comment value=\"$d2_comment\">\n";
+            if ($d3_comment) echo "<input type=hidden name=d3_comment value=\"$d3_comment\">\n";
+            if ($d4_comment) echo "<input type=hidden name=d4_comment value=\"$d4_comment\">\n";
+            if ($d5_comment) echo "<input type=hidden name=d5_comment value=\"$d5_comment\">\n";
+            if ($d6_comment) echo "<input type=hidden name=d6_comment value=\"$d6_comment\">\n";
+            if ($d7_comment) echo "<input type=hidden name=d7_comment value=\"$d7_comment\">\n";
+            if ($d8_comment) echo "<input type=hidden name=d8_comment value=\"$d8_comment\">\n";
+            if ($d9_comment) echo "<input type=hidden name=d9_comment value=\"$d9_comment\">\n";
+            if ($d10_comment) echo "<input type=hidden name=d10_comment value=\"$d10_comment\">\n";
+            if ($d11_comment) echo "<input type=hidden name=d11_comment value=\"$d11_comment\">\n";
+            if ($d12_comment) echo "<input type=hidden name=d12_comment value=\"$d12_comment\">\n";
+            if ($d13_comment) echo "<input type=hidden name=d13_comment value=\"$d13_comment\">\n";
+            if ($d14_comment) echo "<input type=hidden name=d14_comment value=\"$d14_comment\">\n";
+            if ($d15_comment) echo "<input type=hidden name=d15_comment value=\"$d15_comment\">\n";
+            if ($d16_comment) echo "<input type=hidden name=d16_comment value=\"$d16_comment\">\n";
+            if ($d17_comment) echo "<input type=hidden name=d17_comment value=\"$d17_comment\">\n";
+            if ($d18_comment) echo "<input type=hidden name=d18_comment value=\"$d18_comment\">\n";
+            if ($d19_comment) echo "<input type=hidden name=d19_comment value=\"$d19_comment\">\n";
+            if ($d20_comment) echo "<input type=hidden name=d20_comment value=\"$d20_comment\">\n";
+            if ($d21_comment) echo "<input type=hidden name=d21_comment value=\"$d21_comment\">\n";
+            if ($d22_comment) echo "<input type=hidden name=d22_comment value=\"$d22_comment\">\n";
+            if ($d23_comment) echo "<input type=hidden name=d23_comment value=\"$d23_comment\">\n";
+            if ($d24_comment) echo "<input type=hidden name=d24_comment value=\"$d24_comment\">\n";
+            if ($d25_comment) echo "<input type=hidden name=d25_comment value=\"$d25_comment\">\n";
+            if ($d26_comment) echo "<input type=hidden name=d26_comment value=\"$d26_comment\">\n";
+            if ($d27_comment) echo "<input type=hidden name=d27_comment value=\"$d27_comment\">\n";
+            if ($d28_comment) echo "<input type=hidden name=d28_comment value=\"$d28_comment\">\n";
+            if ($d29_comment) echo "<input type=hidden name=d29_comment value=\"$d29_comment\">\n";
+            if ($d30_comment) echo "<input type=hidden name=d30_comment value=\"$d30_comment\">\n";
+            if ($d31_comment) echo "<input type=hidden name=d31_comment value=\"$d31_comment\">\n";
+            if ($n1_comment) echo "<input type=hidden name=n1_comment value=\"$n1_comment\">\n";
+            if ($n2_comment) echo "<input type=hidden name=n2_comment value=\"$n2_comment\">\n";
+            if ($n3_comment) echo "<input type=hidden name=n3_comment value=\"$n3_comment\">\n";
+            if ($n4_comment) echo "<input type=hidden name=n4_comment value=\"$n4_comment\">\n";
+            if ($n5_comment) echo "<input type=hidden name=n5_comment value=\"$n5_comment\">\n";
+            if ($n6_comment) echo "<input type=hidden name=n6_comment value=\"$n6_comment\">\n";
+            if ($n7_comment) echo "<input type=hidden name=n7_comment value=\"$n7_comment\">\n";
+            if ($n8_comment) echo "<input type=hidden name=n8_comment value=\"$n8_comment\">\n";
+            if ($n9_comment) echo "<input type=hidden name=n9_comment value=\"$n9_comment\">\n";
+            if ($n10_comment) echo "<input type=hidden name=n10_comment value=\"$n10_comment\">\n";
+            if ($n11_comment) echo "<input type=hidden name=n11_comment value=\"$n11_comment\">\n";
+            if ($n12_comment) echo "<input type=hidden name=n12_comment value=\"$n12_comment\">\n";
+            if ($n13_comment) echo "<input type=hidden name=n13_comment value=\"$n13_comment\">\n";
+            if ($n14_comment) echo "<input type=hidden name=n14_comment value=\"$n14_comment\">\n";
+            if ($n15_comment) echo "<input type=hidden name=n15_comment value=\"$n15_comment\">\n";
+            if ($n16_comment) echo "<input type=hidden name=n16_comment value=\"$n16_comment\">\n";
+            if ($n17_comment) echo "<input type=hidden name=n17_comment value=\"$n17_comment\">\n";
+            if ($n18_comment) echo "<input type=hidden name=n18_comment value=\"$n18_comment\">\n";
+            if ($n19_comment) echo "<input type=hidden name=n19_comment value=\"$n19_comment\">\n";
+            if ($n20_comment) echo "<input type=hidden name=n20_comment value=\"$n20_comment\">\n";
+            if ($n21_comment) echo "<input type=hidden name=n21_comment value=\"$n21_comment\">\n";
+            if ($n22_comment) echo "<input type=hidden name=n22_comment value=\"$n22_comment\">\n";
+            if ($n23_comment) echo "<input type=hidden name=n23_comment value=\"$n23_comment\">\n";
+            if ($n24_comment) echo "<input type=hidden name=n24_comment value=\"$n24_comment\">\n";
+            if ($n25_comment) echo "<input type=hidden name=n25_comment value=\"$n25_comment\">\n";
+            if ($n26_comment) echo "<input type=hidden name=n26_comment value=\"$n26_comment\">\n";
+            if ($n27_comment) echo "<input type=hidden name=n27_comment value=\"$n27_comment\">\n";
+            if ($n28_comment) echo "<input type=hidden name=n28_comment value=\"$n28_comment\">\n";
+            if ($n29_comment) echo "<input type=hidden name=n29_comment value=\"$n29_comment\">\n";
+            if ($n30_comment) echo "<input type=hidden name=n30_comment value=\"$n30_comment\">\n";
+            if ($n31_comment) echo "<input type=hidden name=n31_comment value=\"$n31_comment\">\n";
+            echo "<input type=hidden name=note value=\"$note\">\n";
+            //
+            ?>
+            <p>Please check which <b>special event shifts</b>, if any, you will be available for:</p>
+            <?
+            $result = $db_link->query
+              (
+              "select special_event_shift.id as special_event_shift_id"
+              . " , description as special_event_description"
+              . " , nominal_day"
+              . " , name as special_event_shift_name"
+              . " from special_event_shift"
+              .   " join special_event on (special_event.id=special_event_shift.special_event_id)"
+              . " where nominal_day >= '" + date("Y-m-d",mktime(12,0,0,$applicable_month_num,1)) + "'"
+              .   " and nominal_day < '" + date("Y-m-d",mktime(12,0,0,$applicable_month_num + 1,1)) + "'"
+              )
+              or die("Query failed with error: " . mysqli_error($db_link));
+            $num_rows = mysqli_num_rows($result);
+            for ($i=1; $i<=$num_rows; $i++)
+              {
+              extract(mysqli_fetch_array($result));
+              echo "<li><input type=checkbox name=special_event_shift_id_$special_event_shift_id value=$special_event_shift_id >$special_event_description, $nominal_day, $special_event_shift_name</li>\n";
+              }
+            ?>
+            Other special requests (will only be visible to <a href=authorities.phtml>OSCAR authorities</a>):<br/>
+            <textarea rows="8" name=note cols="60"></textarea></p>
+            <ul>
+              <li>Availability sheets are due on the 10th day of the preceding month.</li>
+              <li>Abusive or fraudulent submissions are traceable and are cause for disciplinary action.</li>
+              <li>Double check your selections before submitting this form.</li>
+              <?
+              echo "<li>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</li>";
+              ?>
+            </ul>
+            <p><input type="submit" value="Submit"><input type=reset></p>
+          </form>
+          <?
+            }
+          }
+         else
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Sorry...</i></h2>
+            <b>
+            <blockquote>
+               <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please retry your submission later.</p>"; ?>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
+            }
+         }
+         ?>
+      </td>
+   </tr>
+</table>
+</body>
+</html>

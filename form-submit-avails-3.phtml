@@ -153,7 +153,7 @@ require_once("f_htmlofnote.phtml");
             // then
             {
             ?>
-            <form method="POST" action="<? echo $mode; ?>perform-add-avail-sheet.phtml">
+            <form method="POST" action="<? echo $mode; ?>form-submit-avails-4.phtml">
             <?
             echo "<input type=hidden name=first_name value=\"$first_name\">\n"
             . "<input type=hidden name=last_name value=\"$last_name\">\n"
@@ -369,18 +369,7 @@ require_once("f_htmlofnote.phtml");
                }
             ?>
             <b>You are not required to fill out any of the above fields.&nbsp; Most members will leave the above fields blank to indicate they are available for full standard shifts.</b>
-            <br/><br/>
-            Other special requests (will only be visible to <a href=authorities.phtml>OSCAR authorities</a>):<br/>
-            <textarea rows="8" name=note cols="60"></textarea></p>
-            <ul>
-              <li>Availability sheets are due on the 10th day of the preceding month.</li>
-              <li>Abusive or fraudulent submissions are traceable and are cause for disciplinary action.</li>
-              <li>Double check your selections before submitting this form.</li>
-              <?
-              echo "<li>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</li>";
-              ?>
-            </ul>
-            <p><input type="submit" value="Submit"><input type=reset></p>
+            <p><input type="submit" value="Continue"><input type=reset></p>
           </form>
           <?
             }
