@@ -298,19 +298,20 @@ require_once("f_htmlofnote.phtml");
             //
             ?>
             <p>Please check which <b>special event shifts</b>, if any, you will be available for:</p>
+            <ul>
             <?
             $result = $db_link->query
               (
-              "select special_event_shift.id as special_event_shift_id"
+              $qry = "select special_event_shift.id as special_event_shift_id"
               . " , description as special_event_description"
-              . " , nominal_day"
+              . " , DATE_FORMAT(nominal_day,'%a %b %D') as nominal_day"
               . " , name as special_event_shift_name"
               . " from special_event_shift"
               .   " join special_event on (special_event.id=special_event_shift.special_event_id)"
-              . " where nominal_day >= '" + date("Y-m-d",mktime(12,0,0,$applicable_month_num,1)) + "'"
-              .   " and nominal_day < '" + date("Y-m-d",mktime(12,0,0,$applicable_month_num + 1,1)) + "'"
+              . " where nominal_day >= '" . date("Y-m-d",mktime(12,0,0,$applicable_month_num,1)) . "'"
+              .   " and nominal_day < '" . date("Y-m-d",mktime(12,0,0,$applicable_month_num + 1,1)) . "'"
               )
-              or die("Query failed with error: " . mysqli_error($db_link));
+              or die("Query [$qry] failed with error: " . mysqli_error($db_link));
             $num_rows = mysqli_num_rows($result);
             for ($i=1; $i<=$num_rows; $i++)
               {
@@ -318,6 +319,7 @@ require_once("f_htmlofnote.phtml");
               echo "<li><input type=checkbox name=special_event_shift_id_$special_event_shift_id value=$special_event_shift_id >$special_event_description, $nominal_day, $special_event_shift_name</li>\n";
               }
             ?>
+            </ul>
             Other special requests (will only be visible to <a href=authorities.phtml>OSCAR authorities</a>):<br/>
             <textarea rows="8" name=note cols="60"></textarea></p>
             <ul>

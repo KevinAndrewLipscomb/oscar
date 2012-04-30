@@ -1,0 +1,48 @@
+<?
+//
+// $Id: f_harvestemailaddresses.phtml 3402 2010-11-28 01:36:33Z KevinAnLipscomb $
+//
+function ShowSpecialEventShiftAvails
+   (
+   $db_link,
+   $odnmid,
+   $applicable_month_num
+   )
+   {
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $result = $db_link->query
+      (
+      $qry = "select description as special_event_description"
+      . " , DATE_FORMAT(nominal_day,'%a %b %D') as nominal_day"
+      . " , name as special_event_shift_name"
+      . " from special_event_avail"
+      .   " join special_event_shift on (special_event_shift.id=special_event_avail.shift_id)"
+      .   " join special_event on (special_event.id=special_event_shift.special_event_id)"
+      . " where odnmid = '$odnmid'"
+      .   " and"
+      .     " ("
+      .       " nominal_day >= '" . date("Y-m-d",mktime(12,0,0,$applicable_month_num,1)) . "'"
+      .     " and"
+      .       " nominal_day < '" . date("Y-m-d",mktime(12,0,0,$applicable_month_num + 1,1)) . "'"
+      .     " )"
+      )
+      or die("Query [$qry] failed with error: " . mysqli_error($db_link));
+   if (mysqli_num_rows($result))
+      {
+      echo "\n<ul>\n";
+      while ($row = mysqli_fetch_array($result))
+         {
+         extract($row);
+         echo "<li>$special_event_description, $nominal_day, $special_event_shift_name</li>\n";
+         }
+      echo "</ul>\n";
+      }
+   else
+      {
+      echo "<i>(none)</i>";
+      }
+   //
+   error_reporting($saved_error_level);
+   }
+?>
