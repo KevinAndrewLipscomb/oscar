@@ -96,6 +96,7 @@ require_once("f_htmlofnote.phtml");
 require_once("f_setavailcomment.phtml");
 require_once("f_showavailsheetrecdetail.phtml");
 require_once("f_showavailcomments.phtml");
+require_once("f_showspecialeventshiftavails.phtml");
 //
 // Preserve intended logic, which is that be_needing_driver actually indicates be_ALS.  If one is ALS, then one is clearly
 // not a third.
@@ -370,15 +371,15 @@ if ($be_needing_driver) $be_third = FALSE;
                //
                foreach ($_REQUEST as $key => $value)
                  {
-                 if (strpos($key,"special_event_shift_id_"))
+                 if (strpos($key,"special_event_shift_id_") !== FALSE)
                    {
-                   $result = $db_link->query("insert ignore special_event_avail set special_event_shift_id = '$value', odnmid = '$odnmid'")
-                     or die("Query failed with error: " . mysqli_error($db_link)));
+                   $result = $db_link->query("insert ignore special_event_avail set shift_id = '$value', odnmid = '$odnmid'")
+                     or die("Query failed with error: " . mysqli_error($db_link));
                    }
                  }
                echo "<p>And, the following special event shift availabilities have been recorded:</p>\n";
                echo "<blockquote>\n";
-               ShowSpecialEventShiftAvails($db_link,$applicable_month_abbrev,$odnmid);
+               ShowSpecialEventShiftAvails($db_link,$odnmid,$applicable_month_num);
                echo "</blockquote>\n";
                //
                echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
