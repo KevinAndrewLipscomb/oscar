@@ -2,21 +2,21 @@
 //
 // $Id: perform-add-avail-sheet.phtml 3472 2011-01-20 15:58:17Z KevinAnLipscomb $
 //
+// Emulate register_globals on
+if (!ini_get('register_globals'))
+  {
+  $superglobals = array($_SERVER,$_ENV,$_FILES,$_COOKIE,$_POST,$_GET);
+  if (isset($_SESSION))
+    {
+    array_unshift($superglobals, $_SESSION);
+    }
+  foreach ($superglobals as $superglobal)
+    {
+    extract($superglobal, EXTR_SKIP);
+    }
+  }
 require_once("f_runmode.phtml");
 $mode = RunMode($PHP_SELF);
-//
-// Emulate register_globals on
-if (!ini_get('register_globals')) {
-    $superglobals = array($_SERVER, $_ENV,
-        $_FILES, $_COOKIE, $_POST, $_GET);
-    if (isset($_SESSION)) {
-        array_unshift($superglobals, $_SESSION);
-    }
-    foreach ($superglobals as $superglobal) {
-        extract($superglobal, EXTR_SKIP);
-    }
-}
-//
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
