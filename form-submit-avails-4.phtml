@@ -311,7 +311,6 @@ require_once("f_htmlofnote.phtml");
             //
             ?>
             <p>Please check which <b>special event shifts</b>, if any, you will be available for:</p>
-            <ul>
             <?
             $result = $db_link->query
               (
@@ -326,13 +325,21 @@ require_once("f_htmlofnote.phtml");
               )
               or die("Query [$qry] failed with error: " . mysqli_error($db_link));
             $num_rows = mysqli_num_rows($result);
-            for ($i=1; $i<=$num_rows; $i++)
+            if ($num_rows == 0)
               {
-              extract(mysqli_fetch_array($result));
-              echo "<li><input type=checkbox name=special_event_shift_id_$special_event_shift_id value=$special_event_shift_id >$special_event_description, $nominal_day, $special_event_shift_name</li>\n";
+              echo "<blockquote><i>(No special event shifts registered.)</i></blockquote>\n";
+              }
+            else
+              {
+              echo "<ul>\n";
+              for ($i=1; $i<=$num_rows; $i++)
+                {
+                extract(mysqli_fetch_array($result));
+                echo "<li><input type=checkbox name=special_event_shift_id_$special_event_shift_id value=$special_event_shift_id >$special_event_description, $nominal_day, $special_event_shift_name</li>\n";
+                }
+              echo "</ul>\n";
               }
             ?>
-            </ul>
             Other special requests (will only be visible to <a href=authorities.phtml>OSCAR authorities</a>):<br/>
             <textarea rows="8" name=note cols="60"></textarea></p>
             <ul>
