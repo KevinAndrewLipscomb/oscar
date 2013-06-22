@@ -118,6 +118,17 @@ require_once("f_writecalendarbody.phtml");
              </ul>
              <?
              }
+          else if ($coord_agency == "SquadTruckTeam")
+             {
+             ?>
+             <input type=hidden name=be_on_team_30 value="TRUE">
+             <p>Check all that apply as of today's date:</p>
+             <ul>
+                <li><input type=checkbox name=be_on_team_5 value="TRUE">I am a Volunteer Duty Field Supervisor.</li>
+                <li><input type=checkbox name=be_on_team_air value="TRUE">I am on the Air Ambulance Team.</li>
+             </ul>
+             <?
+             }
           else
              {
              echo "<p>Check all that apply as of today's date:</p>\n";
