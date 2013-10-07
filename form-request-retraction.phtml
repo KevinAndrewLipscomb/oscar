@@ -78,8 +78,17 @@ require_once("f_agencyselectionlist.phtml");
         <p>If you are using this form to trigger a <b>retraction</b>, you should <b>wait for further instructions</b>
            that will arrive with the email challenge message.&nbsp; <b>Do not immediately resubmit</b> after completing
            this form.</p>
-        <p>In practice, reconfirming or retracting is easy, safe, and secure.  To begin the process, complete
-           the following form:</p>
+        <blockquote>
+           <table align=center bgcolor="yellow">
+              <tr>
+                 <td align=center valign=middle>
+                    <i>Retracting availabilities after the monthly submission deadline may have NO EFFECT, and you may still be held responsible for covering your assigned
+                      shifts.&nbsp; You MUST contact your scheduling officer directly when retracting after the monthly submission deadline.</i>
+                 </td>
+              </tr>
+           </table>
+        </blockquote>
+        <p>To begin the process, complete the following form:</p>
         <br>
         <blockquote>
            <form action=<? echo $mode; ?>perform-gen-challenge.phtml method=post>
