@@ -17,7 +17,7 @@ if (!ini_get('register_globals'))
     }
   }
 require_once("f_runmode.phtml");
-$mode = RunMode($PHP_SELF);
+$mode = "";
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
@@ -96,7 +96,7 @@ $n30 = $n30;
 $n31 = $n31;
 $odnmid = $odnmid;
 //
-if ($mode) error_reporting(E_ALL);
+if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");

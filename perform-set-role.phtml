@@ -17,7 +17,7 @@ if (!ini_get('register_globals'))
     }
   }
 require_once("f_runmode.phtml");
-$mode = RunMode($PHP_SELF);
+$mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
@@ -25,7 +25,7 @@ $a = $a;
 $b = $b;
 $c = $c;
 //
-if ($mode) error_reporting(E_ALL);
+if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
 require_once("f_oscarhomepageurl.phtml");
 require_once("f_putlibphotorandomplaced.phtml");
