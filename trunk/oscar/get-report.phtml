@@ -17,13 +17,13 @@ if (!ini_get('register_globals'))
     }
   }
 require_once("f_runmode.phtml");
-$mode = RunMode($PHP_SELF);
+$mode = "";
 //
 // Assign incoming argument to itself to avoid "uninitialized variable" error later.
 //
 $digest = $digest;
 //
-if ($mode) error_reporting(E_ALL);
+if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
 require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_oscarhomepageurl.phtml");
