@@ -1,0 +1,52 @@
+<?
+//
+// $Id: f_harvestemailaddresses.phtml 3402 2010-11-28 01:36:33Z KevinAnLipscomb $
+//
+function sShowAvailComments
+   (
+   $db_link,
+   $mode,
+   $applicable_month_abbrev,
+   $last_name,
+   $first_name,
+   $timestamp,
+   $coord_agency,
+   $applicable_month_num
+   )
+   {
+   $s = "";
+   $saved_error_level = error_reporting(E_ALL);
+   //
+   $result = $db_link->query
+      (
+      "select shift_designator"
+      . " , nominal_day_of_month"
+      . " , comment"
+      . " from " . $mode . "avail_comment"
+      . " where month = '$applicable_month_abbrev'"
+      .   " and last_name = '$last_name'"
+      .   " and first_name = '$first_name'"
+      .   " and timestamp = '$timestamp'"
+      .   " and coord_agency = '$coord_agency'"
+      )
+      or die("Query 1 failed with error: " . mysqli_error($db_link));
+   if (mysqli_num_rows($result))
+      {
+      while ($row = mysqli_fetch_array($result))
+         {
+         extract($row);
+         $s .= date('D',mktime(12,0,0,$applicable_month_num,$nominal_day_of_month)) . "/" . sprintf("%02d",$nominal_day_of_month);
+         if ($shift_designator == 'd') $s .= "  DAY : ";
+         if ($shift_designator == 'n') $s .= " NIGHT: ";
+         $s .= "$comment\n";
+         }
+      }
+   else
+      {
+      $s .= "(none)";
+      }
+   //
+   error_reporting($saved_error_level);
+   return $s;
+   }
+?>
