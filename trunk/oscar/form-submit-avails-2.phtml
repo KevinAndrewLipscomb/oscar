@@ -112,8 +112,6 @@ require_once("f_writecalendarbody.phtml");
              ?>
              <p>Check all that apply as of today's date:</p>
              <ul>
-                <li><input type=checkbox name=be_on_team_30 value="TRUE">I am on the Squad Truck Team.</li>
-                <li><input type=checkbox name=be_on_team_5 value="TRUE">I am a Volunteer Duty Field Supervisor.</li>
                 <li><input type=checkbox name=be_on_team_air value="TRUE">I am on the Air Ambulance Team.</li>
              </ul>
              <?
@@ -122,23 +120,10 @@ require_once("f_writecalendarbody.phtml");
              {
              ?>
              <input type=hidden name=be_on_team_30 value="TRUE">
-             <p>Check all that apply as of today's date:</p>
-             <ul>
-                <li><input type=checkbox name=be_on_team_5 value="TRUE">I am a Volunteer Duty Field Supervisor.</li>
-                <li><input type=checkbox name=be_on_team_air value="TRUE">I am on the Air Ambulance Team.</li>
-             </ul>
              <?
              }
           else
              {
-             echo "<p>Check all that apply as of today's date:</p>\n";
-             //
-             ?>
-             <ul>
-                <li><input type=checkbox name=be_on_team_30 value="TRUE">I am on the Squad Truck Team.</li>
-                <li><input type=checkbox name=be_on_team_5 value="TRUE">I am a Volunteer Duty Field Supervisor.</li>
-             </ul>
-             <?
              }
           WriteCalendarSubform
              (
