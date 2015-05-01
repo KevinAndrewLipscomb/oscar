@@ -103,6 +103,7 @@ require_once("f_bodyopen.phtml");
 require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_htmlofnote.phtml");
+require_once("f_bevalidpartialshiftspec.phtml");
 //
 ?>
 <html>
@@ -140,6 +141,147 @@ require_once("f_htmlofnote.phtml");
             <?
             echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
             }
+         elseif
+           (
+             !BeValidPartialShiftSpec($d1_comment)
+           or
+             !BeValidPartialShiftSpec($d2_comment)
+           or
+             !BeValidPartialShiftSpec($d3_comment)
+           or
+             !BeValidPartialShiftSpec($d4_comment)
+           or
+             !BeValidPartialShiftSpec($d5_comment)
+           or
+             !BeValidPartialShiftSpec($d6_comment)
+           or
+             !BeValidPartialShiftSpec($d7_comment)
+           or
+             !BeValidPartialShiftSpec($d8_comment)
+           or
+             !BeValidPartialShiftSpec($d9_comment)
+           or
+             !BeValidPartialShiftSpec($d10_comment)
+           or
+             !BeValidPartialShiftSpec($d11_comment)
+           or
+             !BeValidPartialShiftSpec($d12_comment)
+           or
+             !BeValidPartialShiftSpec($d13_comment)
+           or
+             !BeValidPartialShiftSpec($d14_comment)
+           or
+             !BeValidPartialShiftSpec($d15_comment)
+           or
+             !BeValidPartialShiftSpec($d16_comment)
+           or
+             !BeValidPartialShiftSpec($d17_comment)
+           or
+             !BeValidPartialShiftSpec($d18_comment)
+           or
+             !BeValidPartialShiftSpec($d19_comment)
+           or
+             !BeValidPartialShiftSpec($d20_comment)
+           or
+             !BeValidPartialShiftSpec($d21_comment)
+           or
+             !BeValidPartialShiftSpec($d22_comment)
+           or
+             !BeValidPartialShiftSpec($d23_comment)
+           or
+             !BeValidPartialShiftSpec($d24_comment)
+           or
+             !BeValidPartialShiftSpec($d25_comment)
+           or
+             !BeValidPartialShiftSpec($d26_comment)
+           or
+             !BeValidPartialShiftSpec($d27_comment)
+           or
+             !BeValidPartialShiftSpec($d28_comment)
+           or
+             !BeValidPartialShiftSpec($d29_comment)
+           or
+             !BeValidPartialShiftSpec($d30_comment)
+           or
+             !BeValidPartialShiftSpec($d31_comment)
+           or
+             !BeValidPartialShiftSpec($n1_comment)
+           or
+             !BeValidPartialShiftSpec($n2_comment)
+           or
+             !BeValidPartialShiftSpec($n3_comment)
+           or
+             !BeValidPartialShiftSpec($n4_comment)
+           or
+             !BeValidPartialShiftSpec($n5_comment)
+           or
+             !BeValidPartialShiftSpec($n6_comment)
+           or
+             !BeValidPartialShiftSpec($n7_comment)
+           or
+             !BeValidPartialShiftSpec($n8_comment)
+           or
+             !BeValidPartialShiftSpec($n9_comment)
+           or
+             !BeValidPartialShiftSpec($n10_comment)
+           or
+             !BeValidPartialShiftSpec($n11_comment)
+           or
+             !BeValidPartialShiftSpec($n12_comment)
+           or
+             !BeValidPartialShiftSpec($n13_comment)
+           or
+             !BeValidPartialShiftSpec($n14_comment)
+           or
+             !BeValidPartialShiftSpec($n15_comment)
+           or
+             !BeValidPartialShiftSpec($n16_comment)
+           or
+             !BeValidPartialShiftSpec($n17_comment)
+           or
+             !BeValidPartialShiftSpec($n18_comment)
+           or
+             !BeValidPartialShiftSpec($n19_comment)
+           or
+             !BeValidPartialShiftSpec($n20_comment)
+           or
+             !BeValidPartialShiftSpec($n21_comment)
+           or
+             !BeValidPartialShiftSpec($n22_comment)
+           or
+             !BeValidPartialShiftSpec($n23_comment)
+           or
+             !BeValidPartialShiftSpec($n24_comment)
+           or
+             !BeValidPartialShiftSpec($n25_comment)
+           or
+             !BeValidPartialShiftSpec($n26_comment)
+           or
+             !BeValidPartialShiftSpec($n27_comment)
+           or
+             !BeValidPartialShiftSpec($n28_comment)
+           or
+             !BeValidPartialShiftSpec($n29_comment)
+           or
+             !BeValidPartialShiftSpec($n30_comment)
+           or
+             !BeValidPartialShiftSpec($n31_comment)
+           )
+           {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Error!</i></h2>
+            <b>
+            <blockquote>
+               <p>You specified at least one partial shift in a non-standard format.&nbsp; You must use the standard format.</p>
+               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problem.</p>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
+           }
          else
          {
          if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
