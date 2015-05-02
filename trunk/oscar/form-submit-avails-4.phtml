@@ -139,7 +139,6 @@ require_once("f_bevalidpartialshiftspec.phtml");
             </blockquote>            
             </b>
             <?
-            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
             }
          elseif
            (
@@ -275,12 +274,11 @@ require_once("f_bevalidpartialshiftspec.phtml");
             <h2><i>Error!</i></h2>
             <b>
             <blockquote>
-               <p>You specified at least one partial shift in a non-standard format.&nbsp; You must use the standard format.</p>
+               <p>You specified at least one partial shift with a non-standard format or an invalid time of day.</p>
                <p>Please press your browser's [<--&nbsp;BACK] button to correct the problem.</p>
             </blockquote>            
             </b>
             <?
-            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
            }
          else
          {
