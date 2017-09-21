@@ -163,6 +163,8 @@ require_once("f_htmlofnote.phtml");
                   ($odnmid != "")
                and
                   ($squad != "")
+               and
+                  ((is_int($num_extras) and ($num_extras >= 0) or $num_extras == "")
                )
             // then
             {
@@ -386,6 +388,22 @@ require_once("f_htmlofnote.phtml");
             <p><input type="submit" value="Continue"><input type=reset></p>
           </form>
           <?
+            }
+          else
+            {
+            //
+            // Fill the page out with a warning and instructions.
+            //
+            ?>
+            <h2><i>Error!</i></h2>
+            <b>
+            <blockquote>
+               <p>One or more parameters were missing or invalid.</p>
+               <p>Please press your browser's [<--&nbsp;BACK] button to correct the problem(s).</p>
+            </blockquote>            
+            </b>
+            <?
+            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
             }
           }
          else
