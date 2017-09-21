@@ -164,7 +164,11 @@ require_once("f_htmlofnote.phtml");
                and
                   ($squad != "")
                and
-                  ((is_int($num_extras) and ($num_extras >= 0) or $num_extras == "")
+                  (
+                    (filter_var($num_extras,FILTER_VALIDATE_INT,array('options' => array('min_range' => 0))) !== FALSE)
+                  or
+                    (trim($num_extras) == "")
+                  )
                )
             // then
             {
