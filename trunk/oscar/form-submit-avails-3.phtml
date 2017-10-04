@@ -165,7 +165,7 @@ require_once("f_htmlofnote.phtml");
                   ($squad != "")
                and
                   (
-                    (filter_var($num_extras,FILTER_VALIDATE_INT,array('options' => array('min_range' => 0))) !== FALSE)
+                    (filter_var(preg_replace("/^0+/",'',$num_extras),FILTER_VALIDATE_INT,array('options' => array('min_range' => 0))) !== FALSE)  // preg_replace protects against leading zeros, which filter_var invalidates
                   or
                     (trim($num_extras) == "")
                   )
