@@ -20,8 +20,8 @@ grant select
  , drop
  , create temporary tables
   on oscar_d.*
-  to 'ki-oscar-d'@'70.84.138.98' identified by '~ki-oscar-d-password~'
+  to 'ki-oscar-d'@'51.79.5.240' identified by '~ki-oscar-d-password~'
 ;
 grant select
   on kalipso_d.*
-  to 'ki-oscark-d'@'70.84.138.98' identified by '~ki-oscark-d-password~'
+  to 'ki-oscark-d'@'51.79.5.240' identified by '~ki-oscark-d-password~'
