@@ -1,13 +1,22 @@
-﻿<Project Sdk="Peachpie.NET.Sdk/0.9.35">
-  
+<Project Sdk="Peachpie.NET.Sdk/0.9.35">
+
   <PropertyGroup>
-    <OutputType>library</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <OutDir>bin</OutDir>
+    <AssemblyName>oscar</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="**/*.php" />
+    <Compile Include="**/*.ph*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="**" Exclude="obj/**;bin/**;PublishProfiles/**;@(Compile);$(MsBuildThisFile)">
+      <PackagePath>contentFiles/any/netcoreapp2.0/wwwroot/</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <CopyToOutputDirectory>true</CopyToOutputDirectory>
+      <CopyToPublishDirectory>true</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
