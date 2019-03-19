@@ -6,11 +6,11 @@ grant select
  , drop
  , create temporary tables
   on oscar.*
-  to 'ki-oscar'@'localhost' identified by '~ki-oscar-password~'
+  to 'ki-oscar'@'::1' identified by '~ki-oscar-password~'
 ;
 grant select
   on kalipso.*
-  to 'ki-oscark'@'localhost' identified by '~ki-oscark-password~'
+  to 'ki-oscark'@'::1' identified by '~ki-oscark-password~'
 ;
 grant select
  , insert
