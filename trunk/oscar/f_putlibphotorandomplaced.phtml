@@ -20,10 +20,13 @@ function PutLibPhotoRandomPlaced
    //
    $sql = "select div_spec,frame_num from photo_detail where placement like '%$placement%' order by rand()";
    if ($limit != "") $sql = $sql . " limit $limit";
-   //
-   // Execute the statement
-   //
-   $result_set = $db_link->query($sql) or die(mysqli_error($db_link));
+   if ($conn)
+     {
+     //
+     // Execute the statement
+     //
+     $result_set = $db_link->query($sql) or die(mysqli_error($db_link));
+     }
    //
    // Check how many rows were returned
    //
