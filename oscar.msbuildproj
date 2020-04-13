@@ -32,6 +32,9 @@
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System.Buffers">
+      <HintPath>bin\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Memory">
       <HintPath>bin\System.Memory.dll</HintPath>
     </Reference>
