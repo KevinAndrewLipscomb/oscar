@@ -1,0 +1,42 @@
+﻿<Project Sdk="Peachpie.NET.Sdk/0.9.950">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net461</TargetFramework>
+    <AssemblyName>oscar</AssemblyName>
+    <ShortOpenTag>true</ShortOpenTag>
+    <OutDir>bin</OutDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="*.ph*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="**" Exclude="obj/**;bin/**;PublishProfiles/**;@(Compile);$(MsBuildThisFile)">
+      <PackagePath>contentFiles/any/netcoreapp2.0/wwwroot/</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <CopyToOutputDirectory>true</CopyToOutputDirectory>
+      <CopyToPublishDirectory>true</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Peachpie.CodeAnalysis" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Library" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Library.MySql" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Library.Network" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Library.PDO" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Library.PDO.Firebird" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Library.PDO.MySQL" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Library.Scripting" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Library.XmlDom" Version="0.9.950" />
+    <PackageReference Include="Peachpie.RequestHandler" Version="0.9.950" />
+    <PackageReference Include="Peachpie.Runtime" Version="0.9.950" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Memory">
+      <HintPath>bin\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>bin\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
