@@ -11,8 +11,8 @@ function OscarMailHeaders($db_link)
       // Set to "" for production use, "x_" to debug.
       //
    //
-   $header_string = "From: OSCAR <" . RoleEmailAddress($db_link,"",$mode) . ">\r\n"
-      . "Reply-to: OSCAR <" . RoleEmailAddress($db_link,"",$mode) . ">\r\n";
+   $header_string = RoleEmailAddress($db_link,"",$mode) . "\r\n" //from
+      . RoleEmailAddress($db_link,"",$mode) . "\r\n"; //reply_to
    //
    error_reporting($saved_error_level);
    return $header_string;

@@ -115,7 +115,18 @@ if ($coord_agency != "")
    // Send the mail.
    //
    $sched_coord_email_addr = RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency);
-   $result = mail($sched_coord_email_addr, "OSCAR Modification Challenge", $challenge, OscarMailHeaders($db_link));
+   kix\k::SmtpMailSend
+     (
+     RoleEmailAddress($db_link,"",$mode), //from
+     $sched_coord_email_addr, //to
+     "OSCAR Modification Challenge", //subject
+     $challenge, //message_string
+     false, //be_html
+     "", //cc
+     "", //bcc
+     RoleEmailAddress($db_link,"",$mode) //reply_to
+     );
+   $result = true;
    //
    if ($result)
       {

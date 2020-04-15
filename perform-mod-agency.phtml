@@ -50,18 +50,19 @@ if ($token != "")
          //
          // This single change can have major ramifications for hundreds of individuals.  Notify sysadmin.
          //
-         @mail
-            (
-            RoleEmailAddress($db_link,"",$mode),
-            "OSCAR Participant Change",
-            stripslashes
-               (
-               "The \'OSCAR - "
-               . $mode
-               . "perform-mod-agency.phtml\' script has processed the following operation on behalf of the Master OSCAR "
-               . "Authority:\n\n$sql"
-               )
-            );
+         kix\k::SmtpMailSend
+           (
+           RoleEmailAddress($db_link,"",$mode), //from
+           RoleEmailAddress($db_link,"",$mode), //to
+           "OSCAR Participant Change", //subject
+           stripslashes
+             (
+             "The \'OSCAR - "
+             . $mode
+             . "perform-mod-agency.phtml\' script has processed the following operation on behalf of the Master OSCAR "
+             . "Authority:\n\n$sql"
+             ) //message_string
+           );
          //
          // Clean up the pending operation record.
          //

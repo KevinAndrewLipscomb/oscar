@@ -411,10 +411,6 @@ while ($row = mysqli_fetch_array($result))
          //
          $relay_notice_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency);
          $relay_notice_subject = "Relay notice from EMS";
-         $relay_headers = "From: EMS Schedule Coordinator <"
-            . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS")
-            . ">\r\n"
-            . "Reply-to: EMS Schedule Coordinator <" . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") . ">\r\n";
          //               0        1         2         3         4         5         6         7
          //               123456789012345678901234567890123456789012345678901234567890123456789012
          $relay_notice = "Dear $coord_agency Schedule Coordinator,\n\n"
@@ -436,13 +432,33 @@ while ($row = mysqli_fetch_array($result))
          $relay_notice .= "-- EMS Schedule Coordinator (via OSCAR)\n";
          $relay_notice .= "-- " . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") . "\n";
          //
-         mail($relay_notice_recipient, $relay_notice_subject, $relay_notice, $relay_headers);
+         kix\k::SmtpMailSend
+           (
+           RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS"), //from
+           $relay_notice_recipient, //to
+           $relay_notice_subject, //subject
+           $relay_notice, //message_string
+           false, //be_html
+           "", //cc
+           "", //bcc
+           RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") //reply_to
+           );
          //
          if (($relay_page_recipient = RoleEmailAddress($db_link,"schedule-coordinator-pager",$mode,$coord_agency)) != '')
             {
             $relay_page_headers = "From: " . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") . "\r\n";
             $relay_page_notice = "Check email for OSCAR RELAY notice";
-            mail($relay_page_recipient,'',$relay_page_notice,'');
+            kix\k::SmtpMailSend
+              (
+              RoleEmailAddress($db_link,"",$mode), //from
+              $relay_page_recipient, //to
+              '', //subject
+              $relay_page_notice, //message_string
+              false, //be_html
+              "", //cc
+              "", //bcc
+              '' //reply_to
+              );
             $be_alerted = 'YES';
             }
          else
@@ -535,7 +551,17 @@ while ($row = mysqli_fetch_array($result))
          //
          $relay_report .= "\n\n-- End of OSCAR report ---\n";
          //
-         mail($relay_report_recipient, $relay_report_subject, $relay_report, OscarMailHeaders($db_link));
+         kix\k::SmtpMailSend
+           (
+           RoleEmailAddress($db_link,"",$mode), //from
+           $relay_report_recipient, //to
+           $relay_report_subject, //subject
+           $relay_report, //message_string
+           false, //be_html
+           "", //cc
+           "", //bcc
+           RoleEmailAddress($db_link,"",$mode) //reply_to
+           );
          //
          echo "<tr>\n"
             . "   <td><small>$coord_agency</small></td>\n"

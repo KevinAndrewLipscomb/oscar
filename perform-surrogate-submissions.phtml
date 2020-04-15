@@ -137,11 +137,11 @@ if (isset($_note)) $note = $_note;
                   // completely empty that string, then the string contains a bad character.  Second, when EMS is the coord_agency,
                   // assure that a home squad is supplied for each entry.
                   //
-                  $good_characters = "[[:digit:],[:space:]]";
+                  $good_characters = "/[[:digit:],[:space:]]/";
                   if (
-                        (ereg_replace($good_characters,"",$day_avails[$i]) != "")
+                        (preg_replace($good_characters,"",$day_avails[$i]) != "")
                      or
-                        (ereg_replace($good_characters,"",$night_avails[$i]) != "")
+                        (preg_replace($good_characters,"",$night_avails[$i]) != "")
                      )
                   // then
                      {
@@ -226,17 +226,18 @@ if (isset($_note)) $note = $_note;
                         .  RoleEmailAddress($db_link,"")
                         .  "\">OSCAR System Administrator</a>."
                         );
-                  @mail
-                     (
-                     RoleEmailAddress($db_link,"failsafe-recipient",$mode),
-                     "OSCAR insert op",
-                     stripslashes
-                        (
-                        "The \'OSCAR - "
-                        . $mode
-                        . "add-ers-tda-inputs.phtml\' script has processed the following operation:\n\n$sql"
-                        )
-                     );
+                  kix\k::SmtpMailSend
+                    (
+                    RoleEmailAddress($db_link,"",$mode), //from
+                    RoleEmailAddress($db_link,"failsafe-recipient",$mode), //to
+                    "OSCAR insert op", //subject
+                    stripslashes
+                      (
+                      "The \'OSCAR - "
+                      . $mode
+                      . "add-ers-tda-inputs.phtml\' script has processed the following operation:\n\n$sql"
+                      ) //message_string
+                    );
                   //
                   // Clear calculated vars for next iteration.
                   //

@@ -200,7 +200,17 @@ if
    //
    // Send the mail.
    //
-   $result = mail($email_addr, "OSCAR Reconfirm/Retract Challenge", $challenge, OscarMailHeaders($db_link));
+   kix\k::SmtpMailSend
+     (
+     RoleEmailAddress($db_link,"",$mode), //from
+     $email_addr, //to
+     "OSCAR Reconfirm/Retract Challenge", //subject
+     $challenge, //message_string
+     false, //be_html
+     "", //cc
+     "", //bcc
+     RoleEmailAddress($db_link,"",$mode) //reply_to
+     );
    //
    if ($result)
       {

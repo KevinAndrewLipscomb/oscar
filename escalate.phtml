@@ -170,8 +170,29 @@ else
       //
       // Send the mail.
       //
-      $result = mail($screen_notice_recipient, $screen_notice_subject, $screen_notice, OscarMailHeaders($db_link))
-         and mail($claim_ticket_recipient, $claim_ticket_subject, $claim_ticket, OscarMailHeaders($db_link));
+      kix\k::SmtpMailSend
+        (
+        RoleEmailAddress($db_link,"",$mode), //from
+        $screen_notice_recipient, //to
+        $screen_notice_subject, //subject
+        $screen_notice, //message_string
+        false, //be_html
+        "", //cc
+        "", //bcc
+        RoleEmailAddress($db_link,"",$mode) //reply_to
+        );
+      kix\k::SmtpMailSend
+        (
+        RoleEmailAddress($db_link,"",$mode), //from
+        $claim_ticket_recipient, //to
+        $claim_ticket_subject, //subject
+        $claim_ticket, //message_string
+        false, //be_html
+        "", //cc
+        "", //bcc
+        RoleEmailAddress($db_link,"",$mode) //reply_to
+        );
+      $result = 1;
       }
    if ($result)
       {

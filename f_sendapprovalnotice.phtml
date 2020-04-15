@@ -27,6 +27,17 @@ function SendApprovalNotice
    //
    // Send the mail.
    //
-   return mail($approval_notice_recipient, $approval_notice_subject, $approval_notice, OscarMailHeaders($db_link));
+    kix\k::SmtpMailSend
+      (
+      RoleEmailAddress($db_link,"",$mode), //from
+      $approval_notice_recipient, //to
+      $approval_notice_subject, //subject
+      $approval_notice, //message_string
+      false, //be_html
+      "", //cc
+      "", //bcc
+      RoleEmailAddress($db_link,"",$mode) //reply_to
+      );
+   return true;
    }
 ?>

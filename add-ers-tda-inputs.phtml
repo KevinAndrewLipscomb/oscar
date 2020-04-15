@@ -135,17 +135,18 @@ require_once("f_availlist.phtml");
                         .  RoleEmailAddress($db_link,"")
                         .  "\">OSCAR System Administrator</a>."
                         );
-                  @mail
-                     (
-                     RoleEmailAddress($db_link,"failsafe-recipient",$mode),
-                     "OSCAR insert op",
-                     stripslashes
-                        (
-                        "The \'OSCAR - "
-                        . $mode
-                        . "add-ers-tda-inputs.phtml\' script has processed the following operation:\n\n$sql"
-                        )
-                     );
+                  kix\k::SmtpMailSend
+                    (
+                    RoleEmailAddress($db_link,"",$mode), //from
+                    RoleEmailAddress($db_link,"failsafe-recipient",$mode), //to
+                    "OSCAR insert op", //subject
+                    stripslashes
+                      (
+                      "The \'OSCAR - "
+                      . $mode
+                      . "add-ers-tda-inputs.phtml\' script has processed the following operation:\n\n$sql"
+                      ) //message_string
+                    );
                   //
                   // Clear calculated vars for next iteration.
                   //

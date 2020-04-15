@@ -163,3 +163,5 @@ C:\inetpub\wwwroot\oscar\obj\Debug\net461\oscar.msbuildproj.CoreCompileInputs.ca
 C:\inetpub\wwwroot\oscar\obj\Debug\net461\oscar.msbuildproj.CopyComplete
 C:\inetpub\wwwroot\oscar\obj\Debug\net461\oscar.dll
 C:\inetpub\wwwroot\oscar\obj\Debug\net461\oscar.pdb
+C:\inetpub\wwwroot\oscar\bin\ki.dll
+C:\inetpub\wwwroot\oscar\bin\ki.pdb
