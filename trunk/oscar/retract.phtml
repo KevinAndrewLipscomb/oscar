@@ -42,9 +42,9 @@ require_once("f_formattednoteappendage.phtml");
 <html>
 <head><title>Retraction Confirmation</title></head>
 <? BodyOpen(); ?>
-<table align=center width=80%><tr><td>
-<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
-<H1 ALIGN=CENTER>Retraction Confirmation</H1>
+<table align="center" width="80%"><tr><td>
+<H6 ALIGN="CENTER">KVEO-IT-PROJECT<br><a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br><a href="http://www.vabeachems.com">VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H1 ALIGN="CENTER">Retraction Confirmation</H1>
 <hr>
 <?
 //
@@ -129,19 +129,19 @@ if ($num_rows_affected == 0)
       . "   </ul>\n"
       . "If you suspect a bug, please report the problem to the following people:\n"
       . "   <ul>\n"
-      . "      <li><a href=mailto:\"" . RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency) . "\">the $coord_agency Schedule Coordinator</a></li>\n"
-      . "      <li><a href=mailto:\"" . RoleEmailAddress($db_link,"",$mode) . "\">the OSCAR System Administrator</a></li>\n"
+      . "      <li><a href=\"mailto:" . RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency) . "\">the $coord_agency Schedule Coordinator</a></li>\n"
+      . "      <li><a href=\"mailto:" . RoleEmailAddress($db_link,"",$mode) . "\">the OSCAR System Administrator</a></li>\n"
       . "   </ul>\n"
       . "</i>\n";
    }
-echo "<p><b>Don't forget to submit an accurate availability sheet</a> to agency \"$coord_agency\" by the deadline.</b></p>\n"
-   . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
+echo "<p><b>Don't forget to submit an accurate availability sheet to agency \"$coord_agency\" by the deadline.</b></p>\n"
+   . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=\"mailto:"
    . RoleEmailAddress($db_link,"",$mode)
    . "\">OSCAR System Administrator</a>.</p>";
 }
 ?>
 <hr>
-<p><small><small><em><pre>$Id$</pre></em></small></small>
+<p><small><small><em><pre>$Id$</pre></em></small></small></p>
 </td>
 </tr>
 </table>

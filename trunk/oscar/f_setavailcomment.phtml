@@ -39,7 +39,13 @@ function SetAvailComment
    // As a failsafe in case the database becomes unavailable at any critical time after the insertion, send the
    // data to the sysadmin via email.
    //
-   @mail(RoleEmailAddress($db_link,"failsafe-recipient",$mode),"OSCAR insert op",stripslashes($sql));
+   kix\k::SmtpMailSend
+     (
+     RoleEmailAddress($db_link,"",$mode), //from
+     RoleEmailAddress($db_link,"failsafe-recipient",$mode), //to
+     "OSCAR insert op", //subject
+     stripslashes($sql) //message_string
+     );
    //
    if ($mode) error_reporting($saved_error_level);
    }

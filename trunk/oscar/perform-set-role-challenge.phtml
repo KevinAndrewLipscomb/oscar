@@ -114,7 +114,18 @@ if
    //
    // Send the mail.
    //
-   $result = mail($approving_email_addr, "OSCAR Role Change Challenge", $challenge, OscarMailHeaders($db_link));
+   kix\k::SmtpMailSend
+     (
+     RoleEmailAddress($db_link,"",$mode), //from
+     $approving_email_addr, //to
+     "OSCAR Role Change Challenge", //subject
+     $challenge, //message_string
+     false, //be_html
+     "", //cc
+     "", //bcc
+     RoleEmailAddress($db_link,"",$mode) //reply_to
+     );
+   $result = true;
    //
    if ($result)
       {

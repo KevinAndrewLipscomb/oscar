@@ -275,17 +275,18 @@ if ($be_needing_driver) $be_third = FALSE;
             // As a failsafe in case the database becomes unavailable at any critical time after the insertion, send the
             // data to the sysadmin via email.
             //
-            @mail
-               (
-               RoleEmailAddress($db_link,"failsafe-recipient",$mode),
-               "OSCAR insert op",
-               stripslashes
-                  (
-                  "The \'OSCAR - "
-                  . $mode
-                  . "perform-add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"
-                  )
-               );
+            kix\k::SmtpMailSend
+              (
+              RoleEmailAddress($db_link,"",$mode), //from
+              RoleEmailAddress($db_link,"failsafe-recipient",$mode), //to
+              "OSCAR insert op", //subject
+              stripslashes
+                (
+                "The \'OSCAR - "
+                . $mode
+                . "perform-add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"
+                ) //message_string
+              );
             //
             // For a more meaningful acknowledgement, reinitialize all the dependent variables and restore them by 
             // retrieving the very record we just inserted.
@@ -489,24 +490,25 @@ if ($be_needing_driver) $be_third = FALSE;
                   $be_nondriver,
                   $be_third
                   );
-               @mail
-                  (
-                  $email_addr,
-                  "OSCAR availability sheet submission confirmation",
-                  "This is a confirmation that the availability sheet you just submitted has been recorded as follows:\n"
-                  . "\n"
-                  . $avail_sheet_rec_detail
-                  . "\n"
-                  . "Also, the following specific shift availability comments have been recorded:\n"
-                  . "\n"
-                  . "   " . str_replace("\n","\n   ",sShowAvailComments($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,$applicable_month_num))
-                  . "\n\n"
-                  . "And, the following special event shift availabilities have been recorded:\n"
-                  . "\n"
-                  . "   " . str_replace("\n","\n   ",sShowSpecialEventShiftAvails($db_link,$odnmid,$applicable_month_num))
-                  . "\n\n"
-                  . "-- END --"
-                  );
+               kix\k::SmtpMailSend
+                 (
+                 RoleEmailAddress($db_link,"",$mode), //from
+                 $email_addr, //to
+                 "OSCAR availability sheet submission confirmation", //subject
+                 "This is a confirmation that the availability sheet you just submitted has been recorded as follows:\n"
+                 . "\n"
+                 . $avail_sheet_rec_detail
+                 . "\n"
+                 . "Also, the following specific shift availability comments have been recorded:\n"
+                 . "\n"
+                 . "   " . str_replace("\n","\n   ",sShowAvailComments($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,$applicable_month_num))
+                 . "\n\n"
+                 . "And, the following special event shift availabilities have been recorded:\n"
+                 . "\n"
+                 . "   " . str_replace("\n","\n   ",sShowSpecialEventShiftAvails($db_link,$odnmid,$applicable_month_num))
+                 . "\n\n"
+                 . "-- END --" //message_string
+                 );
                //
                echo "<p><b>Thanks!&nbsp; You may want to print this page for your records.</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";

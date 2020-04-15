@@ -63,7 +63,17 @@ function HarvestEmailAddresses
                //
                // Send the mail.
                //
-               mail($harvest_message_recipient, $harvest_message_subject, $harvest_message, OscarMailHeaders($db_link));
+               kix\k::SmtpMailSend
+                 (
+                 RoleEmailAddress($db_link,"",$mode), //from
+                 $harvest_message_recipient, //to
+                 $harvest_message_subject, //subject
+                 $harvest_message, //message_string
+                 false, //be_html
+                 "", //cc
+                 "", //bcc
+                 RoleEmailAddress($db_link,"",$mode) //reply_to
+                 );
                }
             }
          }

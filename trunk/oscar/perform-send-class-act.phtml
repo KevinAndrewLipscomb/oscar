@@ -116,9 +116,18 @@ if
       //
       $recipient = RoleEmailAddress($db_link,'class-act-coord',$mode);
       $from_reply_to_value = stripslashes(trim($submitter)) . '<' . stripslashes(trim($emailaddr)) . '>';
-      $header_block = "From: $from_reply_to_value\r\n"
-         . "Reply-to: $from_reply_to_value\r\n";
-      $result = mail($recipient, "Class Act Nomination (via OSCAR)", $message, $header_block);
+      kix\k::SmtpMailSend
+        (
+        $from_reply_to_value, //from
+        $recipient, //to
+        "Class Act Nomination (via OSCAR)", //subject
+        $message, //message_string
+        false, //be_html
+        "", //cc
+        "", //bcc
+        $from_reply_to_value //reply_to
+        );
+      $result = true;
       //
       if ($result)
          {
