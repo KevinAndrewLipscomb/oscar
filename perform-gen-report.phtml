@@ -110,7 +110,7 @@ require_once("f_harvestemailaddresses.phtml");
 require_once("f_beemsschedcoord.phtml");
 require_once("f_htmlofnote.phtml");
 require_once("f_formattednoteappendage.phtml");
-require_once("$foundation_dir/std_style_class.php");
+//require_once("$foundation_dir/std_style_class.php");
 require_once("f_coordagencyofclearedemailaddr.phtml");
 //
 $report = "<html>\n";
@@ -1288,8 +1288,7 @@ if ($result)
             . "<blockquote><tt>mesg(RELAY)...Relayed&nbsp;by&nbsp;EMS</tt></blockquote></blockquote>\n";
          }
       //
-      echo std_style_class::AolEmailClientWarning()
-         . "<p><b>Security note</b></p>\n"
+      echo "<p><b>Security note</b></p>\n"
          . "<blockquote>Because you are an OSCAR Authority or a Trusted User, your request does not need to be "
          . "screened.&nbsp; Requests from regular users, however, must be screened by a schedule coordinator or an "
          . "escalation authority prior to fulfillment.</blockquote>\n";
