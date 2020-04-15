@@ -7,7 +7,8 @@
     <OutDir>bin</OutDir>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="*.ph*" />
+    <Compile Include="*.php;*.phtml" />
+    <Compile Include="../foundation/**/*.php;../foundation/**/*.phtml" Exclude="../foundation/recaptcha-master/tests/**" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="**" Exclude="obj/**;bin/**;PublishProfiles/**;@(Compile);$(MsBuildThisFile)">
