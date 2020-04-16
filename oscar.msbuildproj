@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="ki">
       <HintPath>lib\ki\ki.dll</HintPath>
+      <Private>true</Private>
     </Reference>
     <Reference Include="System.Buffers">
       <HintPath>bin\System.Buffers.dll</HintPath>
