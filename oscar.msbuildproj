@@ -1,4 +1,4 @@
-﻿<Project Sdk="Peachpie.NET.Sdk/0.9.950">
+﻿<Project Sdk="Peachpie.NET.Sdk/0.9.961">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net461</TargetFramework>
@@ -19,17 +19,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Peachpie.CodeAnalysis" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Library" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Library.MySql" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Library.Network" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Library.PDO" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Library.PDO.Firebird" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Library.PDO.MySQL" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Library.Scripting" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Library.XmlDom" Version="0.9.950" />
-    <PackageReference Include="Peachpie.RequestHandler" Version="0.9.950" />
-    <PackageReference Include="Peachpie.Runtime" Version="0.9.950" />
+    <PackageReference Include="Peachpie.CodeAnalysis" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Library" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Library.MySql" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Library.Network" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Library.PDO" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Library.PDO.Firebird" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Library.PDO.MySQL" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Library.Scripting" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Library.XmlDom" Version="0.9.961" />
+    <PackageReference Include="Peachpie.RequestHandler" Version="0.9.961" />
+    <PackageReference Include="Peachpie.Runtime" Version="0.9.961" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
@@ -46,5 +46,8 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>bin\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Peachpie.App" Version="0.9.961" />
   </ItemGroup>
 </Project>
