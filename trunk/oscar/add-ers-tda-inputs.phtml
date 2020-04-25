@@ -105,11 +105,11 @@ require_once("f_availlist.phtml");
                   {
                   $found_something_to_process = "TRUE";
                   //
-                  if (($shift_a_day_night[$i] != "") and ($shift_a_num[$i] != ""))
+                  if (($shift_a_day_night[$i] != "") && ($shift_a_num[$i] != ""))
                      {
                      $field_a = $shift_a_day_night[$i][0] . $shift_a_num[$i];
                      }
-                  if (($shift_b_day_night[$i] != "") and ($shift_b_num[$i] != ""))
+                  if (($shift_b_day_night[$i] != "") && ($shift_b_num[$i] != ""))
                      {
                      $field_b = $shift_b_day_night[$i][0] . $shift_b_num[$i];
                      }
@@ -211,7 +211,7 @@ require_once("f_availlist.phtml");
                      echo "<tr><td colspan=10 align=center><b>Error: See explanation below.</b></td></tr>\n";
                      }
                   } // if row is processable
-               if (($i == count($last_name)) and (!$found_something_to_process))
+               if (($i == count($last_name)) && (!$found_something_to_process))
                   {
                   echo "<tr><td colspan=10 align=center><b>Warning: Your submission didn't contain any valid TDA"
                      . " records.&nbsp; Click your browser's [<--&nbsp;Back] button to correct the problem.</b></td></tr>\n";

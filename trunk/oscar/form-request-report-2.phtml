@@ -75,7 +75,7 @@ require_once("f_beauthority.phtml");
               //
               $valid_all_agencies_request = (($cross_agency != '') and BeAuthority($db_link,$email_addr,$mode,'EMS'));
               //
-              if (($coord_agency == '') and !$valid_all_agencies_request)
+              if (($coord_agency == '') && !$valid_all_agencies_request)
                  {
                  //
                  // Fill the page out with a warning and instructions.

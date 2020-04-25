@@ -224,7 +224,7 @@ $where_clause = " month='$month_abbrev' and coord_agency like '$coord_agency' ";
 $be_authority_for_any_agency = BeAuthority($db_link,$email_addr,$mode,'%');
 $be_authority_for_this_agency = BeAuthority($db_link,$email_addr,$mode,$coord_agency);
 $be_ems_sched_coord = BeEmsSchedCoord($db_link,$email_addr,$mode);
-$be_relayable = ($be_ems_sched_coord and ($coord_agency == "EMS"));
+$be_relayable = ($be_ems_sched_coord && ($coord_agency == "EMS"));
 //
 if ($shift_filter == "all")
    {
@@ -461,7 +461,7 @@ if ($shift_filter == "all")
                   .  " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
                   $highlighted_squad = 'Rescue' . $squad;
@@ -537,7 +537,7 @@ if ($shift_filter == "all")
                   .  " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
                   $report .= "<a href=" . $mode . "detail.phtml?a="
@@ -663,7 +663,7 @@ if ($shift_filter == "all")
                   $n31 = "";
                extract($row);
                //
-               $be_authority_to_member = ($be_authority_for_this_agency or BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
                   $last_name = stripslashes($last_name);
@@ -1160,7 +1160,7 @@ $result = $db_link->query
    .  "    and coord_agency like '$coord_agency' "
    )
    or die("Trust check failed with error:  " . mysqli_error($db_link));
-if ($direct_approval = (mysqli_num_rows($result) or $be_authority_for_any_agency))
+if ($direct_approval = (mysqli_num_rows($result) || $be_authority_for_any_agency))
    {
    //
    // Then send an approval notice to the requestor directly.
