@@ -6,7 +6,7 @@ function ConnectSelectDbInstanceUNPUBLISHED(&$db_link)
    {
    $saved_error_level = error_reporting(E_ALL);
    $db_link = mysqli_init();
-   $success = $db_link->real_connect('127.0.0.1','ki-oscar-d','~ki-oscar-d-password~','oscar_d',null,null,MYSQLI_CLIENT_SSL|MYSQLI_CLIENT_COMPRESS)
+   $success = $db_link->real_connect('127.0.0.1','ki-oscar-d','~ki-oscar-d-password~','oscar_d')
       or die("ERRNO-" . mysqli_connect_errno() . ", " . mysqli_connect_error());
    $success = $success && (mysqli_connect_error() == NULL);
    error_reporting($saved_error_level);
