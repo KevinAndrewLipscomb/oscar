@@ -2,11 +2,13 @@
 //
 // $Id$
 //
-require_once("f_connectselectdbinstanceunpublished.phtml");
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
 ?>
 <html>
 
@@ -17,12 +19,12 @@ require_once("f_roleemailaddress.phtml");
    <tr>
       <td>
            <h6 align="center">
-              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+              KVEO-IT-PROJECT - <a href="javascript:close();">OSCAR SYSTEM</a></h6>
            <h1 align="center">Privacy Policy</h1>
         <hr>
-        <h3>The short version</h3><? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?>
+        <h3>The short version</h3><? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right"); ?>
         <blockquote>
-           <p>The OSCAR system (which does not include <a href=http://kalipso.phpwebhosting.com/photolib/index.phtml>Kevin Andrew 
+           <p>The OSCAR system (which does not include <a href="<? echo $ini[server][photodb_prefix]; ?>index.phtml">Kevin Andrew 
               Lipscomb's photography archive</a>) was designed to enhance the efforts of the Virginia Beach Department of 
               EMS (VBDEMS) to schedule its large community of autonomous members.&nbsp; With one exception, none of the 
               information collected by the OSCAR system will be used <i>for any other purpose</i>.</p>
@@ -32,7 +34,7 @@ require_once("f_roleemailaddress.phtml");
               lists.</p>
            <p>We will notify you ahead of time if we change any of the above.</p>
            <p>You (or someone technically qualified) can verify these claims by browsing the
-              production source code at <<a href=https://sourceforge.net/projects/kveo-it-project//>https://sourceforge.net/projects/kveo-it-project/</a>>.</p>
+              production source code at <<a href="https://sf.net/p/kveo-it-project/code/HEAD/tree/trunk/oscar"/>https://sf.net/p/kveo-it-project/code/HEAD/tree/trunk/oscar</a>>.</p>
         </blockquote>
         <h3>The long version</h3>
         <blockquote>
@@ -43,12 +45,11 @@ require_once("f_roleemailaddress.phtml");
               Virginia Beach, VA 23455-6512<br>
               +1-757-642-8668<br>
               <?
-              ConnectSelectDbInstanceUNPUBLISHED($db_link);
               $email_address = RoleEmailAddress($db_link,"");
               echo "<a href=mailto:$email_address>$email_address</a>"
               ?>
            </blockquote>
-           <p><a href=http://kalipso.phpwebhosting.com/photolib/index.phtml>Kevin Andrew Lipscomb's photography archive</a> is 
+           <p><a href="<? echo $ini[server][photodb_prefix]; ?>index.phtml">Kevin Andrew Lipscomb's photography archive</a> is 
               accessible from, but is not a part of, the OSCAR system.</p>
            <p>To prevent fraud and abuse, the OSCAR system automatically recognizes the IP address of each visitor who 
               submits availability information.</p>
@@ -59,7 +60,7 @@ require_once("f_roleemailaddress.phtml");
               any other organizations, nor is it used for any other purpose.&nbsp; You will always have the option of
               unsubscribing from any of the aforementioned lists.</p>
            <p>We do not use "cookies", "web bugs", or any similar technology.</p>
-           <? PutLibPhotoRandomPlaced("oscarsystem",1,"left"); ?>
+           <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"left"); ?>
            <p>We do not partner with or have special relationships with any ad server companies.</p>
            <p>From time to time, we may use visitor information for new, unanticipated uses not previously disclosed in 
               our privacy notice.&nbsp; If our information practices change at some time in the future we will contact you
@@ -71,11 +72,11 @@ require_once("f_roleemailaddress.phtml");
               above telephone number, or writing to us at the above address.</p>
            <p>With respect to security: The information we collect is stored in an online database that is accessible only
               (a) under OSCAR system control via its web-based user interface; (b) under password control by the OSCAR 
-              System Administrator; (b) by the OSCAR system hosting service, currently a company called PhpWebHosting.com,
+              System Administrator; (b) by the OSCAR system hosting service, currently a company called Rackspace.com,
               which maintains its own privacy policy at 
-              <a href=http://www.phpwebhosting.com/priv.html>http://www.phpwebhosting.com/priv.html</a>.</p>
+              <a href="https://www.rackspace.com/information/legal/privacycenter">https://www.rackspace.com/information/legal/privacycenter</a>.</p>
            <p>You (or someone technically qualified) can verify these claims by browsing the
-              production source code at <<a href=http://kveo-it-project.svn.sourceforge.net/viewvc/kveo-it-project/>http://kveo-it-project.svn.sourceforge.net/viewvc/kveo-it-project/</a>>.</p>
+              production source code at <a href="https://sf.net/p/kveo-it-project/code/HEAD/tree/trunk/oscar">https://sf.net/p/kveo-it-project/code/HEAD/tree/trunk/oscar</a>.</p>
            <p>If you feel that this site is not following its stated information policy, you may contact us at the 
               aforementioned postal address, email addresses, or phone number, or you may contact the service sponsor as
               follows:</p>
@@ -96,4 +97,3 @@ require_once("f_roleemailaddress.phtml");
 </body>
 
 </html>
-

@@ -16,7 +16,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
@@ -27,20 +26,21 @@ $current_email_addr = $current_email_addr;
 $proposed_email_addr = $proposed_email_addr;
 $approving_email_addr = $approving_email_addr;
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
-//
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 $html = "<html>\n";
 $html .= "<head><title>Set Role Approval</title></head>\n";
 $html .= "<body bgcolor=#FFFFFF>\n";
 $html .= "<table align=center width=80%><tr><td>\n";
-$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=\"javascript:close();\">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
 $html .= "<H1 ALIGN=CENTER>Set Role Approval</H1>\n";
 $html .= "<hr>\n";
 //
@@ -64,22 +64,6 @@ if
    {
    //
    // All required values are present.
-   // Connect to the database.
-   //
-   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
-      {
-      ?>
-      <h2><i>Sorry...</i></h2>
-      <b>
-      <blockquote>
-         <? echo "<p>OSCAR's database has gone offline.&nbsp; Please try your toggle operation later.</p>"; ?>
-      </blockquote>            
-      </b>
-      <?
-      }
-   else
-   {
-   //
    // Generate the challenge message.
    //
    //             0        1         2         3         4         5         6         7
@@ -96,7 +80,7 @@ if
               .  "   $proposed_email_addr\n\n"
               .  "THE CHANGE IS NOT YET COMPLETE.  To\n"
               .  "complete the process, click here:\n"
-              .  OscarRootUrl()
+              .  $ini[server][root_url]
               .  "/" . $mode . "perform-set-role.phtml?a="
               .  base64_encode($agency)
               .  "&b="
@@ -109,7 +93,7 @@ if
    // Add sig lines.
    //
    $challenge .= "-- OSCAR\n"
-              .  "-- Home page: " . OscarHomePageUrl() . "\n"
+              .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
               .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
@@ -129,7 +113,7 @@ if
    //
    if ($result)
       {
-      PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+      PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
       echo "<p>The OSCAR system has sent a challenge message to <b>$approving_email_addr</b>.</p>";
       echo "Related destinations:\n"
          . "<ul>\n"
@@ -156,7 +140,6 @@ if
       </b>
       <?
       }
-   }
    }
 else
    {

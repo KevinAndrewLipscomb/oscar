@@ -2,13 +2,9 @@
 //
 // $Id$
 //
-require_once("f_runmode.phtml");
 $mode = "";
 //
-require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
 require_once("f_plaintextofnote.phtml");
@@ -17,11 +13,15 @@ require_once("f_oscarmailheaders.phtml");
 require_once("f_formattednoteappendage.phtml");
 require_once("f_htmlofnote.phtml");
 //
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
 $month_abbrev = $month_abbrev;
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 unset($HTTP_POST_VARS['month_abbrev']);
    //
@@ -39,32 +39,16 @@ unset($HTTP_POST_VARS['month_abbrev']);
    <tr>
       <td>
         <table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-           <? PutLibPhotoRandomPlaced("oscarsystem",1); ?>
+           <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1); ?>
         </td><td>
            <h6 align="center">
               KVEO-IT-PROJECT<br>
-              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href="javascript:close();">OSCAR SYSTEM</a><br>
               <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
            <h1 align="center">Relay Results</h1>
         </td></tr></table>
         <hr>
 <?
-//
-// Connect to the database.
-//
-if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
-   {
-   ?>
-   <h2><i>Sorry...</i></h2>
-   <b>
-   <blockquote>
-      <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your relay operation later.</p>"; ?>
-   </blockquote>            
-   </b>
-   <?
-   }
-else
-{
 //
 // $HTTP_POST_VARS holds the array of argument-value pairs that are sent to this page via HTTP's POST method.  From the
 // EMS schedule-coordinator 'Relay unused' form of our perform-gen-report.phtml script, a sample representation of
@@ -417,7 +401,7 @@ while ($row = mysqli_fetch_array($result))
                        . "I have used OSCAR to relay $num_relayed_sheets availability sheet(s) to $coord_agency.\n\n"
                        . "Please click here to retrieve an up-to-date\n"
                        . "compiled availability report:\n"
-                       . OscarRootUrl() . "/" . $mode . "perform-gen-report.phtml"
+                       . $ini[server][root_url] . "/" . $mode . "perform-gen-report.phtml"
                        . "?name=" . $coord_agency . "SchedCoord"
                        . "&email_addr=$relay_notice_recipient"
                        . "&applicable_month_num=" . date("n",strtotime("$month_abbrev 1"))
@@ -612,7 +596,6 @@ $db_link->query("drop table intermediate_avail_sheet")
 echo "</blockquote>\n";
 echo "<br><p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
    . RoleEmailAddress($db_link,"",$mode) . "\">OSCAR System Administrator</a>.</p>";
-}
 ?>
          <hr>
          <p><small><small><em><pre>$Id$</pre></em></small></small>
@@ -622,4 +605,3 @@ echo "<br><p>If you have feedback about the technical aspects of this process, p
 </body>
 
 </html>
-

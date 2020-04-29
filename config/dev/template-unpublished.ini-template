@@ -1,0 +1,13 @@
+;<? die(); ?>
+
+[db]
+database = "oscar_d"
+pwd = "~ki-oscar-d-password~"
+server = "127.0.0.1"
+uid = "ki-oscar-d"
+
+[dbkalipso]
+database = "kalipso_d"
+pwd = "~ki-oscark-d-password~"
+server = "127.0.0.1"
+uid = "ki-oscark-d"

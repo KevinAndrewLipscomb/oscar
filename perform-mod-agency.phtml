@@ -2,33 +2,28 @@
 //
 // $Id$
 //
-require_once("f_runmode.phtml");
 $mode = "";
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 //
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 ?>
 <html>
 <head><title>Modify Squad Participant Status</title></head>
 <? BodyOpen(); ?>
 <table align=center width=80%><tr><td>
-<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href="javascript:close();">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
 <H1 ALIGN=CENTER>Modify Squad Participant Status</H1>
 <hr>
 <?
 if ($token != "")
    {
-   //
-   // Connect to the database.
-   //
-   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
-      {
       //
       // Get the parameters associated with the token.
       //
@@ -72,7 +67,7 @@ if ($token != "")
             )
             or die("Clean-up failed with error: " . mysqli_error($db_link));
          //
-         PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+         PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
          echo "<p>The status of agency '$enumeral' has been changed to ";
          if ($new_be_active == "FALSE") echo "NON";
          echo "PARTICIPANT.</p>\n"
@@ -104,21 +99,6 @@ if ($token != "")
          </b>
          <?
          }
-      }
-   else
-      {
-      //
-      // Fill the page out with a warning and instructions.
-      //
-      ?>
-      <h2><i>Sorry...</i></h2>
-      <b>
-      <blockquote>
-         <p>OSCAR's database is temporarily unavailable.&nbsp; Please try your modification operation later.</p>
-      </blockquote>            
-      </b>
-      <?
-      }
    }
 else
    {

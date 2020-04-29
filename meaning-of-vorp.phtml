@@ -2,10 +2,11 @@
 //
 // $Id$
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
+//
+$ini = AppSettings();
+$dbkalipso_link = DbkalipsoLink($ini);
 ?>
 <html>
 
@@ -16,10 +17,10 @@ require_once("f_roleemailaddress.phtml");
    <tr>
       <td>
            <h6 align="center">
-              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+              KVEO-IT-PROJECT - <a href="javascript:close();">OSCAR SYSTEM</a></h6>
            <h1 align="center">What is a "VORP"?</h1>
         <hr>
-        <? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?>
+        <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right"); ?>
         <p><b>VORP</b> stands for Volunteer Operations Response Personnel.&nbsp; VORPs include volunteers who staff the
         following EMS resources:</p>
         <ul>

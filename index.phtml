@@ -18,19 +18,16 @@ if (!ini_get('register_globals'))
 //
 error_reporting(E_ALL);
 //
-require_once("f_runmode.phtml");
 $mode = "";
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_numsheets.phtml");
 require_once("f_serverstatus.phtml");
-require_once("f_refertooscartrack.phtml");
 //
-$connected = (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE");
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
 ?>
 <html>
 
@@ -46,18 +43,7 @@ $connected = (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE");
             <div align="left">
                <table border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                     <td rowspan="5">
-                     <?
-                     if ($connected)
-                        {
-                        PutLibPhotoRandomPlaced("oscarsystem",1);
-                        }
-                     else
-                        {
-                        echo "&nbsp;";
-                        }
-                     ?>
-                     </td>
+                     <td rowspan="5"><? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1); ?></td>
                      <td rowspan="5" width="20">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                      <td width="22">
                         <h5></h5>
@@ -135,7 +121,7 @@ $connected = (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE");
                          <blockquote>
                            <b>
                              <tt>
-                               <a target="_blank" href="http://frompaper2web.com/OscarTRACK">http://frompaper2web.com/OscarTRACK</a>
+                               <a target="_blank" href="<? echo $ini[server][host_url]/[supperapp]; ?>"><? echo $ini[server][host_url]/[supperapp]; ?></a>
                              </tt>
                            </b>
                          </blockquote>

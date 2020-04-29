@@ -2,13 +2,13 @@
 //
 // $Id: f_writecalendarbody.phtml 541 2001-12-02 04:01:08Z kevinanlipscomb $
 //
-function ReferToOscarTrack()
+function ReferToOscarTrack($ini)
    {
    echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">\n"
    .    "  <tr>\n"
    .    "    <td align=\"center\">\n"
    .    "      <small>Looking for the <i>Roster</i>, <i>Fleet Status</i>, or more?</small><br/>\n"
-   .    "      <big><big><b><a href=\"http://frompaper2web.com/OscarTRACK\">Visit OscarTRACK</a></b></big></big>\n"
+   .    "      <big><big><b><a href=\"" . $ini[server][host_url]/[supperapp] . "\">Visit OscarTRACK</a></b></big></big>\n"
    .    "    </td>\n"
    .    "  </tr>\n"
    .    "</table>\n";

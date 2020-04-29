@@ -16,7 +16,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
@@ -28,21 +27,21 @@ $submitter = $submitter;
 $phone_num = $phonenum;
 $emailaddr = $emailaddr;
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
-//
-require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
-
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 $html = "<html>\n";
 $html .= "<head><title>Class Act Award Nomination Processing</title></head>\n";
 $html .= "<body bgcolor=#FFFFFF>\n";
 $html .= "<table align=center width=80%><tr><td>\n";
-$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=\"javascript:close();\">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
 $html .= "<H1 ALIGN=CENTER>Class Act Award Nomination Processing</H1>\n";
 $html .= "<hr>\n";
 //
@@ -60,21 +59,7 @@ if
    {
    //
    // All required values are present.  Generate the email message.
-   // Connect to the database.
    //
-   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
-      {
-      ?>
-      <h2><i>Sorry...</i></h2>
-      <b>
-      <blockquote>
-         <? echo "<p>OSCAR's database has gone offline.&nbsp; Please try your retraction operation later.</p>"; ?>
-      </blockquote>            
-      </b>
-      <?
-      }
-   else
-      {
       //
       //           0        1         2         3         4         5         6         7
       //           123456789012345678901234567890123456789012345678901234567890123456789012
@@ -109,7 +94,7 @@ if
       // Add sig lines.
       //
       $message .= "-- OSCAR\n"
-               .  "-- Home page: " . OscarHomePageUrl() . "\n"
+               .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
                .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
       //
       // Send the mail.
@@ -131,7 +116,7 @@ if
       //
       if ($result)
          {
-         PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+         PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
          echo "<p><b>Thanks!</b></p>";
          echo "<p>OSCAR has sent your nomination to <b>$recipient</b>.</p>";
          }
@@ -158,7 +143,6 @@ if
          </b>
          <?
          }
-      }
    }
 else
    {

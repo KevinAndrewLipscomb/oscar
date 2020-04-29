@@ -16,15 +16,16 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_agencyselectionlist.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 ?>
 <html>
 
@@ -39,28 +40,13 @@ require_once("f_agencyselectionlist.phtml");
         <table><tr><td>
            <h6 align="center">
               KVEO-IT-PROJECT<br>
-              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href="javascript:close();">OSCAR SYSTEM</a><br>
               <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
            <h1 align="center">Reconfirmation/Retraction Request Form</h1>
         </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-           <? PutLibPhotoRandomPlaced("oscarsystem",1); ?>
+           <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1); ?>
         </td></tr></table>
         <hr>
-        <?
-        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
-           {
-           ?>
-           <h2><i>Sorry...</i></h2>
-           <b>
-           <blockquote>
-              <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try again later.</p>"; ?>
-           </blockquote>            
-           </b>
-           <?
-           }
-        else
-        {
-        ?>
         <p>This form allows you to reconfirm what you have submitted to the OSCAR system, or even to "take back" your 
            previous submissions.</p>
         <blockquote>
@@ -123,9 +109,6 @@ require_once("f_agencyselectionlist.phtml");
               <input type=submit value="Send request"><input type=reset>
            </form>
         </blockquote>
-        <?
-        }
-        ?>
         <hr>
         <p><small><small><em><pre>$Id$</pre></em></small></small>
        </td>

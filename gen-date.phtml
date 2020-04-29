@@ -2,28 +2,26 @@
 //
 // $Id$
 //
-require_once("f_connectselectdbinstanceunpublished.phtml");
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
 ?>
 <html>
 
 <head><title>OSCAR - Explanation of report generation times</title></head>
 
-<?
-BodyOpen();
-ConnectSelectDbInstanceUNPUBLISHED($db_link);
-?>
+<? BodyOpen(); ?>
 <table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
    <tr>
       <td>
            <h6 align="center">
-              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+              KVEO-IT-PROJECT - <a href="javascript:close();">OSCAR SYSTEM</a></h6>
            <h1 align="center">Explanation of report generation times</h1>
         <hr>
-        <? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?>
+        <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right"); ?>
         <p>Sometimes your report may have been generated before you actually requested it.</p>
         <p><i>How can this be?</i></p>
         <p>The OSCAR system <i>caches</i> the reports that it generates.&nbsp; This means that any generated report is kept
@@ -46,4 +44,3 @@ ConnectSelectDbInstanceUNPUBLISHED($db_link);
 </body>
 
 </html>
-

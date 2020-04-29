@@ -2,16 +2,17 @@
 //
 // $Id$
 //
-require_once("f_runmode.phtml");
 $mode = "";
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_agencyselectionlist.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 ?>
 <html>
 
@@ -26,17 +27,13 @@ require_once("f_agencyselectionlist.phtml");
         <table><tr><td>
            <h6 align="center">
               KVEO-IT-PROJECT<br>
-              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href="javascript:close();">OSCAR SYSTEM</a><br>
               <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
            <h1 align="center">Availability Submission (Part 1)</h1>
         </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-           <? PutLibPhotoRandomPlaced("oscarsystem",1); ?>
+           <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1); ?>
         </td></tr></table>
         <hr>
-        <?
-        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
-           {
-           ?>
            <p><i>Submission is a simple two-step process.&nbsp; To 
               complete Part 1, fill out this form and press the "Continue..." button.</i></p>
            <p>All fields on this page are required.</p>
@@ -77,20 +74,6 @@ require_once("f_agencyselectionlist.phtml");
                be available.</p>
             <p><input type="submit" value="Continue..."><input type="reset"></p>
             </form>
-            <?
-            }
-         else
-            {
-            ?>
-            <h2><i>Sorry...</i></h2>
-            <b>
-            <blockquote>
-               <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please try your submission later.</p>"; ?>
-            </blockquote>            
-            </b>
-            <?
-            }
-         ?>
          <p><small><small><em><pre>$Id$</pre></em></small></small>
        </td>
     </tr>

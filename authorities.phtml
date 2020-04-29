@@ -2,10 +2,12 @@
 //
 // $Id$
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
 ?>
 <html>
 
@@ -16,10 +18,10 @@ require_once("f_roleemailaddress.phtml");
    <tr>
       <td>
            <h6 align="center">
-              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+              KVEO-IT-PROJECT - <a href="javascript:close();">OSCAR SYSTEM</a></h6>
            <h1 align="center">Authorities</h1>
         <hr>
-        <? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?>
+        <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right"); ?>
         <p>Only OSCAR system authorities have the ability to read the special request notes that users can submit with 
            their availabilities.&nbsp;  These authorities are:<p>
         <ul>

@@ -3,8 +3,6 @@
 // $Id$
 //
 $foundation_dir = "../foundation";
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("$foundation_dir/std_style_class.php");
 ?>
@@ -17,10 +15,10 @@ require_once("$foundation_dir/std_style_class.php");
    <tr>
       <td>
            <h6 align="center">
-              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+              KVEO-IT-PROJECT - <a href="javascript:close();">OSCAR SYSTEM</a></h6>
            <h1 align="center">What's New</h1>
         <hr>
-        <? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?>
+        <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right"); ?>
         <?php echo std_style_class::CatchUpBlurb(); ?>
         <p><b>2009-10-08:&nbsp; </b>Added support for Air Ambulance team.&nbsp; Updated indicators to reflect EMS-7 program.&nbsp; Switched random photo display from cats to oscarsystem.&nbsp; Improved pre-production testing arrangement.</p>
         <p><b>2005-10-11:&nbsp; </b>Revised statistical reporting in some places to focus on submissions from volunteer ambulance personnel, as opposed to other ERS members.</p>
@@ -111,7 +109,7 @@ require_once("$foundation_dir/std_style_class.php");
            like conventional month-at-a-glance calendars.</p>
         <p><b>2001-11-21:&nbsp; </b>Revised verbage in a few sections to indicate that the first part of the retraction
            process may also be used to simply reconfirm prior submissions.</p>
-        <? PutLibPhotoRandomPlaced("oscarsystem",1,"left"); ?>
+        <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"left"); ?>
         <p><b>2001-11-16:&nbsp; </b>Major enhancements to support availability coordination at both the department and 
            squad/team levels.&nbsp; Features will be activated on per-agency basis via database updates at direction of 
            EMS-2.&nbsp; Added availability summaries to the full reports that authorities get.&nbsp; Added failsafe

@@ -16,28 +16,28 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
 $coord_agency = $coord_agency;
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
-//
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_squadofcoordagency.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 $html = "<html>\n";
 $html .= "<head><title>Remove Trust</title></head>\n";
 $html .= "<body bgcolor=#FFFFFF>\n";
 $html .= "<table align=center width=80%><tr><td>\n";
-$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=\"javascript:close();\">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
 $html .= "<H1 ALIGN=CENTER>Remove Trust</H1>\n";
 $html .= "<hr>\n";
 //
@@ -49,26 +49,9 @@ if ($coord_agency != "")
    {
    //
    // All required values are present.
-   // Connect to the database.
-   //
-   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
-      {
-      ?>
-      <h2><i>Sorry...</i></h2>
-      <b>
-      <blockquote>
-         <? echo "<p>OSCAR's database has gone offline.&nbsp; Please try your trust removal operation later.</p>"; ?>
-      </blockquote>            
-      </b>
-      <?
-      }
-   else
-   {
-   $squad = SquadOfCoordAgency($db_link,$coord_agency);
-   //
    // Retrieve the list of trusted users for the specified agency.
    //
-   $result = $db_link->query("select email_address from " . $mode . "trusted_user where coord_agency='$squad'")
+   $result = $db_link->query("select email_address from " . $mode . "trusted_user where coord_agency='$coord_agency'")
       or die("Query failed with error: " . mysqli_error($db_link));
    //
    // Generate the appropriate email message.
@@ -88,11 +71,11 @@ if ($coord_agency != "")
          {
          extract($row);
          $challenge .= "To remove $email_address, click here:\n"
-                    .  OscarRootUrl()
+                    .  $ini[server][root_url]
                     .  "/" . $mode . "untrust.phtml?a="
                     .  base64_encode($email_address)
                     .  "&b="
-                    .  base64_encode($squad)
+                    .  base64_encode($coord_agency)
                     .  "\n\n";
          }
       }
@@ -109,7 +92,7 @@ if ($coord_agency != "")
    // Add sig lines.
    //
    $challenge .= "-- OSCAR\n"
-              .  "-- Home page: " . OscarHomePageUrl() . "\n"
+              .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
               .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
@@ -130,7 +113,7 @@ if ($coord_agency != "")
    //
    if ($result)
       {
-      PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+      PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
       echo "<p>The OSCAR system has sent a challenge message to <b>$sched_coord_email_addr</b>.</p>\n"
          . "<p><b>Check your email periodically for the challenge message, which contains instructions for completing the "
          . "trust removal process.</b></p>\n"
@@ -153,7 +136,6 @@ if ($coord_agency != "")
       </b>
       <?
       }
-   }
    }
 else
    {

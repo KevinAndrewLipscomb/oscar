@@ -2,10 +2,11 @@
 //
 // $Id$
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
+//
+$ini = AppSettings();
+$dbkalipso_link = DbkalipsoLink($ini);
 ?>
 <html>
 
@@ -15,10 +16,10 @@ require_once("f_roleemailaddress.phtml");
 <table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
    <tr>
       <td>
-        <h6 align="center">KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+        <h6 align="center">KVEO-IT-PROJECT - <a href="javascript:close();">OSCAR SYSTEM</a></h6>
         <h1 align="center">OSCAR U.</h1>
         <hr>
-        <? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?>
+        <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right"); ?>
         <p>The following OSCAR training is available online.&nbsp; Note that HTML versions may be optimized for viewing
            with Internet Explorer 5.0 or higher:</p>
         <table cellpadding=5>
