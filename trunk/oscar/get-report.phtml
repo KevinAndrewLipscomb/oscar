@@ -16,23 +16,19 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
 //
 // Assign incoming argument to itself to avoid "uninitialized variable" error later.
 //
 $digest = $digest;
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
-//
-require_once("f_connectselectdbinstanceunpublished.phtml");
-require_once("f_oscarhomepageurl.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
 //
-// Connect to the database.
+$ini = AppSettings();
+$db_link = DbLink($ini);
 //
-ConnectSelectDbInstanceUNPUBLISHED($db_link);
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 $result = $db_link->query("select report from " . $mode . "report_cache where digest = '$digest'")
    or die("The query failed with error:  " . mysqli_error($db_link));
@@ -52,7 +48,7 @@ else
                <td>
                   <h6 align="center">
                      KVEO-IT-PROJECT<br>
-                     <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+                     <a href="javascript:close();">OSCAR SYSTEM</a><br>
                      <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
                   <H1 ALIGN="CENTER">Get Report Failure</H1>
                   <hr>

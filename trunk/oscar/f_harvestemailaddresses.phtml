@@ -58,7 +58,7 @@ function HarvestEmailAddresses
                //
                $harvest_message .= "\n";
                $harvest_message .= "-- OSCAR\n";
-               $harvest_message .= "-- Home page: " . OscarHomePageUrl() . "\n";
+               $harvest_message .= "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n";
                $harvest_message .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
                //
                // Send the mail.

@@ -16,48 +16,31 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
+//
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 $html = "<html>\n"
       . "   <head><title>Request Escalation</title></head>\n"
       . "   " . BodyOpen() . "\n"
       . "      <table align=center width=80%><tr><td>\n"
       . "         <H6 ALIGN=CENTER>KVEO-IT-PROJECT<br>\n"
-      . "         <a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br>\n"
+      . "         <a href=\"javascript:close();\">OSCAR SYSTEM</a><br>\n"
       . "         <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n"
       . "         <H1 ALIGN=CENTER>Request Escalation</H1>\n"
       . "         <hr>\n";
 //
 echo $html;
-//
-// Connect to the database.
-//
-if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
-   {
-   //
-   // Fill the page out with a warning and instructions.
-   //
-   ?>
-   <h2><i>Sorry...</i></h2>
-   <b>
-   <blockquote>
-      <p>OSCAR's database is temporarily unavailable.&nbsp; Please try your escalation later.</p>
-   </blockquote>            
-   </b>
-   <?
-   }
-else
-{
 //
 // Create the notice.
 //
@@ -75,8 +58,8 @@ if (mysqli_num_rows($result) or ($email_addr == RoleEmailAddress($db_link,"sched
    // Then someone has registered the requestor as trusted in the time since they first received their claim ticket.
    // Just send an approval notice to the requestor directly and forget actual escalation.
    //
-   $result = SendApprovalNotice($db_link,$email_addr,$digest,$mode);
-   PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+   $result = SendApprovalNotice($ini,$db_link,$email_addr,$digest,$mode);
+   PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
    echo "<p>An OSCAR authority from $coord_agency has registered you as a trusted user.&nbsp; </p>";
    echo "<p><b>Check your email for a message titled, <u>Your OSCAR report</u>.</b></p>";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</p>";
@@ -109,18 +92,18 @@ else
       $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
       $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
       $screen_notice .= "   click here:\n";
-      $screen_notice .= OscarRootUrl() . "/" . $mode . "approve-and-trust.phtml?digest=$digest&email_addr=$email_addr&coord_agency=$coord_agency\n\n\n";
+      $screen_notice .= $ini[server][root_url] . "/" . $mode . "approve-and-trust.phtml?digest=$digest&email_addr=$email_addr&coord_agency=$coord_agency\n\n\n";
       $screen_notice .= "2. To approve JUST THIS ONE request without\n";
       $screen_notice .= "   marking the user as trusted, click here:\n";
-      $screen_notice .= OscarRootUrl() . "/" . $mode . "approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
+      $screen_notice .= $ini[server][root_url] . "/" . $mode . "approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
       $screen_notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n\n";
       $screen_notice .= "The report is available for review at:\n";
-      $screen_notice .= OscarRootUrl() . "/" . $mode . "get-report.phtml?digest=$digest\n\n\n";
+      $screen_notice .= $ini[server][root_url] . "/" . $mode . "get-report.phtml?digest=$digest\n\n\n";
       //
       // Add sig lines.
       //
       $screen_notice .= "-- OSCAR\n";
-      $screen_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
+      $screen_notice .= "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n";
       $screen_notice .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
       //
       // Then send a claim ticket to the requestor directly.
@@ -153,7 +136,7 @@ else
          $claim_ticket .= "   $next_authority\n\n";
          $claim_ticket .= "To escalate your request to the above\n";
          $claim_ticket .= "authority, click here:\n\n";
-         $claim_ticket .= OscarRootUrl() . "/" . $mode . "escalate.phtml?level=" . $next_level . "&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr&coord_agency=$coord_agency\n\n";
+         $claim_ticket .= $ini[server][root_url] . "/" . $mode . "escalate.phtml?level=" . $next_level . "&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr&coord_agency=$coord_agency\n\n";
          //
          $claim_ticket_subject = "OSCAR claim ticket";
          }
@@ -165,7 +148,7 @@ else
       // Add sig lines.
       //
       $claim_ticket .= "-- OSCAR\n";
-      $claim_ticket .= "-- Home page: " . OscarHomePageUrl() . "\n";
+      $claim_ticket .= "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n";
       $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
       //
       // Send the mail.
@@ -196,7 +179,7 @@ else
       }
    if ($result)
       {
-      PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+      PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
       echo "<p>The OSCAR system has successfully escalated your request.&nbsp;  Because the report you requested contains "
          . "personal information, a screening notice has been sent to the <a href=mailto:\""
          . RoleEmailAddress($db_link,"escalation-level-$level-recipient",$mode,$coord_agency)
@@ -226,7 +209,6 @@ else
       <?
       }
    }
-}
 ?>
 <hr>
 <p><small><small><em><pre>$Id$</pre></em></small></small>

@@ -15,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
@@ -95,16 +94,15 @@ $n30 = $n30;
 $n31 = $n31;
 $odnmid = $odnmid;
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
-//
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_htmlofnote.phtml");
 require_once("f_bevalidpartialshiftspec.phtml");
 //
+$ini = AppSettings();
+$db_link = DbLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 ?>
 <html>
 <head><title>OSCAR - Availability submission</title></head>
@@ -114,7 +112,7 @@ require_once("f_bevalidpartialshiftspec.phtml");
       <td>
          <h6 align="center">
          KVEO-IT-PROJECT<br>
-         <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+         <a href="javascript:close();">OSCAR SYSTEM</a><br>
          <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
          <H1 ALIGN="CENTER">Availability submission</H1>
          <hr>
@@ -281,8 +279,6 @@ require_once("f_bevalidpartialshiftspec.phtml");
             <?
            }
          else
-         {
-         if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
             {
             //
             // Validate parameters.
@@ -493,22 +489,6 @@ require_once("f_bevalidpartialshiftspec.phtml");
             <p><input type="submit" value="Submit"><input type=reset></p>
           </form>
           <?
-            }
-          }
-         else
-            {
-            //
-            // Fill the page out with a warning and instructions.
-            //
-            ?>
-            <h2><i>Sorry...</i></h2>
-            <b>
-            <blockquote>
-               <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please retry your submission later.</p>"; ?>
-            </blockquote>            
-            </b>
-            <?
-            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
             }
          }
          ?>

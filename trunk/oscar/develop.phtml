@@ -2,29 +2,27 @@
 //
 // $Id$
 //
-require_once("f_connectselectdbinstanceunpublished.phtml");
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
 ?>
 <html>
 
 <head><title>OSCAR - How to contribute to the KVEO-IT-PROJECT</title></head>
 
-<?
-ConnectSelectDbInstanceUNPUBLISHED($db_link);
-BodyOpen();
-?>
+<? BodyOpen(); ?>
 <table border="0" cellpadding="0" cellspacing="0" width="80%" align="center">
    <tr>
       <td>
            <h6 align="center">
-              KVEO-IT-PROJECT - <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a></h6>
+              KVEO-IT-PROJECT - <a href="javascript:close();">OSCAR SYSTEM</a></h6>
            <h1 align="center">How to contribute to the KVEO-IT-PROJECT</h1>
         <hr>
-        <? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?>
-        <p>The OSCAR system is one of the modules in an <a href=http://www.opensource.org>open-source</a> project called 
+        <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right"); ?>
+        <p>The OSCAR system is one of the modules in an <a href="http://www.opensource.org">open-source</a> project called 
            the Kempsville Volunteer Emergency Organization Information Technology Project (KVEO-IT-PROJECT), the purpose
            of which is...</p>
            <blockquote><i>To develop Information Technology resources for Volunteer Emergency Organizations.&nbsp; Domains include
@@ -34,7 +32,7 @@ BodyOpen();
            <dl>
               <dt><a href=http://www.kvrs.org>www.KVRS.org</a></dt>
               <dd>Official web site of the Kempsville Volunteer Rescue Squad, Virginia Beach, Virginia</dd>
-              <dt><br><a href=http://frompaper2web.com/OscarTRACK>OscarTRACK</a></dt>
+              <dt><br><a href="<? echo $ini[server][host_url] . "/" . $ini[app][superapp]; ?>">OscarTRACK</a></dt>
               <dd>Next-generation personnel, vehicle, and fund drive data tracking tool for volunteer rescue squads</dd>
            </dl>
         </blockquote>
@@ -45,13 +43,13 @@ BodyOpen();
            or other documentation, graphic design or mutimedia skills, etc.&nbsp; The KVEO-IT-PROJECT is a platform from 
            which to launch any idea that fits the project's purpose.</p>
         <p>Items that need attention include
-           <a href=http://sf.net/tracker/?atid=351099&group_id=1099&func=browse>feature requests</a>,
-           <a href=http://sf.net/tracker/?atid=201099&group_id=1099&func=browse>support requests</a>, and 
-           <a href=http://sf.net/tracker/?atid=101099&group_id=1099&func=browse>bugs</a>.</p>
+           <a href="https://sf.net/p/kveo-it-project/feature-requests/">feature requests</a>,
+           <a href="https://sf.net/p/kveo-it-project/support-requests/">support requests</a>, and 
+           <a href="https://sf.net/p/kveo-it-project/bugs/">bugs</a>.</p>
         <p>At a minimum, anyone interested in contributing to the project should procede as follows:</p>
         <ol>
-           <li><p>Know <a href=http://www.subversion.tigris.org>what Subversion is and basically how to use it.</a></p>
-           <li><p>Visit <a href=http://sourceforge.net>SourceForge</a> and sign up as a New User.</p></li>
+           <li><p>Know <a href="https://en.wikipedia.org/wiki/Apache_Subversion">what Subversion is and basically how to use it.</a></p>
+           <li><p>Visit <a href="https://sf.net">SourceForge</a> and sign up as a New User.</p></li>
            <li><p><a href=mailto:<? echo RoleEmailAddress($db_link,""); ?>>Email me</a>, tell me how you'd like to contribute, and give me
               your SourceForge username.</p></li>
         </ol>

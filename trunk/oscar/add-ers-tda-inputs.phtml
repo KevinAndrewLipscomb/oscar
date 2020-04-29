@@ -2,16 +2,17 @@
 //
 // $Id$
 //
-require_once("f_runmode.phtml");
 $mode = "";
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_availlist.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 ?>
 <html>
 <head><title>OSCAR - Confirmation</title></head>
@@ -21,7 +22,7 @@ require_once("f_availlist.phtml");
       <td>
          <h6 align="center">
             KVEO-IT-PROJECT<br>
-            <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+            <a href="javascript:close();">OSCAR SYSTEM</a><br>
             <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
          <H1 ALIGN="CENTER">Confirmation</H1>
          <hr>
@@ -60,10 +61,6 @@ require_once("f_availlist.phtml");
             $applicable_month_time = mktime(12,0,0,$applicable_month_num,1);
             $applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
             $expiration_date = date("Y-m-d",mktime(0,0,0,($applicable_month_num + 1),0));
-            //
-            // Connect to the database.
-            //
-            ConnectSelectDbInstanceUNPUBLISHED($db_link);
             //
             $found_something_to_process = "";
             $be_problem = "";
@@ -242,7 +239,7 @@ require_once("f_availlist.phtml");
                }
             else
                {
-               PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+               PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
                echo "<p><b>Thanks!</b></p>";
                echo "<p>If you have feedback about the technical aspects of this process, please contact the "
                   . "<a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>\n";

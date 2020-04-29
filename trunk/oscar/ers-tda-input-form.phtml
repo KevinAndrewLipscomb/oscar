@@ -7,14 +7,15 @@
 $email_addr = $email_addr;
 $applicable_month_num = $applicable_month_num;
 //
-require_once("f_runmode.phtml");
 $mode = "";
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once($mode . "f_roleemailaddress.phtml");
+//
+$ini = AppSettings();
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 ?>
 <html>
 
@@ -29,12 +30,12 @@ require_once($mode . "f_roleemailaddress.phtml");
         <table><tr><td>
            <h6 align="center">
               KVEO-IT-PROJECT<br>
-              <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+              <a href="javascript:close();">OSCAR SYSTEM</a><br>
               <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
            <h1 align="center">ERS TDA Input Form</h1>
            <h2 align="center">for VBFD Scheduling Officers</h2>
         </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
-           <? PutLibPhotoRandomPlaced("oscarsystem",1); ?>
+           <? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1); ?>
         </td></tr></table>
         <hr>
         <p>This form is intended for the use of VBFD Scheduling Officers.</p>

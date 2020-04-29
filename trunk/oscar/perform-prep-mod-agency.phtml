@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-require_once("f_runmode.phtml");
 $mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
@@ -10,20 +9,21 @@ $mode = "";
 $enumeral = $enumeral;
 $current_be_active = $current_be_active;
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
-//
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 $html = "<html>\n";
 $html .= "<head><title>Toggle Squad Participation</title></head>\n";
 $html .= "<body bgcolor=#FFFFFF>\n";
 $html .= "<table align=center width=80%><tr><td>\n";
-$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$html .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=\"javascript:close();\">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
 $html .= "<H1 ALIGN=CENTER>Toggle Squad Participation</H1>\n";
 $html .= "<hr>\n";
 //
@@ -41,22 +41,6 @@ if
    {
    //
    // All required values are present.
-   // Connect to the database.
-   //
-   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) != "TRUE")
-      {
-      ?>
-      <h2><i>Sorry...</i></h2>
-      <b>
-      <blockquote>
-         <? echo "<p>OSCAR's database has gone offline.&nbsp; Please try your toggle operation later.</p>"; ?>
-      </blockquote>            
-      </b>
-      <?
-      }
-   else
-   {
-   //
    // Generate a random token and enter a record in the pend_mod_agency table.
    //
    if ($current_be_active == "TRUE")
@@ -95,14 +79,14 @@ if
    $challenge .= "PARTICIPANT.\n\n"
               .  "THE CHANGE IS NOT YET COMPLETE.  To\n"
               .  "complete the process, click here:\n"
-              .  OscarRootUrl()
+              .  $ini[server][root_url]
               .  "/" . $mode . "perform-mod-agency.phtml?token=$token\n\n"
               .  "To ABORT the change, DO NOTHING.\n\n";
    //
    // Add sig lines.
    //
    $challenge .= "-- OSCAR\n"
-              .  "-- Home page: " . OscarHomePageUrl() . "\n"
+              .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
               .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
@@ -123,7 +107,7 @@ if
    //
    if ($result)
       {
-      PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+      PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
       echo "<p>The OSCAR system has sent a challenge message to <b>$email_addr</b>.</p>";
       echo "<p><b>Check your email periodically for the challenge message, which contains instructions for completing the "
          . "modification process.</b></p>"
@@ -152,7 +136,6 @@ if
       </b>
       <?
       }
-   }
    }
 else
    {

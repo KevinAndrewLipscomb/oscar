@@ -16,24 +16,23 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
-//
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 //
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 ?>
 <html>
 <head><title>Remove Trust</title></head>
 <? BodyOpen(); ?>
 <table align=center width=80%><tr><td>
-<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=<? OscarHomePageUrl() ?>>OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
+<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href="javascript:close();">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>
 <H1 ALIGN=CENTER>Remove Trust</H1>
 <hr>
 <?
@@ -48,13 +47,8 @@ if
    )
 // then
    {
-   //
-   // Connect to the database.
-   //
-   if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
-      {
       $email_address = base64_decode($a);
-      $squad = base64_decode($b);
+      $coord_agency = base64_decode($b);
       //
       // Perform the specified update.
       //
@@ -62,27 +56,12 @@ if
          (
          "delete from " . $mode . "trusted_user "
          .  "where email_address='$email_address' "
-         .  "   and coord_agency='$squad' "
+         .  "   and coord_agency='$coord_agency' "
          )
          or die("Deletion failed with error: " . mysqli_error($db_link));
       //
-      PutLibPhotoRandomPlaced("oscarsystem",1,"right");
-      echo "<p><b>$email_address</b> is no longer trusted by agency <b>$squad</b>.</p>";
-      }
-   else
-      {
-      //
-      // Fill the page out with a warning and instructions.
-      //
-      ?>
-      <h2><i>Sorry...</i></h2>
-      <b>
-      <blockquote>
-         <p>OSCAR's database is temporarily unavailable.&nbsp; Please try your modification operation later.</p>
-      </blockquote>            
-      </b>
-      <?
-      }
+      PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
+      echo "<p><b>$email_address</b> is no longer trusted by agency <b>$coord_agency</b>.</p>";
    }
 else
    {
@@ -101,7 +80,7 @@ else
 ?>
 <br clear=both>
 <hr>
-<p><small><small><em><pre>$Id$</pre></em></small></small>
+<p><small><small><em><pre>$Id$</pre></em></small></small></p>
 </td>
 </tr>
 </table>

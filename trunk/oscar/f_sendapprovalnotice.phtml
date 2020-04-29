@@ -4,6 +4,7 @@
 //
 function SendApprovalNotice
    (
+   $ini,
    $db_link,
    $email_addr,
    $digest,
@@ -17,12 +18,12 @@ function SendApprovalNotice
    //                   123456789012345678901234567890123456789012345678901234567890123456789012
    $approval_notice =  "The OSCAR Availability Report\n";
    $approval_notice .= "you requested is available at:\n\n";
-   $approval_notice .= OscarRootUrl() . "/" . $mode . "get-report.phtml?digest=$digest\n\n";
+   $approval_notice .= $ini[server][root_url] . "/" . $mode . "get-report.phtml?digest=$digest\n\n";
    //
    // Add sig lines.
    //
    $approval_notice .= "-- OSCAR\n";
-   $approval_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
+   $approval_notice .= "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n";
    $approval_notice .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.

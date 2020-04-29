@@ -16,17 +16,18 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_writecalendarsubform.phtml");
 require_once("f_writecalendarbody.phtml");
+//
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 ?>
 <html>
 
@@ -39,20 +40,18 @@ require_once("f_writecalendarbody.phtml");
    <tr>
       <td>
         <table><tr>
-           <td><? PutLibPhotoRandomPlaced("oscarsystem",1); ?></td>
+           <td><? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1); ?></td>
            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
            <td>
               <h6 align="center">
                  KVEO-IT-PROJECT<br>
-                 <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a><br>
+                 <a href="javascript:close();">OSCAR SYSTEM</a><br>
                  <a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></h6>
               <h1 align="center">Availability Submission</h1>
            </td>
         </tr></table>
         <hr>
         <?
-        if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
-        {
         date_default_timezone_set('America/New_York');
         //
         // Validate parameters.
@@ -155,18 +154,6 @@ require_once("f_writecalendarbody.phtml");
            </b>
            <?
            echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</p>";
-           }
-        }
-        else
-           {
-            ?>
-            <h2><i>Sorry...</i></h2>
-            <b>
-            <blockquote>
-               <? echo "<p>OSCAR's database has gone offline.&nbsp; Please retry the submission process later.</p>"; ?>
-            </blockquote>            
-            </b>
-            <?
            }
         ?>
         <p><small><small><em><pre>$Id$</pre></em></small></small></td>

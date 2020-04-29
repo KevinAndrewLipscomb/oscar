@@ -17,12 +17,12 @@ if (!ini_get('register_globals'))
     }
   }
 error_reporting(E_ALL);
-require_once("f_runmode.phtml");
 $mode = "";
 //
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
+//
+$ini = AppSettings();
+$dbkalipso_link = DbkalipsoLink($ini);
 ?>
 <html>
 
@@ -37,11 +37,11 @@ require_once("f_bodyopen.phtml");
                <td>
                   <h6 align="center">
                      KVEO-IT-PROJECT<br>
-                     <a href="<? echo OscarHomePageUrl(); ?>">OSCAR SYSTEM</a>
+                     <a href="javascript:close();">OSCAR SYSTEM</a>
                   </h6>
                   <h1 align="center">Modify settings</h1>
                </td>
-               <td><? PutLibPhotoRandomPlaced("oscarsystem",1,"right"); ?></td>
+               <td><? PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right"); ?></td>
             </tr>
          </table>
          <hr>

@@ -16,7 +16,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-require_once("f_runmode.phtml");
 $mode = "";
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
@@ -91,13 +90,8 @@ $n29 = $n29;
 $n30 = $n30;
 $n31 = $n31;
 //
-if (RunMode($PHP_SELF)) error_reporting(E_ALL);
-//
 $foundation_dir = "../foundation";
-require_once("f_oscarhomepageurl.phtml");
-require_once("f_putlibphotorandomplaced.phtml");
 require_once("f_bodyopen.phtml");
-require_once("f_connectselectdbinstanceunpublished.phtml");
 require_once("f_roleemailaddress.phtml");
 require_once("f_oscarmailheaders.phtml");
 require_once("f_sendapprovalnotice.phtml");
@@ -113,20 +107,21 @@ require_once("f_formattednoteappendage.phtml");
 //require_once("$foundation_dir/std_style_class.php");
 require_once("f_coordagencyofclearedemailaddr.phtml");
 //
+$ini = AppSettings();
+$db_link = DbLink($ini);
+$dbkalipso_link = DbkalipsoLink($ini);
+//
+if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
+//
 $report = "<html>\n";
 $report .= "<head><title>Report generation</title></head>\n";
 $report .= "<body bgcolor=#FFFFFF>\n";
 $report .= "<table align=center width=80%><tr><td>\n";
-$report .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=" . OscarHomePageUrl() . ">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
+$report .= "<H6 ALIGN=CENTER>KVEO-IT-PROJECT<br><a href=\"javascript:close();\">OSCAR SYSTEM</a><br><a href=http://www.vabeachems.com>VIRGINIA BEACH DEPARTMENT OF EMS</a></H6>\n";
 $report .= "<H1 ALIGN=CENTER>Availability Report</H1>\n";
 $report .= "<hr>\n";
 //
 echo $report;
-//
-// Connect to the database.
-//
-if (ConnectSelectDbInstanceUNPUBLISHED($db_link) == "TRUE")
-{
 //
 // Validate parameters.
 //
@@ -1165,7 +1160,7 @@ if ($direct_approval = (mysqli_num_rows($result) || $be_authority_for_any_agency
    //
    // Then send an approval notice to the requestor directly.
    //
-   $result = SendApprovalNotice($db_link,$email_addr,$digest,$mode);
+   $result = SendApprovalNotice($ini,$db_link,$email_addr,$digest,$mode);
    }
 else
    {
@@ -1189,18 +1184,18 @@ else
    $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
    $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
    $screen_notice .= "   click here:\n";
-   $screen_notice .= OscarRootUrl() . "/" . $mode . "approve-and-trust.phtml?digest=$digest&email_addr=$email_addr&coord_agency=$coord_agency\n\n\n";
+   $screen_notice .= $ini[server][root_url] . "/" . $mode . "approve-and-trust.phtml?digest=$digest&email_addr=$email_addr&coord_agency=$coord_agency\n\n\n";
    $screen_notice .= "2. To approve JUST THIS ONE request without\n";
    $screen_notice .= "   marking the user as trusted, click here:\n";
-   $screen_notice .= OscarRootUrl() . "/" . $mode . "approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
+   $screen_notice .= $ini[server][root_url] . "/" . $mode . "approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
    $screen_notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n\n";
    $screen_notice .= "The report is available for review at:\n";
-   $screen_notice .= OscarRootUrl() . "/" . $mode . "get-report.phtml?digest=$digest\n\n\n";
+   $screen_notice .= $ini[server][root_url] . "/" . $mode . "get-report.phtml?digest=$digest\n\n\n";
    //
    // Add sig lines.
    //
    $screen_notice .= "-- OSCAR\n";
-   $screen_notice .= "-- Home page: " . OscarHomePageUrl() . "\n";
+   $screen_notice .= "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n";
    $screen_notice .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Then send a claim ticket to the requestor directly.
@@ -1228,12 +1223,12 @@ else
    $claim_ticket .= "   " . RoleEmailAddress($db_link,"escalation-level-1-recipient",$mode,$coord_agency) . "\n\n";
    $claim_ticket .= "To escalate your request to the above\n";
    $claim_ticket .= "authority, click here:\n\n";
-   $claim_ticket .= OscarRootUrl() . "/" . $mode . "escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr&coord_agency=$coord_agency\n\n";
+   $claim_ticket .= $ini[server][root_url] . "/" . $mode . "escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr&coord_agency=$coord_agency\n\n";
    //
    // Add sig lines.
    //
    $claim_ticket .= "-- OSCAR\n";
-   $claim_ticket .= "-- Home page: " . OscarHomePageUrl() . "\n";
+   $claim_ticket .= "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n";
    $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
    //
    // Send the mail.
@@ -1264,7 +1259,7 @@ else
    }
 if ($result)
    {
-   PutLibPhotoRandomPlaced("oscarsystem",1,"right");
+   PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
    if ($direct_approval)
       {
       if ($relay == "TRUE")
@@ -1366,21 +1361,6 @@ else
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
       . RoleEmailAddress($db_link,"",$mode)
       . "\">OSCAR System Administrator</a>.</p>";
-   }
-}
-else
-   {
-   //
-   // Fill the page out with a warning and instructions.
-   //
-   ?>
-   <h2><i>Sorry...</i></h2>
-   <b>
-   <blockquote>
-      <? echo "<p>OSCAR's database is temporarily offline.&nbsp; Please retry your request later.</p>"; ?>
-   </blockquote>            
-   </b>
-   <?
    }
 ?>
 <hr>
