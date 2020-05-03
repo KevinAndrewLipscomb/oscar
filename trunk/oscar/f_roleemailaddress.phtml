@@ -6,18 +6,20 @@ function RoleEmailAddress
    (
    $db_link,
    $role = "",
-   $mode = "",
    $coord_agency = "EMS"
    )
    {
    $saved_error_level = error_reporting(E_ALL);
+   //
+   $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+   $role = kix\k::Safe($role,kix\k::PhpValueOf_safe_hint_type("HYPHENATED_ALPHANUM"));
    //
    $email_addr = "";
    if ($role == "") $role = "sysadmin";
    //
    $result = $db_link->query
       (
-      "select email_addr from " . $mode . "authority "
+      "select email_addr from authority "
       .  "   where role='$role' "
       .  "      and coord_agency='$coord_agency' "
       .  "   limit 1"

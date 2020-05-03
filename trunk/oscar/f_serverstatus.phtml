@@ -2,16 +2,12 @@
 //
 // $Id$
 //
-function ServerStatus
-   (
-   $db_link,
-   $mode = ""
-   )
+function ServerStatus($db_link)
    {
    error_reporting(E_ALL);
    //
    $value = 0;
-   $result = $db_link->query("select value from " . $mode . "db_status limit 1")
+   $result = $db_link->query("select value from db_status limit 1")
       or die("ServerStatus query failed with error:  " . mysqli_error($db_link));
    if (mysqli_num_rows($result)) extract(mysqli_fetch_array($result));
    //

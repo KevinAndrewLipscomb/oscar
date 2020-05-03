@@ -2,7 +2,7 @@
 //
 // $Id$
 //
-$mode = "";
+if (isset($token)) $token = kix\k::Safe($token,kix\k::PhpValueOf_safe_hint_type("HEX"));
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -29,7 +29,7 @@ if ($token != "")
       //
       $result = $db_link->query
          (
-         "select enumeral, new_be_active from " . $mode . "pend_mod_agency where token='$token' "
+         "select enumeral, new_be_active from pend_mod_agency where token='$token' "
          )
          or die("Query failed with error: " . mysqli_error($db_link));
       if (mysqli_num_rows($result))
@@ -38,7 +38,7 @@ if ($token != "")
          //
          // Perform the specified update.
          //
-         $sql = "update " . $mode . "agency "
+         $sql = "update agency "
             .  "set be_active='$new_be_active' "
             .  "where enumeral='$enumeral' ";
          $db_link->query($sql) or die("Update failed with error: " . mysqli_error($db_link));
@@ -47,13 +47,13 @@ if ($token != "")
          //
          kix\k::SmtpMailSend
            (
-           RoleEmailAddress($db_link,"",$mode), //from
-           RoleEmailAddress($db_link,"",$mode), //to
+           RoleEmailAddress($db_link,""), //from
+           RoleEmailAddress($db_link,""), //to
            "OSCAR Participant Change", //subject
            stripslashes
              (
              "The \'OSCAR - "
-             . $mode
+             . ""
              . "perform-mod-agency.phtml\' script has processed the following operation on behalf of the Master OSCAR "
              . "Authority:\n\n$sql"
              ) //message_string
@@ -63,7 +63,7 @@ if ($token != "")
          //
          $db_link->query
             (
-            "delete from " . $mode . "pend_mod_agency where token='$token' "
+            "delete from pend_mod_agency where token='$token' "
             )
             or die("Clean-up failed with error: " . mysqli_error($db_link));
          //
@@ -73,9 +73,9 @@ if ($token != "")
          echo "PARTICIPANT.</p>\n"
             . "Related destinations:\n"
             . "<ul>\n"
-            . "   <li><a href=" . $mode . "form-set-agency.phtml>Toggle Squad Participation page</a></li>\n"
-            . "   <li><a href=" . $mode . "modify.phtml>Modify other OSCAR settings</a></li>\n"
-            . "   <li><a href=" . $mode . "index.phtml>Main OSCAR page</a></li>\n"
+            . "   <li><a href=form-set-agency.phtml>Toggle Squad Participation page</a></li>\n"
+            . "   <li><a href=modify.phtml>Modify other OSCAR settings</a></li>\n"
+            . "   <li><a href=index.phtml>Main OSCAR page</a></li>\n"
             . "</ul>\n";
          }
       else
@@ -93,7 +93,7 @@ if ($token != "")
                   in your challenge email message.</li>
                <li>Maybe you have already completed this modification.</li>
             </ul>
-            <p>If the above hints don't help, contact the <a href=mailto:"<? echo RoleEmailAddress($db_link,"",$mode); ?>">OSCAR
+            <p>If the above hints don't help, contact the <a href=mailto:"<? echo RoleEmailAddress($db_link,""); ?>">OSCAR
                System Administrator</a>.</p>
          </blockquote>            
          </b>

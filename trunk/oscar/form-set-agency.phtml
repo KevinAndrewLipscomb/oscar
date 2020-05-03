@@ -2,8 +2,6 @@
 //
 // $Id$
 //
-$mode = "";
-//
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
 //
@@ -48,7 +46,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
            </blockquote>
            <br>
            <p><b>WARNING:&nbsp; The buttons on this page send traceable email messages to the Master OSCAR Authority
-              (<? echo RoleEmailAddress($db_link,"master",$mode); ?>).&nbsp; These links are not intended for general use.</i></p>
+              (<? echo RoleEmailAddress($db_link,"master"); ?>).&nbsp; These links are not intended for general use.</i></p>
            <blockquote>
               <table cellpadding=4>
                  <tr>
@@ -57,14 +55,14 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
                     <td>&nbsp;</td>
                  </tr>
                  <?
-                 $result = $db_link->query("select * from " . $mode . "agency")
+                 $result = $db_link->query("select * from agency")
                     or die("Query failed with error: " . mysqli_error($db_link));
                  $num_rows = mysqli_num_rows($result);
                  for ($i=1; $i<=$num_rows; $i++)
                     {
                     extract(mysqli_fetch_array($result));
                     echo "<tr>\n"
-                       . "<form action=" . $mode . "perform-prep-mod-agency.phtml method=post>\n"
+                       . "<form action=perform-prep-mod-agency.phtml method=post>\n"
                        . "<input type=hidden name=enumeral value=$enumeral>\n"
                        . "<input type=hidden name=current_be_active value=$be_active>\n"
                        . "<td>$description</td>\n"

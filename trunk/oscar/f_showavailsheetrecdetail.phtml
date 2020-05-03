@@ -21,14 +21,12 @@ function ShowAvailSheetRecDetail
    $note,
    $expiration,
    $be_authority = "",
-   $mode = "",
    $coord_agency = "EMS",
    $be_needing_driver = "",
    $be_nondriver = "",
    $be_third = ""
    )
    {
-   if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    echo "<table cellspacing=5>\n";
    echo "   <tr><td align=right valign=top><b>Time&nbsp;of&nbsp;submission:</b></td><td><b>";
@@ -56,10 +54,9 @@ function ShowAvailSheetRecDetail
    echo "   <tr><td align=right valign=top>#Extra&nbsp;duties&nbsp;will&nbsp;run:</td><td><i>$num_extras</i></td></tr>\n";
    if ($be_authority == 1)
       {
-      echo "   <tr><td align=right valign=top>Note:</td><td><i>" . HtmlOfNote(stripslashes($note),$mode) . "</i></td></tr>\n";
+      echo "   <tr><td align=right valign=top>Note:</td><td><i>" . HtmlOfNote(stripslashes($note)) . "</i></td></tr>\n";
       }
    echo "</table>\n";
    //
-   if ($mode) error_reporting($saved_error_level);
    }
 ?>

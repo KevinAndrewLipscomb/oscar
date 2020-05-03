@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -46,18 +44,20 @@ if (
    )
 //then
    {
+      $email_addr = kix\k::Safe($email_addr,kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS"));
+      $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
       //
       // Insert the trusted email address into the trusted_user table.
       //
       $db_link->query
          (
-         "insert into " . $mode . "trusted_user "
+         "insert into trusted_user "
          .  "set email_address='$email_addr'"
          .  ", coord_agency='$coord_agency'"
          )
          or die("Trust assertion failed with error: " . mysqli_error($db_link));
       //
-      if (SendApprovalNotice($ini,$db_link,$email_addr,$digest,$mode))
+      if (SendApprovalNotice($ini,$db_link,$email_addr,$digest))
          {
          PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
          echo "<p>The OSCAR system has performed the following:</p>\n"
@@ -75,7 +75,7 @@ if (
          <h2><i>Error!</i></h2>
          <b>
          <blockquote>
-            <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
+            <? echo "<p>The OSCAR system encountered an internal error while processing your request.  Please let the <a href=mailto:" . RoleEmailAddress($db_link,"") . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>"; ?>
          </blockquote>            
          </b>
          <?

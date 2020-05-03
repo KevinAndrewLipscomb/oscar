@@ -6,14 +6,16 @@ function NumDistinctUsers
    (
    $db_link,
    $month_abbrev,
-   $mode = "",
    $coord_agency = ""
    )
    {
    $saved_error_level = error_reporting(E_ALL);
    //
+   $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+   $month_abbrev = kix\k::Safe($month_abbrev,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+   //
    $num_distinct_users = 0;
-   $qry = "select distinct email_addr from " . $mode . "avail_sheet "
+   $qry = "select distinct email_addr from avail_sheet "
       .  "   where month='$month_abbrev' ";
    if ($coord_agency)
       {

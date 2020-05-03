@@ -6,11 +6,13 @@ function NumAvails
    (
    $db_link,
    $month_abbrev,
-   $coord_agency,
-   $mode = ""
+   $coord_agency
    )
    {
    $saved_error_level = error_reporting(E_ALL);
+   //
+   $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+   $month_abbrev = kix\k::Safe($month_abbrev,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
    //
    $num_avails = 0;
    //
@@ -22,7 +24,7 @@ function NumAvails
       .  " select last_name "
       .  "    , first_name "
       .  "    , max(timestamp) as timestamp "
-      .  " from " . $mode . "avail_sheet "
+      .  " from avail_sheet "
       .  " where month='$month_abbrev' "
       .  "    and be_tda != 'TRUE' "
       .  "    and coord_agency='$coord_agency' "
@@ -103,7 +105,7 @@ function NumAvails
       .  "    + if(n30='$marker',1,0) "
       .  "    + if(n31='$marker',1,0) "
       .  "    as per_person_num_avails "
-      .  " from aggregated left join " . $mode . "avail_sheet "
+      .  " from aggregated left join avail_sheet "
       .  "    using (last_name, first_name, timestamp)"
       .  " where month='$month_abbrev' "
       .  "    and coord_agency='$coord_agency' "

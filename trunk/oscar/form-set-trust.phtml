@@ -2,8 +2,6 @@
 //
 // $Id$
 //
-$mode = "";
-//
 require_once("f_bodyopen.phtml");
 require_once("f_agencyselectionlist.phtml");
 //
@@ -67,8 +65,8 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
                     <blockquote>
                        <b>WARNING:&nbsp; This form sends a traceable email message to the appropriate schedule
                        coordinator.&nbsp; It is not intended for general use.</b>
-                       <form action=<? echo $mode; ?>perform-prep-mod-trust.phtml method=post>
-                          Which agency?&nbsp; <? AgencySelectionList($db_link,$mode); ?> <input type="submit" value="Submit">
+                       <form action=perform-prep-mod-trust.phtml method=post>
+                          Which agency?&nbsp; <? AgencySelectionList($db_link); ?> <input type="submit" value="Submit">
                        </form>
                     </blockquote>
                     <p>A user who is not in the Trusted User table will only receive a compiled availability report once

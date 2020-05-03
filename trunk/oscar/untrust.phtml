@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -47,14 +45,14 @@ if
    )
 // then
    {
-      $email_address = base64_decode($a);
-      $coord_agency = base64_decode($b);
+      $email_address = kix\k::Safe(base64_decode($a),kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS"));
+      $coord_agency = kix\k::Safe(base64_decode($b),kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
       //
       // Perform the specified update.
       //
       $db_link->query
          (
-         "delete from " . $mode . "trusted_user "
+         "delete from trusted_user "
          .  "where email_address='$email_address' "
          .  "   and coord_agency='$coord_agency' "
          )

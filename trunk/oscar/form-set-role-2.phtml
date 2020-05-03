@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -63,6 +61,8 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
            )
         // then
         {
+        $agency = kix\k::Safe($agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+        $role = kix\k::Safe($role,kix\k::PhpValueOf_safe_hint_type("HYPHENATED_ALPHANUM"));
         //
         // Show what was collected in Part 1.
         //
@@ -77,7 +77,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
         <?
         $result = $db_link->query
            (
-           "select email_addr from " . $mode . "authority "
+           "select email_addr from authority "
            .  "where coord_agency='$agency' "
            .  "   and role='$role' "
            )
@@ -100,7 +100,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
         // Get the new value
         //
         ?>
-        <form action=<? echo $mode; ?>perform-set-role-challenge.phtml method=post>
+        <form action=perform-set-role-challenge.phtml method=post>
            <?
            echo "<input type=hidden name=agency value=\"$agency\">\n"
               . "<input type=hidden name=role value=\"$role\">\n"
@@ -122,7 +122,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
                  "select coord_agency as approving_agency "
                  .  "   , role as approving_role "
                  .  "   , email_addr as approving_email_addr "
-                 .  "from " . $mode . "authority "
+                 .  "from authority "
                  .  "where "
                  .  "      ( "
                  .  "         coord_agency='$agency' "

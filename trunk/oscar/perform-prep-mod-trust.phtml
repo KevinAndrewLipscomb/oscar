@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,11 +15,10 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
-$coord_agency = $coord_agency;
+if (isset($coord_agency)) $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -51,7 +49,7 @@ if ($coord_agency != "")
    // All required values are present.
    // Retrieve the list of trusted users for the specified agency.
    //
-   $result = $db_link->query("select email_address from " . $mode . "trusted_user where coord_agency='$coord_agency'")
+   $result = $db_link->query("select email_address from trusted_user where coord_agency='$coord_agency'")
       or die("Query failed with error: " . mysqli_error($db_link));
    //
    // Generate the appropriate email message.
@@ -72,7 +70,7 @@ if ($coord_agency != "")
          extract($row);
          $challenge .= "To remove $email_address, click here:\n"
                     .  $ini[server][root_url]
-                    .  "/" . $mode . "untrust.phtml?a="
+                    .  "/untrust.phtml?a="
                     .  base64_encode($email_address)
                     .  "&b="
                     .  base64_encode($coord_agency)
@@ -93,21 +91,21 @@ if ($coord_agency != "")
    //
    $challenge .= "-- OSCAR\n"
               .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
-              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
+              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"") . "\n";
    //
    // Send the mail.
    //
-   $sched_coord_email_addr = RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency);
+   $sched_coord_email_addr = RoleEmailAddress($db_link,"schedule-coordinator",$coord_agency);
    kix\k::SmtpMailSend
      (
-     RoleEmailAddress($db_link,"",$mode), //from
+     RoleEmailAddress($db_link,""), //from
      $sched_coord_email_addr, //to
      "OSCAR Modification Challenge", //subject
      $challenge, //message_string
      false, //be_html
      "", //cc
      "", //bcc
-     RoleEmailAddress($db_link,"",$mode) //reply_to
+     RoleEmailAddress($db_link,"") //reply_to
      );
    $result = true;
    //
@@ -118,7 +116,7 @@ if ($coord_agency != "")
          . "<p><b>Check your email periodically for the challenge message, which contains instructions for completing the "
          . "trust removal process.</b></p>\n"
          . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress($db_link,"",$mode)
+         .  RoleEmailAddress($db_link,"")
          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
@@ -131,7 +129,7 @@ if ($coord_agency != "")
       <b>
       <blockquote>
          <p>The OSCAR system encountered an internal error while processing your request.&nbsp; Contact the
-            <a href=mailto:"<? echo RoleEmailAddress($db_link,"",$mode); ?>">OSCAR System Administrator</a>.</p>
+            <a href=mailto:"<? echo RoleEmailAddress($db_link,""); ?>">OSCAR System Administrator</a>.</p>
       </blockquote>            
       </b>
       <?

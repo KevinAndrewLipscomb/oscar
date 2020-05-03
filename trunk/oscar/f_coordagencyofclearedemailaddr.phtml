@@ -5,8 +5,7 @@
 function CoordAgencyOfClearedEmailAddr
    (
    $db_link,
-   $email_addr,
-   $mode = ""
+   $email_addr
    )
    {
    $saved_error_level = error_reporting(E_ALL);
@@ -15,8 +14,8 @@ function CoordAgencyOfClearedEmailAddr
    //
    $result = $db_link->query
       (
-      "select coord_agency from " . $mode . "authority "
-      .  "   where email_addr='$email_addr'"
+      "select coord_agency from authority "
+      .  "   where email_addr='" . kix\k::Safe($email_addr,kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS")) . "'"
       .  "      and has_clearance='TRUE' "
       )
       or die("CoordAgencyOfClearedEmailAddr query failed with error:  " . mysqli_error($db_link));

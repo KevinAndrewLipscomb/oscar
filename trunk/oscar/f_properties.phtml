@@ -11,7 +11,6 @@ function Properties
    $be_tda,
    $be_als,
    $squad,
-   $mode = "",
    $coord_agency = "EMS",
    $be_third = "",
    $be_nondriver = "",
@@ -19,12 +18,11 @@ function Properties
    $be_combined_agency_format = ""
    )
    {
-   if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    $s = "-";
    if ($be_on_team_air == "TRUE") $s .= "H"; else $s .= "-";
    $s .= "-";
-   if ($be_on_team_5 == "TRUE") $s .= "7"; else $s .= "-";
+   if ($be_on_team_5 == "TRUE") $s .= "S"; else $s .= "-";
    $s .= "-";
    if ($be_on_team_30 == "TRUE") $s .= "30"; else $s .= "--";
    $s .= "-";
@@ -74,11 +72,10 @@ function Properties
       $s .= "- ";
       if ($be_combined_agency_format == "TRUE")
          {
-         $s .= sprintf("%3s",SquadOfCoordAgency($db_link,$coord_agency,$mode));
+         $s .= sprintf("%3s",SquadOfCoordAgency($db_link,$coord_agency));
          }
       }
    //
-   if ($mode) error_reporting($saved_error_level);
    return $s;
    }
 ?>

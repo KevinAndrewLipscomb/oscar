@@ -6,11 +6,9 @@ function PlainTextOfNote
    (
    $note,
    $left_margin,
-   $right_margin = 72,
-   $mode = ""
+   $right_margin = 72
    )
    {
-   if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    // Remove leading addendum indicator, if any.
    //
@@ -53,7 +51,6 @@ function PlainTextOfNote
    //
    $note = wordwrap($note,($right_margin - $left_margin),$break);
    //
-   if ($mode) error_reporting($saved_error_level);
    return $note;
    }
 ?>

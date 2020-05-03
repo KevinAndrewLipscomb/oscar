@@ -5,7 +5,6 @@
 function sShowAvailComments
    (
    $db_link,
-   $mode,
    $applicable_month_abbrev,
    $last_name,
    $first_name,
@@ -17,12 +16,18 @@ function sShowAvailComments
    $s = "";
    $saved_error_level = error_reporting(E_ALL);
    //
+   $applicable_month_abbrev = kix\k::Safe($applicable_month_abbrev,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+   $last_name = kix\k::Safe($last_name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+   $first_name = kix\k::Safe($first_name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+   $timestamp = kix\k::Safe($timestamp,kix\k::PhpValueOf_safe_hint_type("DATE_TIME"));
+   $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+   //
    $result = $db_link->query
       (
       "select shift_designator"
       . " , nominal_day_of_month"
       . " , comment"
-      . " from " . $mode . "avail_comment"
+      . " from avail_comment"
       . " where month = '$applicable_month_abbrev'"
       .   " and last_name = '$last_name'"
       .   " and first_name = '$first_name'"

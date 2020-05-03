@@ -4,14 +4,12 @@
 //
 function FormattedNoteAppendage
    (
-   $mode,
    $condition,
    $mnemonic,
    $message,
    $source = "OSCAR"
    )
    {
-   if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    $pad_mask = "................";
    $num_invisible_chars = 0;
@@ -38,7 +36,6 @@ function FormattedNoteAppendage
       .  "<br>"
       .  addslashes($message);
    //
-   if ($mode) error_reporting($saved_error_level);
    return $s;
    }
 ?>

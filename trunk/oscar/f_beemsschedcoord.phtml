@@ -5,8 +5,8 @@
 function BeEmsSchedCoord
    (
    $db_link,
-   $email_addr,
-   $mode = ""   )
+   $email_addr
+   )
    {
    $saved_error_level = error_reporting(E_ALL);
    //
@@ -14,8 +14,8 @@ function BeEmsSchedCoord
    //
    $result = $db_link->query
       (
-      "select 1 from " . $mode . "authority "
-      .  "   where email_addr='$email_addr' "
+      "select 1 from authority "
+      .  "   where email_addr='" . kix\k::Safe($email_addr,kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS")) . "' "
       .  "      and role='schedule-coordinator' "
       .  "      and coord_agency='EMS' "
       .  "      and has_clearance='TRUE' "

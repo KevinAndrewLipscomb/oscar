@@ -7,10 +7,8 @@
 $email_addr = $email_addr;
 $applicable_month_num = $applicable_month_num;
 //
-$mode = "";
-//
 require_once("f_bodyopen.phtml");
-require_once($mode . "f_roleemailaddress.phtml");
+require_once("" . "f_roleemailaddress.phtml");
 //
 $ini = AppSettings();
 $dbkalipso_link = DbkalipsoLink($ini);
@@ -39,7 +37,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
         </td></tr></table>
         <hr>
         <p>This form is intended for the use of VBFD Scheduling Officers.</p>
-        <form method="POST" action="<? echo $mode; ?>add-ers-tda-inputs.phtml">
+        <form method="POST" action="add-ers-tda-inputs.phtml">
               <?
               if ((!$email_addr) or (!$applicable_month_num))
                  {

@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -37,7 +35,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 <H1 ALIGN=CENTER>Request Approval</H1>
 <hr>
 <?
-   if (SendApprovalNotice($ini,$db_link,$email_addr,$digest,$mode))
+   if (SendApprovalNotice($ini,$db_link,$email_addr,$digest))
       {
       PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
       echo "<p>The OSCAR system has performed the following:</p>\n"

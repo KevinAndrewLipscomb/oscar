@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
@@ -81,7 +79,7 @@ if
               .  "THE CHANGE IS NOT YET COMPLETE.  To\n"
               .  "complete the process, click here:\n"
               .  $ini[server][root_url]
-              .  "/" . $mode . "perform-set-role.phtml?a="
+              .  "/perform-set-role.phtml?a="
               .  base64_encode($agency)
               .  "&b="
               .  base64_encode($role)
@@ -94,20 +92,20 @@ if
    //
    $challenge .= "-- OSCAR\n"
               .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
-              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
+              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"") . "\n";
    //
    // Send the mail.
    //
    kix\k::SmtpMailSend
      (
-     RoleEmailAddress($db_link,"",$mode), //from
+     RoleEmailAddress($db_link,""), //from
      $approving_email_addr, //to
      "OSCAR Role Change Challenge", //subject
      $challenge, //message_string
      false, //be_html
      "", //cc
      "", //bcc
-     RoleEmailAddress($db_link,"",$mode) //reply_to
+     RoleEmailAddress($db_link,"") //reply_to
      );
    $result = true;
    //
@@ -117,12 +115,12 @@ if
       echo "<p>The OSCAR system has sent a challenge message to <b>$approving_email_addr</b>.</p>";
       echo "Related destinations:\n"
          . "<ul>\n"
-         . "   <li><a href=" . $mode . "form-set-role-1.phtml>Role Modification page</a></li>\n"
-         . "   <li><a href=" . $mode . "modify.phtml>Modify other OSCAR settings</a></li>\n"
-         . "   <li><a href=" . $mode . "index.phtml>Main OSCAR page</a></li>\n"
+         . "   <li><a href=form-set-role-1.phtml>Role Modification page</a></li>\n"
+         . "   <li><a href=modify.phtml>Modify other OSCAR settings</a></li>\n"
+         . "   <li><a href=index.phtml>Main OSCAR page</a></li>\n"
          . "</ul>\n";
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress($db_link,"",$mode)
+         .  RoleEmailAddress($db_link,"")
          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
@@ -135,7 +133,7 @@ if
       <b>
       <blockquote>
          <p>The OSCAR system encountered an internal error while processing your request.&nbsp; Contact the
-            <a href=mailto:"<? echo RoleEmailAddress($db_link,"",$mode); ?>">OSCAR System Administrator</a>.</p>
+            <a href=mailto:"<? echo RoleEmailAddress($db_link,""); ?>">OSCAR System Administrator</a>.</p>
       </blockquote>            
       </b>
       <?

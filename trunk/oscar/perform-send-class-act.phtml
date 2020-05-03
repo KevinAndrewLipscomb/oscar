@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
@@ -95,11 +93,11 @@ if
       //
       $message .= "-- OSCAR\n"
                .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
-               .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
+               .  "-- Sysadmin: " . RoleEmailAddress($db_link,"") . "\n";
       //
       // Send the mail.
       //
-      $recipient = RoleEmailAddress($db_link,'class-act-coord',$mode);
+      $recipient = RoleEmailAddress($db_link,'class-act-coord');
       $from_reply_to_value = stripslashes(trim($submitter)) . '<' . stripslashes(trim($emailaddr)) . '>';
       kix\k::SmtpMailSend
         (
@@ -133,9 +131,9 @@ if
             <ul>
                <?
                echo "<li><p>Use another method (like email or telephone) to submit your nomination to the <a href=mailto:\""
-                  .  RoleEmailAddress($db_link,"class-act-coord",$mode)
+                  .  RoleEmailAddress($db_link,"class-act-coord")
                   .  "\">Class Act Coordinator</a>.</p>";
-               echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System "
+               echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress($db_link,"") . "?subj=\"OSCAR Bug Report\">OSCAR System "
                   .  "Administrator</a> know this error occurred.</p>";
                ?>
             </ul>
