@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign incoming arguments to themselves to avoid "undefined variable" warnings later.
 //
@@ -40,11 +38,11 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 // Give arguments meaningful names.  The obtuse names and base 64 encoding are measly attempts to protect generated URLs to this script
 // from being abused.
 //
-$last_name = base64_decode($a);
-$first_name = base64_decode($b);
-$month = base64_decode($c);
+$last_name = kix\k::Safe(base64_decode($a),kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+$first_name = kix\k::Safe(base64_decode($b),kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+$month = kix\k::Safe(base64_decode($c),kix\k::PhpValueOf_safe_hint_type("ALPHA"));
 $be_authority = base64_decode($d);
-$coord_agency = base64_decode($e);
+$coord_agency = kix\k::Safe(base64_decode($e),kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
 //
 ?>
 <html>
@@ -62,7 +60,7 @@ KVEO-IT-PROJECT<br>
 <?
    $result = $db_link->query
       (
-      "select * from " . $mode . "avail_sheet"
+      "select * from avail_sheet"
       .  " where month = '$month'"
       .  "    and last_name = \"" . addslashes(addslashes($last_name)) . "\""
       .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
@@ -114,7 +112,6 @@ KVEO-IT-PROJECT<br>
             $note,
             $expiration,
             $be_authority,
-            $mode,
             $coord_agency,
             $be_needing_driver,
             $be_nondriver,

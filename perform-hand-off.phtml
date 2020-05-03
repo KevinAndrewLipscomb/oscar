@@ -2,7 +2,7 @@
 //
 // $Id$
 //
-$mode = "";
+$month_abbrev = kix\k::Safe($month_abbrev,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -16,10 +16,6 @@ require_once("f_htmlofnote.phtml");
 $ini = AppSettings();
 $db_link = DbLink($ini);
 $dbkalipso_link = DbkalipsoLink($ini);
-//
-// Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
-//
-$month_abbrev = $month_abbrev;
 //
 if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
@@ -93,7 +89,7 @@ unset($HTTP_POST_VARS['month_abbrev']);
 $db_link->query
    (
    "create temporary table intermediate_avail_sheet "
-   .  " select * from " . $mode . "avail_sheet "
+   .  " select * from avail_sheet "
    .  "    where month='$month_abbrev' and coord_agency='EMS' "
    )
    or die("Creation of temp table intermediate_avail_sheet failed with error: " . mysqli_error($db_link));
@@ -115,7 +111,7 @@ $db_link->query
 //
 $result = $db_link->query
    (
-   "select coord_agency, count(*) as num_sheets from " . $mode . "avail_sheet "
+   "select coord_agency, count(*) as num_sheets from avail_sheet "
    .  "    where coord_agency != 'EMS' "
    .  "    group by coord_agency "
    )
@@ -158,8 +154,8 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
       //
       // Decode the encoded parts.
       //
-      $target_last_name = base64_decode($encoded_last_name);
-      $target_first_name = base64_decode($encoded_first_name);
+      $target_last_name = trim(kix\k::Safe(base64_decode($encoded_last_name),kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME")));
+      $target_first_name = trim(kix\k::Safe(base64_decode($encoded_first_name),kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME")));
       //
       // Make sure there's still an avail_sheet that matches what EMS was working with.
       //
@@ -211,11 +207,10 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                   {
                   $note_appendage_ems_comment = FormattedNoteAppendage
                      (
-                     $mode,
                      "INFO",  // condition
                      "COMMENT",  // mnemonic
                      $value,
-                     strtoupper(RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS"))
+                     strtoupper(RoleEmailAddress($db_link,"schedule-coordinator","EMS"))
                      );
                   }
                }
@@ -232,7 +227,6 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                {
                $note_appendage_relay = FormattedNoteAppendage
                   (
-                  $mode,
                   "INFO",  // condition
                   "RELAY",  // mnemonic
                   "Relayed from EMS"
@@ -248,7 +242,6 @@ foreach ($HTTP_POST_VARS as $encoded_avail_spec => $value)
                //
                $note_appendage_emtorst = FormattedNoteAppendage
                   (
-                  $mode,
                   "WARNING",  // condition
                   "EMTORST",  // mnemonic
                   "EMT versus ST status is unknown to OSCAR on records relayed from EMS."
@@ -273,7 +266,7 @@ $relay_select_clause = "select * from intermediate_avail_sheet where coord_agenc
    // intermediate_avail_sheet was created, we only put records whose coord_agency = 'EMS'.
    //
 //
-$db_link->query("insert into " . $mode . "avail_sheet " . $relay_select_clause)
+$db_link->query("insert into avail_sheet " . $relay_select_clause)
    or die("Relay insertion failed with error: " . mysqli_error($db_link));
 //
 $num_rows_affected = mysqli_affected_rows($db_link);
@@ -342,7 +335,7 @@ echo "<li><p><b>Notifications:</b>&nbsp; Email notifications have been sent to s
 //
 $result = $db_link->query
    (
-   "select coord_agency, count(*) as num_sheets from " . $mode . "avail_sheet "
+   "select coord_agency, count(*) as num_sheets from avail_sheet "
    .  " where coord_agency != 'EMS' "
    .  " group by coord_agency "
    )
@@ -359,7 +352,7 @@ while ($row = mysqli_fetch_array($result))
       //
       $db_link->query
          (
-         "insert into " . $mode . "relay_journal "
+         "insert into relay_journal "
          .  " set month='$month_abbrev' "
          .  "    , coord_agency='$coord_agency' "
          )
@@ -371,7 +364,6 @@ while ($row = mysqli_fetch_array($result))
             (
             FormattedNoteAppendage
                (
-               $mode,
                "ERROR",
                "JOUENTFAI",
                "Insertion of relay journal record for agency $coord_agency failed.  The $coord_agency schedule "
@@ -386,14 +378,14 @@ while ($row = mysqli_fetch_array($result))
       // Determine whether or not the agency is an OSCAR participant.
       //
       $participation_test_result = $db_link->query
-         ("select 1 from " . $mode . "agency where enumeral='$coord_agency' and be_active='TRUE'")
+         ("select 1 from agency where enumeral='$coord_agency' and be_active='TRUE'")
          or die("OSCAR participant check failed for $coord_agency with error: " . mysqli_error($db_link));
       if (mysqli_num_rows($participation_test_result))
          {
          //
          // Agency IS an OSCAR participant.  Send a notice directly to the squad schedule coordinator.
          //
-         $relay_notice_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency);
+         $relay_notice_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$coord_agency);
          $relay_notice_subject = "Relay notice from EMS";
          //               0        1         2         3         4         5         6         7
          //               123456789012345678901234567890123456789012345678901234567890123456789012
@@ -401,7 +393,7 @@ while ($row = mysqli_fetch_array($result))
                        . "I have used OSCAR to relay $num_relayed_sheets availability sheet(s) to $coord_agency.\n\n"
                        . "Please click here to retrieve an up-to-date\n"
                        . "compiled availability report:\n"
-                       . $ini[server][root_url] . "/" . $mode . "perform-gen-report.phtml"
+                       . $ini[server][root_url] . "/perform-gen-report.phtml"
                        . "?name=" . $coord_agency . "SchedCoord"
                        . "&email_addr=$relay_notice_recipient"
                        . "&applicable_month_num=" . date("n",strtotime("$month_abbrev 1"))
@@ -414,27 +406,27 @@ while ($row = mysqli_fetch_array($result))
          // Add sig lines.
          //
          $relay_notice .= "-- EMS Schedule Coordinator (via OSCAR)\n";
-         $relay_notice .= "-- " . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") . "\n";
+         $relay_notice .= "-- " . RoleEmailAddress($db_link,"schedule-coordinator","EMS") . "\n";
          //
          kix\k::SmtpMailSend
            (
-           RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS"), //from
+           RoleEmailAddress($db_link,"schedule-coordinator","EMS"), //from
            $relay_notice_recipient, //to
            $relay_notice_subject, //subject
            $relay_notice, //message_string
            false, //be_html
            "", //cc
            "", //bcc
-           RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") //reply_to
+           RoleEmailAddress($db_link,"schedule-coordinator","EMS") //reply_to
            );
          //
-         if (($relay_page_recipient = RoleEmailAddress($db_link,"schedule-coordinator-pager",$mode,$coord_agency)) != '')
+         if (($relay_page_recipient = RoleEmailAddress($db_link,"schedule-coordinator-pager",$coord_agency)) != '')
             {
-            $relay_page_headers = "From: " . RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS") . "\r\n";
+            $relay_page_headers = "From: " . RoleEmailAddress($db_link,"schedule-coordinator","EMS") . "\r\n";
             $relay_page_notice = "Check email for OSCAR RELAY notice";
             kix\k::SmtpMailSend
               (
-              RoleEmailAddress($db_link,"",$mode), //from
+              RoleEmailAddress($db_link,""), //from
               $relay_page_recipient, //to
               '', //subject
               $relay_page_notice, //message_string
@@ -463,7 +455,7 @@ while ($row = mysqli_fetch_array($result))
          // Agency is NOT an OSCAR participant.  Send a message to the EMS schedule coordinator that he can forward as 
          // appropriate.
          //
-         $relay_report_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$mode,"EMS");
+         $relay_report_recipient = RoleEmailAddress($db_link,"schedule-coordinator","EMS");
          $relay_report_subject = "OSCAR availability relay for $coord_agency";
          //               0        1         2         3         4         5         6         7
          //               123456789012345678901234567890123456789012345678901234567890123456789012
@@ -518,7 +510,6 @@ while ($row = mysqli_fetch_array($result))
                   $note,
                   $expiration,
                   1,
-                  $mode,
                   $coord_agency,
                   $be_needing_driver,
                   $be_nondriver,
@@ -537,14 +528,14 @@ while ($row = mysqli_fetch_array($result))
          //
          kix\k::SmtpMailSend
            (
-           RoleEmailAddress($db_link,"",$mode), //from
+           RoleEmailAddress($db_link,""), //from
            $relay_report_recipient, //to
            $relay_report_subject, //subject
            $relay_report, //message_string
            false, //be_html
            "", //cc
            "", //bcc
-           RoleEmailAddress($db_link,"",$mode) //reply_to
+           RoleEmailAddress($db_link,"") //reply_to
            );
          //
          echo "<tr>\n"
@@ -595,7 +586,7 @@ $db_link->query("drop table intermediate_avail_sheet")
 //
 echo "</blockquote>\n";
 echo "<br><p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-   . RoleEmailAddress($db_link,"",$mode) . "\">OSCAR System Administrator</a>.</p>";
+   . RoleEmailAddress($db_link,"") . "\">OSCAR System Administrator</a>.</p>";
 ?>
          <hr>
          <p><small><small><em><pre>$Id$</pre></em></small></small>

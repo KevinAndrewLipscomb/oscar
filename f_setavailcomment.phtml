@@ -5,7 +5,6 @@
 function SetAvailComment
    (
    $db_link,
-   $mode,
    $applicable_month_abbrev,
    $last_name,
    $first_name,
@@ -16,9 +15,17 @@ function SetAvailComment
    $comment
    )
    {
-   if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
-   $sql = "replace " . $mode . "avail_comment set month = '$applicable_month_abbrev'"
+   $applicable_month_abbrev = kix\k::Safe($applicable_month_abbrev,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+   $last_name = kix\k::Safe($last_name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+   $first_name = kix\k::Safe($first_name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+   $timestamp = kix\k::Safe($timestamp,kix\k::PhpValueOf_safe_hint_type("DATE_TIME"));
+   $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+   $shift_designator = kix\k::Safe($shift_designator,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+   $nominal_day_of_month = kix\k::Safe($nominal_day_of_month,kix\k::PhpValueOf_safe_hint_type("NUM"));
+   $comment = kix\k::Safe($comment,kix\k::PhpValueOf_safe_hint_type("HYPHENATED_NUM"));
+   //
+   $sql = "replace avail_comment set month = '$applicable_month_abbrev'"
    . " , last_name = '" . addslashes(trim($last_name)) ."'"
    . " , first_name = '" . addslashes(trim($first_name)) . "'"
    . " , timestamp = '$timestamp'"
@@ -41,12 +48,11 @@ function SetAvailComment
    //
    kix\k::SmtpMailSend
      (
-     RoleEmailAddress($db_link,"",$mode), //from
-     RoleEmailAddress($db_link,"failsafe-recipient",$mode), //to
+     RoleEmailAddress($db_link,""), //from
+     RoleEmailAddress($db_link,"failsafe-recipient"), //to
      "OSCAR insert op", //subject
      stripslashes($sql) //message_string
      );
    //
-   if ($mode) error_reporting($saved_error_level);
    }
 ?>

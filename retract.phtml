@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
@@ -49,11 +47,11 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 // Decode the arguments.
 //
-$first_name = base64_decode($a);
-$last_name = base64_decode($b);
+$first_name = kix\k::Safe(base64_decode($a),kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+$last_name = kix\k::Safe(base64_decode($b),kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
 $applicable_month_num = base64_decode($c);
-$email_addr = base64_decode($d);
-$coord_agency = base64_decode($e);
+$email_addr = kix\k::Safe(base64_decode($d),kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS"));
+$coord_agency = kix\k::Safe(base64_decode($e),kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
 //
 // Determine the three-letter abbreviation for the specified month.
 //
@@ -64,7 +62,7 @@ $applicable_month_abbrev = strtoupper(date("M",$applicable_month_time));
 //
 $db_link->query
    (
-   "delete from " . $mode . "avail_sheet "
+   "delete from avail_sheet "
    .  " where month = '$applicable_month_abbrev' "
    .  "    and last_name = \"" . addslashes(addslashes($last_name)) . "\" "
    .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\" "
@@ -75,7 +73,7 @@ if ($num_rows_affected = mysqli_affected_rows($db_link))
    {
    $db_link->query
       (
-      "insert into " . $mode . "avail_sheet "
+      "insert into avail_sheet "
       .  " set last_name = \"" . addslashes(addslashes($last_name)) . "\""
       .  "    , first_name = \"" . addslashes(addslashes($first_name)) . "\""
       .  "    , email_addr = \"" . addslashes(addslashes($email_addr)) . "\""
@@ -86,7 +84,6 @@ if ($num_rows_affected = mysqli_affected_rows($db_link))
       .  "    , note='"
       .  FormattedNoteAppendage
          (
-         $mode,
          "WARNING",
          "RETRACT",
          "User at IP $REMOTE_ADDR retracted all availabilities."
@@ -112,14 +109,14 @@ if ($num_rows_affected == 0)
       . "   </ul>\n"
       . "If you suspect a bug, please report the problem to the following people:\n"
       . "   <ul>\n"
-      . "      <li><a href=\"mailto:" . RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency) . "\">the $coord_agency Schedule Coordinator</a></li>\n"
-      . "      <li><a href=\"mailto:" . RoleEmailAddress($db_link,"",$mode) . "\">the OSCAR System Administrator</a></li>\n"
+      . "      <li><a href=\"mailto:" . RoleEmailAddress($db_link,"schedule-coordinator",$coord_agency) . "\">the $coord_agency Schedule Coordinator</a></li>\n"
+      . "      <li><a href=\"mailto:" . RoleEmailAddress($db_link,"") . "\">the OSCAR System Administrator</a></li>\n"
       . "   </ul>\n"
       . "</i>\n";
    }
 echo "<p><b>Don't forget to submit an accurate availability sheet to agency \"" . strtoupper($coord_agency) . "\" by the deadline.</b></p>\n"
    . "<p>If you have feedback about the technical aspects of this process, please contact the <a href=\"mailto:"
-   . RoleEmailAddress($db_link,"",$mode)
+   . RoleEmailAddress($db_link,"")
    . "\">OSCAR System Administrator</a>.</p>";
 ?>
 <hr>

@@ -2,7 +2,6 @@
 //
 // $Id: perform-add-avail-sheet.phtml 3472 2011-01-20 15:58:17Z KevinAnLipscomb $
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
@@ -171,7 +169,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
             // then
             {
             ?>
-            <form method="POST" action="<? echo $mode; ?>form-submit-avails-4.phtml">
+            <form method="POST" action="form-submit-avails-4.phtml">
             <?
             echo "<input type=hidden name=first_name value=\"$first_name\">\n"
             . "<input type=hidden name=last_name value=\"$last_name\">\n"

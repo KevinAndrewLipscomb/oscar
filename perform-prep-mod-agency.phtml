@@ -2,8 +2,6 @@
 //
 // $Id$
 //
-$mode = "";
-//
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
 $enumeral = $enumeral;
@@ -58,7 +56,7 @@ if
    extract(mysqli_fetch_array($result));
    $db_link->query
       (
-      "insert into " . $mode . "pend_mod_agency set token='$token' "
+      "insert into pend_mod_agency set token='$token' "
       .  ", enumeral='$enumeral' "
       .  ", new_be_active='$new_be_active' "
       )
@@ -80,28 +78,28 @@ if
               .  "THE CHANGE IS NOT YET COMPLETE.  To\n"
               .  "complete the process, click here:\n"
               .  $ini[server][root_url]
-              .  "/" . $mode . "perform-mod-agency.phtml?token=$token\n\n"
+              .  "/perform-mod-agency.phtml?token=$token\n\n"
               .  "To ABORT the change, DO NOTHING.\n\n";
    //
    // Add sig lines.
    //
    $challenge .= "-- OSCAR\n"
               .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
-              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
+              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"") . "\n";
    //
    // Send the mail.
    //
-   $email_addr = RoleEmailAddress($db_link,"master",$mode);
+   $email_addr = RoleEmailAddress($db_link,"master");
    kix\k::SmtpMailSend
      (
-     RoleEmailAddress($db_link,"",$mode), //from
+     RoleEmailAddress($db_link,""), //from
      $email_addr, //to
      "OSCAR Modification Challenge", //subject
      $challenge, //message_string
      false, //be_html
      "", //cc
      "", //bcc
-     RoleEmailAddress($db_link,"",$mode) //reply_to
+     RoleEmailAddress($db_link,"") //reply_to
      );
    $result = true;
    //
@@ -113,12 +111,12 @@ if
          . "modification process.</b></p>"
          . "Related destinations:\n"
          . "<ul>\n"
-         . "   <li><a href=" . $mode . "form-set-agency.phtml>Toggle Squad Participation page</a></li>\n"
-         . "   <li><a href=" . $mode . "modify.phtml>Modify other OSCAR settings</a></li>\n"
-         . "   <li><a href=" . $mode . "index.phtml>Main OSCAR page</a></li>\n"
+         . "   <li><a href=form-set-agency.phtml>Toggle Squad Participation page</a></li>\n"
+         . "   <li><a href=modify.phtml>Modify other OSCAR settings</a></li>\n"
+         . "   <li><a href=index.phtml>Main OSCAR page</a></li>\n"
          . "</ul>\n";
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress($db_link,"",$mode)
+         .  RoleEmailAddress($db_link,"")
          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
@@ -131,7 +129,7 @@ if
       <b>
       <blockquote>
          <p>The OSCAR system encountered an internal error while processing your request.&nbsp; Contact the
-            <a href=mailto:"<? echo RoleEmailAddress($db_link,"",$mode); ?>">OSCAR System Administrator</a>.</p>
+            <a href=mailto:"<? echo RoleEmailAddress($db_link,""); ?>">OSCAR System Administrator</a>.</p>
       </blockquote>            
       </b>
       <?

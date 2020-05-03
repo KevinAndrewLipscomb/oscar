@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,14 +15,16 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
-$first_name = $first_name;
 $last_name = $last_name;
 $applicable_month_num = $applicable_month_num;
 $coord_agency = $coord_agency;
+//
+if (isset($coord_agency)) $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+if (isset($first_name)) $first_name = trim(kix\k::Safe($first_name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME")));
+if (isset($last_name)) $last_name = trim(kix\k::Safe($last_name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME")));
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -37,9 +38,6 @@ $db_link = DbLink($ini);
 $dbkalipso_link = DbkalipsoLink($ini);
 //
 if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
-//
-$first_name = trim($first_name);
-$last_name = trim($last_name);
 //
 $html = "<html>\n";
 $html .= "<head><title>Reconfirmation/Retraction Request</title></head>\n";
@@ -94,7 +92,7 @@ if
    //
    $result = $db_link->query
       (
-      "select * from " . $mode . "avail_sheet"
+      "select * from avail_sheet"
       .  " where month = '$applicable_month_abbrev'"
       .  "    and last_name = \"" . addslashes(addslashes($last_name)) . "\""
       .  "    and first_name = \"" . addslashes(addslashes($first_name)) . "\""
@@ -144,7 +142,6 @@ if
             $note,
             $expiration,
             1,
-            $mode,
             $coord_agency,
             $be_needing_driver,
             $be_nondriver,
@@ -163,7 +160,7 @@ if
               .  "remove) the above record(s) from the\n"
               .  "OSCAR system, click here:\n"
               .  $ini[server][root_url]
-              .  "/" . $mode . "retract.phtml?a="
+              .  "/retract.phtml?a="
               .  base64_encode($first_name)
               .  "&b="
               .  base64_encode($last_name)
@@ -180,20 +177,20 @@ if
    //
    $challenge .= "-- OSCAR\n"
               .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
-              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
+              .  "-- Sysadmin: " . RoleEmailAddress($db_link,"") . "\n";
    //
    // Send the mail.
    //
    kix\k::SmtpMailSend
      (
-     RoleEmailAddress($db_link,"",$mode), //from
+     RoleEmailAddress($db_link,""), //from
      $email_addr, //to
      "OSCAR Reconfirm/Retract Challenge", //subject
      $challenge, //message_string
      false, //be_html
      "", //cc
      "", //bcc
-     RoleEmailAddress($db_link,"",$mode) //reply_to
+     RoleEmailAddress($db_link,"") //reply_to
      );
    //
    if ($result)
@@ -204,7 +201,7 @@ if
          .  "Check your email periodically for the challenge message, which contains instructions for completing the "
          .  "retraction process.</b></p>";
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress($db_link,"",$mode)
+         .  RoleEmailAddress($db_link,"")
          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
@@ -220,9 +217,9 @@ if
          <ul>
             <?
             echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\""
-               .  RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency)
+               .  RoleEmailAddress($db_link,"schedule-coordinator",$coord_agency)
                .  "\">$coord_agency Schedule Coordinator</a> to reconfirm or retract your submission(s).</p>";
-            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . "?subj=\"OSCAR Bug Report\">OSCAR System "
+            echo "<li><p>Let the <a href=mailto:" . RoleEmailAddress($db_link,"") . "?subj=\"OSCAR Bug Report\">OSCAR System "
                .  "Administrator</a> know this error occurred.</p>";
             ?>
          </ul>

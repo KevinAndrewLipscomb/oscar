@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign passed-in arguments to themselves to prevent 'undefined var' warnings later.
 //
@@ -46,14 +44,14 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
 //
 // Decode the arguments.
 //
-$agency = base64_decode($a);
-$role = base64_decode($b);
-$new_email_addr = base64_decode($c);
+$agency = kix\k::Safe(base64_decode($a),kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+$role = kix\k::Safe(base64_decode($b),kix\k::PhpValueOf_safe_hint_type("HYPHENATED_ALPHANUM"));
+$new_email_addr = kix\k::Safe(base64_decode($c),kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS"));
 //
    //
    // Determine whether or not the specified role is defined.
    //
-   $result = $db_link->query("select 1 from " . $mode . "authority where coord_agency='$agency' and role='$role' ")
+   $result = $db_link->query("select 1 from authority where coord_agency='$agency' and role='$role' ")
       or die("Role existence check failed with error: " . mysqli_error($db_link));
    if (mysqli_num_rows($result))
       {
@@ -62,7 +60,7 @@ $new_email_addr = base64_decode($c);
       //
       $db_link->query
          (
-         "update " . $mode . "authority "
+         "update authority "
          .  "set email_addr='$new_email_addr' "
          .  "where coord_agency = '$agency' "
          .  "   and role = '$role' "
@@ -84,7 +82,7 @@ $new_email_addr = base64_decode($c);
          }
       $db_link->query
          (
-         "insert into " . $mode . "authority "
+         "insert into authority "
          .  " set coord_agency = '$agency' "
          .  "    , role = '$role' "
          .  "    , email_addr = '$new_email_addr' "
@@ -96,7 +94,7 @@ $new_email_addr = base64_decode($c);
    PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
    echo "<p>OSCAR has accepted the new role setting.</p>\n";
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-      . RoleEmailAddress($db_link,"",$mode)
+      . RoleEmailAddress($db_link,"")
       . "\">OSCAR System Administrator</a>.</p>";
 ?>
 <hr>

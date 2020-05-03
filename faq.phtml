@@ -2,8 +2,6 @@
 //
 // $Id$
 //
-$mode = "";
-//
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
 //
@@ -36,7 +34,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
            <p>To search for a particular word or phrase, press CTRL-F.</p>
            <ul>
               <?
-              $result = $db_link->query("select * from " . $mode . "faq")
+              $result = $db_link->query("select * from faq")
                  or die("Query failed with error: " . mysqli_error($db_link));
               $num_rows = mysqli_num_rows($result);
               for ($i=1; $i<=$num_rows; $i++)

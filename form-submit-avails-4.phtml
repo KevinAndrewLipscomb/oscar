@@ -15,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
@@ -302,7 +301,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
             // then
             {
             ?>
-            <form method="POST" action="<? echo $mode; ?>perform-add-avail-sheet.phtml">
+            <form method="POST" action="perform-add-avail-sheet.phtml">
             <?
             echo "<input type=hidden name=first_name value=\"$first_name\">\n"
             . "<input type=hidden name=last_name value=\"$last_name\">\n"
@@ -483,7 +482,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
               <li>Abusive or fraudulent submissions are traceable and are cause for disciplinary action.</li>
               <li>Double check your selections before submitting this form.</li>
               <?
-              echo "<li>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress($db_link,"",$mode) . ">OSCAR System Administrator</a>.</li>";
+              echo "<li>If you have feedback about this form, please send it to the <a href=mailto:" . RoleEmailAddress($db_link,"") . ">OSCAR System Administrator</a>.</li>";
               ?>
             </ul>
             <p><input type="submit" value="Submit"><input type=reset></p>

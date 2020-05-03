@@ -16,7 +16,6 @@ if (!ini_get('register_globals'))
     }
   }
 error_reporting(E_ALL);
-$mode = "";
 //
 require_once("f_bodyopen.phtml");
 require_once("f_numsheets.phtml");
@@ -68,9 +67,9 @@ $dbkalipso_link = DbkalipsoLink($ini);
                   </tr>
                   <tr>
                      <?
-                     echo "<td align=center>" . ($current_num_sheets = NumSheets($db_link,$current_month_abbrev,$mode,"",1,1,1)) . "</td>\n";
-                     echo "<td align=center>" . ($next_num_sheets = NumSheets($db_link,$next_month_abbrev,$mode,"",1,1,1)) . "</td>\n";
-                     echo "<td align=center>" . ($after_num_sheets = NumSheets($db_link,$after_next_month_abbrev,$mode,"",1,1,1)) . "</td>\n";
+                     echo "<td align=center>" . ($current_num_sheets = NumSheets($db_link,$current_month_abbrev,"",1,1,1)) . "</td>\n";
+                     echo "<td align=center>" . ($next_num_sheets = NumSheets($db_link,$next_month_abbrev,"",1,1,1)) . "</td>\n";
+                     echo "<td align=center>" . ($after_num_sheets = NumSheets($db_link,$after_next_month_abbrev,"",1,1,1)) . "</td>\n";
                      ?>
                   </tr>
                </table>
@@ -87,9 +86,9 @@ $dbkalipso_link = DbkalipsoLink($ini);
                   </tr>
                   <tr>
                      <?
-                     echo "<td align=center>" . ($current_num_users = NumDistinctUsers($db_link,$current_month_abbrev,$mode)) . "</td>\n";
-                     echo "<td align=center>" . ($next_num_users = NumDistinctUsers($db_link,$next_month_abbrev,$mode)) . "</td>\n";
-                     echo "<td align=center>" . ($after_num_users = NumDistinctUsers($db_link,$after_next_month_abbrev,$mode)) . "</td>\n";
+                     echo "<td align=center>" . ($current_num_users = NumDistinctUsers($db_link,$current_month_abbrev)) . "</td>\n";
+                     echo "<td align=center>" . ($next_num_users = NumDistinctUsers($db_link,$next_month_abbrev)) . "</td>\n";
+                     echo "<td align=center>" . ($after_num_users = NumDistinctUsers($db_link,$after_next_month_abbrev)) . "</td>\n";
                      echo "<td>Absolute</td>\n";
                      ?>
                   </tr>
@@ -154,7 +153,7 @@ $dbkalipso_link = DbkalipsoLink($ini);
                      .  "    , first_name "
                      .  "    , coord_agency "
                      .  "    , max(timestamp) as timestamp "
-                     .  " from " . $mode . "avail_sheet "
+                     .  " from avail_sheet "
                      .  " where be_tda != 'TRUE' "
                      .  "    and coord_agency != 'EMS' "
                      .  "    and coord_agency != 'SupSvcs' "
@@ -235,7 +234,7 @@ $dbkalipso_link = DbkalipsoLink($ini);
                      .  "    + if(n30='$marker',1,0) "
                      .  "    + if(n31='$marker',1,0) "
                      .  "    as num_avails "
-                     .  " from aggregated left join " . $mode . "avail_sheet "
+                     .  " from aggregated left join avail_sheet "
                      .  "    using (month, last_name, first_name, coord_agency, timestamp)"
                      .  " order by num_avails desc"
                      )

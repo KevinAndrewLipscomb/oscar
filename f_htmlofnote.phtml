@@ -2,13 +2,8 @@
 //
 // $Id$
 //
-function HtmlOfNote
-   (
-   $note,
-   $mode = ""
-   )
+function HtmlOfNote($note)
    {
-   if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    $addendum_indicator = "<br>:<br>";
    $addendum_indicator_len = strlen($addendum_indicator);
@@ -17,7 +12,6 @@ function HtmlOfNote
       $note = substr($note,$addendum_indicator_len);
       }
    //
-   if ($mode) error_reporting($saved_error_level);
    return $note;
    }
 ?>

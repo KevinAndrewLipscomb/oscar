@@ -5,8 +5,7 @@
 function WriteCalendarSubform
    (
    $applicable_month_num,
-   $instruction_string = "",
-   $mode = ""
+   $instruction_string = ""
    )
 //
    {
@@ -33,7 +32,7 @@ function WriteCalendarSubform
                   <td align=center>Fri</td>
                   <td align=center>Sat</td>
                </tr>
-               <? WriteCalendarBody("d",$day_of_week_of_1st,$num_days_in_applicable_month,$mode); ?>
+               <? WriteCalendarBody("d",$day_of_week_of_1st,$num_days_in_applicable_month); ?>
             </table>
          </td>
       </tr>
@@ -52,7 +51,7 @@ function WriteCalendarSubform
                   <td align=center>Fri</td>
                   <td align=center>Sat</td>
                </tr>
-               <? WriteCalendarBody("n",$day_of_week_of_1st,$num_days_in_applicable_month,$mode); ?>
+               <? WriteCalendarBody("n",$day_of_week_of_1st,$num_days_in_applicable_month); ?>
             </table>
          </td>
       </tr>

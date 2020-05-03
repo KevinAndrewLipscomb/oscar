@@ -5,6 +5,9 @@
 $foundation_dir = "../foundation";
 require_once("f_bodyopen.phtml");
 require_once("$foundation_dir/std_style_class.php");
+//
+$ini = AppSettings();
+$dbkalipso_link = DbkalipsoLink($ini);
 ?>
 <html>
 

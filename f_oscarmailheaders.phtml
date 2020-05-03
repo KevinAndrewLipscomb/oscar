@@ -6,13 +6,8 @@ function OscarMailHeaders($db_link)
    {
    $saved_error_level = error_reporting(E_ALL);
    //
-   $mode="";
-      //
-      // Set to "" for production use, "x_" to debug.
-      //
-   //
-   $header_string = RoleEmailAddress($db_link,"",$mode) . "\r\n" //from
-      . RoleEmailAddress($db_link,"",$mode) . "\r\n"; //reply_to
+   $header_string = RoleEmailAddress($db_link,"") . "\r\n" //from
+      . RoleEmailAddress($db_link,"") . "\r\n"; //reply_to
    //
    error_reporting($saved_error_level);
    return $header_string;

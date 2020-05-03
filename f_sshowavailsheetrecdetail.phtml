@@ -21,14 +21,12 @@ function sShowAvailSheetRecDetail
    $note,
    $expiration,
    $be_authority = "",
-   $mode = "",
    $coord_agency = "EMS",
    $be_needing_driver = "",
    $be_nondriver = "",
    $be_third = ""
    )
    {
-   if ($mode) $saved_error_level = error_reporting(E_ALL);
    //
    $s =  "";
    $s .= "   NAME:\n"
@@ -82,10 +80,9 @@ function sShowAvailSheetRecDetail
    if ($be_authority == 1)
       {
       $s .= "   NOTE:\n"
-         .  "      " . PlainTextOfNote(stripslashes($note),6,72,$mode) . "\n";
+         .  "      " . PlainTextOfNote(stripslashes($note),6,72) . "\n";
       }
    //
-   if ($mode) error_reporting($saved_error_level);
    return $s;
    }
 ?>

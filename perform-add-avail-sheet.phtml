@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,13 +15,9 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
-$first_name = $first_name;
-$last_name = $last_name;
-$email_addr = $email_addr;
 $squad = $squad;
 $applicable_month_num = $applicable_month_num;
 $be_on_team_30 = $be_on_team_30;
@@ -33,69 +28,6 @@ $coord_agency = $coord_agency;
 $be_third = !$be_aic;  //Same logic, different user interface
 $be_nondriver = !$be_driver;  //Same logic, different user interface
 $be_needing_driver = $be_needing_driver;
-$d1 = $d1;
-$d2 = $d2;
-$d3 = $d3;
-$d4 = $d4;
-$d5 = $d5;
-$d6 = $d6;
-$d7 = $d7;
-$d8 = $d8;
-$d9 = $d9;
-$d10 = $d10;
-$d11 = $d11;
-$d12 = $d12;
-$d13 = $d13;
-$d14 = $d14;
-$d15 = $d15;
-$d16 = $d16;
-$d17 = $d17;
-$d18 = $d18;
-$d19 = $d19;
-$d20 = $d20;
-$d21 = $d21;
-$d22 = $d22;
-$d23 = $d23;
-$d24 = $d24;
-$d25 = $d25;
-$d26 = $d26;
-$d27 = $d27;
-$d28 = $d28;
-$d29 = $d29;
-$d30 = $d30;
-$d31 = $d31;
-$n1 = $n1;
-$n2 = $n2;
-$n3 = $n3;
-$n4 = $n4;
-$n5 = $n5;
-$n6 = $n6;
-$n7 = $n7;
-$n8 = $n8;
-$n9 = $n9;
-$n10 = $n10;
-$n11 = $n11;
-$n12 = $n12;
-$n13 = $n13;
-$n14 = $n14;
-$n15 = $n15;
-$n16 = $n16;
-$n17 = $n17;
-$n18 = $n18;
-$n19 = $n19;
-$n20 = $n20;
-$n21 = $n21;
-$n22 = $n22;
-$n23 = $n23;
-$n24 = $n24;
-$n25 = $n25;
-$n26 = $n26;
-$n27 = $n27;
-$n28 = $n28;
-$n29 = $n29;
-$n30 = $n30;
-$n31 = $n31;
-$odnmid = $odnmid;
 $d1_comment = $d1_comment;
 $d2_comment = $d2_comment;
 $d3_comment = $d3_comment;
@@ -158,6 +90,76 @@ $n28_comment = $n28_comment;
 $n29_comment = $n29_comment;
 $n30_comment = $n30_comment;
 $n31_comment = $n31_comment;
+//
+if (isset($first_name)) $first_name = kix\k::Safe($first_name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+if (isset($last_name)) $last_name = kix\k::Safe($last_name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME"));
+if (isset($email_addr)) $email_addr = kix\k::Safe($email_addr,kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS"));
+if (isset($applicable_month_abbrev)) $applicable_month_abbrev = kix\k::Safe($applicable_month_abbrev,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($coord_agency)) $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM"));
+if (isset($d1)) $d1 = kix\k::Safe($d1,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d2)) $d2 = kix\k::Safe($d2,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d3)) $d3 = kix\k::Safe($d3,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d4)) $d4 = kix\k::Safe($d4,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d5)) $d5 = kix\k::Safe($d5,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d6)) $d6 = kix\k::Safe($d6,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d7)) $d7 = kix\k::Safe($d7,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d8)) $d8 = kix\k::Safe($d8,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d9)) $d9 = kix\k::Safe($d9,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d10)) $d10 = kix\k::Safe($d10,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d11)) $d11 = kix\k::Safe($d11,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d12)) $d12 = kix\k::Safe($d12,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d13)) $d13 = kix\k::Safe($d13,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d14)) $d14 = kix\k::Safe($d14,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d15)) $d15 = kix\k::Safe($d15,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d16)) $d16 = kix\k::Safe($d16,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d17)) $d17 = kix\k::Safe($d17,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d18)) $d18 = kix\k::Safe($d18,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d19)) $d19 = kix\k::Safe($d19,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d20)) $d20 = kix\k::Safe($d20,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d21)) $d21 = kix\k::Safe($d21,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d22)) $d22 = kix\k::Safe($d22,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d23)) $d23 = kix\k::Safe($d23,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d24)) $d24 = kix\k::Safe($d24,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d25)) $d25 = kix\k::Safe($d25,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d26)) $d26 = kix\k::Safe($d26,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d27)) $d27 = kix\k::Safe($d27,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d28)) $d28 = kix\k::Safe($d28,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d29)) $d29 = kix\k::Safe($d29,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d30)) $d30 = kix\k::Safe($d30,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($d31)) $d31 = kix\k::Safe($d31,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n1)) $n1 = kix\k::Safe($n1,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n2)) $n2 = kix\k::Safe($n2,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n3)) $n3 = kix\k::Safe($n3,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n4)) $n4 = kix\k::Safe($n4,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n5)) $n5 = kix\k::Safe($n5,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n6)) $n6 = kix\k::Safe($n6,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n7)) $n7 = kix\k::Safe($n7,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n8)) $n8 = kix\k::Safe($n8,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n9)) $n9 = kix\k::Safe($n9,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n10)) $n10 = kix\k::Safe($n10,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n11)) $n11 = kix\k::Safe($n11,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n12)) $n12 = kix\k::Safe($n12,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n13)) $n13 = kix\k::Safe($n13,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n14)) $n14 = kix\k::Safe($n14,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n15)) $n15 = kix\k::Safe($n15,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n16)) $n16 = kix\k::Safe($n16,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n17)) $n17 = kix\k::Safe($n17,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n18)) $n18 = kix\k::Safe($n18,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n19)) $n19 = kix\k::Safe($n19,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n20)) $n20 = kix\k::Safe($n20,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n21)) $n21 = kix\k::Safe($n21,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n22)) $n22 = kix\k::Safe($n22,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n23)) $n23 = kix\k::Safe($n23,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n24)) $n24 = kix\k::Safe($n24,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n25)) $n25 = kix\k::Safe($n25,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n26)) $n26 = kix\k::Safe($n26,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n27)) $n27 = kix\k::Safe($n27,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n28)) $n28 = kix\k::Safe($n28,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n29)) $n29 = kix\k::Safe($n29,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n30)) $n30 = kix\k::Safe($n30,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($n31)) $n31 = kix\k::Safe($n31,kix\k::PhpValueOf_safe_hint_type("ALPHA"));
+if (isset($note)) $note = kix\k::Safe($note,kix\k::PhpValueOf_safe_hint_type("PUNCTUATED"));
+if (isset($odnmid)) $odnmid = kix\k::Safe($odnmid,kix\k::PhpValueOf_safe_hint_type("NUM"));
 //
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -230,7 +232,7 @@ if ($be_needing_driver) $be_third = FALSE;
             //
             // Create and execute the SQL statement to insert the record.
             //
-            $sql = "insert into " . $mode . "avail_sheet set first_name='" . addslashes(trim($first_name)) . "'"
+            $sql = "insert into avail_sheet set first_name='" . addslashes(trim($first_name)) . "'"
                . ", last_name='" . addslashes(trim($last_name)) ."'"
                . ", email_addr='" . addslashes(trim($email_addr)) . "'"
                . ", month='" . $applicable_month_abbrev . "'"
@@ -274,13 +276,13 @@ if ($be_needing_driver) $be_third = FALSE;
             //
             kix\k::SmtpMailSend
               (
-              RoleEmailAddress($db_link,"",$mode), //from
-              RoleEmailAddress($db_link,"failsafe-recipient",$mode), //to
+              RoleEmailAddress($db_link,""), //from
+              RoleEmailAddress($db_link,"failsafe-recipient"), //to
               "OSCAR insert op", //subject
               stripslashes
                 (
                 "The \'OSCAR - "
-                . $mode
+                . ""
                 . "perform-add-avail-sheet.phtml\' script has processed the following operation:\n\n$sql"
                 ) //message_string
               );
@@ -303,7 +305,7 @@ if ($be_needing_driver) $be_third = FALSE;
             //
             $result = $db_link->query
                (
-               $qry = "select * from " . $mode . "avail_sheet"
+               $qry = "select * from avail_sheet"
                .  " where month='$applicable_month_abbrev'"
                .  "    and last_name='" . addslashes(trim($last_name)) . "'"
                .  "    and first_name='" . addslashes(trim($first_name)) . "'"
@@ -346,7 +348,7 @@ if ($be_needing_driver) $be_third = FALSE;
                //   . "      </tr>\n"
                //   . "   </table>\n"
                //   . "   </td></tr></table>\n";
-               echo "Know of someone who deserves a <b>Class Act Award</b>?  <a href=" . $mode . "form-submit-class-act.phtml>Tell EMS Admin!</a>\n";
+               echo "Know of someone who deserves a <b>Class Act Award</b>?  <a href=form-submit-class-act.phtml>Tell EMS Admin!</a>\n";
                echo "</blockquote>\n";
                echo "<p>Your availability sheet has been recorded as follows:</p>\n";
                echo "<blockquote>\n";
@@ -369,7 +371,6 @@ if ($be_needing_driver) $be_third = FALSE;
                   $note,
                   $expiration,
                   1,
-                  $mode,
                   $coord_agency,
                   $be_needing_driver,
                   $be_nondriver,
@@ -379,79 +380,79 @@ if ($be_needing_driver) $be_third = FALSE;
                //
                // Record partial-shift comment data.  Do it after the read-back so that we'll have the timestamp value that forms part of the key that links the records.
                //
-               if ($d1_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",1,$d1_comment);
-               if ($d2_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",2,$d2_comment);
-               if ($d3_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",3,$d3_comment);
-               if ($d4_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",4,$d4_comment);
-               if ($d5_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",5,$d5_comment);
-               if ($d6_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",6,$d6_comment);
-               if ($d7_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",7,$d7_comment);
-               if ($d8_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",8,$d8_comment);
-               if ($d9_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",9,$d9_comment);
-               if ($d10_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",10,$d10_comment);
-               if ($d11_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",11,$d11_comment);
-               if ($d12_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",12,$d12_comment);
-               if ($d13_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",13,$d13_comment);
-               if ($d14_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",14,$d14_comment);
-               if ($d15_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",15,$d15_comment);
-               if ($d16_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",16,$d16_comment);
-               if ($d17_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",17,$d17_comment);
-               if ($d18_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",18,$d18_comment);
-               if ($d19_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",19,$d19_comment);
-               if ($d20_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",20,$d20_comment);
-               if ($d21_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",21,$d21_comment);
-               if ($d22_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",22,$d22_comment);
-               if ($d23_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",23,$d23_comment);
-               if ($d24_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",24,$d24_comment);
-               if ($d25_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",25,$d25_comment);
-               if ($d26_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",26,$d26_comment);
-               if ($d27_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",27,$d27_comment);
-               if ($d28_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",28,$d28_comment);
-               if ($d29_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",29,$d29_comment);
-               if ($d30_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",30,$d30_comment);
-               if ($d31_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",31,$d31_comment);
-               if ($n1_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",1,$n1_comment);
-               if ($n2_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",2,$n2_comment);
-               if ($n3_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",3,$n3_comment);
-               if ($n4_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",4,$n4_comment);
-               if ($n5_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",5,$n5_comment);
-               if ($n6_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",6,$n6_comment);
-               if ($n7_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",7,$n7_comment);
-               if ($n8_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",8,$n8_comment);
-               if ($n9_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",9,$n9_comment);
-               if ($n10_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",10,$n10_comment);
-               if ($n11_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",11,$n11_comment);
-               if ($n12_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",12,$n12_comment);
-               if ($n13_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",13,$n13_comment);
-               if ($n14_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",14,$n14_comment);
-               if ($n15_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",15,$n15_comment);
-               if ($n16_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",16,$n16_comment);
-               if ($n17_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",17,$n17_comment);
-               if ($n18_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",18,$n18_comment);
-               if ($n19_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",19,$n19_comment);
-               if ($n20_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",20,$n20_comment);
-               if ($n21_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",21,$n21_comment);
-               if ($n22_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",22,$n22_comment);
-               if ($n23_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",23,$n23_comment);
-               if ($n24_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",24,$n24_comment);
-               if ($n25_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",25,$n25_comment);
-               if ($n26_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",26,$n26_comment);
-               if ($n27_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",27,$n27_comment);
-               if ($n28_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",28,$n28_comment);
-               if ($n29_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",29,$n29_comment);
-               if ($n30_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",30,$n30_comment);
-               if ($n31_comment) SetAvailComment($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",31,$n31_comment);
+               if ($d1_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",1,$d1_comment);
+               if ($d2_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",2,$d2_comment);
+               if ($d3_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",3,$d3_comment);
+               if ($d4_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",4,$d4_comment);
+               if ($d5_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",5,$d5_comment);
+               if ($d6_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",6,$d6_comment);
+               if ($d7_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",7,$d7_comment);
+               if ($d8_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",8,$d8_comment);
+               if ($d9_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",9,$d9_comment);
+               if ($d10_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",10,$d10_comment);
+               if ($d11_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",11,$d11_comment);
+               if ($d12_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",12,$d12_comment);
+               if ($d13_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",13,$d13_comment);
+               if ($d14_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",14,$d14_comment);
+               if ($d15_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",15,$d15_comment);
+               if ($d16_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",16,$d16_comment);
+               if ($d17_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",17,$d17_comment);
+               if ($d18_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",18,$d18_comment);
+               if ($d19_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",19,$d19_comment);
+               if ($d20_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",20,$d20_comment);
+               if ($d21_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",21,$d21_comment);
+               if ($d22_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",22,$d22_comment);
+               if ($d23_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",23,$d23_comment);
+               if ($d24_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",24,$d24_comment);
+               if ($d25_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",25,$d25_comment);
+               if ($d26_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",26,$d26_comment);
+               if ($d27_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",27,$d27_comment);
+               if ($d28_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",28,$d28_comment);
+               if ($d29_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",29,$d29_comment);
+               if ($d30_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",30,$d30_comment);
+               if ($d31_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"d",31,$d31_comment);
+               if ($n1_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",1,$n1_comment);
+               if ($n2_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",2,$n2_comment);
+               if ($n3_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",3,$n3_comment);
+               if ($n4_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",4,$n4_comment);
+               if ($n5_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",5,$n5_comment);
+               if ($n6_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",6,$n6_comment);
+               if ($n7_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",7,$n7_comment);
+               if ($n8_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",8,$n8_comment);
+               if ($n9_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",9,$n9_comment);
+               if ($n10_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",10,$n10_comment);
+               if ($n11_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",11,$n11_comment);
+               if ($n12_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",12,$n12_comment);
+               if ($n13_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",13,$n13_comment);
+               if ($n14_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",14,$n14_comment);
+               if ($n15_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",15,$n15_comment);
+               if ($n16_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",16,$n16_comment);
+               if ($n17_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",17,$n17_comment);
+               if ($n18_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",18,$n18_comment);
+               if ($n19_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",19,$n19_comment);
+               if ($n20_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",20,$n20_comment);
+               if ($n21_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",21,$n21_comment);
+               if ($n22_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",22,$n22_comment);
+               if ($n23_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",23,$n23_comment);
+               if ($n24_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",24,$n24_comment);
+               if ($n25_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",25,$n25_comment);
+               if ($n26_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",26,$n26_comment);
+               if ($n27_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",27,$n27_comment);
+               if ($n28_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",28,$n28_comment);
+               if ($n29_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",29,$n29_comment);
+               if ($n30_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",30,$n30_comment);
+               if ($n31_comment) SetAvailComment($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,"n",31,$n31_comment);
                //
                echo "<p>Also, the following specific shift availability comments have been recorded:</p>\n";
                echo "<blockquote>\n";
-               ShowAvailComments($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,$applicable_month_num);
+               ShowAvailComments($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,$applicable_month_num);
                echo "</blockquote>\n";
                //
                foreach ($_REQUEST as $key => $value)
                  {
                  if (strpos($key,"special_event_shift_id_") !== FALSE)
                    {
-                   $result = $db_link->query("insert ignore special_event_avail set shift_id = '$value', odnmid = '$odnmid'")
+                   $result = $db_link->query("insert ignore special_event_avail set shift_id = '" . kix\k::Safe($value,kix\k::PhpValueOf_safe_hint_type("NUM")) . "', odnmid = '$odnmid'")
                      or die("Query failed with error: " . mysqli_error($db_link));
                    }
                  }
@@ -481,7 +482,6 @@ if ($be_needing_driver) $be_third = FALSE;
                   $note,
                   $expiration,
                   1,
-                  $mode,
                   $coord_agency,
                   $be_needing_driver,
                   $be_nondriver,
@@ -489,7 +489,7 @@ if ($be_needing_driver) $be_third = FALSE;
                   );
                kix\k::SmtpMailSend
                  (
-                 RoleEmailAddress($db_link,"",$mode), //from
+                 RoleEmailAddress($db_link,""), //from
                  $email_addr, //to
                  "OSCAR availability sheet submission confirmation", //subject
                  "This is a confirmation that the availability sheet you just submitted has been recorded as follows:\n"
@@ -498,7 +498,7 @@ if ($be_needing_driver) $be_third = FALSE;
                  . "\n"
                  . "Also, the following specific shift availability comments have been recorded:\n"
                  . "\n"
-                 . "   " . str_replace("\n","\n   ",sShowAvailComments($db_link,$mode,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,$applicable_month_num))
+                 . "   " . str_replace("\n","\n   ",sShowAvailComments($db_link,$applicable_month_abbrev,$last_name,$first_name,$timestamp,$coord_agency,$applicable_month_num))
                  . "\n\n"
                  . "And, the following special event shift availabilities have been recorded:\n"
                  . "\n"

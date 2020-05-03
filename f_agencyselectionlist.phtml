@@ -2,15 +2,11 @@
 //
 // $Id$
 //
-function AgencySelectionList
-   (
-   $db_link,
-   $mode = ""
-   )
+function AgencySelectionList($db_link)
    {
    $saved_error_level = error_reporting(E_ALL);
    //
-   $result = $db_link->query("select * from " . $mode . "agency where be_active='TRUE'")
+   $result = $db_link->query("select * from agency where be_active='TRUE'")
       or die("AgencySelectionList query failed with error: " . mysqli_error($db_link));
    //
    echo "<select name=coord_agency>\n";

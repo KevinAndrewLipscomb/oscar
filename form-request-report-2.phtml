@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,7 +15,6 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
@@ -71,7 +69,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
            // then
               {
               //
-              $valid_all_agencies_request = (($cross_agency != '') and BeAuthority($db_link,$email_addr,$mode,'EMS'));
+              $valid_all_agencies_request = (($cross_agency != '') and BeAuthority($db_link,$email_addr,'EMS'));
               //
               if (($coord_agency == '') && !$valid_all_agencies_request)
                  {
@@ -121,7 +119,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
                  ?>
                  <p><i>For the values you supplied in Part 1, the following additional information is required.&nbsp; Complete the
                     form below and press the "Submit" button to finish the report request.</i></p>
-                 <form action=<? echo $mode; ?>perform-gen-report.phtml method=post>
+                 <form action=perform-gen-report.phtml method=post>
                     <?
                     echo "<input type=hidden name=name value=\"$name\">\n"
                        . "<input type=hidden name=email_addr value=\"$email_addr\">\n"
@@ -145,10 +143,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
                                       {
                                       ?>
                                       <input type=radio name=team_filter value=als_only>Only Zone Car ALS providers<br>
-                                      <input type=radio name=team_filter value=team_30_only>Only squad truck team members<br>
-                                      <input type=radio name=team_filter value=team_5_only>Only EMS-5 team members<br>
-                                      <input type=radio name=team_filter value=team_air_only>Only Air Ambulance team members<br>
-                                      <input type=radio name=team_filter value=tda_only>Only TDA personnel<br>
+                                      <input type=radio name=team_filter value=team_5_only>Only VFS team members<br>
                                       <?
                                       }
                                    else
@@ -174,7 +169,7 @@ if ($ini[app][do_report_all_errors]) error_reporting(E_ALL);
                        .  "   <input type=radio name=shift_filter value=some checked>\n"
                        .  "      <b>Just one or more</b> shifts, as follows:&nbsp <small><i>(Who can run my duty on... ?)</i></small>\n"
                        .  "</blockquote>\n";
-                    WriteCalendarSubform($applicable_month_num,$instruction_string,$mode);
+                    WriteCalendarSubform($applicable_month_num,$instruction_string);
                     ?>
                     <br>
                     <p align=left>Briefly explain the reason for your request:<br>

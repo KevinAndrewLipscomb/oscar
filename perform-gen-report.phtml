@@ -2,7 +2,6 @@
 //
 // $Id$
 //
-//
 // Emulate register_globals on
 if (!ini_get('register_globals'))
   {
@@ -16,14 +15,10 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
-$mode = "";
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
-$name = $name;
-$email_addr = $email_addr;
 $applicable_month_num = $applicable_month_num;
-$coord_agency = $coord_agency;
 $team_filter = $team_filter;
 $shift_filter = $shift_filter;
 $relay = $relay;
@@ -90,6 +85,10 @@ $n29 = $n29;
 $n30 = $n30;
 $n31 = $n31;
 //
+if (isset($coord_agency)) $coord_agency = kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("KI_SORT_EXPRESSION"));
+if (isset($email_addr)) $email_addr = trim(kix\k::Safe($email_addr,kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS")));
+if (isset($name)) $name = trim(kix\k::Safe($name,kix\k::PhpValueOf_safe_hint_type("HUMAN_NAME")));
+//
 $foundation_dir = "../foundation";
 require_once("f_bodyopen.phtml");
 require_once("f_roleemailaddress.phtml");
@@ -138,8 +137,6 @@ if
 // then
 {
 $name = trim($name);
-$email_addr = trim($email_addr);
-
 //
 // CODEGENCOAL ("code-gen-coal")
 //    COndition DEscriptor GENeration/COmparison ALgorithm
@@ -160,7 +157,7 @@ $email_addr = trim($email_addr);
 // generate a report that's already been generated, we'll avoid regeneration and just retrieve what's in the cache.
 //
 $sql = "select max(timestamp) as timestamp_of_latest_submission "
-   .  " from " . $mode . "avail_sheet "
+   .  " from avail_sheet "
    .  " where coord_agency like '$coord_agency' ";
 $result = $db_link->query($sql)
    or die("The attempt to select the latest timestamp from the avail_sheet table failed with this error:  " . mysqli_error($db_link));
@@ -174,7 +171,7 @@ $condition_descriptor = "timestamp_of_latest_submission=" . $row->timestamp_of_l
 // (above) is not sufficient.
 //
 $sql = "select max(timestamp) as timestamp_of_latest_relay "
-   .  " from " . $mode . "relay_journal "
+   .  " from relay_journal "
    .  " where coord_agency like '$coord_agency' ";
 $result = $db_link->query($sql)
    or die("The attempt to select the latest timestamp from the relay journal failed with this error:  " . mysqli_error($db_link));
@@ -216,9 +213,9 @@ $month_word = strtoupper(date("F",mktime(12,0,0,$applicable_month_num,1)));
 $month_abbrev = substr($month_word,0,3);
 $where_clause = " month='$month_abbrev' and coord_agency like '$coord_agency' ";
 //
-$be_authority_for_any_agency = BeAuthority($db_link,$email_addr,$mode,'%');
-$be_authority_for_this_agency = BeAuthority($db_link,$email_addr,$mode,$coord_agency);
-$be_ems_sched_coord = BeEmsSchedCoord($db_link,$email_addr,$mode);
+$be_authority_for_any_agency = BeAuthority($db_link,$email_addr,'%');
+$be_authority_for_this_agency = BeAuthority($db_link,$email_addr,$coord_agency);
+$be_ems_sched_coord = BeEmsSchedCoord($db_link,$email_addr);
 $be_relayable = ($be_ems_sched_coord && ($coord_agency == "EMS"));
 //
 if ($shift_filter == "all")
@@ -236,7 +233,7 @@ if ($shift_filter == "all")
          }
       else
          {
-         $condition_descriptor .= "authority-of=" . CoordAgencyOfClearedEmailAddr($db_link,$email_addr,$mode) . "\n";
+         $condition_descriptor .= "authority-of=" . CoordAgencyOfClearedEmailAddr($db_link,$email_addr) . "\n";
          $condition_descriptor .= "full-authority=FALSE\n";
          }
       //
@@ -266,7 +263,7 @@ if ($shift_filter == "all")
       or die("The digest calculation failed with this error:  " . mysqli_error($db_link));
    $row = mysqli_fetch_object($result);
    $digest = $row->digest;
-   $result = $db_link->query("select report from " . $mode . "report_cache where digest = '$digest'")
+   $result = $db_link->query("select report from report_cache where digest = '$digest'")
       or die("The cache check failed with error:  " . mysqli_error($db_link));
    if (mysqli_num_rows($result))
       {
@@ -284,9 +281,9 @@ if ($shift_filter == "all")
          // from-scratch requests from the EMS schedule coordinator for full reports don't happen excessively but do happen
          // regularly.
          //
-         HarvestEmailAddresses($db_link,$mode);
-         $db_link->query("delete from " . $mode . "avail_sheet where expiration < CURRENT_DATE");
-         $db_link->query("delete from " . $mode . "report_cache where expiration < CURRENT_DATE");
+         HarvestEmailAddresses($ini,$db_link);
+         $db_link->query("delete from avail_sheet where expiration < CURRENT_DATE");
+         $db_link->query("delete from report_cache where expiration < CURRENT_DATE");
          }
       //
       $base_sql_statement = "select distinct last_name"
@@ -310,7 +307,7 @@ if ($shift_filter == "all")
                .  ", be_third";
          }
       $base_sql_statement .= ", (note != \"\") as be_a_note"
-         .  " from " . $mode . "avail_sheet ";
+         .  " from avail_sheet ";
       switch ($team_filter)
          {
          case "als_only":
@@ -358,7 +355,7 @@ if ($shift_filter == "all")
          {
          $report .= 'SYSTEM-WIDE';
          }
-      $report .= "</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "</u></b> availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       //
       $shortcuts  = "<p>Shortcuts:&nbsp; \n";
       $shortcuts .= "<a href=#Days>Days</a>";
@@ -375,7 +372,7 @@ if ($shift_filter == "all")
          {
          $report .= "   +---------------------------------------------+\n";
          $report .= "   | Legend:                                     |\n";
-         $report .= "   |    -H-7-30-TDA-Z- Rxx Lastname, Firstname * |\n";
+         $report .= "   |    -H-S-30-TDA-Z- Rxx Lastname, Firstname * |\n";
          $report .= "   |     ^ ^  ^     ^   ^                      ^ |\n";
          $report .= "   |     | |  |     |   |                      | |\n";
          $report .= "   |     | |  |     |   +- Home rescue squad   | |\n";
@@ -385,7 +382,7 @@ if ($shift_filter == "all")
          $report .= "   |     | |  |                                | |\n";
          $report .= "   |     | |  +- Squad truck team member       | |\n";
          $report .= "   |     | |                                   | |\n";
-         $report .= "   |     | +- EMS-7 team member                | |\n";
+         $report .= "   |     | +- VFS team member                  | |\n";
          $report .= "   |     |                                     | |\n";
          $report .= "   |     +- Air Ambulance team member          | |\n";
          $report .= "   |                                           | |\n";
@@ -446,7 +443,6 @@ if ($shift_filter == "all")
                         $be_tda,
                         $be_als,
                         $squad,
-                        $mode,
                         $coord_agency,
                         $be_third,
                         $be_nondriver,
@@ -456,11 +452,11 @@ if ($shift_filter == "all")
                   .  " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
                   $highlighted_squad = 'Rescue' . $squad;
-                  $report .= "<a href=" . $mode . "detail.phtml?a="
+                  $report .= "<a href=detail.phtml?a="
                      .  base64_encode($last_name)
                      .  "&b="
                      .  base64_encode($first_name)
@@ -522,7 +518,6 @@ if ($shift_filter == "all")
                         $be_tda,
                         $be_als,
                         $squad,
-                        $mode,
                         $coord_agency,
                         $be_third,
                         $be_nondriver,
@@ -532,10 +527,10 @@ if ($shift_filter == "all")
                   .  " ";
                $last_name = stripslashes($last_name);
                $first_name = stripslashes($first_name);
-               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
-                  $report .= "<a href=" . $mode . "detail.phtml?a="
+                  $report .= "<a href=detail.phtml?a="
                      .  base64_encode($last_name)
                      .  "&b="
                      .  base64_encode($first_name)
@@ -581,7 +576,7 @@ if ($shift_filter == "all")
             $report .= "<p><b>This section ONLY includes personnel from $highlighted_squad who sent submissions to agency EMS.</b></p>\n";
             }
          $relay_instructions = "<table width=100%><tr><td><b>EMS Schedule Coordinator:</b></td>"
-            .  "<td align=right><small><a href=" . $mode . "relay-all-details.phtml>What is <b>Relay all</b>?</a></small>"
+            .  "<td align=right><small><a href=relay-all-details.phtml>What is <b>Relay all</b>?</a></small>"
             .  "</td></tr></table>\n"
             .  "<ul>\n"
             .  "   <li><p>Use the checkboxes to indicate availabilities you have allocated for the centralized "
@@ -593,7 +588,7 @@ if ($shift_filter == "all")
             .  "</ul>\n";
          if ($be_relayable)
             {
-            $report .= "<form action=" . $mode . "perform-hand-off.phtml method=post>\n"
+            $report .= "<form action=perform-hand-off.phtml method=post>\n"
                . "<input type=hidden name=month_abbrev value=$month_abbrev>\n";
             $report .= $relay_instructions;
             }
@@ -604,7 +599,7 @@ if ($shift_filter == "all")
             .  "    , first_name "
             .  "    , count(*) as num_submissions"
             .  "    , max(timestamp) as timestamp "
-            .  " from " . $mode . "avail_sheet "
+            .  " from avail_sheet "
             .  " where $where_clause "
             .  " group by last_name "
             .  "    , first_name "
@@ -637,7 +632,7 @@ if ($shift_filter == "all")
             .  "    , num_extras "
             .  "    , note "
             .  "    , num_submissions "
-            .  " from aggregated left join " . $mode . "avail_sheet "
+            .  " from aggregated left join avail_sheet "
             .  "    using (last_name, first_name, timestamp)"
             .  " where $where_clause "
             .  " order by last_name, first_name ";
@@ -658,7 +653,7 @@ if ($shift_filter == "all")
                   $n31 = "";
                extract($row);
                //
-               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,$mode,('Rescue' . $squad)));
+               $be_authority_to_member = ($be_authority_for_this_agency || BeAuthority($db_link,$email_addr,('Rescue' . $squad)));
                if ($be_authority_to_member)
                   {
                   $last_name = stripslashes($last_name);
@@ -671,7 +666,7 @@ if ($shift_filter == "all")
                      {
                      $encoded_sheet_key = $encoded_last_name . "-" . $encoded_first_name;
                      }
-                  $report .= "<table width=100%><tr><td><a href=" . $mode . "detail.phtml?a="
+                  $report .= "<table width=100%><tr><td><a href=detail.phtml?a="
                      .  $encoded_last_name
                      .  "&b="
                      .  $encoded_first_name
@@ -691,7 +686,6 @@ if ($shift_filter == "all")
                            $be_tda,
                            $be_als,
                            $squad,
-                           $mode,
                            $coord_agency,
                            $be_third,
                            $be_nondriver,
@@ -714,7 +708,6 @@ if ($shift_filter == "all")
                         (
                         FormattedNoteAppendage
                            (
-                           $mode,
                            "WARNING",
                            "MULTSUB",
                            "Submission count = $num_submissions, verification recommended."
@@ -731,7 +724,6 @@ if ($shift_filter == "all")
                        $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
                        "",
                        "use_spaces",
-                       $mode,
                        $encoded_sheet_key . "-d"
                        );
                      }
@@ -740,9 +732,8 @@ if ($shift_filter == "all")
                      $report .= AvailList
                        (
                        $d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$d10,$d11,$d12,$d13,$d14,$d15,$d16,$d17,$d18,$d19,$d20,$d21,$d22,$d23,$d24,$d25,$d26,$d27,$d28,$d29,$d30,$d31,
-                       "",
                        "use_spaces",
-                       $mode
+                       ""
                        );
                      }
                   $report .= "</td></tr>\n"
@@ -754,7 +745,6 @@ if ($shift_filter == "all")
                        $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
                        "",
                        "use_spaces",
-                       $mode,
                        $encoded_sheet_key . "-n"
                        );
                      }
@@ -764,15 +754,14 @@ if ($shift_filter == "all")
                        (
                        $n1,$n2,$n3,$n4,$n5,$n6,$n7,$n8,$n9,$n10,$n11,$n12,$n13,$n14,$n15,$n16,$n17,$n18,$n19,$n20,$n21,$n22,$n23,$n24,$n25,$n26,$n27,$n28,$n29,$n30,$n31,
                        "",
-                       "use_spaces",
-                       $mode
+                       "use_spaces"
                        );
                      }
                   $report .= "</td></tr>\n";
                   $report .= "</table>\n";
                   if ($note != "")
                      {
-                     $report .= "   <p><i>" . HtmlOfNote(stripslashes($note),$mode) . "</i></p>\n";
+                     $report .= "   <p><i>" . HtmlOfNote(stripslashes($note)) . "</i></p>\n";
                      }
                   if ($be_relayable)
                      {
@@ -815,7 +804,7 @@ if ($shift_filter == "all")
       // Store the report in the cache.
       //
       $report = addslashes($report);
-      $result = $db_link->query("insert into " . $mode . "report_cache set digest='$digest'"
+      $result = $db_link->query("insert into report_cache set digest='$digest'"
          . ", report='$report'"
          . ", expiration='$expiration_date'")
          or die("Report insertion failed with this error:  " . mysqli_error($db_link));
@@ -871,7 +860,7 @@ else
       or die("The digest calculation failed with this error:  " . mysqli_error($db_link));
    $row = mysqli_fetch_object($result);
    $digest = $row->digest;
-   $result = $db_link->query("select report from " . $mode . "report_cache where digest = '$digest'")
+   $result = $db_link->query("select report from report_cache where digest = '$digest'")
       or die("The cache check failed with error:  " . mysqli_error($db_link));
    if (mysqli_num_rows($result))
       {
@@ -900,7 +889,7 @@ else
                .  ", be_nondriver"
                .  ", be_third";
          }
-      $base_sql_statement .= " from " . $mode . "avail_sheet ";
+      $base_sql_statement .= " from avail_sheet ";
       switch ($team_filter)
          {
          case "als_only":
@@ -949,7 +938,7 @@ else
          {
          $report .= 'SYSTEM-WIDE';
          }
-      $report .= "</u></b> availability report for $month_word <a href=" . $mode . "gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
+      $report .= "</u></b> availability report for $month_word <a href=gen-date.phtml>generated " . date("l Y-M-d H:i:s T") . "</a>\n\n";
       if ($coord_agency == "EMS")
          {
          $report .= "   +-------------------------------------------+\n";
@@ -1017,7 +1006,6 @@ else
                            $be_tda,
                            $be_als,
                            $squad,
-                           $mode,
                            $coord_agency,
                            $be_third,
                            $be_nondriver,
@@ -1029,7 +1017,7 @@ else
                   $first_name = stripslashes($first_name);
                   if ($be_authority_for_this_agency)
                      {
-                     $report .= "<a href=" . $mode . "detail.phtml?a="
+                     $report .= "<a href=detail.phtml?a="
                         .  base64_encode($last_name)
                         .  "&b="
                         .  base64_encode($first_name)
@@ -1083,7 +1071,6 @@ else
                            $be_tda,
                            $be_als,
                            $squad,
-                           $mode,
                            $coord_agency,
                            $be_third,
                            $be_nondriver,
@@ -1095,7 +1082,7 @@ else
                   $first_name = stripslashes($first_name);
                   if ($be_authority_for_this_agency)
                      {
-                     $report .= "<a href=" . $mode . "detail.phtml?a="
+                     $report .= "<a href=detail.phtml?a="
                         .  base64_encode($last_name)
                         .  "&b="
                         .  base64_encode($first_name)
@@ -1140,7 +1127,7 @@ else
       // Store the report in the cache.
       //
       $report = addslashes($report);
-      $result = $db_link->query("insert into " . $mode . "report_cache set digest='$digest', report='$report', expiration='$expiration_date'")
+      $result = $db_link->query("insert into report_cache set digest='$digest', report='$report', expiration='$expiration_date'")
          or die("Report insertion failed with this error:  " . mysqli_error($db_link));
       }
    }
@@ -1150,7 +1137,7 @@ else
 $result = $db_link->query
    (
    "select 1 "
-   .  " from " . $mode . "trusted_user "
+   .  " from trusted_user "
    .  " where email_address='$email_addr' "
    .  "    and coord_agency like '$coord_agency' "
    )
@@ -1160,14 +1147,14 @@ if ($direct_approval = (mysqli_num_rows($result) || $be_authority_for_any_agency
    //
    // Then send an approval notice to the requestor directly.
    //
-   $result = SendApprovalNotice($ini,$db_link,$email_addr,$digest,$mode);
+   $result = SendApprovalNotice($ini,$db_link,$email_addr,$digest);
    }
 else
    {
    //
    // Someone else requested the report.  Notify the schedule coordinator.
    //
-   $screen_notice_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency);
+   $screen_notice_recipient = RoleEmailAddress($db_link,"schedule-coordinator",$coord_agency);
    $screen_notice_subject = "-> OSCAR request ->";
    //
    // Give the schedule coordinator a chance to approve (weakly or strongly) or disapprove of the request.
@@ -1184,19 +1171,19 @@ else
    $screen_notice .= "1. To MARK THIS USER AS TRUSTED (ie, approve this\n";
    $screen_notice .= "   and subsequent OSCAR requests from this user),\n";
    $screen_notice .= "   click here:\n";
-   $screen_notice .= $ini[server][root_url] . "/" . $mode . "approve-and-trust.phtml?digest=$digest&email_addr=$email_addr&coord_agency=$coord_agency\n\n\n";
+   $screen_notice .= $ini[server][root_url] . "/approve-and-trust.phtml?digest=$digest&email_addr=$email_addr&coord_agency=$coord_agency\n\n\n";
    $screen_notice .= "2. To approve JUST THIS ONE request without\n";
    $screen_notice .= "   marking the user as trusted, click here:\n";
-   $screen_notice .= $ini[server][root_url] . "/" . $mode . "approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
+   $screen_notice .= $ini[server][root_url] . "/approve.phtml?digest=$digest&email_addr=$email_addr\n\n\n";
    $screen_notice .= "3. To DISAPPROVE the request, DO NOTHING.\n\n\n";
    $screen_notice .= "The report is available for review at:\n";
-   $screen_notice .= $ini[server][root_url] . "/" . $mode . "get-report.phtml?digest=$digest\n\n\n";
+   $screen_notice .= $ini[server][root_url] . "/get-report.phtml?digest=$digest\n\n\n";
    //
    // Add sig lines.
    //
    $screen_notice .= "-- OSCAR\n";
    $screen_notice .= "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n";
-   $screen_notice .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
+   $screen_notice .= "-- Sysadmin: " . RoleEmailAddress($db_link,"") . "\n";
    //
    // Then send a claim ticket to the requestor directly.
    //
@@ -1220,40 +1207,40 @@ else
    $claim_ticket .= "   primary schedule coordinator is unable to respond in a timely manner.\n";
    $claim_ticket .= "   Generally, it is better to wait for the regular approval notice.\n\n";
    $claim_ticket .= "The next authority in the chain is:\n\n";
-   $claim_ticket .= "   " . RoleEmailAddress($db_link,"escalation-level-1-recipient",$mode,$coord_agency) . "\n\n";
+   $claim_ticket .= "   " . RoleEmailAddress($db_link,"escalation-level-1-recipient",$coord_agency) . "\n\n";
    $claim_ticket .= "To escalate your request to the above\n";
    $claim_ticket .= "authority, click here:\n\n";
-   $claim_ticket .= $ini[server][root_url] . "/" . $mode . "escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr&coord_agency=$coord_agency\n\n";
+   $claim_ticket .= $ini[server][root_url] . "/escalate.phtml?level=1&digest=$digest&name=" . urlencode($name) . "&email_addr=$email_addr&coord_agency=$coord_agency\n\n";
    //
    // Add sig lines.
    //
    $claim_ticket .= "-- OSCAR\n";
    $claim_ticket .= "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n";
-   $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress($db_link,"",$mode) . "\n";
+   $claim_ticket .= "-- Sysadmin: " . RoleEmailAddress($db_link,"") . "\n";
    //
    // Send the mail.
    //
    kix\k::SmtpMailSend
      (
-     RoleEmailAddress($db_link,"",$mode), //from
+     RoleEmailAddress($db_link,""), //from
      $screen_notice_recipient, //to
      $screen_notice_subject, //subject
      $screen_notice, //message_string
      false, //be_html
      "", //cc
      "", //bcc
-     RoleEmailAddress($db_link,"",$mode) //reply_to
+     RoleEmailAddress($db_link,"") //reply_to
      );
    kix\k::SmtpMailSend
      (
-     RoleEmailAddress($db_link,"",$mode), //from
+     RoleEmailAddress($db_link,""), //from
      $claim_ticket_recipient, //to
      $claim_ticket_subject, //subject
      $claim_ticket, //message_string
      false, //be_html
      "", //cc
      "", //bcc
-     RoleEmailAddress($db_link,"",$mode) //reply_to
+     RoleEmailAddress($db_link,"") //reply_to
      );
    $result = true;
    }
@@ -1293,16 +1280,16 @@ if ($result)
       echo "<p><b>Success!</b></p>\n"
          . "<blockquote>OSCAR has successfully generated your report.&nbsp;  Because the report contains personal "
          . "information, a screening notice has been sent to the <a href=mailto:\""
-         . RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency)
+         . RoleEmailAddress($db_link,"schedule-coordinator",$coord_agency)
          . "\">$coord_agency Schedule Coordinator</a>.&nbsp; The coordinator will forward the report to you once "
          . "screening is complete.</blockquote>";
       echo "<p><b>Check your email periodically for the report.</b></p>";
       }
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-      . RoleEmailAddress($db_link,"",$mode)
+      . RoleEmailAddress($db_link,"")
       . "\">OSCAR System Administrator</a>.</p>";
    //
-   if ($mode != "")
+   if ("" != "")
       {
       echo "<pre>\n"
          . "condition_descriptor\n"
@@ -1326,10 +1313,10 @@ else
       <ul>
          <?
          echo "<li><p>Use another method (like email or telephone) to ask the <a href=mailto:\""
-            . RoleEmailAddress($db_link,"schedule-coordinator",$mode,$coord_agency)
+            . RoleEmailAddress($db_link,"schedule-coordinator",$coord_agency)
             . "\">$coord_agency Schedule Coordinator</a> for the information you need.</p>";
          echo "<li><p>Let the <a href=mailto:\""
-            . RoleEmailAddress($db_link,"",$mode)
+            . RoleEmailAddress($db_link,"")
             . "?subj=\"OSCAR Bug Report\">OSCAR System Administrator</a> know this error occurred.</p>";
          ?>
       </ul>
@@ -1359,7 +1346,7 @@ else
    </b>
    <?
    echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-      . RoleEmailAddress($db_link,"",$mode)
+      . RoleEmailAddress($db_link,"")
       . "\">OSCAR System Administrator</a>.</p>";
    }
 ?>

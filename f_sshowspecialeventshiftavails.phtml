@@ -12,6 +12,8 @@ function sShowSpecialEventShiftAvails
    $s = "";
    $saved_error_level = error_reporting(E_ALL);
    //
+   $odnmid = kix\k::Safe($odnmid,kix\k::PhpValueOf_safe_hint_type("NUM"));
+   //
    $result = $db_link->query
       (
       $qry = "select description as special_event_description"
