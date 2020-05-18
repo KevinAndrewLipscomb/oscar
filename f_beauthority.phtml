@@ -17,7 +17,7 @@ function BeAuthority
       (
       "select email_addr as found_email_addr from authority "
       .  "   where email_addr='" . kix\k::Safe($email_addr,kix\k::PhpValueOf_safe_hint_type("EMAIL_ADDRESS")) . "'"
-      .  "      and ( coord_agency like '" . kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("ALPHANUM")) . "' or coord_agency like 'EMS' ) "
+      .  "      and ( coord_agency like '" . kix\k::Safe($coord_agency,kix\k::PhpValueOf_safe_hint_type("KI_SORT_EXPRESSION")) . "' or coord_agency like 'EMS' ) "
       .  "      and has_clearance='TRUE' "
       )
       or die("BeAuthority query failed with error:  " . mysqli_error($db_link));
