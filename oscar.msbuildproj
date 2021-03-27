@@ -1,4 +1,4 @@
-﻿<Project Sdk="Peachpie.NET.Sdk/0.9.990">
+﻿<Project Sdk="Peachpie.NET.Sdk/1">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net461</TargetFramework>
@@ -22,24 +22,6 @@
     <Compile Remove="..\foundation\recaptcha-master\examples\example-captcha.php" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Peachpie.CodeAnalysis" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Library" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Library.MySql" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Library.Network" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Library.PDO" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Library.PDO.Firebird" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Library.PDO.MySQL" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Library.Scripting" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Library.XmlDom" Version="0.9.990" />
-    <PackageReference Include="Peachpie.RequestHandler" Version="0.9.990" />
-    <PackageReference Include="Peachpie.Runtime" Version="0.9.990" />
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="ki">
       <HintPath>lib\ki\ki.dll</HintPath>
       <Private>true</Private>
@@ -53,8 +35,5 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>bin\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Peachpie.App" Version="0.9.990" />
   </ItemGroup>
 </Project>
