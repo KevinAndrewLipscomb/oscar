@@ -33,7 +33,6 @@
     <PackageReference Include="Peachpie.Library.XmlDom" Version="1.0.0" />
     <PackageReference Include="Peachpie.RequestHandler" Version="1.0.0" />
     <PackageReference Include="Peachpie.Runtime" Version="1.0.0" />
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ki">
