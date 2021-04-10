@@ -179,30 +179,38 @@ if
               .  "-- Home page: " . $ini[server][host_url] . "/" . $ini[app][superapp] . "\n"
               .  "-- Sysadmin: " . RoleEmailAddress($db_link,"") . "\n";
    //
-   // Send the mail.
-   //
-   kix\k::SmtpMailSend
-     (
-     RoleEmailAddress($db_link,""), //from
-     $email_addr, //to
-     "OSCAR Reconfirm/Retract Challenge", //subject
-     $challenge, //message_string
-     false, //be_html
-     "", //cc
-     "", //bcc
-     RoleEmailAddress($db_link,"") //reply_to
-     );
-   //
    if ($result)
       {
       PutLibPhotoRandomPlaced($ini,$dbkalipso_link,"oscarsystem",1,"right");
-      echo "<p>The OSCAR system has sent the reconfirmation/challenge message to <b>$email_addr</b>.</p>";
-      echo "<p>If you intend to retract your submissions, be advised that <u>retraction is not yet complete</u>.&nbsp; "
-         .  "Check your email periodically for the challenge message, which contains instructions for completing the "
-         .  "retraction process.</b></p>";
+      //
+      if ($num_rows)
+        {
+        // Send the mail.
+        //
+        //
+        kix\k::SmtpMailSend
+          (
+          RoleEmailAddress($db_link,""), //from
+          $email_addr, //to
+          "OSCAR Reconfirm/Retract Challenge", //subject
+          $challenge, //message_string
+          false, //be_html
+          "", //cc
+          "", //bcc
+          RoleEmailAddress($db_link,"") //reply_to
+          );
+        echo "<p>The OSCAR system has sent the reconfirmation/challenge message to <b>$email_addr</b>.</p>";
+        echo "<p>If you intend to retract your submissions, be advised that <u>retraction is not yet complete</u>.&nbsp; "
+           .  "Check your email periodically for the challenge message, which contains instructions for completing the "
+           .  "retraction process.</b></p>";
+        }
+      else
+        {
+        echo "<p>No records found.</p>";
+        }
       echo "<p>If you have feedback about the technical aspects of this process, please contact the <a href=mailto:\""
-         .  RoleEmailAddress($db_link,"")
-         .  "\">OSCAR System Administrator</a>.</p>";
+          .  RoleEmailAddress($db_link,"")
+          .  "\">OSCAR System Administrator</a>.</p>";
       }
    else
       {
@@ -223,7 +231,7 @@ if
                .  "Administrator</a> know this error occurred.</p>";
             ?>
          </ul>
-      </blockquote>            
+      </blockquote>
       </b>
       <?
       }
