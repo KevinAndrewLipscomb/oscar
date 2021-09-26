@@ -11,17 +11,3 @@ grant select
 grant select
   on kalipso.*
   to 'ki-oscark'@'127.0.0.1' identified by '~ki-oscark-password~'
-;
-grant select
- , insert
- , update
- , delete
- , create
- , drop
- , create temporary tables
-  on oscar.*
-  to 'ki-oscar'@'51.79.5.240' identified by '~ki-oscar-password~'
-;
-grant select
-  on kalipso.*
-  to 'ki-oscark'@'51.79.5.240' identified by '~ki-oscark-password~'
