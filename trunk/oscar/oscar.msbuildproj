@@ -1,4 +1,4 @@
-﻿<Project Sdk="Peachpie.NET.Sdk/1.0.8">
+﻿<Project Sdk="Peachpie.NET.Sdk/1.0.18">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net461</TargetFramework>
@@ -22,17 +22,17 @@
     <Compile Remove="..\foundation\recaptcha-master\examples\example-captcha.php" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Peachpie.CodeAnalysis" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.MySql" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.Network" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.PDO" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.PDO.Firebird" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.PDO.MySQL" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.Scripting" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.XmlDom" Version="1.0.8" />
-    <PackageReference Include="Peachpie.RequestHandler" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Runtime" Version="1.0.8" />
+    <PackageReference Include="Peachpie.CodeAnalysis" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Library" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Library.MySql" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Library.Network" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Library.PDO" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Library.PDO.Firebird" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Library.PDO.MySQL" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Library.Scripting" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Library.XmlDom" Version="1.0.18" />
+    <PackageReference Include="Peachpie.RequestHandler" Version="1.0.18" />
+    <PackageReference Include="Peachpie.Runtime" Version="1.0.18" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ki">
@@ -50,6 +50,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Peachpie.App" Version="1.0.8" />
+    <PackageReference Update="Peachpie.App" Version="1.0.18" />
   </ItemGroup>
 </Project>
