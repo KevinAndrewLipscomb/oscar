@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: .crontab 1894 2007-03-30 20:27:03Z KevinAnLipscomb $
 #
 MAILTO=kevin.lipscomb@kvrs.org
 30 13 * * * wget -q http://www.oscarsystem.com/daily-avail-report.phtml

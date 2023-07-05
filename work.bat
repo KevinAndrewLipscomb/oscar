@@ -1,5 +1,5 @@
 REM
-REM $Id$
+REM $Id: work.bat 7035 2020-04-13 18:47:08Z kevinanlipscomb $
 REM
 cd "C:\Inetpub\wwwroot\oscar"
 start /max explorer /e,/select,C:\Inetpub\wwwroot\oscar\.svn

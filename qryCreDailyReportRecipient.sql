@@ -10,7 +10,7 @@
 # Database : `oscar`
 # --------------------------------------------------------
 
-# $Id$
+# $Id: qryCreDailyReportRecipient.sql 747 2002-10-05 22:48:03Z kevinanlipscomb $
 
 #
 # Table structure for tables `daily_report_recipient` and `x_daily_report_recipient`
