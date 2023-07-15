@@ -1,0 +1,13 @@
+grant select
+ , insert
+ , update
+ , delete
+ , create
+ , drop
+ , create temporary tables
+  on oscar_x.*
+  to 'ki-oscar-x'@'127.0.0.1' identified by '~ki-oscar-x-password~'
+;
+grant select
+  on kalipso_x.*
+  to 'ki-oscark-x'@'127.0.0.1' identified by '~ki-oscark-x-password~'
