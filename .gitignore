@@ -8,9 +8,6 @@ unpublished.ini
 /.svn
 /.vs
 /app.ini
-/obj
-/packages
-/web.config
 /bin/*.xml
 /bin/*.dll.config
 /bin/cs
@@ -26,3 +23,9 @@ unpublished.ini
 /bin/tr
 /bin/zh-Hans
 /bin/zh-Hant
+/lib/ki/*.dll
+/lib/ki/*.dll.config
+/lib/ki/*.xml
+/obj
+/packages
+/web.config
