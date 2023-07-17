@@ -14,7 +14,7 @@ unpublished.*
 /app.ini
 /bin/*.xml
 /bin/*/
-/lib/ki/
+/lib/ki
 /obj/
 /packages/
 /web.config
