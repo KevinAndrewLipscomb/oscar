@@ -4,10 +4,13 @@
 
 *.dll.config
 *.lnk
+*.user
 1-user-setup.sql
-unpublished.*
 .svn/
 .vs/
+obj/
+packages/
+unpublished.*
 /app.ini
 /bin/*.xml
 /bin/*/
