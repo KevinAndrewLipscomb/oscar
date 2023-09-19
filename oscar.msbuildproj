@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Peachpie.NET.Sdk/1.0.8">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AssemblyName>oscar</AssemblyName>
     <ShortOpenTag>true</ShortOpenTag>
     <OutDir>bin</OutDir>
