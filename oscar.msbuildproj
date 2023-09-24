@@ -1,4 +1,4 @@
-﻿<Project Sdk="Peachpie.NET.Sdk/1.0.8">
+﻿<Project Sdk="Peachpie.NET.Sdk/1.0.30">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net48</TargetFramework>
@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="**" Exclude="obj/**;bin/**;PublishProfiles/**;@(Compile);$(MsBuildThisFile)">
-      <PackagePath>contentFiles/any/netcoreapp2.0/wwwroot/</PackagePath>
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <CopyToOutputDirectory>true</CopyToOutputDirectory>
       <CopyToPublishDirectory>true</CopyToPublishDirectory>
@@ -22,34 +21,17 @@
     <Compile Remove="..\foundation\recaptcha-master\examples\example-captcha.php" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Peachpie.CodeAnalysis" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.MySql" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.Network" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.PDO" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.PDO.Firebird" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.PDO.MySQL" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.Scripting" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Library.XmlDom" Version="1.0.8" />
-    <PackageReference Include="Peachpie.RequestHandler" Version="1.0.8" />
-    <PackageReference Include="Peachpie.Runtime" Version="1.0.8" />
+    <PackageReference Include="Peachpie.RequestHandler" Version="1.0.30" />
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ki">
       <HintPath>lib\ki\ki.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="System.Buffers">
-      <HintPath>bin\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Memory">
-      <HintPath>bin\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>bin\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Peachpie.App" Version="1.0.8" />
+    <PackageReference Update="Peachpie.App" Version="1.0.30" />
   </ItemGroup>
 </Project>
