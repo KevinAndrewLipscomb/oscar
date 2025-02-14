@@ -15,6 +15,7 @@ if (!ini_get('register_globals'))
     extract($superglobal, EXTR_SKIP);
     }
   }
+session_start();
 //
 // Assign incoming arguments to themselves to prevent 'uninitialized variable' warnings later.
 //
@@ -261,6 +262,7 @@ if ($be_needing_driver) $be_third = FALSE;
                . ", submitting_node='$REMOTE_ADDR'"
                . ", expiration='$expiration_date'"
                . ", odnmid=NULLIF('$odnmid','')";
+            $_SESSION["ErrorElaboration"] = "coord_agency = '" . $coord_agency . "'";
             $db_link->query($sql)
                or die
                   (
